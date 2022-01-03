@@ -17,3 +17,6 @@ params:
   DateFormat: "January 2, 2006"
   defaultTheme: auto # dark, light
   disableThemeToggle: false
+
+permalinks:
+  posts: /:year/:month/:title/
