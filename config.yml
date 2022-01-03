@@ -1,0 +1,19 @@
+baseURL: "https://glyphack.com"
+languageCode: en-us
+title: Glyphack's Blog
+paginate: 5
+theme: PaperMod
+
+minify:
+  disableXML: true
+  minifyOutput: true
+
+params:
+  env: production # to enable google analytics, opengraph, twitter-cards and schema.
+  title: Glyphack's Blog
+  description: "A blog by Shayegan Hooshyari About software and the world"
+  keywords: [Blog, SoftwareEngineering, Programming, Shayegan, Hooshyari]
+  author: Shayegan Hooshyari
+  DateFormat: "January 2, 2006"
+  defaultTheme: auto # dark, light
+  disableThemeToggle: false
