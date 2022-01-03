@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>Glyphack&#39;s Blog</title>
-    <link>https://glyphack.com/</link>
-    <description>Recent content on Glyphack&#39;s Blog</description>
+    <title>Posts on Glyphack&#39;s Blog</title>
+    <link>https://glyphack.com/posts/</link>
+    <description>Recent content in Posts on Glyphack&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 03 Jan 2022 19:10:52 +0330</lastBuildDate><atom:link href="https://glyphack.com/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 03 Jan 2022 19:10:52 +0330</lastBuildDate><atom:link href="https://glyphack.com/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>How I Stay Focused and Manage Time</title>
       <link>https://glyphack.com/posts/how-i-stay-focused-and-manage-time/</link>
