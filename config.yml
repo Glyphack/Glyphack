@@ -1,22 +1,53 @@
 baseURL: "https://glyphack.com"
 languageCode: en-us
-title: Glyphack's Blog
+Title: "Glyphack's Blog"
+Description: "df"
 paginate: 5
 theme: PaperMod
+disqusShortname: shayeganhooshyari
+googleAnalytics: G-8LYVTHE5XD
 
 minify:
   disableXML: true
   minifyOutput: true
 
 params:
-  env: production # to enable google analytics, opengraph, twitter-cards and schema.
-  title: Glyphack's Blog
-  description: "A blog by Shayegan Hooshyari About software and the world"
+  env: production
+  title: Glyphack
+  description: "Software and people"
   keywords: [Blog, SoftwareEngineering, Programming, Shayegan, Hooshyari]
   author: Shayegan Hooshyari
   DateFormat: "January 2, 2006"
   defaultTheme: auto # dark, light
   disableThemeToggle: false
+  enableEmoji: true
+  comments: true
+
+  
+  # post
+  ShowReadingTime: true
+  ShowShareButtons: true
+
+
+  # introduction
+  homeInfoParams:
+      Title: ""
+      Content: "I write about people and software"
+
+  # social-buttons
+  socialIcons:
+    - name: linkedin
+      url: "https://www.linkedin.com/in/shayegan-hooshyari"
+    - name: github
+      url: "https://github.com/Glyphack"
+    - name: email
+      url: "mailto:sh.hooshyari@gmail.com"
 
 permalinks:
   posts: /:year/:month/:title/
+
+outputs:
+    home:
+        - HTML
+        - RSS
+        - JSON # is necessary
