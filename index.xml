@@ -6,7 +6,17 @@
     <description>Recent content on Glyphack&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 03 Jan 2022 19:10:52 +0330</lastBuildDate><atom:link href="https://glyphack.com/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 23 Jan 2022 17:30:40 +0330</lastBuildDate><atom:link href="https://glyphack.com/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>How to Write and Organize Software Documentation</title>
+      <link>https://glyphack.com/2022/01/how-to-write-and-organize-software-documentation/</link>
+      <pubDate>Sun, 23 Jan 2022 17:30:40 +0330</pubDate>
+      
+      <guid>https://glyphack.com/2022/01/how-to-write-and-organize-software-documentation/</guid>
+      <description>Software documents play an important role in software development, these days everyone tries to pay attention to writing documentation but just like writing code, writing the text is not enough but it has to be readable and understandable for other people, after all the purpose of documenting is to communicate.
+Let&amp;rsquo;s review the documentation role in these two situations, onboarding a new person with the system and improving collaboration between a team.</description>
+    </item>
+    
     <item>
       <title>How I Stay Focused and Manage Time</title>
       <link>https://glyphack.com/2022/01/how-i-stay-focused-and-manage-time/</link>
