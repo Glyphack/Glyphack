@@ -1,11 +1,11 @@
 ---
-title: "How to Write and Organize Software Documentation"
+title: "How Write and Organize Software Documentation"
 date: 2022-01-23T17:30:40+03:30
 draft: false
 tags: ['software-documentation', 'documentation-writing', 'writing-documentation', 'document software']
 
 ---
-Software documents play an important role in software development, these days everyone tries to pay attention to writing documentation but just like writing code, writing the text is not enough but it has to be readable and understandable for other people, after all the purpose of documenting is to communicate.
+Software documents play an important role in software development, everyone pays attention to writing documentation but just like writing code, writing the text is not enough but it has to be readable and understandable for other people, after all the purpose of documenting is to communicate. Recently while reviewing documentation of our team we noticed that there's something although we wrote documents for most of the core components of the system, it still looks like an undocumented system. And I was thinking what could be the problem here.
 
 Let's review the documentation role in these two situations, onboarding a new person with the system and improving collaboration between a team. This comes down to these two questions:
 1. Can I hand over my technical docs to someone and expect them to have all information they need to make their first commit?
