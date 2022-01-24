@@ -13,7 +13,7 @@
       <pubDate>Sun, 23 Jan 2022 17:30:40 +0330</pubDate>
       
       <guid>https://glyphack.com/2022/01/how-write-and-organize-software-documentation/</guid>
-      <description>Software documents play an important role in software development, everyone pays attention to writing documentation but just like writing code, writing the text is not enough but it has to be readable and understandable for other people, after all the purpose of documenting is to communicate. Recently while reviewing documentation of our team we noticed that there&amp;rsquo;s something although we wrote documents for most of the core components of the system, it still looks like an undocumented system.</description>
+      <description>Software documents play an important role in software development, everyone pays attention to writing documentation but just like writing code, writing the text is not enough but it has to be readable and understandable for other people, after all the purpose of documenting is to communicate. Recently I was reading documentation of a system and noticed that there&amp;rsquo;s something strange about it. although all the components are documented, but still it&amp;rsquo;s not easy to find information on something.</description>
     </item>
     
   </channel>
