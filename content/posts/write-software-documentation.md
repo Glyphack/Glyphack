@@ -25,10 +25,11 @@ If someone joins your team, they need information on how a system works. They al
 Having sub-pages inside sub-pages makes the text to be scattered in different documents. Suppose someone reads a note on compiling a project. They also have to find the testing guide and deployment guide next to that text. It can be another section within that doc or a document next to it. Just make sure you don't need to browse again to find those.
 This pattern is similar to coupling the code that is related to each other like putting it inside a single module.
 #### Multiple channels
-Some materials might be found on the slack channel, others on your documentation tool.
+Some materials might be found on the slack channel, others on your documentation tool. Keep all of them in one place as much as possible.
 
 ### Inaccurate Documents
-If the documents are not updated along with the code, they become inaccurate as you change the software.
+If the documents are not updated along with the code, they become inaccurate as you change the software. One possible solution is to link the code and document together(by using Readme file) so more people will see the document while writing code.
+Here you can see that why is it valuable to have a single document for a topic, for example here if you have 4 documents that has to change after changing system codes then it's much harder to update the documents that a single document.
 
 ### Obsolete Documents
 If a design is changed and older design decisions don't apply anymore, archive them.
@@ -36,7 +37,7 @@ If a design is changed and older design decisions don't apply anymore, archive t
 ### Afterthought Documents
 This is a problem because if you write your docs after delivering a project, you will end up:
 1. Forgetting to include important notes on the topic because you are in the [curse of knowledge](https://en.wikipedia.org/wiki/Curse_of_knowledge).
-2. Explain the project to someone personally if you need to hand it over in the middle.
+2. Have to explain the project to someone personally if you need to hand it over in the middle.
 
 ## How to Make Technical Documentations Better
 It's essential to organize documents so that it's visible to everyone.
@@ -44,9 +45,10 @@ It's essential to organize documents so that it's visible to everyone.
 **Be Careful with Nesting**
 When newcomers open the documentation, they should locate all the required information they need to work on the project. This means in your top-level page you should have all the topics you want to explain visible there as links or sub-pages.
 As an example of a good technical documentation checkout [CockroachDB documents](https://wiki.crdb.io/wiki/spaces/CRDB/overview), There are all the things from introduction to deploying the project listed on the first page with only 1 level nesting.
+My personal suggestion about this is choose a topic and write all the relevant information to that topic in the page. if a sub topic grows over time you can create a sub-page for it later.
 
 **Make it like a story**
-It should make sense to read and continue to the next topics. Make sure the topics are in the right order. Keep similar topics in different contexts separate, e.g. keep end-user documents separate from system specification documents but link them because the developer needs to know about the user when writing docs.
+It should be easy to follow your documents from beginning to the end. Make sure the topics are in the right order. Keep similar topics in different contexts separate, e.g. keep end-user documents separate from system specification documents but link them because the developer needs to know about the user when writing docs.
 This means all the journey from finding the repo to clone to deploying a feature can be found inside technical docs.
 
 **Make Documentation Writing an Ongoing process**
