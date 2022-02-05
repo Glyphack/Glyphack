@@ -2,25 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://glyphack.com/tags/bugs/</loc>
+    <lastmod>2022-02-05T09:49:50+03:30</lastmod>
+  </url><url>
+    <loc>https://glyphack.com/2022/02/fixing-one-bug-leads-to-another/</loc>
+    <lastmod>2022-02-05T09:49:50+03:30</lastmod>
+  </url><url>
+    <loc>https://glyphack.com/</loc>
+    <lastmod>2022-02-05T09:49:50+03:30</lastmod>
+  </url><url>
+    <loc>https://glyphack.com/posts/</loc>
+    <lastmod>2022-02-05T09:49:50+03:30</lastmod>
+  </url><url>
+    <loc>https://glyphack.com/tags/</loc>
+    <lastmod>2022-02-05T09:49:50+03:30</lastmod>
+  </url><url>
+    <loc>https://glyphack.com/tags/yak-shaving/</loc>
+    <lastmod>2022-02-05T09:49:50+03:30</lastmod>
+  </url><url>
     <loc>https://glyphack.com/tags/document-software/</loc>
     <lastmod>2022-01-23T17:30:40+03:30</lastmod>
   </url><url>
     <loc>https://glyphack.com/tags/documentation-writing/</loc>
     <lastmod>2022-01-23T17:30:40+03:30</lastmod>
   </url><url>
-    <loc>https://glyphack.com/</loc>
-    <lastmod>2022-01-23T17:30:40+03:30</lastmod>
-  </url><url>
     <loc>https://glyphack.com/2022/01/how-write-and-organize-software-documentation/</loc>
     <lastmod>2022-01-23T17:30:40+03:30</lastmod>
   </url><url>
-    <loc>https://glyphack.com/posts/</loc>
-    <lastmod>2022-01-23T17:30:40+03:30</lastmod>
-  </url><url>
     <loc>https://glyphack.com/tags/software-documentation/</loc>
-    <lastmod>2022-01-23T17:30:40+03:30</lastmod>
-  </url><url>
-    <loc>https://glyphack.com/tags/</loc>
     <lastmod>2022-01-23T17:30:40+03:30</lastmod>
   </url><url>
     <loc>https://glyphack.com/tags/writing-documentation/</loc>
