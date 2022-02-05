@@ -1,7 +1,7 @@
 baseURL: "https://glyphack.com"
 languageCode: en-us
 Title: "Glyphack's Blog"
-Description: "df"
+Description: "Software and People"
 paginate: 5
 theme: PaperMod
 disqusShortname: glyphack
@@ -14,7 +14,7 @@ minify:
 params:
   env: production
   title: Glyphack
-  description: "Software and people"
+  description: "Software and People"
   keywords: [Blog, SoftwareEngineering, Programming, Shayegan, Hooshyari]
   author: Shayegan Hooshyari
   DateFormat: "January 2, 2006"
@@ -23,16 +23,14 @@ params:
   enableEmoji: true
   comments: true
 
-  
   # post
   ShowReadingTime: true
   ShowShareButtons: true
 
-
   # introduction
   homeInfoParams:
-      Title: ""
-      Content: "I write about people and software"
+    Title: ""
+    Content: "I write about people and software"
 
   # social-buttons
   socialIcons:
@@ -47,7 +45,7 @@ permalinks:
   posts: /:year/:month/:title/
 
 outputs:
-    home:
-        - HTML
-        - RSS
-        - JSON # is necessary
+  home:
+    - HTML
+    - RSS
+    - JSON # is necessary
