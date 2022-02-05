@@ -1,7 +1,7 @@
 ---
 title: "Fixing One Bug Leads to Another"
 date: 2022-02-05T09:49:50+03:30
-draft: true
+draft: false
 tags: ['bugs', 'yak-shaving']
 ---
 
