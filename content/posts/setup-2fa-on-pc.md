@@ -1,7 +1,7 @@
 ---
 title: "How to Setup 2 Factor Authentication Code Generator on PC"
 date: 2022-03-17T23:19:14+03:30
-draft: true
+draft: false
 tags: [tools] 
 ---
 
