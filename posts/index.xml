@@ -6,7 +6,17 @@
     <description>Recent content in Posts on Glyphack&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 05 Feb 2022 09:49:50 +0330</lastBuildDate><atom:link href="https://glyphack.com/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 17 Mar 2022 23:19:14 +0330</lastBuildDate><atom:link href="https://glyphack.com/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>How to Setup 2 Factor Authentication Code Generator on PC</title>
+      <link>https://glyphack.com/2022/03/how-to-setup-2-factor-authentication-code-generator-on-pc/</link>
+      <pubDate>Thu, 17 Mar 2022 23:19:14 +0330</pubDate>
+      
+      <guid>https://glyphack.com/2022/03/how-to-setup-2-factor-authentication-code-generator-on-pc/</guid>
+      <description>I use 2 factor authentication with almost all of my accounts, the only downside of this is that when I need to access something frequently or automate some task I have to manually enter this code from my phone.
+So I searched a bit and found these tools to make this process easier, I imported 2fa keys to my laptop and can generate keys with a command so I can copy the code and also the command can be used in automated tasks.</description>
+    </item>
+    
     <item>
       <title>Fixing One Bug Leads to Another</title>
       <link>https://glyphack.com/2022/02/fixing-one-bug-leads-to-another/</link>

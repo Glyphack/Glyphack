@@ -2,19 +2,25 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://glyphack.com/</loc>
+    <lastmod>2022-03-17T23:19:14+03:30</lastmod>
+  </url><url>
+    <loc>https://glyphack.com/2022/03/how-to-setup-2-factor-authentication-code-generator-on-pc/</loc>
+    <lastmod>2022-03-17T23:19:14+03:30</lastmod>
+  </url><url>
+    <loc>https://glyphack.com/posts/</loc>
+    <lastmod>2022-03-17T23:19:14+03:30</lastmod>
+  </url><url>
+    <loc>https://glyphack.com/tags/</loc>
+    <lastmod>2022-03-17T23:19:14+03:30</lastmod>
+  </url><url>
+    <loc>https://glyphack.com/tags/tools/</loc>
+    <lastmod>2022-03-17T23:19:14+03:30</lastmod>
+  </url><url>
     <loc>https://glyphack.com/tags/bugs/</loc>
     <lastmod>2022-02-05T09:49:50+03:30</lastmod>
   </url><url>
     <loc>https://glyphack.com/2022/02/fixing-one-bug-leads-to-another/</loc>
-    <lastmod>2022-02-05T09:49:50+03:30</lastmod>
-  </url><url>
-    <loc>https://glyphack.com/</loc>
-    <lastmod>2022-02-05T09:49:50+03:30</lastmod>
-  </url><url>
-    <loc>https://glyphack.com/posts/</loc>
-    <lastmod>2022-02-05T09:49:50+03:30</lastmod>
-  </url><url>
-    <loc>https://glyphack.com/tags/</loc>
     <lastmod>2022-02-05T09:49:50+03:30</lastmod>
   </url><url>
     <loc>https://glyphack.com/tags/yak-shaving/</loc>
