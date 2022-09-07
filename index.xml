@@ -6,7 +6,16 @@
     <description>Recent content on Glyphack&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 15 Aug 2022 08:53:57 +0430</lastBuildDate><atom:link href="https://glyphack.com/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 07 Sep 2022 23:22:58 +0430</lastBuildDate><atom:link href="https://glyphack.com/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Planning My Day</title>
+      <link>https://glyphack.com/2022/09/planning-my-day/</link>
+      <pubDate>Wed, 07 Sep 2022 23:22:58 +0430</pubDate>
+      
+      <guid>https://glyphack.com/2022/09/planning-my-day/</guid>
+      <description>A while back I started planning my day before starting any task. I did this because I wanted to have a morning routine for myself, but most of the time I found myself starting to pickup something to read or already replying to emails or slack. So by setting this rule for myself to writing down anything I want to do for the day first it helped to overcome this habit.</description>
+    </item>
+    
     <item>
       <title>Stateful Stream Processing</title>
       <link>https://glyphack.com/2022/08/stateful-stream-processing/</link>
