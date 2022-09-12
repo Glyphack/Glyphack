@@ -2,12 +2,12 @@
 title: "Planning My Day"
 date: 2022-09-07T23:22:58+04:30
 draft: false
-tags: []
+tags: [koal, productivity]
 ---
 
-A while back I started planning my day before starting any task. I did this because I wanted to have a morning routine for myself,
+A while back I started planning my day before starting my day. I did this because I wanted to have a morning routine for myself,
 but most of the time I found myself starting to pickup something to read or already replying to emails or slack. So by setting this
-rule for myself to writing down anything I want to do for the day first it helped to overcome this habit.
+rule for myself to write down everything I want to do for the day first, helped to overcome this habit.
 
 Since then I found some improvements that can be done along with writing down the plan for the day. I'll list my observation here, and my
 goal is to implement these in the [koal](https://github.com/Glyphack/koal) app, as a default way of planning the day.
@@ -19,22 +19,27 @@ So in this situation my mind is full of different things to do, I cannot concent
 Sometimes I saw that It's been months that I'm working on something without making much progress and that was because I did not spend
 time continuously to finish it.
 
-I've searched for advice on how to plan something and do it well.
-One thing I found was this note from the [atomic habits book](https://jamesclear.com/atomic-habits)
+One thing that I think is related to this is this quote from [atomic habits book](https://jamesclear.com/atomic-habits)
 
 > Success is the product of daily habits—not once-in-a-lifetime transformations.
-> The book tries to say that you don't do big improvements over a night, or a week, you make them a habit for yourself.
-> I borrowed this definition of success and tried to use it in my planning.
+
+It tries to say that you don't reach your goals in a single step, you create daily habits based on them.
+I borrowed this definition of success and tried to use it in my planning.
 
 This is the first thing I realized I have to do:
 **If I want to do something I have to do it everyday, no matter how small is my progress is**
 
-This helps a lot on different aspects of reaching my goal. When I did my work continuously I was always aware of where I left off,
+This helps a lot on different aspects of reaching my goal.
+When I do my work continuously I'm always aware of where I left off,
 I could more easily get in the zone, and needed less time to get focused.
 This method can be very powerful even if you [only spend 10 minutes a day on something](https://medium.com/@alexallain/ten-minutes-a-day-e2fa1084f924).
 
-A challenge that comes with this approach is that I no longer could have so many ongoing work at once, I decided to
-have re plan my goals so they are:
+> How, exactly, did I manage to write a book in this short a time? I had one simple rule: I had to work on the book for just ten minutes, every day, no excuses. Ever.
+>
+> The original reason I tracked my time, in fact, was that I wanted to motivate myself by having a streak of days, and I figured that instead of just tallying check marks, I’d write down exactly how long I spent. It worked — I never missed a day.
+
+A challenge that comes with this approach is that I no longer can have so many ongoing work at once,
+I decided to re plan my goals so they are:
 
 - more specific: instead of saying I want to learn a tool I said I want to use the tool do make something.
 - split into approachable goals: an example was that I wanted to get 1800 chess ELO, but this journey is not a single step, in each ELO range you need to focus on something and get better at it. So it split this into two parts of getting to 1400 and the getting to 1800
@@ -44,13 +49,14 @@ Each day I started by browsing my current work, thinking what is the next small 
 
 ## Repetitive tasks
 
-There are things I want to do everyday, like my morning routine or preparing meals.
-Having a prepared list of these kind of work saves a lot of time because I don't have to remember,
-and write them down everyday.
-Even some of my goals consists of repetitive tasks, like for chess I wanted to play a game everyday.
+There are things I want to do everyday, like my morning routine.
+Having a prepared list of these kind of work saves a lot of time,
+because I don't have to remember, and write them down everyday.
+Even some of my goals consists of repetitive tasks,
+like for chess I wanted to play a game everyday.
 
 Writing down this list also helped me with creating a habit of doing these things, For example when I
-added meditation to this list, only by seeing this everyday I did not forgot to do it.
+added meditation to this list, only by seeing this everyday I did not forgot about it.
 
 For me this list is very simple, I just wrote down things I have to do. There are some things that I don't
 do everyday but I still listed them only to not forget to do them.
@@ -60,7 +66,8 @@ do everyday but I still listed them only to not forget to do them.
 I continued with my approach for some time and realized there are somethings I need to do to improve my focus.
 
 Sometimes I tried to do multi tasking because I had number of small things to do, So when I was waiting for something to finish
-I started writing down an email, and if it was finished I got back to it and then I realized I lost my focus.
+I started writing down an email, and if it was finished I got back to it and then I lost my focus.
+
 Sometimes I was not even waiting for something but I just jumped to a different thing, because I was not focused.
 Some tasks require you to be focused for the whole time to finish it, like writing a blog post or writing code,
 In these cases I could not do something that steals my focus like browsing social media while I'm waiting.
@@ -99,8 +106,8 @@ This task does not have to be a serious deadline or anything, it's just a thing 
 For example if I'm working on a new feature the important part is to sending it for review.
 When I know today is the day for it to be done I use my most productive time to finish it.
 
-When I started identify the important work to be done for a day and doing it,
-I made a lot more progress in my goals.
+When I started to mark the important task to be done for a day,
+I made a lot more progress in my goals. Because I was finishing these important milestones when it was needed for progress.
 It's like there are some parts of each goal which require a lot of effort to get it done.
 If I don't put some serious time on my goals from time to time I cannot make significant progress.
 
@@ -110,3 +117,20 @@ While to-do list should be short I found it useful to add what I need for the ta
 When I add an entry of reading the article about something I attach the link there.
 If I want to check the to-do search the google for the article and read it I might encounter
 things that can steal my focus along the way, like finding another interesting article in the search result.
+
+## Leverage Boredom
+
+People [do anything](https://www.science.org/content/article/people-would-rather-be-electrically-shocked-left-alone-their-thoughts) to escape boredom.
+
+When I plan my day I try to plan as much as I can so I don't do anything outside the planning, in this way I either have to do the stuff
+I planned for or do nothing. This helps to avoid procrastination.
+
+This is very hard to get write, I sometimes forget some chore tasks or something unplanned happens, but the good part is most of the day
+I'm facing my plan and can't do other things before complete the tasks.
+
+## Conclusion
+
+Using this approach and planning the tasks in the beginning of the day, helped me a lot on being more organized, and following
+my goals.
+
+I'll try to update the list if I find more useful tricks but for now this is it. Hope you enjoyed it.
