@@ -128,6 +128,21 @@ I planned for or do nothing. This helps to avoid procrastination.
 This is very hard to get write, I sometimes forget some chore tasks or something unplanned happens, but the good part is most of the day
 I'm facing my plan and can't do other things before complete the tasks.
 
+## Rewarding
+
+Most of my motivation to do something comes from either the joy of doing the thing or the joy of finishing it.
+For some goals(specially the ones that takes more time) it's hard to have these two.
+For example if your goal is to study for something for 3-4 months it's gonna be very hard to keep the motivation.
+I wish I would know sooner that I have to reward myself for doing my tasks, and this really works well with these kind of tasks.
+
+I try to reward myself after doing a couple of tasks, this can be a video game or watching a YouTube video,
+but there are also other resources to [reward yourself without money](https://www.frugalconfessions.com/save-me-money/reward-yourself/).
+One other effective method is to reward yourself with money after doing something. For example I can put aside 10$ each
+time I do X and use that money to buy something I like.
+When I started streaming my rule was that I won't buy fancy mic/webcam stuff until I create videos for certain amount of time.
+
+One way to apply this can be by having a list of rewards beside items planned for the day.
+
 ## Conclusion
 
 Using this approach and planning the tasks in the beginning of the day, helped me a lot on being more organized, and following
