@@ -146,6 +146,13 @@ One way to apply this can be by having a list of rewards beside items planned fo
 ## Conclusion
 
 Using this approach and planning the tasks in the beginning of the day, helped me a lot on being more organized, and following
-my goals.
+my goals. To summarize the full list into steps for planning the day:
+
+1. Going through list of current ongoing projects and see list what to do next for each
+2. Going over repetitive tasks and add them to my current list
+3. Setting my uninterrupted focus time for the day
+4. Getting started on the tasks, setting pomodoro timer
+5. After some tasks checking my reward lists and pick up one to enjoy
+6. If anything is left from the work which I know have to pick up tomorrow I write it down in a note.
 
 I'll try to update the list if I find more useful tricks but for now this is it. Hope you enjoyed it.
