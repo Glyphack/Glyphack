@@ -29,8 +29,8 @@ params:
 
   # introduction
   homeInfoParams:
-    Title: ""
-    Content: "I write about people and software"
+    Title: "Glyphack's Blog"
+    Content: "My notes on SoftwareEngineering"
 
   # social-buttons
   socialIcons:
