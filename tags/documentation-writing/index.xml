@@ -14,6 +14,64 @@
       
       <guid>https://glyphack.com/2022/01/how-write-and-organize-software-documentation/</guid>
       <description>Software documents play an important role in software development, everyone pays attention to writing documentation but just like writing code, writing the text is not enough but it has to be readable and understandable for other people, after all the purpose of documenting is to communicate. Recently I was reading documentation of a system and noticed that there&amp;rsquo;s something strange about it. although all the components are documented, but still it&amp;rsquo;s not easy to find information on something.</description>
+      <content:encoded><![CDATA[<p>Software documents play an important role in software development, everyone pays attention to writing documentation but just like writing code, writing the text is not enough but it has to be readable and understandable for other people, after all the purpose of documenting is to communicate. Recently I was reading documentation of a system and noticed that there&rsquo;s something  strange about it. although all the components are documented, but still it&rsquo;s not easy to find information on something.</p>
+<p>Let&rsquo;s review the documentation role in these two situations, onboarding a new person with the system and improving collaboration between a team. This comes down to these two questions:</p>
+<ol>
+<li>Can I hand over my technical docs to someone and expect them to have all information they need to make their first commit?</li>
+<li>If situation X happens, do my teammates have to call someone to know what is happening?
+So every day, when one of these happens, think about the answers and see how well your documentation is. For example, when you get similar questions from teammates about a system, think of it as a failure in the documentation system, not all questions can be answered inside docs, but the frequent ones must be answered.</li>
+</ol>
+<h2 id="avoid-common-problems-of-technical-software-documentation">Avoid Common Problems of Technical Software Documentation</h2>
+<p>So what are the problems that can be in your technical notes?</p>
+<h3 id="non-existent-documents">Non existent documents</h3>
+<h4 id="no-entry-point-link-around-a-topic">No Entry Point Link Around a Topic</h4>
+<p>There is no primary documentation around a topic; you have to pass multiple links when someone is on boarded or read a single document after cloning the repo.</p>
+<h4 id="cover-all-information-needed-for-a-project">Cover all information needed for a project</h4>
+<p>If someone joins your team, they need information on how a system works. They also have to know how to set up their local and sandbox environment and use it.</p>
+<h3 id="hidden-documents">Hidden Documents</h3>
+<h4 id="nesting-overuse">Nesting Overuse</h4>
+<p>Having sub-pages inside sub-pages makes the text to be scattered in different documents. Suppose someone reads a note on compiling a project. They also have to find the testing guide and deployment guide next to that text. It can be another section within that doc or a document next to it. Just make sure you don&rsquo;t need to browse again to find those.
+This pattern is similar to coupling the code that is related to each other like putting it inside a single module.</p>
+<h4 id="multiple-channels">Multiple channels</h4>
+<p>Some materials might be found on the slack channel, others on your documentation tool. Keep all of them in one place as much as possible.</p>
+<h3 id="inaccurate-documents">Inaccurate Documents</h3>
+<p>If the documents are not updated along with the code, they become inaccurate as you change the software. One possible solution is to link the code and document together(by using Readme file) so more people will see the document while writing code.
+Here you can see that why is it valuable to have a single document for a topic, for example here if you have 4 documents that has to change after changing system codes then it&rsquo;s much harder to update the documents that a single document.</p>
+<h3 id="obsolete-documents">Obsolete Documents</h3>
+<p>If a design is changed and older design decisions don&rsquo;t apply anymore, archive them.</p>
+<h3 id="afterthought-documents">Afterthought Documents</h3>
+<p>This is a problem because if you write your docs after delivering a project, you will end up:</p>
+<ol>
+<li>Forgetting to include important notes on the topic because you are in the <a href="https://en.wikipedia.org/wiki/Curse_of_knowledge">curse of knowledge</a>.</li>
+<li>Have to explain the project to someone personally if you need to hand it over in the middle.</li>
+</ol>
+<h2 id="how-to-make-technical-documentations-better">How to Make Technical Documentations Better</h2>
+<p>It&rsquo;s essential to organize documents so that it&rsquo;s visible to everyone.</p>
+<p><strong>Be Careful with Nesting</strong>
+When newcomers open the documentation, they should locate all the required information they need to work on the project. This means in your top-level page you should have all the topics you want to explain visible there as links or sub-pages.
+As an example of a good technical documentation checkout <a href="https://wiki.crdb.io/wiki/spaces/CRDB/overview">CockroachDB documents</a>, There are all the things from introduction to deploying the project listed on the first page with only 1 level nesting.
+My personal suggestion about this is choose a topic and write all the relevant information to that topic in the page. if a sub topic grows over time you can create a sub-page for it later.</p>
+<p><strong>Make it like a story</strong>
+It should be easy to follow your documents from beginning to the end. Make sure the topics are in the right order. Keep similar topics in different contexts separate, e.g. keep end-user documents separate from system specification documents but link them because the developer needs to know about the user when writing docs.
+This means all the journey from finding the repo to clone to deploying a feature can be found inside technical docs.</p>
+<p><strong>Make Documentation Writing an Ongoing process</strong>
+It&rsquo;s hard to keep documents that no one reads updated, make sure your documents have users by sending people document links instead of answering questions in Slack.</p>
+<p><strong>Writing Software Documentation is a Collaborative Process</strong>
+Write documents with the mindset of other people are going to use them. so you should considering:</p>
+<ul>
+<li>Ask your team to review the docs you write</li>
+<li>Put new pages you create on draft</li>
+</ul>
+<h2 id="other-resources">Other resources</h2>
+<ul>
+<li>
+<p><a href="https://microsoft.github.io/code-with-engineering-playbook/documentation/guidance/project-and-repositories/">Documenting code repositories</a></p>
+</li>
+<li>
+<p><a href="https://blog.prototypr.io/software-documentation-types-and-best-practices-1726ca595c7f">Type of documentations</a></p>
+</li>
+</ul>
+]]></content:encoded>
     </item>
     
   </channel>
