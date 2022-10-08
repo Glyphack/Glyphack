@@ -22,6 +22,7 @@ params:
   disableThemeToggle: false
   enableEmoji: true
   comments: true
+  ShowFullTextinRSS: true
 
   # post
   ShowReadingTime: true
@@ -30,7 +31,7 @@ params:
   # introduction
   homeInfoParams:
     Title: "Glyphack's Blog"
-    Content: "My notes on SoftwareEngineering"
+    Content: "Hi, I'm Shaygan. I'm a software engineer(and sometimes a data engineer). I'm passionate about building things, helping and sharing things I've learned with people. If you want to know more about me visit the links below, If you want to know me even more send me a game invite on Lichess."
 
   # social-buttons
   socialIcons:
@@ -40,6 +41,10 @@ params:
       url: "https://github.com/Glyphack"
     - name: email
       url: "mailto:sh.hooshyari@gmail.com"
+    - name: rss
+      url: https://glyphack.com/index.xml
+    - name: twitch
+      url: https://www.twitch.tv/glyphack
 
 permalinks:
   posts: /:year/:month/:title/
