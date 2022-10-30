@@ -1,6 +1,6 @@
 baseURL = "glyphack.com"
 title = "Glyphack"
-theme = "manis"
+theme = "manis-hugo-theme"
 
 # Copyright notice. Note: You can use HTML tag here
 # copyright = "&copy; 2019 Yurizal Susanto"
