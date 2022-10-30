@@ -1,0 +1,80 @@
+baseURL = "glyphack.com"
+title = "Glyphack"
+theme = "manis"
+
+# Copyright notice. Note: You can use HTML tag here
+# copyright = "&copy; 2019 Yurizal Susanto"
+pluralizeListTitles = false
+
+# Minimum number of posts before paginate navigation show up
+paginate = 20
+
+# Your disqus shortname
+disqusShortname = "glyphack"
+googleAnalytics = "G-8LYVTHE5XD"
+defaultContentLanguage = "en"
+
+# Code Highlighting (Chroma)
+pygmentsCodeFences = true
+pygmentsUseClasses = true
+
+[menu]
+[[menu.main]]
+name = "Blog"
+url = "/blog/"
+
+[taxonomies]
+tag = "tags"
+
+[params]
+# If false, use minified CSS (ui.min.css)
+debugCSS = false
+# Custom CSS
+customCSS = []
+
+# Site meta description
+description = "Hi, I'm Shaygan. I'm a software engineer(and sometimes a data engineer). I'm passionate about building things, helping and sharing things I've learned with people. If you want to know more about me visit the links below, If you want to know me even more send me a game invite on Lichess."
+# Site's Tagline (Subtitle or Keyword)
+tagline = "Hi, I'm Shaygan. I'm a software engineer(and sometimes a data engineer). I'm passionate about building things, helping and sharing things I've learned with people. If you want to know more about me visit the links below, If you want to know me even more send me a game invite on Lichess."
+# URL to license file, can be outside of your domain
+# licenseURL = "/about/license"
+
+# Configure which sections for Latest Posts
+mainSections = ["blog", "post"]
+# Configure which sections for Latest Works
+workSections = ["work"]
+
+# List of sections that support disqus comments
+disqusSections = ["blog"]
+# List of sections that support utterances comments
+# utterancesSections = ["blog"]
+
+# Utterances Configuration
+# utterancesRepo = ""
+# utterancesTheme = "github-light"
+# utterancesLabel = ""
+
+# 404 Configuration
+head404 = "Sorry, I can't find what you want."
+sub404 = "Back to <a href='/'>Home</a>."
+
+# Color of your website's accent
+colorTheme = "#ff6565"
+# Maximum number of item in Latest Posts or Works
+latestCount = 3
+# Path to site's favicon image
+faviconImg = ""
+# Date format in item list
+dateFmt = "Jan 02, 2006"
+
+# Code Highlighting (HighlightJS)
+highlightJs = false
+highlightJsLanguages = ["go"]
+highlightJsStyle = "ocean"
+
+# Social Links
+email = "sh.hooshyari@gmail.com"
+github = "https://github.com/glyphack/"
+twitter = "https://twitter.com/GlyphackDev"
+twitch = "https://www.twitch.tv/glyphack"
+youtube = "https://www.youtube.com/@glyphack"
