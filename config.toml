@@ -1,4 +1,4 @@
-baseURL = "glyphack.com"
+baseURL = "https://glyphack.com/"
 title = "Glyphack"
 theme = "manis-hugo-theme"
 
