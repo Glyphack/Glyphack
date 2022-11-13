@@ -1,0 +1,83 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=generator content="Hugo 0.105.0"><title>Everything you need to know about splitting CDK stacks - Glyphack</title><meta name=description content="AWS CDK is a tool that lets you define your cloud resources in a languages such as python. And like any other project as the codebase grows, it needs to be split into components.
+CDK projects can be split into multiple stacks. Stack is a single deployable unit in CDK. when you deploy it all the resources inside it will get deployed.
+Knowing a few points in the beginning can help to create a good project structure, and avoiding common pitfalls like dependency issues."><link rel=stylesheet href=/css/ui.css><script defer src=/js/dark-mode.js></script>
+<link disabled id=dark-mode-theme rel=stylesheet href=/css/dark.css><link rel=stylesheet href="https://fonts.googleapis.com/css?family=Fira+Mono|Lato|Raleway"></head><body><header class="container no-print"><div class=u-header><nav class=bar><ul><li><a href=/><img class=icon-text src=/img/prev.svg></a></li><li><img class=icon-text id=dark-mode-toggle src=/img/moon-regular.svg alt="Toggle Dark Mode"></a></li><li><a href=/blog/>Blog</a></li></ul></nav></div></header><main class=container><article><header><hgroup id=brand><h1>Everything you need to know about splitting CDK stacks</h1><h5><time datetime="2022-11-13 09:49:50 +0330 +0330">Nov 13, 2022</time>
+<span class=no-print>-
+<a href=/tags/aws>aws</a>
+<a href=/tags/cdk>cdk</a>
+<span></h5></hgroup><hr class=sep></header><p>AWS CDK is a tool that lets you define your cloud resources
+in a languages such as python.
+And like any other project as the codebase grows, it needs to be split into components.</p><p>CDK projects can be split into multiple stacks.
+Stack is a single deployable unit in CDK.
+when you deploy it all the resources inside it will get deployed.</p><p>Knowing a few points in the beginning can help to create a good project structure,
+and avoiding common pitfalls like dependency issues.</p><p>The questions to ask when considering splitting a stack:</p><ul><li>Which components should be extracted?</li><li>Should this new code be a stack or a construct?</li><li>which components belong to this stack?</li><li>What cross-stack dependencies are created?</li></ul><p>I’m sharing the lessons I learned writing and refactoring multiple cdk projects.</p><h2 id=splitting-stacks>Splitting stacks</h2><p>When components can be deployed separately, it&rsquo;s good to split the stacks.
+Smaller stacks are deployed faster and it&rsquo;s easier to maintain them.</p><p>You can extract some parts of a stack into another stack and add it as a dependency.
+Keep in mind that when <code>StackA</code> depends on <code>StackB</code> then:</p><ul><li>To Deploy <code>StackA</code> the <code>StackB</code> must be deployed.</li><li>When stacks are deployed <code>StackB</code> cannot be updated without updating <code>StackA</code> first.</li></ul><p>This two way relation can cause problems which we&rsquo;ll talk about it later.</p><h3 id=how-to-decide-the-number-of-stacks>How to Decide the Number of Stacks?</h3><p>A simple rule for separation is based on:</p><ol><li>Application domain</li><li>Resources life cycle</li></ol><p>Multiple stacks for apps in different domains is a separation based on domain.
+Separating based on life cycle can be done for rarely deployed resources like databases.</p><p>You can find a good reference on these examples and stacks in
+<a href=https://github.com/kevinslin/open-cdk#stacks>open-cdk guide</a>.</p><h2 id=creating-constructs>Creating constructs</h2><p>CDK has another solution for having smaller stacks
+which is creating a re-suable component called construct.
+To decide whether a code should be a stack or a construct we can check:</p><ol><li>Can be used in other places: a S3 Bucket with specific options.</li><li>A second stack would be always deployed deleted with current stack(highly coupled).</li></ol><p>Creating constructs is also easier;
+because you are not introducing any dependencies between stacks.
+If you delete an stack all constructs inside it are removed.</p><h2 id=separated-stacks-and-dependencies>Separated Stacks and Dependencies</h2><p>Imagine we have an API with lambda and API gateway, and a route53 hosted zone.
+This infrastructure has two properties:</p><ul><li>Lambda can frequently be changed, but the API endpoint is same.</li><li>deploying a resource like a hosted zone takes a lot of time.
+So it&rsquo;s better to deploy it separately, once.</li><li>A hosted zone record must point to API endpoint.</li></ul><p>By splitting this stack into two:</p><ol><li>API stack</li><li>Hosted zone stack</li></ol><p><img src=/example-cdk-stack-deps.excalidraw.png alt=example-cdk-stack></p><h3 id=dependency-problem-and-solution>Dependency problem and Solution</h3><p>What dependencies did we create?
+If our API endpoint changes then the Hosted zone needs to be updated
+to point to the new endpoint.
+This dependencies between stack, can cause problems if not considered carefully.
+If you now try to update the API endpoint(which is part of API stack)
+when all the stacks are deployed you will get the following error:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>Export ApiStack:ExportsOutputFnGetAtt-******
+</span></span><span class=line><span class=cl>cannot be deletedas it is in use by HostedZoneStack
+</span></span></code></pre></div><p>The issue is that the Hosted Zone stack is using the referenced endpoint
+from ApiStack and without deleting the hosted zone you cannot delete the reference.</p><p>You have two solutions to either destroy them both or <a href=https://github.com/aws/aws-cdk/tree/main/packages/aws-cdk-lib#removing-automatic-cross-stack-references>do a 2 phase deployment</a>.
+Although the 2 phase deployment always works it&rsquo;s manual work.
+It&rsquo;s fine for a database migration but this should not be something to do every week.</p><p><em>Solution to prevent the issue</em>:
+<strong>Document</strong> not changing parts in your CDK app.
+Our assumption is that our API endpoint is not going to change frequently,
+otherwise we are just deploying stacks together all the time.</p><p>Another solution is to use parameter store to reference these dependencies.
+In this method you can change anything since CDK does not know about your dependencies.
+The downside of this method is that you have to manage dependencies now,
+actually you are now the compiler :D.</p><p>I would not recommend this method Because you are loosing the type checks,
+like <code>any</code> in a typed language.</p><p>It&rsquo;s a solution where you want to share resources between multiple CDK apps where
+you can&rsquo;t pass the objects.
+For example if you are referencing DB name in applications as env vars,
+it&rsquo;s better to save the DB name in parameter store and retrieve in runtime.
+Because that resource can be deployed multiple times but your app does not need
+to be redeployed.</p><p>Now Let me give you a <strong>Bad</strong> splitting example:</p><p>Imagine we have a EC2 with an application load balancer.
+The EC2 id must be set in load balancer to route the traffic.</p><p>If we try to separate these into load balancer and app stacks,
+when ever we want to redeploy the EC2 the other stack must be destroyed and redeployed.</p><h3 id=remove-security-group-dependencies>Remove Security Group dependencies</h3><p>A common dependency between stacks is the security group rules.
+For example we have a database with and we want our EC2 to access it.
+One solution could be:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=line><span class=cl><span class=c1>// DB Stack
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>dbInstance</span> <span class=o>=</span> <span class=p>...</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// App Stack
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>dbInstance</span><span class=p>.</span><span class=nx>connections</span><span class=p>.</span><span class=nx>allowFrom</span><span class=p>(</span><span class=nx>ec2Instance</span><span class=p>,</span> <span class=nx>ec2</span><span class=p>.</span><span class=nx>Port</span><span class=p>.</span><span class=nx>tcp</span><span class=p>(</span><span class=mi>5432</span><span class=p>));</span>
+</span></span></code></pre></div><p>But in this code DB stacks depends on the EC2 instance which can change.
+Is there a way to make our database stack completely independent?</p><p>Surprisingly you can use the dependency inversion principle:</p><blockquote><p><em>Low level policies should depend upon high level policies.</em></p></blockquote><p>How can we make the application dependent on database in this case?</p><ol><li>Create two security groups in the database stack. Attach one to DB.</li><li>allow connections from one security group to database</li><li>expose the security group to other stacks,
+and attach it to resources that need to access the DB.</li></ol><div class=highlight><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=c1>// DB stack
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>DbSg</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>ec2</span><span class=p>.</span><span class=nx>SecurityGroup</span><span class=p>(</span><span class=k>this</span><span class=p>,</span> <span class=s1>&#39;db-sg&#39;</span><span class=p>,</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=p>...</span>
+</span></span><span class=line><span class=cl> <span class=p>});</span>
+</span></span><span class=line><span class=cl><span class=nx>DbAccessSg</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>ec2</span><span class=p>.</span><span class=nx>SecurityGroup</span><span class=p>(</span><span class=k>this</span><span class=p>,</span> <span class=s1>&#39;db-access-sg&#39;</span><span class=p>,</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=p>...</span>
+</span></span><span class=line><span class=cl> <span class=p>});</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nx>DbSg</span><span class=p>.</span><span class=nx>addIngressRule</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>      <span class=nx>DbAccessSg</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nx>ec2</span><span class=p>.</span><span class=nx>Port</span><span class=p>.</span><span class=nx>tcp</span><span class=p>(</span><span class=mi>3306</span><span class=p>),</span> <span class=c1>// database port
+</span></span></span><span class=line><span class=cl><span class=c1></span>      <span class=s1>&#39;Allow from access security group&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// App stack
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl><span class=nx>Ec2</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>ec2</span><span class=p>.</span><span class=nx>Instance</span><span class=p>(...)</span>
+</span></span><span class=line><span class=cl><span class=nx>Ec2</span><span class=p>.</span><span class=nx>addSecurityGroup</span><span class=p>(</span><span class=nx>DbAccessSg</span><span class=p>)</span>
+</span></span></code></pre></div><p>With this method your database is not aware of what resources are connected to it.
+You made it a high level policy and other services are now aware of how to connect.</p><h3 id=remove-unnecessary-dependencies>Remove unnecessary dependencies</h3><p>Removing redundant dependencies reduces the overhead of managing them between stacks.
+The security group was an example of how to do this.
+Important lesson here is to understand how each line of
+CDK is connecting your resources together.</p></article><nav class="no-print post-nav"><a class=prev-post href=https://glyphack.com/blog/planning-my-day/><img class=icon-text src=/img/prev.svg>Planning My Day</a></nav><div id=disqus_thread class=no-print></div><script type=text/javascript>(function(){if(window.location.hostname=="localhost")return;var t,e=document.createElement("script");e.type="text/javascript",e.async=!0,t="glyphack",e.src="//"+t+".disqus.com/embed.js",(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(e)})()</script><noscript>Please enable JavaScript to view the <a href=http://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><hr class=sep></main><footer class="container no-print"><div class=u-footer><a href=mailto:sh.hooshyari@gmail.com><img class=icon-social src=/img/email.svg alt="Email Me!"></a>
+<a href=https://github.com/glyphack/><img class=icon-social src=/img/github.svg alt=Github></a>
+<a href=https://twitter.com/GlyphackDev><img class=icon-social src=/img/twitter.svg alt=Twitter></a>
+<a href=https://glyphack.com/index.xml target=_blank><img class=icon-social src=/img/feed.svg alt=Feed></a>
+<a href=https://www.twitch.tv/glyphack><img class=icon-social src=/img/twitch.svg alt=Twitch></a><p>Theme used: <a href=https://github.com/yursan9/manis-hugo-theme>Manis</a><br></p><a href=#brand><img class=icon-text src=/img/toup.svg alt="To Up">
+<span>Back to Up</span></a></div></footer></body></html>
