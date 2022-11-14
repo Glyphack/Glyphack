@@ -189,3 +189,12 @@ Removing redundant dependencies reduces the overhead of managing them between st
 The security group was an example of how to do this.
 Important lesson here is to understand how each line of
 CDK is connecting your resources together.
+
+## Conclusion
+
+Knowing how to split stacks is an art of managing dependencies.
+When I first started to do it before knowing these topics, I ran into
+issues I did not except and it helped me see the problem from a different aspect.
+It's not only about separating code but it's about which resources should be grouped.
+
+I hope knowing this will help you avoiding this common pitfall.
