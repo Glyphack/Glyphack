@@ -1,6 +1,705 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Glyphack</title><link>https://glyphack.com/</link><description>Recent content on Glyphack</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Sun, 13 Nov 2022 09:49:50 +0330</lastBuildDate><atom:link href="https://glyphack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Everything you need to know about splitting CDK stacks</title><link>https://glyphack.com/blog/everything-about-splitting-cdk-stacks/</link><pubDate>Sun, 13 Nov 2022 09:49:50 +0330</pubDate><guid>https://glyphack.com/blog/everything-about-splitting-cdk-stacks/</guid><description>AWS CDK is a tool that lets you define your cloud resources in a languages such as python. And like any other project as the codebase grows, it needs to be split into components.
-CDK projects can be split into multiple stacks. Stack is a single deployable unit in CDK. when you deploy it all the resources inside it will get deployed.
-Knowing a few points in the beginning can help to create a good project structure, and avoiding common pitfalls like dependency issues.</description></item><item><title>Planning My Day</title><link>https://glyphack.com/blog/planning-my-day/</link><pubDate>Wed, 07 Sep 2022 23:22:58 +0430</pubDate><guid>https://glyphack.com/blog/planning-my-day/</guid><description>A while back I started planning my day before starting my day. I did this because I wanted to have a morning routine for myself, but most of the time I found myself starting to pickup something to read or already replying to emails or slack. So by setting this rule for myself to write down everything I want to do for the day first, helped to overcome this habit.</description></item><item><title>Stateful Stream Processing</title><link>https://glyphack.com/blog/stateful-stream-processing/</link><pubDate>Mon, 15 Aug 2022 08:53:57 +0430</pubDate><guid>https://glyphack.com/blog/stateful-stream-processing/</guid><description>A pattern that I have recently seen in a project is data replication through real-time stream processing. This pattern happens when a company has all of it&amp;rsquo;s data stored on centralized databases and applications access this data, this means that two example services like &amp;ldquo;search&amp;rdquo; and &amp;ldquo;product catalog&amp;rdquo; are depending on the same data. In this situation some services cannot function by only request the data through API, they need a snapshot of the data.</description></item><item><title>How to Setup 2 Factor Authentication Code Generator on PC</title><link>https://glyphack.com/blog/setup-2fa-on-pc/</link><pubDate>Thu, 17 Mar 2022 23:19:14 +0330</pubDate><guid>https://glyphack.com/blog/setup-2fa-on-pc/</guid><description>I use 2 factor authentication with almost all of my accounts, the only downside of this is that when I need to access something frequently or automate some task I have to manually enter this code from my phone.
-So I searched a bit and found these tools to make this process easier, I imported 2fa keys to my laptop and can generate keys with a command so I can copy the code and also the command can be used in automated tasks.</description></item><item><title>Fixing One Bug Leads to Another</title><link>https://glyphack.com/blog/fixing-one-bug-leads-to-another/</link><pubDate>Sat, 05 Feb 2022 09:49:50 +0330</pubDate><guid>https://glyphack.com/blog/fixing-one-bug-leads-to-another/</guid><description>One thing that frequently frustrates me when I&amp;rsquo;m working is sloppy work. I&amp;rsquo;m using the word &amp;ldquo;work&amp;rdquo; here because it can refer to anything, but here I&amp;rsquo;ll talk about sloppy code.
-Recently, someone from my previous team asked me to help them fix an issue on a system while the maintainer was not available. At first, I discussed this with my team lead and didn&amp;rsquo;t get involved in the issue, but after a week, the problem was still there, and they asked me for my help again.</description></item><item><title>How Write and Organize Software Documentation</title><link>https://glyphack.com/blog/write-software-documentation/</link><pubDate>Sun, 23 Jan 2022 17:30:40 +0330</pubDate><guid>https://glyphack.com/blog/write-software-documentation/</guid><description>Software documents play an important role in software development, everyone pays attention to writing documentation but just like writing code, writing the text is not enough but it has to be readable and understandable for other people, after all the purpose of documenting is to communicate. Recently I was reading documentation of a system and noticed that there&amp;rsquo;s something strange about it. although all the components are documented, but still it&amp;rsquo;s not easy to find information on something.</description></item><item><title>How I Stay Focused and Manage Time</title><link>https://glyphack.com/blog/how-i-stay-focused-and-manage-time/</link><pubDate>Mon, 03 Jan 2022 19:10:52 +0330</pubDate><guid>https://glyphack.com/blog/how-i-stay-focused-and-manage-time/</guid><description>A few weeks ago, I experienced one of these busy weeks with lots of meetings, Slack messages, working on different tasks. Although I did many things, I didn&amp;rsquo;t feel like getting anything done. So I decided to see how can I improve this.
-First of all, the cost of getting interrupted while developing is high. You need time to get back on what you were doing, and if this happens a lot, you can&amp;rsquo;t manage to get many things done.</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Glyphack</title><link>https://glyphack.com/</link><description>Recent content on Glyphack</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Sun, 13 Nov 2022 09:49:50 +0330</lastBuildDate><atom:link href="https://glyphack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Everything you need to know about splitting CDK stacks</title><link>https://glyphack.com/blog/everything-about-splitting-cdk-stacks/</link><pubDate>Sun, 13 Nov 2022 09:49:50 +0330</pubDate><guid>https://glyphack.com/blog/everything-about-splitting-cdk-stacks/</guid><description>&lt;p>AWS CDK is a tool that lets you define your cloud resources
+in a languages such as python.
+And like any other project as the codebase grows, it needs to be split into components.&lt;/p>
+&lt;p>CDK projects can be split into multiple stacks.
+Stack is a single deployable unit in CDK.
+when you deploy it all the resources inside it will get deployed.&lt;/p>
+&lt;p>Knowing a few points in the beginning can help to create a good project structure,
+and avoiding common pitfalls like dependency issues.&lt;/p>
+&lt;p>The questions to ask when considering splitting a stack:&lt;/p>
+&lt;ul>
+&lt;li>Which components should be extracted?&lt;/li>
+&lt;li>Should this new code be a stack or a construct?&lt;/li>
+&lt;li>which components belong to this stack?&lt;/li>
+&lt;li>What cross-stack dependencies are created?&lt;/li>
+&lt;/ul>
+&lt;p>I’m sharing the lessons I learned writing and refactoring multiple cdk projects.&lt;/p>
+&lt;h2 id="splitting-stacks">Splitting stacks&lt;/h2>
+&lt;p>When components can be deployed separately, it&amp;rsquo;s good to split the stacks.
+Smaller stacks are deployed faster and it&amp;rsquo;s easier to maintain them.&lt;/p>
+&lt;p>You can extract some parts of a stack into another stack and add it as a dependency.
+Keep in mind that when &lt;code>StackA&lt;/code> depends on &lt;code>StackB&lt;/code> then:&lt;/p>
+&lt;ul>
+&lt;li>To Deploy &lt;code>StackA&lt;/code> the &lt;code>StackB&lt;/code> must be deployed.&lt;/li>
+&lt;li>When stacks are deployed &lt;code>StackB&lt;/code> cannot be updated without updating &lt;code>StackA&lt;/code> first.&lt;/li>
+&lt;/ul>
+&lt;p>This two way relation can cause problems which we&amp;rsquo;ll talk about it later.&lt;/p>
+&lt;h3 id="how-to-decide-the-number-of-stacks">How to Decide the Number of Stacks?&lt;/h3>
+&lt;p>A simple rule for separation is based on:&lt;/p>
+&lt;ol>
+&lt;li>Application domain&lt;/li>
+&lt;li>Resources life cycle&lt;/li>
+&lt;/ol>
+&lt;p>Multiple stacks for apps in different domains is a separation based on domain.
+Separating based on life cycle can be done for rarely deployed resources like databases.&lt;/p>
+&lt;p>You can find a good reference on these examples and stacks in
+&lt;a href="https://github.com/kevinslin/open-cdk#stacks">open-cdk guide&lt;/a>.&lt;/p>
+&lt;h2 id="creating-constructs">Creating constructs&lt;/h2>
+&lt;p>CDK has another solution for having smaller stacks
+which is creating a re-suable component called construct.
+To decide whether a code should be a stack or a construct we can check:&lt;/p>
+&lt;ol>
+&lt;li>Can be used in other places: a S3 Bucket with specific options.&lt;/li>
+&lt;li>A second stack would be always deployed deleted with current stack(highly coupled).&lt;/li>
+&lt;/ol>
+&lt;p>Creating constructs is also easier;
+because you are not introducing any dependencies between stacks.
+If you delete an stack all constructs inside it are removed.&lt;/p>
+&lt;h2 id="separated-stacks-and-dependencies">Separated Stacks and Dependencies&lt;/h2>
+&lt;p>Imagine we have an API with lambda and API gateway, and a route53 hosted zone.
+This infrastructure has two properties:&lt;/p>
+&lt;ul>
+&lt;li>Lambda can frequently be changed, but the API endpoint is same.&lt;/li>
+&lt;li>deploying a resource like a hosted zone takes a lot of time.
+So it&amp;rsquo;s better to deploy it separately, once.&lt;/li>
+&lt;li>A hosted zone record must point to API endpoint.&lt;/li>
+&lt;/ul>
+&lt;p>By splitting this stack into two:&lt;/p>
+&lt;ol>
+&lt;li>API stack&lt;/li>
+&lt;li>Hosted zone stack&lt;/li>
+&lt;/ol>
+&lt;p>&lt;img src="https://glyphack.com/example-cdk-stack-deps.excalidraw.png" alt="example-cdk-stack">&lt;/p>
+&lt;h3 id="dependency-problem-and-solution">Dependency problem and Solution&lt;/h3>
+&lt;p>What dependencies did we create?
+If our API endpoint changes then the Hosted zone needs to be updated
+to point to the new endpoint.
+This dependencies between stack, can cause problems if not considered carefully.
+If you now try to update the API endpoint(which is part of API stack)
+when all the stacks are deployed you will get the following error:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-text" data-lang="text">&lt;span class="line">&lt;span class="cl">Export ApiStack:ExportsOutputFnGetAtt-******
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">cannot be deletedas it is in use by HostedZoneStack
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The issue is that the Hosted Zone stack is using the referenced endpoint
+from ApiStack and without deleting the hosted zone you cannot delete the reference.&lt;/p>
+&lt;p>You have two solutions to either destroy them both or &lt;a href="https://github.com/aws/aws-cdk/tree/main/packages/aws-cdk-lib#removing-automatic-cross-stack-references">do a 2 phase deployment&lt;/a>.
+Although the 2 phase deployment always works it&amp;rsquo;s manual work.
+It&amp;rsquo;s fine for a database migration but this should not be something to do every week.&lt;/p>
+&lt;p>&lt;em>Solution to prevent the issue&lt;/em>:
+&lt;strong>Document&lt;/strong> not changing parts in your CDK app.
+Our assumption is that our API endpoint is not going to change frequently,
+otherwise we are just deploying stacks together all the time.&lt;/p>
+&lt;p>Another solution is to use parameter store to reference these dependencies.
+In this method you can change anything since CDK does not know about your dependencies.
+The downside of this method is that you have to manage dependencies now,
+actually you are now the compiler :D.&lt;/p>
+&lt;p>I would not recommend this method Because you are loosing the type checks,
+like &lt;code>any&lt;/code> in a typed language.&lt;/p>
+&lt;p>It&amp;rsquo;s a solution where you want to share resources between multiple CDK apps where
+you can&amp;rsquo;t pass the objects.
+For example if you are referencing DB name in applications as env vars,
+it&amp;rsquo;s better to save the DB name in parameter store and retrieve in runtime.
+Because that resource can be deployed multiple times but your app does not need
+to be redeployed.&lt;/p>
+&lt;p>Now Let me give you a &lt;strong>Bad&lt;/strong> splitting example:&lt;/p>
+&lt;p>Imagine we have a EC2 with an application load balancer.
+The EC2 id must be set in load balancer to route the traffic.&lt;/p>
+&lt;p>If we try to separate these into load balancer and app stacks,
+when ever we want to redeploy the EC2 the other stack must be destroyed and redeployed.&lt;/p>
+&lt;h3 id="remove-security-group-dependencies">Remove Security Group dependencies&lt;/h3>
+&lt;p>A common dependency between stacks is the security group rules.
+For example we have a database with and we want our EC2 to access it.
+One solution could be:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-javascript" data-lang="javascript">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// DB Stack
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nx">dbInstance&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">...&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// App Stack
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nx">dbInstance&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">connections&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">allowFrom&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">ec2Instance&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">ec2&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Port&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">tcp&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">5432&lt;/span>&lt;span class="p">));&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>But in this code DB stacks depends on the EC2 instance which can change.
+Is there a way to make our database stack completely independent?&lt;/p>
+&lt;p>Surprisingly you can use the dependency inversion principle:&lt;/p>
+&lt;blockquote>
+&lt;p>&lt;em>Low level policies should depend upon high level policies.&lt;/em>&lt;/p>
+&lt;/blockquote>
+&lt;p>How can we make the application dependent on database in this case?&lt;/p>
+&lt;ol>
+&lt;li>Create two security groups in the database stack. Attach one to DB.&lt;/li>
+&lt;li>allow connections from one security group to database&lt;/li>
+&lt;li>expose the security group to other stacks,
+and attach it to resources that need to access the DB.&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-typescript" data-lang="typescript">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// DB stack
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nx">DbSg&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="nx">ec2&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">SecurityGroup&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="k">this&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;db-sg&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">...&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">});&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">DbAccessSg&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="nx">ec2&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">SecurityGroup&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="k">this&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;db-access-sg&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">...&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">});&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">DbSg&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">addIngressRule&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">DbAccessSg&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">ec2&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Port&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">tcp&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">3306&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="c1">// database port
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="s1">&amp;#39;Allow from access security group&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// App stack
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Ec2&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="nx">ec2&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Instance&lt;/span>&lt;span class="p">(...)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Ec2&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">addSecurityGroup&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">DbAccessSg&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>With this method your database is not aware of what resources are connected to it.
+You made it a high level policy and other services are now aware of how to connect.&lt;/p>
+&lt;h3 id="remove-unnecessary-dependencies">Remove unnecessary dependencies&lt;/h3>
+&lt;p>Removing redundant dependencies reduces the overhead of managing them between stacks.
+The security group was an example of how to do this.
+Important lesson here is to understand how each line of
+CDK is connecting your resources together.&lt;/p>
+&lt;h2 id="conclusion">Conclusion&lt;/h2>
+&lt;p>Knowing how to split stacks is an art of managing dependencies.
+When I first started to do it before knowing these topics, I ran into
+issues I did not except and it helped me see the problem from a different aspect.
+It&amp;rsquo;s not only about separating code but it&amp;rsquo;s about which resources should be grouped.&lt;/p>
+&lt;p>I hope knowing this will help you avoiding this common pitfall.&lt;/p></description></item><item><title>Planning My Day</title><link>https://glyphack.com/blog/planning-my-day/</link><pubDate>Wed, 07 Sep 2022 23:22:58 +0430</pubDate><guid>https://glyphack.com/blog/planning-my-day/</guid><description>&lt;p>A while back I started planning my day before starting my day. I did this because I wanted to have a morning routine for myself,
+but most of the time I found myself starting to pickup something to read or already replying to emails or slack. So by setting this
+rule for myself to write down everything I want to do for the day first, helped to overcome this habit.&lt;/p>
+&lt;p>Since then I found some improvements that can be done along with writing down the plan for the day. I&amp;rsquo;ll list my observation here, and my
+goal is to implement these in the &lt;a href="https://github.com/Glyphack/koal">koal&lt;/a> app, as a default way of planning the day.&lt;/p>
+&lt;h2 id="choosing-what-to-do">Choosing what to do&lt;/h2>
+&lt;p>I have a long list of things I want to try/learn/experiment; and the list continues to expand everyday when I come across new things.
+So in this situation my mind is full of different things to do, I cannot concentrate on one thing and finish it in a reasonable time.
+Sometimes I saw that It&amp;rsquo;s been months that I&amp;rsquo;m working on something without making much progress and that was because I did not spend
+time continuously to finish it.&lt;/p>
+&lt;p>One thing that I think is related to this is this quote from &lt;a href="https://jamesclear.com/atomic-habits">atomic habits book&lt;/a>&lt;/p>
+&lt;blockquote>
+&lt;p>Success is the product of daily habits—not once-in-a-lifetime transformations.&lt;/p>
+&lt;/blockquote>
+&lt;p>It tries to say that you don&amp;rsquo;t reach your goals in a single step, you create daily habits based on them.
+I borrowed this definition of success and tried to use it in my planning.&lt;/p>
+&lt;p>This is the first thing I realized I have to do:
+&lt;strong>If I want to do something I have to do it everyday, no matter how small is my progress is&lt;/strong>&lt;/p>
+&lt;p>This helps a lot on different aspects of reaching my goal.
+When I do my work continuously I&amp;rsquo;m always aware of where I left off,
+I could more easily get in the zone, and needed less time to get focused.
+This method can be very powerful even if you &lt;a href="https://medium.com/@alexallain/ten-minutes-a-day-e2fa1084f924">only spend 10 minutes a day on something&lt;/a>.&lt;/p>
+&lt;blockquote>
+&lt;p>How, exactly, did I manage to write a book in this short a time? I had one simple rule: I had to work on the book for just ten minutes, every day, no excuses. Ever.&lt;/p>
+&lt;p>The original reason I tracked my time, in fact, was that I wanted to motivate myself by having a streak of days, and I figured that instead of just tallying check marks, I’d write down exactly how long I spent. It worked — I never missed a day.&lt;/p>
+&lt;/blockquote>
+&lt;p>A challenge that comes with this approach is that I no longer can have so many ongoing work at once,
+I decided to re plan my goals so they are:&lt;/p>
+&lt;ul>
+&lt;li>more specific: instead of saying I want to learn a tool I said I want to use the tool do make something.&lt;/li>
+&lt;li>split into approachable goals: an example was that I wanted to get 1800 chess ELO, but this journey is not a single step, in each ELO range you need to focus on something and get better at it. So it split this into two parts of getting to 1400 and the getting to 1800&lt;/li>
+&lt;/ul>
+&lt;p>Then I picked only 5 or 6 goals at each point, I had to have enough time for all of them to make continuous progress on each.
+Each day I started by browsing my current work, thinking what is the next small step I can take today and write it down in Koal.&lt;/p>
+&lt;h2 id="repetitive-tasks">Repetitive tasks&lt;/h2>
+&lt;p>There are things I want to do everyday, like my morning routine.
+Having a prepared list of these kind of work saves a lot of time,
+because I don&amp;rsquo;t have to remember, and write them down everyday.
+Even some of my goals consists of repetitive tasks,
+like for chess I wanted to play a game everyday.&lt;/p>
+&lt;p>Writing down this list also helped me with creating a habit of doing these things, For example when I
+added meditation to this list, only by seeing this everyday I did not forgot about it.&lt;/p>
+&lt;p>For me this list is very simple, I just wrote down things I have to do. There are some things that I don&amp;rsquo;t
+do everyday but I still listed them only to not forget to do them.&lt;/p>
+&lt;h2 id="being-focused-on-tasks">Being focused on tasks&lt;/h2>
+&lt;p>I continued with my approach for some time and realized there are somethings I need to do to improve my focus.&lt;/p>
+&lt;p>Sometimes I tried to do multi tasking because I had number of small things to do, So when I was waiting for something to finish
+I started writing down an email, and if it was finished I got back to it and then I lost my focus.&lt;/p>
+&lt;p>Sometimes I was not even waiting for something but I just jumped to a different thing, because I was not focused.
+Some tasks require you to be focused for the whole time to finish it, like writing a blog post or writing code,
+In these cases I could not do something that steals my focus like browsing social media while I&amp;rsquo;m waiting.
+But there are things that do not steal the focus, like pouring a cup of tea or doing the dishes.&lt;/p>
+&lt;p>I slightly changed my habit to only do these kind of tasks that do not require a context switch,
+while I&amp;rsquo;m blocked on my current task.&lt;/p>
+&lt;p>How to change this habit?&lt;/p>
+&lt;ul>
+&lt;li>Try to have a list of things you can do while waiting.&lt;/li>
+&lt;li>Use a pomodoro or a time tracker, this helps to focus because it only requires a short amount of focused work.&lt;/li>
+&lt;li>Rewarding myself after the focus time, &lt;a href="https://www.frugalconfessions.com/save-me-money/reward-yourself/">this list&lt;/a> is a good one if you want to get started&lt;/li>
+&lt;/ul>
+&lt;h2 id="having-an-uninterrupted-focus-time">Having an uninterrupted focus time&lt;/h2>
+&lt;p>Not all of the day I have the same productivity and energy, I found that I achieve the most when I&amp;rsquo;m working uninterrupted.
+To leverage this, I started to mark a time window of 2-3 hours for doing focused and uninterrupted work.
+This is really important to set right, in different days I have meetings at different hours and some days I have a busy morning,
+and some days I have a busy afternoon.
+I try to find a time window that I can block for myself to focus on important things I have to do.&lt;/p>
+&lt;p>In the planning I also write down when is this uninterrupted focus time, when the time comes I put my phone away and minimize
+the chance of loosing focus.&lt;/p>
+&lt;h2 id="choosing-one-thing-to-complete-everyday">Choosing one thing to complete everyday&lt;/h2>
+&lt;p>While I have a list of things to do, I know what is the most important one for today to complete.
+This can be something from my work that I want to get done, or reaching a milestone in one of the goals.
+This task is very important because it brings me joy and motivation when I finish it.&lt;/p>
+&lt;p>I mark the important task of the day and try to start that one during my uninterrupted time. This helps me to make sure I can get it done.
+The other benefit is that every few days I reach an important milestone in my goals or work,
+Which means that I&amp;rsquo;m one step closer to finish it.
+This task does not have to be a serious deadline or anything, it&amp;rsquo;s just a thing I decide on.
+For example if I&amp;rsquo;m working on a new feature the important part is to sending it for review.
+When I know today is the day for it to be done I use my most productive time to finish it.&lt;/p>
+&lt;p>When I started to mark the important task to be done for a day,
+I made a lot more progress in my goals. Because I was finishing these important milestones when it was needed for progress.
+It&amp;rsquo;s like there are some parts of each goal which require a lot of effort to get it done.
+If I don&amp;rsquo;t put some serious time on my goals from time to time I cannot make significant progress.&lt;/p>
+&lt;h2 id="writing-down-detailed-to-dos">Writing down detailed to-dos&lt;/h2>
+&lt;p>While to-do list should be short I found it useful to add what I need for the task to be done in the task.
+When I add an entry of reading the article about something I attach the link there.
+If I want to check the to-do search the google for the article and read it I might encounter
+things that can steal my focus along the way, like finding another interesting article in the search result.&lt;/p>
+&lt;h2 id="leverage-boredom">Leverage Boredom&lt;/h2>
+&lt;p>People &lt;a href="https://www.science.org/content/article/people-would-rather-be-electrically-shocked-left-alone-their-thoughts">do anything&lt;/a> to escape boredom.&lt;/p>
+&lt;p>When I plan my day I try to plan as much as I can so I don&amp;rsquo;t do anything outside the planning, in this way I either have to do the stuff
+I planned for or do nothing. This helps to avoid procrastination.&lt;/p>
+&lt;p>This is very hard to get write, I sometimes forget some chore tasks or something unplanned happens, but the good part is most of the day
+I&amp;rsquo;m facing my plan and can&amp;rsquo;t do other things before complete the tasks.&lt;/p>
+&lt;h2 id="rewarding">Rewarding&lt;/h2>
+&lt;p>Most of my motivation to do something comes from either the joy of doing the thing or the joy of finishing it.
+For some goals(specially the ones that takes more time) it&amp;rsquo;s hard to have these two.
+For example if your goal is to study for something for 3-4 months it&amp;rsquo;s gonna be very hard to keep the motivation.
+I wish I would know sooner that I have to reward myself for doing my tasks, and this really works well with these kind of tasks.&lt;/p>
+&lt;p>I try to reward myself after doing a couple of tasks, this can be a video game or watching a YouTube video,
+but there are also other resources to &lt;a href="https://www.frugalconfessions.com/save-me-money/reward-yourself/">reward yourself without money&lt;/a>.
+One other effective method is to reward yourself with money after doing something. For example I can put aside 10$ each
+time I do X and use that money to buy something I like.
+When I started streaming my rule was that I won&amp;rsquo;t buy fancy mic/webcam stuff until I create videos for certain amount of time.&lt;/p>
+&lt;p>One way to apply this can be by having a list of rewards beside items planned for the day.&lt;/p>
+&lt;h2 id="conclusion">Conclusion&lt;/h2>
+&lt;p>Using this approach and planning the tasks in the beginning of the day, helped me a lot on being more organized, and following
+my goals. To summarize the full list into steps for planning the day:&lt;/p>
+&lt;ol>
+&lt;li>Going through list of current ongoing projects and see list what to do next for each&lt;/li>
+&lt;li>Going over repetitive tasks and add them to my current list&lt;/li>
+&lt;li>Setting my uninterrupted focus time for the day&lt;/li>
+&lt;li>Getting started on the tasks, setting pomodoro timer&lt;/li>
+&lt;li>After some tasks checking my reward lists and pick up one to enjoy&lt;/li>
+&lt;li>If anything is left from the work which I know have to pick up tomorrow I write it down in a note.&lt;/li>
+&lt;/ol>
+&lt;p>I&amp;rsquo;ll try to update the list if I find more useful tricks but for now this is it. Hope you enjoyed it.&lt;/p></description></item><item><title>Stateful Stream Processing</title><link>https://glyphack.com/blog/stateful-stream-processing/</link><pubDate>Mon, 15 Aug 2022 08:53:57 +0430</pubDate><guid>https://glyphack.com/blog/stateful-stream-processing/</guid><description>&lt;p>A pattern that I have recently seen in a project is data replication through
+real-time stream processing. This pattern happens when a company has all of
+it&amp;rsquo;s data stored on centralized databases and applications access this data,
+this means that two example services like &amp;ldquo;search&amp;rdquo; and &amp;ldquo;product catalog&amp;rdquo; are
+depending on the same data.
+In this situation some services cannot function by only request the data
+through API, they need a snapshot of the data.
+Do address this requirement the real-time data replication solutions come
+handy.
+With this approach we need a event driven architecture to handle incoming data
+and apply required transformations.
+All stream processing frameworks such as Kafka Streams support doing stream
+joins to denormalize the data and while they offer very straightforward
+performant solutions the join support is limited in some cases.&lt;/p>
+&lt;h2 id="streaming-changes-from-database">Streaming Changes from Database&lt;/h2>
+&lt;p>We can start by implementing a change data capture system with a tool like
+Debizium and Apache Kafka. An example architecture is the following picture:
+&lt;img src="https://glyphack.com/streaming-database-changes.excalidraw.png" alt="streaming-database-changes">&lt;/p>
+&lt;p>Now the downstream services can use the data product topic coming out of Kafka.
+Let&amp;rsquo;s focus on how to implement the stream processing component.&lt;/p>
+&lt;p>As discussed earlier this use case is very suitable for a tool like Kafka
+Streams but if we have requirements to join data like:&lt;/p>
+&lt;ul>
+&lt;li>Join on primary and non primary keys&lt;/li>
+&lt;li>Having no time window on when the join can occur&lt;/li>
+&lt;li>Support denormalizing database relations&lt;/li>
+&lt;/ul>
+&lt;p>Then you cannot utilize full power of Kafka streams.
+Because Kafka streams joins the data on record key then all records that are
+going to be joined need to be published with the same key.
+Now if a stream needs to be joined with multiple streams then it has to bNnne
+published in multiple topics with different keys.
+This approach will result in the following diagram&lt;/p>
+&lt;p>&lt;img src="https://glyphack.com/repartion-data-to-join.excalidraw.png" alt="reparition-data-join">&lt;/p>
+&lt;p>This can lead to a very expensive solution both in terms of cost and
+development.&lt;/p>
+&lt;h2 id="problem-and-possible-solutions">Problem and Possible Solutions&lt;/h2>
+&lt;p>Now that we know the pattern and the limit let&amp;rsquo;s try to solve it with for an
+example business.&lt;/p>
+&lt;p>My goal is to find a solution which is easy to implement not the fastest one
+, but a balance between easy and cost efficient and low latency solutions.
+It&amp;rsquo;s also possible to come up with a range of different configurations and package them
+as solutions so different users can choose different configurations.&lt;/p>
+&lt;p>Imagine you are doing this for Github, they want to extract all user data and
+it&amp;rsquo;s interactions with the platform into an easy to use data structure named
+&lt;code>UserProfile&lt;/code>.&lt;/p>
+&lt;p>Let&amp;rsquo;s start by giving a very simple example data model:
+&lt;img src="https://glyphack.com/github-example-data-model.excalidraw.png" alt="github-example-data-model">&lt;/p>
+&lt;p>With following definitions:&lt;/p>
+&lt;p>&lt;strong>User&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>id&lt;/li>
+&lt;li>email&lt;/li>
+&lt;li>username&lt;/li>
+&lt;li>registered_at&lt;/li>
+&lt;/ul>
+&lt;p>Pk: email&lt;/p>
+&lt;p>&lt;strong>Repo&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>name&lt;/li>
+&lt;li>owner&lt;/li>
+&lt;li>description&lt;/li>
+&lt;li>star_count&lt;/li>
+&lt;li>fork_count&lt;/li>
+&lt;li>created_at&lt;/li>
+&lt;li>updated_at&lt;/li>
+&lt;/ul>
+&lt;p>Pk: (owner,name)&lt;/p>
+&lt;p>&lt;strong>Pull Request&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>title&lt;/li>
+&lt;li>repo&lt;/li>
+&lt;li>repo_owner&lt;/li>
+&lt;li>index&lt;/li>
+&lt;li>author&lt;/li>
+&lt;li>status&lt;/li>
+&lt;li>created_at&lt;/li>
+&lt;/ul>
+&lt;p>Pk: (repo,repo_owner,index)&lt;/p>
+&lt;p>&lt;strong>Star&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>username&lt;/li>
+&lt;li>repo_name&lt;/li>
+&lt;li>repo_owner&lt;/li>
+&lt;li>created_at&lt;/li>
+&lt;/ul>
+&lt;p>Pk: (username, repo_name, repo_owner)&lt;/p>
+&lt;p>&lt;strong>Payment Info&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>id&lt;/li>
+&lt;li>user_id&lt;/li>
+&lt;li>verified&lt;/li>
+&lt;/ul>
+&lt;p>Pk: id&lt;/p>
+&lt;p>Now let&amp;rsquo;s say the &lt;code>UserProfile&lt;/code> is going to have the structure:&lt;/p>
+&lt;p>&lt;strong>User Profile&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>email&lt;/li>
+&lt;li>username&lt;/li>
+&lt;li>starred_repos (many to many rel)
+&lt;ul>
+&lt;li>repo&lt;/li>
+&lt;li>description&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>pull_requests (one to many rel)
+&lt;ul>
+&lt;li>repo&lt;/li>
+&lt;li>index&lt;/li>
+&lt;li>title&lt;/li>
+&lt;li>created_at&lt;/li>
+&lt;li>status&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>payment_verified&lt;/li>
+&lt;/ul>
+&lt;p>In this case when we are consuming events form User, Pull Request and Star
+table then we need to do join these streams and embed the pull request and
+star information inside the &lt;code>UserProfile&lt;/code> output stream.
+If we start by using message keys as join keys here to join User and Pull
+Request streams then the Pull Request has to be published with &lt;code>author&lt;/code> field
+as a key.
+In case we need to create another data product for pull requests
+data depends on the repo and index we need to create another stream.&lt;/p>
+&lt;p>Before that let&amp;rsquo;s see what query join do we need to perform on these streams
+to get the result.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-SQL" data-lang="SQL">&lt;span class="line">&lt;span class="cl">&lt;span class="k">select&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">...&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">from&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">users&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">left&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">outer&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">join&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">star&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="k">on&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">star&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">username&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">username&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">left&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">outer&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">join&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">pull_request&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="k">on&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">pull_request&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">author&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">username&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">left&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">outer&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">join&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">payment_info&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="k">on&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">payment_info&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">id&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">id&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Note that in this query we only want to get a single record with &lt;code>UserProfile&lt;/code>
+structure.
+This means to embed all pull requests into record as a list, and add
+payment_verified value as a single value.&lt;/p>
+&lt;h2 id="solutions">Solutions&lt;/h2>
+&lt;p>To give a solution I&amp;rsquo;m focusing on providing something that can work at huge
+scale, imagine we are going to create a hundred data products so system should
+make it very easy to onboard a new table.&lt;/p>
+&lt;h3 id="solution-1-using-rdbms">Solution 1: Using RDBMS&lt;/h3>
+&lt;p>I started with the idea of why not just moving all the computation on the database?
+After all the SQL language has nice features to do these transformations.&lt;/p>
+&lt;p>&lt;img src="https://glyphack.com/running-transformations-on-db.excalidraw.png" alt="rdbms-solution">&lt;/p>
+&lt;p>With this method we can have a generic application that reads streams and place
+them in database under a table with the topic name.
+So to onboard a new topic we have to feed this service two values:&lt;/p>
+&lt;ul>
+&lt;li>table name to insert data into&lt;/li>
+&lt;li>table schema and mapping of event fields into table fields&lt;/li>
+&lt;/ul>
+&lt;p>After we insert the data in the database we
+&lt;a href="https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/AuroraMySQL.Integrating.Lambda.html">trigger&lt;/a> a lambda function to run the SQL query, get the data and embed the joins into a single document and produce message to Kafka.&lt;/p>
+&lt;p>This lambda function requires these inputs:&lt;/p>
+&lt;ul>
+&lt;li>a mapping from table names to SQL queries&lt;/li>
+&lt;/ul>
+&lt;p>After lambda is triggered it will lookup the mapping and run the SQL query. In our case it will get the user back with all matched pull request.
+Now we need a custom logic in lambda to embed all the matched Pull Request
+entities into &lt;code>UserInfo&lt;/code> message.&lt;/p>
+&lt;h4 id="benefits">Benefits&lt;/h4>
+&lt;ul>
+&lt;li>Implementation is very generic&lt;/li>
+&lt;li>We have all the capabilities of SQL to do the processing&lt;/li>
+&lt;li>Each topic can be joined with any other topic with any valid SQL condition&lt;/li>
+&lt;/ul>
+&lt;h4 id="drawbacks">Drawbacks&lt;/h4>
+&lt;ul>
+&lt;li>The fact that we put all the computation on the database and specially join
+queries will result in a huge amount of costs&lt;/li>
+&lt;li>The architecture is not truly real-time, we should utilize indexes on
+database to make sure query returns with low latency&lt;/li>
+&lt;/ul>
+&lt;h3 id="solution-2-join-data-in-stream-processor">Solution 2: Join Data In Stream Processor&lt;/h3>
+&lt;p>To attempt to fix the previous solution drawbacks, a reasonable way can be moving the join logic to stream processor application.&lt;/p>
+&lt;p>In this case the stream processor has a data store named state store that is used to keep track of latests state of records consumed.
+To get a better understand of how the state store works, Imagine the scenario:&lt;/p>
+&lt;ul>
+&lt;li>A new pull request is created with information &lt;code>{ title: &amp;quot;PR&amp;quot;, status: &amp;quot;Open&amp;quot;, ...}&lt;/code>&lt;/li>
+&lt;li>Stream processor consumes the message and insert it into the state store&lt;/li>
+&lt;li>The pull request is updated and it&amp;rsquo;s closed so another event is emitted with body &lt;code>{ title: &amp;quot;PR&amp;quot;, status: &amp;quot;Closed&amp;quot;, ...}&lt;/code>&lt;/li>
+&lt;li>Stream processor consumes the new event updates the previous record in the state store using the primary key of the pull request.&lt;/li>
+&lt;/ul>
+&lt;p>So at any given point the state store has latest state of an entity.&lt;/p>
+&lt;p>We can leverage this state store to join events as they are consumed by creating 3 tables: &lt;code>pull_request&lt;/code>, &lt;code>user&lt;/code>, &lt;code>user_info&lt;/code>.&lt;/p>
+&lt;p>&lt;img src="https://glyphack.com/join-in-processor-rdbms.excalidraw.png" alt="join data in processor">
+This is how the example procedure looks like:&lt;/p>
+&lt;ol>
+&lt;li>When a pull request event is consumed and inserted into a intermediate table&lt;/li>
+&lt;li>When a user event is consumed, application queries the pull request table to check if there&amp;rsquo;s any matched records with the join criteria. If there&amp;rsquo;s any it creates the user_info message and saves it into database.&lt;/li>
+&lt;li>Finally application also saves the &lt;code>user&lt;/code> message in step 2 into database in case there&amp;rsquo;s other joins for user table.&lt;/li>
+&lt;/ol>
+&lt;p>Or in a case that the order of incoming events is not guaranteed when the user event comes in application joins it with the pull request table and creates the user_info message.
+Here also based on the join type we either publish a new &lt;code>user_info&lt;/code> message or not, in this case this is a left join where the left is user entity:&lt;/p>
+&lt;ol>
+&lt;li>If user event is consumed even if it do not match any pull request the &lt;code>user_info&lt;/code> message must be published.&lt;/li>
+&lt;li>If pull_request event is consumed &lt;code>user_info&lt;/code> message will only be published when pull request matches a user record, then the application updates the corresponding &lt;code>user_info&lt;/code> message with the new pull request and publishes the message again.&lt;/li>
+&lt;/ol>
+&lt;h4 id="benefits-1">Benefits&lt;/h4>
+&lt;ul>
+&lt;li>Ability to execute all SQL queries&lt;/li>
+&lt;li>Can do complex joins&lt;/li>
+&lt;li>Can index database on the fields that are queried for joins to decrease the processing time&lt;/li>
+&lt;/ul>
+&lt;h4 id="drawbacks-1">Drawbacks&lt;/h4>
+&lt;ul>
+&lt;li>The RDBMS database is used for a lot of read/write operations which can become slow and expensive&lt;/li>
+&lt;li>The join logic is split in processing events from left and right side of the join.&lt;/li>
+&lt;/ul>
+&lt;h3 id="using-another-database-as-state-store">Using Another Database as State Store&lt;/h3>
+&lt;p>Following the idea of previous solution to move the join logic to application, we can make an adjustment to DB choice.
+The pattern is inserting a record but retrieving it only by specific fields.
+Usually key value store databases provide fast read and writes with this limitation.&lt;/p>
+&lt;p>Let&amp;rsquo;s say like the previous method processor consumes events, and saves them inside a KV store like dynamoDB.
+Now it&amp;rsquo;s important to specify a unique key for records so they don&amp;rsquo;t overwrite each other, primary keys are:&lt;/p>
+&lt;ol>
+&lt;li>User: email&lt;/li>
+&lt;li>Pull request: (repo,repo_owner,index)&lt;/li>
+&lt;li>Payment Info: id&lt;/li>
+&lt;/ol>
+&lt;p>When the application consumes a user event it&amp;rsquo;s required to join this field with pull requests that have the same username.
+This is not possible since our hash key is the PK, which is email in this case.&lt;/p>
+&lt;p>Now we use some auxiliary tables to make this possible.
+We create a table called &lt;code>join_user_pr&lt;/code> with key being the join condition value(username) and value be the primary key
+of the user entity with that username, And similarly a table called &lt;code>join_pr_user&lt;/code> for when joining an incoming PR event
+with User.&lt;/p>
+&lt;p>Application can use this table as a lookup table to do joins.
+An example when &lt;code>user&lt;/code> event is coming in:&lt;/p>
+&lt;ol>
+&lt;li>Save user in &lt;code>Users&lt;/code> table and insert record &lt;code>{user.username: user.email}&lt;/code> into &lt;code>join_pr_user&lt;/code>&lt;/li>
+&lt;li>Query the &lt;code>join_user_pr&lt;/code> with the username to get back primary keys of PRs which has this username.&lt;/li>
+&lt;li>Query the &lt;code>pull_reqest&lt;/code> table with primary key of PR and construct the &lt;code>user_info&lt;/code> message and publish&lt;/li>
+&lt;/ol>
+&lt;p>When &lt;code>pull_request&lt;/code> event comes in:&lt;/p>
+&lt;ol>
+&lt;li>Save pull_request event in&lt;code>pull_request&lt;/code> table and insert record &lt;code>{pull_request.pk: pull_request.username}&lt;/code> into &lt;code>join_user_pr&lt;/code>.&lt;/li>
+&lt;li>Query the &lt;code>join_pr_user&lt;/code> table with pull_request username to get back user email for that PR.&lt;/li>
+&lt;li>Query user table with email and construct the &lt;code>user_info&lt;/code> message and publish&lt;/li>
+&lt;/ol>
+&lt;p>Since DynamoDB(and other KV stores) provide a fast way to read and write the process time is not going to grow in large
+volume of data.
+But we are creating duplicate data to be able to execute these queries, this can also be solved with
+Secondary Indexes in DynamoDB. Secondary Indexes can be fine for small number of joins but if we want to join the User
+with 20 different tables the cost of User table with 20 SI will be high and more than having the auxiliary tables.&lt;/p>
+&lt;h4 id="benefits-2">Benefits&lt;/h4>
+&lt;ul>
+&lt;li>Can support large volume of data&lt;/li>
+&lt;li>Application can support multiple joins on a single record with low process time.(DynamoDB can provide 10ms read times)&lt;/li>
+&lt;/ul>
+&lt;h4 id="drawbacks-2">Drawbacks&lt;/h4>
+&lt;ul>
+&lt;li>Data is duplicated&lt;/li>
+&lt;li>Coordination of what tables and fields to query makes the application complex, the given example has 6 steps for a single join&lt;/li>
+&lt;/ul>
+&lt;h3 id="leveraging-the-dynamodb-global-secondary-indexes">Leveraging the DynamoDB Global Secondary Indexes&lt;/h3>
+&lt;p>The previous solution was really close to achieve a very good result but still the 1 lookup and 1 query per join statement can cause
+long process time in some cases.
+Now we&amp;rsquo;ll try to exploit another feature of DynamoDB, Global Secondary Indexes, to solve this problem.&lt;/p>
+&lt;p>Before that let&amp;rsquo;s state what we exactly need from state store:&lt;/p>
+&lt;ul>
+&lt;li>Being able to get all records of a topic with given join condition, for example all pull_requests with a particular username&lt;/li>
+&lt;/ul>
+&lt;p>We can use a single table for all the records to make this join possible and easier.
+Imagine we have a table with a composite primary key with following definition:&lt;/p>
+&lt;ul>
+&lt;li>Partition Key: TABLE#{table_name}&lt;/li>
+&lt;li>Sort Key: entity PK&lt;/li>
+&lt;/ul>
+&lt;p>For example we insert all &lt;code>user&lt;/code> records in the table with Partition Key of &lt;code>TABLE#users&lt;/code> and Sort key of &lt;code>user.email&lt;/code>,
+The same happens for pull_request as well(we can concatenate multiple columns for the Sort Key).&lt;/p>
+&lt;p>Now how can we join a user with all of it&amp;rsquo;s pull_requests? Using a Global Secondary Index.
+Let&amp;rsquo;s say we create a column called GSI_1(Global Secondary Index column names can be meaningless and be reused in DynamoDB),
+We are going to use this column in both &lt;code>user&lt;/code> and &lt;code>pull_request&lt;/code> entities.
+For users we insert the username value in the GSI_1 and for pull requests we insert the username in GSI_1.&lt;/p>
+&lt;p>When a &lt;code>user&lt;/code> event comes in the application will:&lt;/p>
+&lt;ol>
+&lt;li>Insert it in the &lt;code>user&lt;/code> table and fills the GSI values according to joins specified.&lt;/li>
+&lt;li>Query the &lt;code>pull_request&lt;/code> table with the &lt;code>GSI_1=={user.username}&lt;/code> condition, This will return all the PRs for that username&lt;/li>
+&lt;li>Create the &lt;code>user_info&lt;/code> message and publish&lt;/li>
+&lt;/ol>
+&lt;p>When a &lt;code>pull_request&lt;/code> event comes in the application will do the same things again the GSI_1 will be used and PR will be matched
+with the correct user record.&lt;/p>
+&lt;p>Now the problem will be managing the GSI fields we create. We need to create GSI fields for every single join that an entity has.
+In our example if we want to join the user record with payment info we have to create a new GSI_2 field for the user and save the &lt;code>user.id&lt;/code> in that field.
+But for the &lt;code>payment_info&lt;/code> record we can insert the &lt;code>user.id&lt;/code> in the GSI_1 field because the only join Payment Info has is with the User.
+This allows us to reuse the GSI field for multiple purpose so we don&amp;rsquo;t hit the 20 GSI limit unless we have a table with 20 different joins.
+Also we now can get back all pull requests for a user with a single query, this will enable us to perform multiple joins without loosing performance.&lt;/p>
+&lt;p>To manage the GSI fields and what they are used for in each record we need another storage to save this information.
+We can have a small PostgreSQL instance that knows for example in User records the GSI_1 field is used to join with Pull Request entity.&lt;/p></description></item><item><title>How to Setup 2 Factor Authentication Code Generator on PC</title><link>https://glyphack.com/blog/setup-2fa-on-pc/</link><pubDate>Thu, 17 Mar 2022 23:19:14 +0330</pubDate><guid>https://glyphack.com/blog/setup-2fa-on-pc/</guid><description>&lt;p>I use 2 factor authentication with almost all of my accounts, the only downside of this is that when I need to access something frequently or automate some task I have to manually enter this code from my phone.&lt;/p>
+&lt;p>So I searched a bit and found these tools to make this process easier, I imported 2fa keys to my laptop and can generate keys with a command so I can copy the code and also the command can be used in automated tasks. Note that in this way anyone with access to your laptop has access to 2fa codes too.&lt;/p>
+&lt;h2 id="setup-2fa-code-on-your-machine">Setup 2FA code on your machine&lt;/h2>
+&lt;p>Here&amp;rsquo;s the process:&lt;/p>
+&lt;h3 id="1-export-2fa-accounts-from-google-authenticator">1. Export 2FA Accounts From Google Authenticator&lt;/h3>
+&lt;p>You probably have already setup your accounts with google authenticator. You can use the &lt;a href="https://support.google.com/accounts/thread/107807857/how-to-export-2fa-codes-from-google-authenticator?hl=en">export option&lt;/a> to export the accounts you need. Export will be a qr code so you need a way to convert it to text. On mac I did it with &lt;a href="https://apps.apple.com/us/app/qr-journal/id483820530?mt=12">qr journal&lt;/a> .&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">brew install --cask qr-journal
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="2-extract-account-secret-key">2. Extract Account Secret Key&lt;/h3>
+&lt;p>Once you have the qr code as text you can use &lt;a href="https://github.com/scito/extract_otp_secret_keys">extract_otp_secret_keys&lt;/a> to read the text and get the secret strings. save exported qr code in a text file and read it with like this:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">gh repo clone scito/extract_otp_secret_keys
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">python extract_otp_secret_keys/extract_otp_secret_keys.py -p exported.txt
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This will output the final secret key for accounts.&lt;/p>
+&lt;h3 id="3-install-a-2fa-code-generator">3. Install a 2FA Code Generator&lt;/h3>
+&lt;p>I used the &lt;a href="https://github.com/rsc/2fa">2fa&lt;/a> app to import accounts in terminal.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">go install rsc.io/2fa@latest
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">2fa -add account_name
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now that you have this you can use the command &lt;code>2fa&lt;/code> to get all of your accounts 2FA codes or &lt;code>2fa account_name&lt;/code> to get the 2FA code for a specific account, the latter is useful when writing scripts.&lt;/p></description></item><item><title>Fixing One Bug Leads to Another</title><link>https://glyphack.com/blog/fixing-one-bug-leads-to-another/</link><pubDate>Sat, 05 Feb 2022 09:49:50 +0330</pubDate><guid>https://glyphack.com/blog/fixing-one-bug-leads-to-another/</guid><description>&lt;p>One thing that frequently frustrates me when I&amp;rsquo;m working is sloppy work. I&amp;rsquo;m using the word &amp;ldquo;work&amp;rdquo; here because it can refer to anything, but here I&amp;rsquo;ll talk about sloppy code.&lt;/p>
+&lt;p>Recently, someone from my previous team asked me to help them fix an issue on a system while the maintainer was not available. At first, I discussed this with my team lead and didn&amp;rsquo;t get involved in the issue, but after a week, the problem was still there, and they asked me for my help again. So I finally decided to give it a try.&lt;/p>
+&lt;h2 id="the-story">The story&lt;/h2>
+&lt;p>The issue was that one of the microservices was consuming messages twice from a Kafka topic. Kafka client consumes a message in this order:&lt;/p>
+&lt;ol>
+&lt;li>Read a new message&lt;/li>
+&lt;li>Process the message&lt;/li>
+&lt;li>Commit the message
+Working with at least one delivery model where each message is delivered to you at least once, duplicates might occur in your system when a message is delivered twice or more.
+An example scenario of a duplicate message problem that can occur here is when your application reads the message, updates some business entity in the database, and fails before committing the message. You would see the message coming back again.&lt;/li>
+&lt;/ol>
+&lt;p>To overcome this issue, the application has to make the consumer idempotent with &lt;a href="https://chrisrichardson.net/post/microservices/patterns/2020/10/16/idempotent-consumer.html#:~:text=Specifically%2C%20if%20Apache%20Kafka%20invokes,execute%20the%20database%20transaction%20repeatedly">idempotent consumer pattern&lt;/a>&lt;/p>
+&lt;blockquote>
+&lt;p>Read message
+Begin database transaction
+INSERT into PROCESSED_MESSAGE (subscriberId, ID) VALUES(subscriberId, message.ID)
+Update one or more business objects
+Commit transaction
+Acknowledge message
+After starting the database transaction, the message handler inserts the message’s ID into the &lt;code>PROCESSED_MESSAGE&lt;/code> table. Since the &lt;code>(subscriberId, messageID)&lt;/code> is the &lt;code>PROCESSED_MESSAGE&lt;/code> table’s primary key the &lt;code>INSERT&lt;/code> will fail if the message has been processed successfully. The message handler can then abort the transaction and acknowledge the message.&lt;/p>
+&lt;/blockquote>
+&lt;p>So I checked if the code was idempotent or not, and hopefully, it had. With several problems:&lt;/p>
+&lt;p>&lt;strong>Sloppy code&lt;/strong>,
+The steps were in the wrong order. The insert in &lt;code>PROCESSED_MESSAGE&lt;/code> was the last step. It should be the first action because you want to assume the message is processed, and if any error occurs, the transaction will fail. The insert will be reverted, so you don&amp;rsquo;t have to manually decide where to mark the message as read in the code process flow.
+Also, The &lt;code>messageID&lt;/code> was not unique, so two concurrent inserts of the same message would not cause any issue, while it should. It&amp;rsquo;s always better to crash than to be inconsistent; the latter will take much more time to find out and recover.&lt;/p>
+&lt;p>&lt;strong>Not knowing about the business domain of your application&lt;/strong>,
+The third problem; the message ID was generated by the whole body of the message to string, literally a TextField in PostgresSQL for deduplication and searching! While it was inefficient and expensive to use your database for matching full text for deduplication. It&amp;rsquo;s also not working if you change the format of the same message(like updating the schema).
+I can guess that this happens because developers can be far from the business domain, but you should always understand why you are writing a piece of code. By asking questions like what unique values are we looking for in the message? From the product manager, you can use this information to do the deduplication for that use case.&lt;/p>
+&lt;p>I fixed the algorithm and changed the table schema to have a better deduplication key by discussing this with business people to discover the unique values in this message. Everything was done, and I started testing the code; while I was doing that, I checked the logs and realized that the application was consuming messages from 2 weeks ago. This should not happen when we are committing the messages. I dug more into the issue and found out the duplication bug was part of a more significant issue. Kafka consumer was not committing the messages correctly, so it caused duplicates even after a successful message process. And even worse than that, the application was not failing if the commit failed; it silently ignored the issue. Until that moment, the deduplication logic was not only deduplication but serving as Kafka offset manager!&lt;/p>
+&lt;p>After realizing that it was not easy to fix and needed proper investigation, I handed it to the original maintainer. But I did investigate why this issue was happening just for my curiosity and ended up with this hypothesis.
+The issue was that Kafka has a &lt;a href="https://docs.confluent.io/platform/current/installation/configuration/consumer-configs.html#consumerconfigs_max.poll.interval.ms">max poll interval&lt;/a> configuration which determines how long it takes for the consumer to poll a message(read a new message from the topic). If a consumer reaches this time limit before polling a message, it will be considered unhealthy and replaced with a new consumer. Meanwhile, the consumer has a timeout to commit all the pending messages to offset, and if it cannot, then those messages are not considered as done and will be consumed again.&lt;/p>
+&lt;p>The point here is that the second bug was buried under the first issue, and I brought it up by fixing the first one. Kind of a rabbit hole, and who knows, I would not face &lt;a href="https://en.wikipedia.org/wiki/Lernaean_Hydra">Hydra&lt;/a> if I continued fixing the problem?
+&lt;img src="https://glyphack.com/Hydra.png" alt="Hydra, a see monster that that as soon as one head was cut off, two more heads would emerge from the fresh wound">&lt;/p>
+&lt;h2 id="yak-shaving">Yak shaving&lt;/h2>
+&lt;p>The more precise term about this situation is &lt;a href="https://seths.blog/2005/03/dont_shave_that/">Yak Shaving&lt;/a>. It&amp;rsquo;s a situation where you have to fix something else before working on the current issue.
+It is essential to be ready to go down this path before actually starting. For me, it was always a frustrating experience because You can&amp;rsquo;t get it done, and estimations become incorrect, then you have no clue where you are until you can resolve the final issue.&lt;/p>
+&lt;h2 id="what-did-i-learn">What did I learn&lt;/h2>
+&lt;p>Some bug fixes seem easy to solve, like this one. You and the others might have no idea why some issue is happening. When a request like this comes to me from now on, I&amp;rsquo;ll be asking for a time to investigate the issue and how it is happening. It might take more time; in this case, I only had a couple of days to work on it, so I would not have a chance to fix the issue.
+I&amp;rsquo;m not saying all the bug fixes should be like this; if you worked with a system and know why something is wrong and are sure about the system behavior based on experience, go ahead and work on the fix. But for me, there were a lot of changes to the system after I left the team, so the system was not what I used to know.&lt;/p>
+&lt;p>And also, don&amp;rsquo;t forget the chance of ending up in a Yak Shaving. Investigate enough to see if anything else is wrong except the current issue.
+As said in pragmatic programmer&lt;/p>
+&lt;blockquote>
+&lt;p>Is the problem being reported a direct result of the underlying bug, or merely a symptom?&lt;/p>
+&lt;/blockquote>
+&lt;p>It&amp;rsquo;s tempting to help others with something you are sure you can. But the bottom line is if someone asks for help, they expect the issue to be resolved, and this kind of help is not helpful anyway.&lt;/p></description></item><item><title>How Write and Organize Software Documentation</title><link>https://glyphack.com/blog/write-software-documentation/</link><pubDate>Sun, 23 Jan 2022 17:30:40 +0330</pubDate><guid>https://glyphack.com/blog/write-software-documentation/</guid><description>&lt;p>Software documents play an important role in software development, everyone pays attention to writing documentation but just like writing code, writing the text is not enough but it has to be readable and understandable for other people, after all the purpose of documenting is to communicate. Recently I was reading documentation of a system and noticed that there&amp;rsquo;s something strange about it. although all the components are documented, but still it&amp;rsquo;s not easy to find information on something.&lt;/p>
+&lt;p>Let&amp;rsquo;s review the documentation role in these two situations, onboarding a new person with the system and improving collaboration between a team. This comes down to these two questions:&lt;/p>
+&lt;ol>
+&lt;li>Can I hand over my technical docs to someone and expect them to have all information they need to make their first commit?&lt;/li>
+&lt;li>If situation X happens, do my teammates have to call someone to know what is happening?
+So every day, when one of these happens, think about the answers and see how well your documentation is. For example, when you get similar questions from teammates about a system, think of it as a failure in the documentation system, not all questions can be answered inside docs, but the frequent ones must be answered.&lt;/li>
+&lt;/ol>
+&lt;h2 id="avoid-common-problems-of-technical-software-documentation">Avoid Common Problems of Technical Software Documentation&lt;/h2>
+&lt;p>So what are the problems that can be in your technical notes?&lt;/p>
+&lt;h3 id="non-existent-documents">Non existent documents&lt;/h3>
+&lt;h4 id="no-entry-point-link-around-a-topic">No Entry Point Link Around a Topic&lt;/h4>
+&lt;p>There is no primary documentation around a topic; you have to pass multiple links when someone is on boarded or read a single document after cloning the repo.&lt;/p>
+&lt;h4 id="cover-all-information-needed-for-a-project">Cover all information needed for a project&lt;/h4>
+&lt;p>If someone joins your team, they need information on how a system works. They also have to know how to set up their local and sandbox environment and use it.&lt;/p>
+&lt;h3 id="hidden-documents">Hidden Documents&lt;/h3>
+&lt;h4 id="nesting-overuse">Nesting Overuse&lt;/h4>
+&lt;p>Having sub-pages inside sub-pages makes the text to be scattered in different documents. Suppose someone reads a note on compiling a project. They also have to find the testing guide and deployment guide next to that text. It can be another section within that doc or a document next to it. Just make sure you don&amp;rsquo;t need to browse again to find those.
+This pattern is similar to coupling the code that is related to each other like putting it inside a single module.&lt;/p>
+&lt;h4 id="multiple-channels">Multiple channels&lt;/h4>
+&lt;p>Some materials might be found on the slack channel, others on your documentation tool. Keep all of them in one place as much as possible.&lt;/p>
+&lt;h3 id="inaccurate-documents">Inaccurate Documents&lt;/h3>
+&lt;p>If the documents are not updated along with the code, they become inaccurate as you change the software. One possible solution is to link the code and document together(by using Readme file) so more people will see the document while writing code.
+Here you can see that why is it valuable to have a single document for a topic, for example here if you have 4 documents that has to change after changing system codes then it&amp;rsquo;s much harder to update the documents that a single document.&lt;/p>
+&lt;h3 id="obsolete-documents">Obsolete Documents&lt;/h3>
+&lt;p>If a design is changed and older design decisions don&amp;rsquo;t apply anymore, archive them.&lt;/p>
+&lt;h3 id="afterthought-documents">Afterthought Documents&lt;/h3>
+&lt;p>This is a problem because if you write your docs after delivering a project, you will end up:&lt;/p>
+&lt;ol>
+&lt;li>Forgetting to include important notes on the topic because you are in the &lt;a href="https://en.wikipedia.org/wiki/Curse_of_knowledge">curse of knowledge&lt;/a>.&lt;/li>
+&lt;li>Have to explain the project to someone personally if you need to hand it over in the middle.&lt;/li>
+&lt;/ol>
+&lt;h2 id="how-to-make-technical-documentations-better">How to Make Technical Documentations Better&lt;/h2>
+&lt;p>It&amp;rsquo;s essential to organize documents so that it&amp;rsquo;s visible to everyone.&lt;/p>
+&lt;p>&lt;strong>Be Careful with Nesting&lt;/strong>
+When newcomers open the documentation, they should locate all the required information they need to work on the project. This means in your top-level page you should have all the topics you want to explain visible there as links or sub-pages.
+As an example of a good technical documentation checkout &lt;a href="https://wiki.crdb.io/wiki/spaces/CRDB/overview">CockroachDB documents&lt;/a>, There are all the things from introduction to deploying the project listed on the first page with only 1 level nesting.
+My personal suggestion about this is choose a topic and write all the relevant information to that topic in the page. if a sub topic grows over time you can create a sub-page for it later.&lt;/p>
+&lt;p>&lt;strong>Make it like a story&lt;/strong>
+It should be easy to follow your documents from beginning to the end. Make sure the topics are in the right order. Keep similar topics in different contexts separate, e.g. keep end-user documents separate from system specification documents but link them because the developer needs to know about the user when writing docs.
+This means all the journey from finding the repo to clone to deploying a feature can be found inside technical docs.&lt;/p>
+&lt;p>&lt;strong>Make Documentation Writing an Ongoing process&lt;/strong>
+It&amp;rsquo;s hard to keep documents that no one reads updated, make sure your documents have users by sending people document links instead of answering questions in Slack.&lt;/p>
+&lt;p>&lt;strong>Writing Software Documentation is a Collaborative Process&lt;/strong>
+Write documents with the mindset of other people are going to use them. so you should considering:&lt;/p>
+&lt;ul>
+&lt;li>Ask your team to review the docs you write&lt;/li>
+&lt;li>Put new pages you create on draft&lt;/li>
+&lt;/ul>
+&lt;h2 id="other-resources">Other resources&lt;/h2>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;a href="https://microsoft.github.io/code-with-engineering-playbook/documentation/guidance/project-and-repositories/">Documenting code repositories&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://blog.prototypr.io/software-documentation-types-and-best-practices-1726ca595c7f">Type of documentations&lt;/a>&lt;/p>
+&lt;/li>
+&lt;/ul></description></item><item><title>How I Stay Focused and Manage Time</title><link>https://glyphack.com/blog/how-i-stay-focused-and-manage-time/</link><pubDate>Mon, 03 Jan 2022 19:10:52 +0330</pubDate><guid>https://glyphack.com/blog/how-i-stay-focused-and-manage-time/</guid><description>&lt;p>A few weeks ago, I experienced one of these busy weeks with lots of meetings, Slack messages, working on different tasks. Although I did many things, I didn&amp;rsquo;t feel like getting anything done. So I decided to see how can I improve this.&lt;/p>
+&lt;p>First of all, the cost of getting interrupted while developing is high. You need time to get back on what you were doing, and if this happens a lot, you can&amp;rsquo;t manage to get many things done.
+The second thing I noticed was that I have to do better with planning for my day. I have a mix of personal stuff, university, and work. Some days, I&amp;rsquo;m constantly switching between tasks with different contexts, and I get myself out of the zone.&lt;/p>
+&lt;h1 id="my-setup">My setup&lt;/h1>
+&lt;p>I&amp;rsquo;ve experimented with different productivity tools for focus and time management tools. I was looking for a simple enough task manager with a built-in time tracker that you can decide on something you must do in the day and track your time while doing them for the rest of the day. I could not find such a tool, so I combined different apps to achieve this.&lt;/p>
+&lt;h3 id="daily-planning">Daily Planning&lt;/h3>
+&lt;p>I use &lt;a href="https://www.notion.so/">Notion&lt;/a> as my general notebook to organize projects, learn lists, and other random things that gather here, not to forget them.
+I also started to use it as my time management tool just by creating a table where each row is a date, and inside that, I write my day plan:
+&lt;img src="https://glyphack.com/notion-day-plan.png" alt="Daily planning with Notion">
+Of course, it does not offer any unique feature here that other apps don&amp;rsquo;t. I prefer to write down my tasks as raw notes instead of task management apps to keep them simple and easy enough to do every day.
+This way, it helps me two organize my tasks such that:&lt;/p>
+&lt;ul>
+&lt;li>I know what I want to do upfront, so I can plan to do them appropriately. For example, I can do all of my university stuff together to reduce context switching costs&lt;/li>
+&lt;li>If I can&amp;rsquo;t manage to do something on that day, it&amp;rsquo;s not lost, and I can move it to the next day&lt;/li>
+&lt;/ul>
+&lt;h3 id="time-tracking">Time Tracking&lt;/h3>
+&lt;p>I use &lt;a href="https://toggl.com/">Toggl&lt;/a> to track how much time I spend on a task and focus while working.
+Toggl has a concept of clients and tasks, I defined my clients as DataChef, University and Personal stuff and tasks are my current work, whenever I decide to work on something I start the timer choose the client and start working. The remarkable feature is that they have a Pomodoro timer too, and I use this technique to focus on my job.
+&lt;img src="https://glyphack.com/toggl-timeline.png" alt="Toggl Timeline">
+If you&amp;rsquo;re not familiar with Pomodoro, here is the procedure from Wikipedia&lt;/p>
+&lt;blockquote>
+&lt;ol>
+&lt;li>Decide on the task to be done.&lt;/li>
+&lt;li>Set the Pomodoro timer (typically for 25 minutes).&lt;/li>
+&lt;li>Work on the task.&lt;/li>
+&lt;li>End work when the timer rings and take a short break (typically 5–10 minutes).&lt;/li>
+&lt;li>If you have fewer than three Pomodoros, go back to Step 2 and repeat until you go through all three Pomodoros.&lt;/li>
+&lt;li>After three Pomodoros are done, take the fourth Pomodoro and then take an extended break (traditionally 20 to 30 minutes). Once the long break is finished, return to step 2.&lt;/li>
+&lt;/ol>
+&lt;/blockquote>
+&lt;p>I prefer it over other Pomodoro apps because the features it provides, such as reminders, help me to continuously not lose focus and track time.
+I started using Toggl with 25 min focus 5 min break and increased the time to 45 min focus in just two weeks!&lt;/p>
+&lt;h1 id="conclusion">Conclusion&lt;/h1>
+&lt;p>I think task management and time tracking are not only for teams, but people can also boost their productivity with these methods.
+I did not go over all the features of the tools I mentioned because it&amp;rsquo;s not the tools that are important but the techniques you put in place to help yourself with focus and time management.&lt;/p></description></item></channel></rss>
