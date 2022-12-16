@@ -152,31 +152,16 @@ Surprisingly you can use the dependency inversion principle:
 > _Low level policies should depend upon high level policies._
 
 How can we make the application dependent on database in this case?
-
-1. Create two security groups in the database stack. Attach one to DB.
-2. allow connections from one security group to database
-3. expose the security group to other stacks,
-   and attach it to resources that need to access the DB.
+We can just flip the dependency.
 
 ```typescript
 // DB stack
-DbSg = new ec2.SecurityGroup(this, 'db-sg', {
-      ...
- });
-DbAccessSg = new ec2.SecurityGroup(this, 'db-access-sg', {
-      ...
- });
-
-DbSg.addIngressRule(
-      DbAccessSg,
-      ec2.Port.tcp(3306), // database port
-      'Allow from access security group',
-    );
+dbInstance = ...
 
 // App stack
 
 Ec2 = new ec2.Instance(...)
-Ec2.addSecurityGroup(DbAccessSg)
+Ec2.connections.allowTo(Db, ...)
 
 ```
 
