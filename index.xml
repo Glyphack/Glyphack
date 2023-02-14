@@ -1,4 +1,171 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Glyphack</title><link>https://glyphack.com/</link><description>Recent content on Glyphack</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Sun, 13 Nov 2022 09:49:50 +0330</lastBuildDate><atom:link href="https://glyphack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Everything you need to know about splitting CDK stacks</title><link>https://glyphack.com/blog/everything-about-splitting-cdk-stacks/</link><pubDate>Sun, 13 Nov 2022 09:49:50 +0330</pubDate><guid>https://glyphack.com/blog/everything-about-splitting-cdk-stacks/</guid><description>&lt;p>AWS CDK is a tool that lets you define your cloud resources
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Glyphack</title><link>https://glyphack.com/</link><description>Recent content on Glyphack</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Tue, 14 Feb 2023 23:19:18 +0100</lastBuildDate><atom:link href="https://glyphack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Rate Limiter From Scratch in Python Part 1</title><link>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-1/</link><pubDate>Tue, 14 Feb 2023 23:19:18 +0100</pubDate><guid>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-1/</guid><description>&lt;h2 id="introduction">Introduction&lt;/h2>
+&lt;p>After reading &lt;a href="https://bytebytego.com/">ByteByteGo course&lt;/a> motivated me to write a rate limiter. So I decided to do it in &lt;a href="https://aosabook.org/en/500L/introduction.html">500lines&lt;/a> theme.
+We are going to focus on how to create the interfaces and components, to allow extensibility in the predicted ways.&lt;/p>
+&lt;p>You can find the full source code &lt;a href="https://github.com/Glyphack/hera-limit">here&lt;/a>.&lt;/p>
+&lt;h2 id="what-is-a-rate-limiter">What is a Rate Limiter?&lt;/h2>
+&lt;p>Well there are a lot of &lt;a href="https://www.cloudflare.com/en-gb/learning/bots/what-is-rate-limiting/">great explanations&lt;/a> on what is a rate limier but I&amp;rsquo;ll give a very small introduction to it for this post.&lt;/p>
+&lt;p>Rate limiter is a software that limits how many times someone can repeat an action in your software. Take twitter as an example, they need to limit how many times someone can send a tweet per minute otherwise 1 person can create 1 million tweets in a second and fill up all of their server resources.&lt;/p>
+&lt;h2 id="high-level-design">High Level Design&lt;/h2>
+&lt;p>First off what should our rate limiter do? Rate limiter should be a function that takes in a request, decides if the request can go through or not based on the current statistics.&lt;/p>
+&lt;p>We are going to implement the following features:&lt;/p>
+&lt;ol>
+&lt;li>Rule based rate limiting: let user define rules with a simpler version(without nested rules) of &lt;a href="https://github.com/envoyproxy/ratelimit#configuration">envoy rate limit config&lt;/a>.&lt;/li>
+&lt;li>Support both local memory and Redis as storage backend&lt;/li>
+&lt;li>Support the following rate-limit algorithms:&lt;/li>
+&lt;li>Token bucket&lt;/li>
+&lt;li>Fixed window&lt;/li>
+&lt;li>Sliding window log&lt;/li>
+&lt;li>Sliding window counter&lt;/li>
+&lt;li>Distributed deployment model: deploying multiple instances with both consistent and eventual consistent models.&lt;/li>
+&lt;/ol>
+&lt;p>What are the components in our system?&lt;/p>
+&lt;p>&lt;img src="https://glyphack.com/rate-limiter-components.png" alt="System Components">&lt;/p>
+&lt;p>Breaking down the components:&lt;/p>
+&lt;p>Rules storage
+it is responsible for loading rules and providing them to rate limiter. Separating this component allows the service to not depend on how the rules should be loaded into the service. We want to start the application with a set of rules saved on disk, but it&amp;rsquo;s useful to be able to add/remove rules from an API endpoint while the application is running.
+Although we are not going to implement that part in this guide. It&amp;rsquo;s good to separate this for easier testing and future extensibility.&lt;/p>
+&lt;p>Storage&lt;/p>
+&lt;p>This component is responsible for holding data used by rate limiting algorithms. Creating an interface for storage is useful because we can ignore the underlying storage implementation in rate limit algorithms. This allows us to easily use multiple storage backends such as Redis or local memory without having to touch the rate limit algorithm code.
+For the above algorithms we can implement operations &lt;code>exists&lt;/code>, &lt;code>get_value&lt;/code>, &lt;code>set&lt;/code>, &lt;code>incr&lt;/code>.&lt;/p>
+&lt;p>Note that we have this assumption that our datastore for this software is a key/value store, we are not creating a generic store that can be used for other use cases. This helps with writing a simpler interface and implementation for storage. For example we don&amp;rsquo;t require to support a where/filtering clause.&lt;/p>
+&lt;p>&lt;a href="https://www.youtube.com/watch?v=tKbV6BpH-C8">This video&lt;/a>
+gives a nice explanation on why sometimes we must do this.&lt;/p>
+&lt;style>
+#callout {
+background: #f9f9f9;
+padding: 1.5em 1.25em;
+border-radius: 3px;
+display: flex;
+flex-direction: row;
+margin-bottom: 20px;
+}
+#callout-inner {
+margin-left: 1em;
+}
+@media (max-width: 767px) {
+#callout {
+padding: 1.5em 0.75em 1.5em 0.6em;
+}
+#callout-inner {
+margin-left: 0.5em;
+}
+}
+&lt;/style>
+&lt;div id="callout" style="">
+&lt;div>✅&lt;/div>
+&lt;div id="callout-inner">In the above abstraction we are not creating a generic storage but only a key value store. This limits the extensibility of the code but makes the work easier. This is a good choice for rate limiter problem scope. Always be careful when creating a very generic abstraction.&lt;/div>
+&lt;/div>
+&lt;p>Limit Strategy: This component implements the rate limit algorithms without knowing about the underlying storage or API implementation. It should take in a storage and a request and provide a result whether it&amp;rsquo;s limited or not.
+The request details are important to decide whether to limit or not, but we only the request data, IP, and path. So it&amp;rsquo;s better to only take in these values and not depend on a particular request type, then in the future we can write adapters to convert a gRPC request to this functions input format.&lt;/p>
+&lt;p>Service: takes care of orchestrating all the components.
+Upon startup it loads all the rules into memory and creates a list of limit strategies to check.
+Flow of handling requests:&lt;/p>
+&lt;ol>
+&lt;li>Run all the rules that apply to the request path&lt;/li>
+&lt;li>rules provide an answer whether to allow or deny the request.&lt;/li>
+&lt;/ol>
+&lt;p>API: This layer is an interface for other programs to call the rate limiter, for example this part can be exposed to the API gateway. We are not going to implement the API but we implement the logic to rate limit requests. Separating the API and rate limit service is helpful as we can expose different interfaces to integrate with different tools, for example:&lt;/p>
+&lt;ul>
+&lt;li>Importing the rate limiter directly into the app&lt;/li>
+&lt;li>Making it available as a &lt;a href="https://docs.konghq.com/gateway/latest/plugin-development/">Kong plugin&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>The rule structure is part of application interface. Users can define them to rate limit the services, and just like an API we don&amp;rsquo;t change them much. On the other hand the LimitStrategy and Storage can be swapped and replaced with different implementations. So a rule can stay the same while the limiter enforcing the rule can be changed to relax the rule or make it more strict.&lt;/p>
+&lt;h2 id="implementation">Implementation&lt;/h2>
+&lt;h3 id="defining-interfaces">Defining Interfaces&lt;/h3>
+&lt;p>Based on the above rule structure we can use the following structure:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">dataclasses&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">dataclass&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">enum&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">Enum&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">typing&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">List&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">Optional&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">Unit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">str&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">Enum&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">SECOND&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;second&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">MINUTE&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;minute&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">HOUR&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;hour&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nd">@dataclass&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">Descriptor&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">key&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">str&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">unit&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Unit&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">requests_per_unit&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">int&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">value&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Optional&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="nb">str&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="kc">None&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nd">@dataclass&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">Rule&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">path&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">str&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">descriptors&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">List&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">Descriptor&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="nf">match&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">path&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">str&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span> &lt;span class="nb">bool&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">path&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">path&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>dataclass&lt;/code> is used here for easier initialization.&lt;/p>
+&lt;p>Now let&amp;rsquo;s define the storage interface&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">abc&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">ABC&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">abstractmethod&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">enum&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">Enum&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">StorageEngines&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">str&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">Enum&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">REDIS&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;redis&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">MEMORY&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;memory&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">AbstractStorage&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">ABC&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nd">@abstractmethod&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="nf">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">raise&lt;/span> &lt;span class="ne">NotImplementedError&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nd">@abstractmethod&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="nf">set&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">ttl_seconds&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">int&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">raise&lt;/span> &lt;span class="ne">NotImplementedError&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>get&lt;/code> and &lt;code>set&lt;/code> are the required methods for implementing the above algorithms. other operations such as &lt;a href="https://redis.io/commands/decr/">decr&lt;/a> are also available which can increase the performance of our code.&lt;/p>
+&lt;p>Limit strategies only depend on the storage &amp;amp; rule components.
+It should also have a request type for itself which can be used by other components calling it to pass in a request with a generic form. So it does not depend on a specific type of request, but only it&amp;rsquo;s data and path.
+The only public function is &lt;code>do_limit&lt;/code> which takes in a request and determines if it&amp;rsquo;s limited or not.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">LimitStrategies&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">str&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">Enum&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">TOKEN_BUCKET&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;token_bucket&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nd">@dataclass&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">Request&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">path&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">str&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">data&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">dict&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">AbstractStrategy&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">abc&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">ABC&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">metaclass&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">abc&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">ABCMeta&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="fm">__init__&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">storage_backend&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">AbstractStorage&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rule_descriptor&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Descriptor&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span> &lt;span class="kc">None&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">storage_backend&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">storage_backend&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">rule_descriptor&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">rule_descriptor&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nd">@abc.abstractmethod&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="nf">do_limit&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">request&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Request&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">raise&lt;/span> &lt;span class="ne">NotImplementedError&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="token-bucket">Token Bucket&lt;/h3>
+&lt;p>Now that the interfaces are clear we can start implementing the algorithm.&lt;/p>
+&lt;p>From the rule strucutre, we can use the &lt;code>unit&lt;/code> to to refresh tokens in the bucket. and the &lt;code>request_per_unit&lt;/code> to determine bucket capacity.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">TokenBucket&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">AbstractStrategy&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="fm">__init__&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">storage_backend&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">AbstractStorage&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rule_descriptor&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Descriptor&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">super&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">TokenBucket&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="fm">__init__&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">storage_backend&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">rule_descriptor&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">unit&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">rule_descriptor&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">unit&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">unit&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">Unit&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">SECOND&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">refill_period&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">elif&lt;/span> &lt;span class="n">unit&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">Unit&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">MINUTE&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">refill_period&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">60&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">elif&lt;/span> &lt;span class="n">unit&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">Unit&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">HOUR&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">refi&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Everything you need to know about splitting CDK stacks</title><link>https://glyphack.com/blog/everything-about-splitting-cdk-stacks/</link><pubDate>Sun, 13 Nov 2022 09:49:50 +0330</pubDate><guid>https://glyphack.com/blog/everything-about-splitting-cdk-stacks/</guid><description>&lt;p>AWS CDK is a tool that lets you define your cloud resources
 in a languages such as python.
 And like any other project as the codebase grows, it needs to be split into components.&lt;/p>
 &lt;p>CDK projects can be split into multiple stacks.
@@ -110,31 +277,15 @@ Is there a way to make our database stack completely independent?&lt;/p>
 &lt;blockquote>
 &lt;p>&lt;em>Low level policies should depend upon high level policies.&lt;/em>&lt;/p>
 &lt;/blockquote>
-&lt;p>How can we make the application dependent on database in this case?&lt;/p>
-&lt;ol>
-&lt;li>Create two security groups in the database stack. Attach one to DB.&lt;/li>
-&lt;li>allow connections from one security group to database&lt;/li>
-&lt;li>expose the security group to other stacks,
-and attach it to resources that need to access the DB.&lt;/li>
-&lt;/ol>
+&lt;p>How can we make the application dependent on database in this case?
+We can just flip the dependency.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-typescript" data-lang="typescript">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// DB stack
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nx">DbSg&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="nx">ec2&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">SecurityGroup&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="k">this&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;db-sg&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">...&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">});&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">DbAccessSg&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="nx">ec2&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">SecurityGroup&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="k">this&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;db-access-sg&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">...&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">});&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">DbSg&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">addIngressRule&lt;/span>&lt;span class="p">(&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">DbAccessSg&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">ec2&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Port&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">tcp&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">3306&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="c1">// database port
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="s1">&amp;#39;Allow from access security group&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nx">dbInstance&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">...&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// App stack
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Ec2&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="nx">ec2&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Instance&lt;/span>&lt;span class="p">(...)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Ec2&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">addSecurityGroup&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">DbAccessSg&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Ec2&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">connections&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">allowTo&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">Db&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="p">...)&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>With this method your database is not aware of what resources are connected to it.
 You made it a high level policy and other services are now aware of how to connect.&lt;/p>
 &lt;h3 id="remove-unnecessary-dependencies">Remove unnecessary dependencies&lt;/h3>
