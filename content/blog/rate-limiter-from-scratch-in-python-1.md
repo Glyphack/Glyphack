@@ -187,5 +187,284 @@ class TokenBucket(AbstractStrategy):
         elif unit == Unit.MINUTE:
             refill_period = 60
         elif unit == Unit.HOUR:
-            refi
+            refill_period = 3600
+        else:
+            refill_period = 1
+        self.capacity = self.rule_descriptor.requests_per_unit
+        self.refill_every_x_seconds = refill_period
+
 ```
+
+How does token bucket works?
+
+[Wikipedia definition](https://en.wikipedia.org/wiki/Token_bucket) is pretty straightforward:
+
+> - A token is added to the bucket every R seconds.
+> - The bucket can hold at the most B tokens. If a token arrives when the bucket is full, it is discarded.
+
+To translate it into code, for each request we create a key, this key consists of the request path and it's value for the specified key.
+When a request comes in:
+
+- We allow it if it's not in the storage which means it's the first time.
+- If key exists we try to consume one token from it and if it fails we deny
+
+When do we do the refill?
+This part is handled by setting the ttl, after the ttl the bucket is gone and we recreate it and fill it with `capacity`.
+
+```python
+def do_limit(self, request: Request):
+ self.request = request
+ counter_key = self._get_counter_key()
+ if counter_key is None:
+  return False
+ if self._consume(counter_key):
+  return False
+
+ return True
+
+def _get_counter_key(self):
+ descriptor = self.rule_descriptor
+ path = self.request.path
+ key = descriptor.key
+ value = self.request.data[key]
+ if descriptor.value is not None and value != descriptor.value:
+  return None
+ else:
+  return path + "_" + key + "_" + value
+
+def _consume(self, counter_key):
+ counter = self.storage_backend.get(counter_key)
+ if counter is None:
+  counter = self.capacity
+ elif counter <= 0:
+  return False
+
+ counter -= 1
+ self.storage_backend.set(counter_key, counter, self.refill_every_x_seconds)
+
+ return True
+
+```
+
+### Implementing Local Cache
+
+With local cache we need to keep track of the data and ttl(time to live) values.
+
+```python
+from datetime import datetime, timedelta
+from typing import Dict
+
+from hera_limit.storage.storage import AbstractStorage
+
+
+class Memory(AbstractStorage):
+    def __init__(self):
+        self.data = {}
+        self.ttl: Dict[str, datetime] = {}
+
+    def current_time(self):
+        return datetime.now()
+```
+
+Having a wrapper around current time is useful later when mocking the time in tests.
+
+The set operation takes in a a string key and a string value. We don't need to support more complex data structures(sets, maps) with this function as it's not needed.
+
+```python
+def set(self, key: str, value: str, ttl_seconds: int):
+ self.data[key] = value
+ self.ttl[key] = self.current_time() + timedelta(seconds=ttl_seconds)
+```
+
+We add the key to both `data` and `ttl` to be able to determine if a key is expired or not.
+Now when getting a key we need to check the `ttl` has not passed yet.
+
+```python
+def get(self, key):
+ if key in self.ttl:
+  if self.ttl[key] < self.current_time():
+   del self.ttl[key]
+   del self.data[key]
+   return None
+ return self.data.get(key)
+```
+
+{{< callout emoji="💯" text="An improvement idea is to create a process to remove keys with passed `ttl`. Currently if we add many keys but don't retrieve them for a long time it can take space." >}}
+
+### Rate Limiter Service
+
+The service is just the orchestrator of our components. we haven't defined an interface for it now because nothing depends on it.
+
+When the service is started it takes in the rules and since each rule might have multiple descriptors we need to make sure to check all of those if a request path matches it.
+
+The `Config` class holds data such as which limiting strategy to use.
+
+```python
+@dataclass
+class Config:
+    limit_strategy: LimitStrategies
+
+
+class RateLimitService:
+    def __init__(
+        self, config: Config, storage_engine: AbstractStorage, rules: List[Rule]
+    ) -> None:
+        self.rule_to_limits: Dict[Rule, List[AbstractStrategy]] = {}
+        self.storage_engine = storage_engine
+
+        for rule in rules:
+            self.rule_to_limits[rule] = []
+            for descriptor in rule.descriptors:
+                if config.limit_strategy == LimitStrategies.TOKEN_BUCKET:
+                    self.rule_to_limits[rule].append(
+                        TokenBucket(
+                            storage_backend=self.storage_engine,
+                            rule_descriptor=descriptor,
+                        )
+                    )
+                else:
+                    raise NotImplementedError
+```
+
+The limit function is going to find which rules apply for each request and apply all of its descriptors.
+
+```python
+def do_limit(self, request):
+ applied_rules = []
+ for rule, limits in self.rule_to_limits.items():
+  if rule.match(request.path):
+   applied_rules.append(limits)
+ for rule_limits in applied_rules:
+  if rule_limits.do_limit(request):
+   return True
+ return False
+```
+
+### Testing
+
+We did a lot of work before writing tests and it's so unfortunate. I though having tests after setting up the interfaces would be better for this post. But never do this in real life!
+
+We're going to use `pytest` to write tests and we can define the storage as a fixture to inject it in the test cases:
+
+```python
+@pytest.fixture
+def local_storage():
+    yield memory.Memory()
+```
+
+#### Test Token Bucket Algorithm
+
+There are three cases we can test for the implementation:
+
+- When a bucket gets empty it should allow the request anymore
+- Algorithm respects key values, for example if user 1 requests too much only user 1 is limited.
+- If a value for a key is provided then we only limit requests with that value.
+
+An important question that pops up is that how can we test the bucket refills? we need to wait for the `ttl` to pass. We're going to use python [mock](https://docs.python.org/3/library/unittest.mock.html) package and mock the time function that is available on the Memory to fast forward the time.
+
+```python
+def test_token_bucket_apply_limit_per_unit(local_storage):
+    rule_descriptor = Descriptor(
+        key="user_id",
+        requests_per_unit=1,
+        unit=Unit.SECOND,
+    )
+    token_bucket = TokenBucket(
+        storage_backend=local_storage,
+        rule_descriptor=rule_descriptor,
+    )
+    request = Request(path="dd", data={"user_id": "1"})
+    assert token_bucket.do_limit(request) is False
+    assert token_bucket.do_limit(request) is True
+
+    local_storage.current_time = mock.MagicMock(
+        return_value=datetime.datetime.now() + datetime.timedelta(seconds=2)
+    )
+    assert token_bucket.do_limit(request) is False
+
+
+def test_token_bucket_apply_limit_for_values(local_storage):
+    rule_descriptor = Descriptor(
+        key="user_id",
+        requests_per_unit=1,
+        unit=Unit.SECOND,
+    )
+    token_bucket = TokenBucket(
+        storage_backend=local_storage,
+        rule_descriptor=rule_descriptor,
+    )
+    user_1_request = Request(path="dd", data={"user_id": "1"})
+    user_2_request = Request(path="dd", data={"user_id": "2"})
+
+    assert token_bucket.do_limit(user_1_request) is False
+    assert token_bucket.do_limit(user_2_request) is False
+    assert token_bucket.do_limit(user_1_request) is True
+    assert token_bucket.do_limit(user_2_request) is True
+
+
+def test_token_bucket_apply_limit_specific_values(local_storage):
+    rule_descriptor = Descriptor(
+        key="user_id",
+        value="1",
+        requests_per_unit=1,
+        unit=Unit.MINUTE,
+    )
+    token_bucket = TokenBucket(
+        storage_backend=local_storage,
+        rule_descriptor=rule_descriptor,
+    )
+    user_1_req = Request(path="dd", data={"user_id": "1"})
+    user_2_req = Request(path="dd", data={"user_id": "2"})
+
+    assert token_bucket.do_limit(user_1_req) is False
+
+ assert token_bucket.do_limit(user_2_req) is False
+    assert token_bucket.do_limit(user_1_req) is True
+```
+
+#### Test Rate Limiter Service
+
+For rate limiter service we need to create two fixtures, config and local storage:
+
+```python
+@pytest.fixture
+def local_storage():
+    yield memory.Memory()
+
+
+@pytest.fixture
+def config():
+    return Config(
+        limit_strategy=LimitStrategies.TOKEN_BUCKET,
+    )
+```
+
+Now what can be tested in the service? With the limit strategy we were testing if the rule descriptor is applied correctly. Here we should check if the rule is applied correctly, this means we can still test the rule descriptor part, but it's not necessary since if a rule descriptor is not applied correctly then the limit strategy test must throw an error(otherwise we end up with an untested strategy which is a nightmare).
+
+```python
+
+def test_rate_limit_service_applies_the_rule(local_storage: memory.Memory, config: Config):
+    rule_descriptor = Descriptor(
+        key="user_id",
+        requests_per_unit=1,
+        unit=Unit.SECOND,
+    )
+    rule = Rule(path="/limited-path", descriptors=[rule_descriptor])
+    rate_limit_service = RateLimitService(
+        config=config, storage_engine=local_storage, rules=[rule]
+    )
+    request = Request(path="/limited-path", data={"user_id": "1"})
+    assert rate_limit_service.do_limit(request) is False
+    assert rate_limit_service.do_limit(request) is True
+
+    local_storage.current_time = mock.MagicMock(
+        return_value=datetime.datetime.now() + datetime.timedelta(seconds=3)
+    )
+    assert rate_limit_service.do_limit(request) is False
+```
+
+## Conclusion
+
+So far we have a working rate limiter with one implemented rule. I think this would be enough for one read, In the next post we will add more rate limiting algorithms and see how the current structure of the program can be extended.
+
+You can find the [full source code](https://github.com/Glyphack/hera-limit) on my Github.
