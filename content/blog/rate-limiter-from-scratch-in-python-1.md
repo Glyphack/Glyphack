@@ -35,7 +35,7 @@ We are going to implement the following features:
 
 What are the components in our system?
 
-![[Excalidraw/rate-limiter-components]]
+![System Components](/rate-limiter-components.png)
 
 Breaking down the components:
 
