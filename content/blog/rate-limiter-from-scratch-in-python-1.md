@@ -89,6 +89,16 @@ class Unit(str, Enum):
     MINUTE = "minute"
     HOUR = "hour"
 
+    def to_seconds(self) -> int:
+        if self == Unit.SECOND:
+            return 1
+        elif self == Unit.MINUTE:
+            return 60
+        elif self == Unit.HOUR:
+            return 3600
+        else:
+            raise ValueError(f"Unknown unit: {self}")
+
 
 @dataclass
 class Descriptor:
@@ -182,16 +192,8 @@ class TokenBucket(AbstractStrategy):
     ):
         super(TokenBucket, self).__init__(storage_backend, rule_descriptor)
         unit = self.rule_descriptor.unit
-        if unit == Unit.SECOND:
-            refill_period = 1
-        elif unit == Unit.MINUTE:
-            refill_period = 60
-        elif unit == Unit.HOUR:
-            refill_period = 3600
-        else:
-            refill_period = 1
         self.capacity = self.rule_descriptor.requests_per_unit
-        self.refill_every_x_seconds = refill_period
+        self.refill_every_x_seconds = unit.to_seconds()
 
 ```
 
@@ -261,19 +263,14 @@ class Memory(AbstractStorage):
     def __init__(self):
         self.data = {}
         self.ttl: Dict[str, datetime] = {}
-
-    def current_time(self):
-        return datetime.now()
 ```
-
-Having a wrapper around current time is useful later when mocking the time in tests.
 
 The set operation takes in a a string key and a string value. We don't need to support more complex data structures(sets, maps) with this function as it's not needed.
 
 ```python
 def set(self, key: str, value: str, ttl_seconds: int):
  self.data[key] = value
- self.ttl[key] = self.current_time() + timedelta(seconds=ttl_seconds)
+ self.ttl[key] = datetime.now() + timedelta(seconds=ttl_seconds)
 ```
 
 We add the key to both `data` and `ttl` to be able to determine if a key is expired or not.
@@ -282,7 +279,7 @@ Now when getting a key we need to check the `ttl` has not passed yet.
 ```python
 def get(self, key):
  if key in self.ttl:
-  if self.ttl[key] < self.current_time():
+  if self.ttl[key] < datetime.now():
    del self.ttl[key]
    del self.data[key]
    return None
@@ -352,6 +349,14 @@ def local_storage():
     yield memory.Memory()
 ```
 
+Also in order to test that the algorithm respects the time period of a limit,
+we need to mock the `datetime.now()` in our tests.
+Install `freezegun` to do this.
+
+```bash
+pip install freezegun
+```
+
 #### Test Token Bucket Algorithm
 
 There are three cases we can test for the implementation:
@@ -377,10 +382,9 @@ def test_token_bucket_apply_limit_per_unit(local_storage):
     assert token_bucket.do_limit(request) is False
     assert token_bucket.do_limit(request) is True
 
-    local_storage.current_time = mock.MagicMock(
-        return_value=datetime.datetime.now() + datetime.timedelta(seconds=2)
-    )
-    assert token_bucket.do_limit(request) is False
+    time_now = datetime.datetime.now() + datetime.timedelta(seconds=3)
+    with freezegun.freeze_time(time_now):
+        assert token_bucket.do_limit(request) is False
 
 
 def test_token_bucket_apply_limit_for_values(local_storage):
@@ -439,7 +443,14 @@ def config():
     )
 ```
 
-Now what can be tested in the service? With the limit strategy we were testing if the rule descriptor is applied correctly. Here we should check if the rule is applied correctly, this means we can still test the rule descriptor part, but it's not necessary since if a rule descriptor is not applied correctly then the limit strategy test must throw an error(otherwise we end up with an untested strategy which is a nightmare).
+Now what can be tested in the service?
+With the limit strategy we were testing if the rule descriptor is applied correctly.
+
+Here we should check if the rule is applied correctly,
+this means we can still test the rule descriptor part,
+but it's not necessary since if a rule descriptor is not applied correctly
+then the limit strategy test must throw an error(otherwise we end up with an
+untested strategy which is a nightmare).
 
 ```python
 
@@ -457,14 +468,16 @@ def test_rate_limit_service_applies_the_rule(local_storage: memory.Memory, confi
     assert rate_limit_service.do_limit(request) is False
     assert rate_limit_service.do_limit(request) is True
 
-    local_storage.current_time = mock.MagicMock(
-        return_value=datetime.datetime.now() + datetime.timedelta(seconds=3)
-    )
-    assert rate_limit_service.do_limit(request) is False
+    time_now = datetime.datetime.now() + datetime.timedelta(seconds=3)
+    with freezegun.freeze_time(time_now):
+        assert rate_limit_service.do_limit(request) is False
 ```
 
 ## Conclusion
 
-So far we have a working rate limiter with one implemented rule. I think this would be enough for one read, In the next post we will add more rate limiting algorithms and see how the current structure of the program can be extended.
+So far we have a working rate limiter with one implemented rule.
+I think this would be enough for one read,
+In the next post we will add more rate limiting algorithms and see
+how the current structure of the program can be extended.
 
 You can find the [full source code](https://github.com/Glyphack/hera-limit) on my Github.
