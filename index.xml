@@ -1,63 +1,144 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Glyphack</title><link>https://glyphack.com/</link><description>Recent content on Glyphack</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Sun, 19 Feb 2023 20:58:33 +0100</lastBuildDate><atom:link href="https://glyphack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Personalize Macos Environment for Your Productivity</title><link>https://glyphack.com/blog/personalize-macos-environment-for-your-productivity/</link><pubDate>Sun, 19 Feb 2023 20:58:33 +0100</pubDate><guid>https://glyphack.com/blog/personalize-macos-environment-for-your-productivity/</guid><description>&lt;p>MacOS is already a polished environment, but imagine being able to streamline your workflow even further. With personalized tools and a customized environment, you can get your work done with fewer keystrokes and less cognitive load. Think about it - no more wasting time opening websites or going through a tedious process just to get to where you need to be.&lt;/p>
-&lt;p>Investing the time to personalize your tools and environment is a smart move, especially if you plan to do your current profession for years to come. With a set of personalized methods and tools, you can make your routine tasks easier and more efficient.&lt;/p>
-&lt;p>In this guide, we&amp;rsquo;ll explore methods and tools that can help you personalize your environment to suit your needs as a developer. While not everything may be applicable to you, you&amp;rsquo;re sure to find some good ideas to steal or improve upon. We&amp;rsquo;ll go through a list of regular tasks that developers typically face and show you how customized tools can make your work easier and more enjoyable.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Glyphack</title><link>https://glyphack.com/</link><description>Recent content on Glyphack</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Sun, 19 Feb 2023 20:58:33 +0100</lastBuildDate><atom:link href="https://glyphack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Personalize Macos Environment for Your Productivity</title><link>https://glyphack.com/blog/personalize-macos-environment-for-your-productivity/</link><pubDate>Sun, 19 Feb 2023 20:58:33 +0100</pubDate><guid>https://glyphack.com/blog/personalize-macos-environment-for-your-productivity/</guid><description>&lt;p>MacOS is already a polished environment,&lt;/p>
+&lt;p>Investing the time to personalize your tools and environment is a smart move,
+especially if you plan to do your current profession for years to come.
+With a set of personalized methods and tools,
+you can make your routine tasks easier and more efficient.&lt;/p>
+&lt;p>In this guide, we&amp;rsquo;ll explore methods and tools that can help you personalize
+your environment to suit your needs as a developer.
+While not everything may be applicable to you,
+you&amp;rsquo;re sure to find some good ideas to steal or improve upon.
+We&amp;rsquo;ll go through a list of regular tasks that developers face and
+show you how customized tools can make your work easier and more enjoyable.&lt;/p>
 &lt;h2 id="why">Why?&lt;/h2>
-&lt;p>If you&amp;rsquo;re already sold to this idea go ahead and start, otherwise keep reading so I can convince you why you might want to start configuring your tools.&lt;/p>
-&lt;p>I first heard the term &lt;a href="https://www.youtube.com/watch?v=QMVIJhC9Veg">Personalized Development Environment&lt;/a> in the video he talks about why configuring Neovim editor for yourself is useful and good investment. I think this approach works well with other tools too. If you are going to spend 20 years in this profession, you need your customized tools and environment to work with. You can go ahead with default configurations that come out of the box but those are not built for you, they are for everyone. Apple does not know you are going to a lot of meetings everyday and need ready tools to attend them. They don&amp;rsquo;t know your job involves constantly switching between two windows.&lt;/p>
-&lt;p>All of these actions have cognitive overhead to do with default settings. This automations are not primarily here to save your time, they are here so you can complete your stuff more easily. If you need to constantly search some documentation while coding, it&amp;rsquo;s a lot if you have to altTab to your browser find the browser tab and write in the search box, what if you could get a floating window that give you what you need inside the text editor so you don&amp;rsquo;t loose the focus? or even worse opening the browser and end up scrolling reddit.&lt;/p>
+&lt;p>If you&amp;rsquo;re already sold to this idea go ahead and start,
+otherwise keep reading so I can convince you why you might want to start
+configuring your tools.&lt;/p>
+&lt;p>I first heard the term
+&lt;a href="https://www.youtube.com/watch?v=QMVIJhC9Veg">Personalized Development Environment&lt;/a>
+in the video he talks about why configuring Neovim editor for yourself is
+useful and good investment.&lt;/p>
+&lt;p>I think this approach works well with other tools too.
+If you are going to spend 20 years in this profession,
+you need your customized tools and environment to work with.
+That&amp;rsquo;s exactly why you learn touch typing.
+Being able to use keyboard with the least amount of effort is important.&lt;/p>
+&lt;p>You can go ahead with default configurations that come out of the box but those
+are not built for you, they are for everyone.
+Apple does not know you are going to a lot of meetings everyday and need ready
+tools to attend them.
+They don&amp;rsquo;t know your job involves constantly switching between two windows.&lt;/p>
+&lt;p>All of these actions have cognitive overhead to do with default settings.
+This automations are not primarily here to save your time,
+they are here so you can complete your stuff more easily.
+If you need to constantly search some documentation while coding,
+it&amp;rsquo;s a lot if you have to altTab to your browser find the browser tab and
+write in the search box, what if you could get a floating window that give you
+what you need inside the text editor so you don&amp;rsquo;t loose the focus?
+or even worse opening the browser and end up scrolling reddit.&lt;/p>
 &lt;h2 id="how-to-start">How to Start&lt;/h2>
-&lt;p>Since this is all about your own workflow, I can&amp;rsquo;t give you instructions on what to configure. But I give you ideas about what can be done, and next time you wish something was easier to do take a look and see which tool can help you with it.&lt;/p>
-&lt;h2 id="keyboard">Keyboard&lt;/h2>
-&lt;p>Keyboard is the main input to do your work, there&amp;rsquo;s not much to customize about the mouse but keyboard has a lot of possibilities.&lt;/p>
+&lt;p>Since this is all about your own workflow,
+I can&amp;rsquo;t give you instructions on what to configure.&lt;/p>
+&lt;p>But I give you ideas about what can be done,
+and next time you wish something was easier to do take a look and see
+which tool can help you with it.&lt;/p>
+&lt;h3 id="keyboard">Keyboard&lt;/h3>
+&lt;p>Keyboard is the main input to do your work,
+there&amp;rsquo;s not much to customize about the mouse but keyboard has a lot of possibilities.&lt;/p>
+&lt;p>note that using the following tools without knowing touch typing is not possible.&lt;/p>
 &lt;h3 id="remapping">Remapping&lt;/h3>
-&lt;p>Try remapping the keys that you don&amp;rsquo;t use often to things that you miss on the keyboard, some examples are:&lt;/p>
+&lt;p>Try remapping the keys that you don&amp;rsquo;t use often to things that you miss on the
+keyboard, some examples are:&lt;/p>
 &lt;ul>
-&lt;li>Caps lock key can be remapped to Esc, especially if you use vim&lt;/li>
-&lt;li>Fn keys I added media control to stop/play and move between songs&lt;/li>
-&lt;li>&lt;code>§&lt;/code> which I don&amp;rsquo;t know why is it here in the first place&lt;/li>
+&lt;li>Caps lock: key can be remapped to Esc, especially if you use vim&lt;/li>
+&lt;li>Fn keys: I added media control to stop/play and move between songs&lt;/li>
+&lt;li>&lt;code>§&lt;/code>: which I don&amp;rsquo;t know why is it here in the first place can be mapped to &amp;ldquo;`&amp;rdquo;&lt;/li>
 &lt;/ul>
-&lt;p>&lt;a href="https://karabiner-elements.pqrs.org/">Karabiner&lt;/a> can be used for this purpose and it supports more &lt;a href="https://ke-complex-modifications.pqrs.org/">complex modifications&lt;/a> too.&lt;/p>
+&lt;p>&lt;a href="https://karabiner-elements.pqrs.org/">Karabiner&lt;/a> can be used for this purpose.&lt;/p>
+&lt;p>it supports more &lt;a href="https://ke-complex-modifications.pqrs.org/">complex modifications&lt;/a>
+which include things like adding a shortcut for sleep.&lt;/p>
 &lt;h3 id="expanding">Expanding&lt;/h3>
-&lt;p>Text expanding is the action of writing a small text and then it expands to a bigger text. For example instead of typing your work mail every time you can only wirte &lt;code>,wm&lt;/code> and it expands to your work mail.&lt;/p>
-&lt;p>&lt;a href="https://textexpander.com/">TexExpander&lt;/a> is the tool I use.&lt;/p>
+&lt;p>Text expanding is writing a small text and then it expands to a bigger text.&lt;/p>
+&lt;p>For example instead of typing your work mail every time you,
+can only wirte &lt;code>,wm&lt;/code> and it expands to your work mail.&lt;/p>
+&lt;p>&lt;a href="https://textexpander.com/">TexExpander&lt;/a> is the tool I use for this.&lt;/p>
 &lt;p>Some examples I have are:&lt;/p>
 &lt;ul>
 &lt;li>&lt;code>,date&lt;/code> to current date like 19/02/2023&lt;/li>
 &lt;li>multiple shortcuts to write my email addresses&lt;/li>
 &lt;/ul>
-&lt;p>You can also have macros for run javascript code to format something, fro example this snippet and format json in my clipboard for when I need to share something with others:&lt;/p>
+&lt;p>You can also have macros for run javascript code to format something,
+for example this snippet and format json in my clipboard for when I need
+to share something with others:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-js" data-lang="js">&lt;span class="line">&lt;span class="cl">&lt;span class="nx">JSON&lt;/span>&lt;span class="err">﻿&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="err">﻿&lt;/span>&lt;span class="nx">stringify&lt;/span>&lt;span class="err">﻿&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="err">﻿&lt;/span>&lt;span class="o">%&lt;/span>&lt;span class="nx">clipboard&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="err">﻿&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">2&lt;/span>&lt;span class="err">﻿&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="err">﻿&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This is so powerful for me, I deal with a lot of json outputs everyday and being able to format it without opening a website and paste the json in and format it to look at what it I can continue my work in my environment.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This is so powerful for me,
+I deal with a lot of json outputs everyday and being able to format it without
+opening a website and paste the json in and format it to look at what it I can
+continue my work in my environment.&lt;/p>
 &lt;h3 id="raycast">Raycast&lt;/h3>
-&lt;p>While other suggestions have multiple implementations that you can use, I don&amp;rsquo;t think there&amp;rsquo;s a better launcher than &lt;a href="https://www.raycast.com">Raycast&lt;/a>.&lt;/p>
-&lt;p>What does it do? It gives a launch bar(like Spotlight) that can open applications, find files and perform actions. I suggest reading through their &lt;a href="https://manual.raycast.com/">manual&lt;/a> to understand all it can do.
-With Raycast you can integrate the stuff you need while reading/coding to quickly pull them off without leaving your current work.&lt;/p>
+&lt;p>While other suggestions have multiple implementations that you can use,
+I don&amp;rsquo;t think there&amp;rsquo;s a better launcher than &lt;a href="https://www.raycast.com">Raycast&lt;/a>.&lt;/p>
+&lt;p>What does it do?&lt;/p>
+&lt;p>It gives a launch bar(like Spotlight) that can open applications,
+find files and perform actions. I suggest reading through their
+&lt;a href="https://manual.raycast.com/">manual&lt;/a> to understand all it can do.
+With Raycast you can integrate the stuff you need while reading/coding to quickly
+pull them off without leaving your current work.&lt;/p>
 &lt;h4 id="extensions">Extensions&lt;/h4>
-&lt;p>Raycast is easy to extend yourself, every time you find yourself doing something over an over or need to open something regularly, take a look at it&amp;rsquo;s [store](but you can use public extensions &lt;a href="https://www.raycast.com/store">here&lt;/a>.) to check if there&amp;rsquo;s a solution.&lt;/p>
-&lt;p>After installing the extensions you can configure them or set shortcuts by searching &amp;ldquo;extensions&amp;rdquo; in Raycast search bar.
-For example these are some of the things I&amp;rsquo;m using
-&lt;img src="https://glyphack.com/my-raycast.png" alt="My Raycast">
-Notice that you can &lt;a href="https://raycastapp.notion.site/Command-Aliases-and-Hotkeys-43cba38c19dd4000bc75404c11eb0f80">set hotkeys&lt;/a> for most used commands to activate them immediately.&lt;/p>
-&lt;p>&lt;a href="https://www.raycast.com/raycast/browser-bookmarks">Search bookmarks&lt;/a>: Start bookmarking any page you need to visit frequently, for example your team Jira board, AWS account, Homepages for your projects, or university portal. Then use this extension to search the page you want to open from bookmarks and open it with.
-The reason this is handy is that, first you don&amp;rsquo;t need to open browser to search and through the history to open frequently visited pages also you don&amp;rsquo;t have to navigate through the pages to get to where you want. Imagine navigating through Confluence to update some page you have to do everyday.&lt;/p>
-&lt;p>Clipboard History &amp;amp; edit are useful for traveling trough clipboard and change the content.&lt;/p>
-&lt;p>&lt;a href="https://raycastapp.notion.site/Calendar-b4bdcf402a024c37940e46e8dcf2da91">Calendar&lt;/a> to check the events and join them.&lt;/p>
-&lt;p>&lt;a href="https://github.com/raycast/extensions/blob/4d68ff23122d5505ab1be6dc595427f8f95fa7ea/extensions/amazon-aws/README.md">AWS&lt;/a> extension to browse resources, everyone knows AWS console sucks and is slow.
-Fun note: I previously tried to implement the same for &lt;a href="https://github.com/Glyphack/aws-slapdash/">slapdash&lt;/a> and after writing a plugin for them realized I have to leave their platform because the APIs are not designed to create wonderful community.&lt;/p>
-&lt;p>&lt;a href="https://www.raycast.com/raycast/github">Github&lt;/a> Can be useful if you happen to do open source, it can search repos, or show you the status of your PRs:
+&lt;p>Raycast is easy to extend yourself, every time you find yourself doing something
+over an over or need to open something regularly, take a look at it&amp;rsquo;s
+&lt;a href="https://www.raycast.com/store">store&lt;/a>
+to check if there&amp;rsquo;s a solution.&lt;/p>
+&lt;p>After installing the extensions you can configure them or set shortcuts by
+searching &amp;ldquo;extensions&amp;rdquo; in Raycast search bar.&lt;/p>
+&lt;p>For example these are some of the things I&amp;rsquo;m using
+&lt;img src="https://glyphack.com/my-raycast.png" alt="My Raycast">&lt;/p>
+&lt;p>Notice that you can &lt;a href="https://raycastapp.notion.site/Command-Aliases-and-Hotkeys-43cba38c19dd4000bc75404c11eb0f80">set hotkeys&lt;/a>
+for most used commands to activate them immediately.&lt;/p>
+&lt;p>&lt;a href="https://www.raycast.com/raycast/browser-bookmarks">Search bookmarks&lt;/a>
+Start bookmarking any page you need to visit frequently, for example your
+team Jira board, AWS account, Homepages for your projects, or university portal.
+Then use this extension to search the page you want to open from bookmarks and
+open it with.&lt;/p>
+&lt;p>The reason this is handy is that, first you don&amp;rsquo;t need to open browser to search
+and through the history to open frequently visited pages also you don&amp;rsquo;t have to
+navigate through the pages to get to where you want.
+Imagine navigating through Confluence to update some page you have to do everyday.&lt;/p>
+&lt;p>Clipboard history &amp;amp; edit for traveling trough clipboard and change the content.&lt;/p>
+&lt;p>&lt;a href="https://raycastapp.notion.site/Calendar-b4bdcf402a024c37940e46e8dcf2da91">Calendar&lt;/a>
+to check the events and join them.&lt;/p>
+&lt;p>&lt;a href="https://github.com/raycast/extensions/blob/4d68ff23122d5505ab1be6dc595427f8f95fa7ea/extensions/amazon-aws/README.md">AWS&lt;/a>
+extension to browse resources, everyone knows AWS console sucks and is slow.
+Fun note: I previously tried to implement the same for
+&lt;a href="https://github.com/Glyphack/aws-slapdash/">slapdash&lt;/a>
+after writing a plugin for them realized their APIs are not developer friendly.
+And this is a risk because the usefulness of these products are tied to developers.&lt;/p>
+&lt;p>&lt;a href="https://www.raycast.com/raycast/github">Github&lt;/a>
+Can be useful if you happen to do open source, it can search repos,
+and PRs:
 &lt;img src="https://glyphack.com/raycast-github-pr.png" alt="Raycast Github">&lt;/p>
 &lt;h4 id="apps">Apps&lt;/h4>
-&lt;p>Another feature is to manage some application windows with hotkeys. This is useful 1,2 applications where you switch them all the time. For example for me it&amp;rsquo;s terminal and browser:
+&lt;p>Another feature is to manage some application windows with hotkeys.
+This is useful 1,2 applications where you switch them all the time.
+For example for me it&amp;rsquo;s terminal and browser:
 &lt;img src="https://glyphack.com/raycast-apps.png" alt="Raycas Apps">&lt;/p>
-&lt;p>With this setting not only you can launch the app but you can focus the window anywhere with hotkey.&lt;/p>
+&lt;p>With this setting not only you can launch the app but you can focus the window
+anywhere with hotkey.&lt;/p>
 &lt;h4 id="quicklinks">Quicklinks&lt;/h4>
-&lt;p>Last feature to setup is Quicklinks, with this you can predefine sites to open with some parameters, this can be used to search google, or translate a world.
+&lt;p>Last feature to setup is Quicklinks,
+with this you can predefine sites to open with some parameters,
+this can be used to search google, or translate a world.
 &lt;img src="https://glyphack.com/raycast-quicklinks.png" alt="Raycas Quicklinks">&lt;/p>
 &lt;h2 id="automation-tools">Automation tools&lt;/h2>
 &lt;h3 id="hammerspoon">Hammerspoon&lt;/h3>
-&lt;p>This one&amp;rsquo;s the most powerful tool, it&amp;rsquo;s a bridge between MacOS and Lua. You can &lt;a href="https://www.hammerspoon.org/docs/index.html">customize anything&lt;/a> with it&amp;rsquo;s builtin libraries called spoon.&lt;/p>
-&lt;p>You can take a look at &lt;a href="https://github.com/Glyphack/dotfiles/blob/master/hammerspoon/init.lua">my config&lt;/a> for inspirations. The rest are explanations of my config.&lt;/p>
-&lt;p>One useful feature if you do multiple meetings per day(which you probably do) is it have a global shortcut to mute/unmute your mic to don&amp;rsquo;t annoy others with noise in the meeting and quickly unmute. I&amp;rsquo;m doing this with &lt;a href="https://github.com/cmaahs/global-mute-spoon">global mute spoon&lt;/a>.&lt;/p>
+&lt;p>This one&amp;rsquo;s the most powerful tool, it&amp;rsquo;s a bridge between MacOS and Lua. You can
+&lt;a href="https://www.hammerspoon.org/docs/index.html">customize anything&lt;/a>
+with it&amp;rsquo;s builtin libraries called spoons.&lt;/p>
+&lt;p>You can take a look at
+&lt;a href="https://github.com/Glyphack/dotfiles/blob/master/hammerspoon/init.lua">my config&lt;/a>
+for inspirations. The rest are explanations of my config.&lt;/p>
+&lt;p>One useful feature if you do multiple meetings per day(which you probably do)
+is it have a global shortcut to mute/unmute your mic to don&amp;rsquo;t annoy others with
+noise in the meeting and quickly unmute. I&amp;rsquo;m doing this with &lt;a href="https://github.com/cmaahs/global-mute-spoon">global mute spoon&lt;/a>.&lt;/p>
 &lt;p>Here&amp;rsquo;s how the configuration looks like&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-lua" data-lang="lua">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">local&lt;/span> &lt;span class="n">GlobalMute&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">hs.loadSpoon&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;GlobalMute&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">GlobalMute&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">bindHotkeys&lt;/span>&lt;span class="p">({&lt;/span>
@@ -65,7 +146,8 @@ Fun note: I previously tried to implement the same for &lt;a href="https://githu
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mute&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">lesshyper&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;m&amp;#34;&lt;/span> &lt;span class="p">},&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">toggle&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">hyper&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;t&amp;#34;&lt;/span> &lt;span class="p">}&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">})&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>I also use this to set my audio devices when different devices are connected for example this one sets my output to speakers when my external mic &amp;amp; speaker is connected, so I don&amp;rsquo;t have to:&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>I also use Hammerspoon to set my audio devices when different devices are connected.
+this one sets my output to speakers when my external mic &amp;amp; speaker is connected:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-lua" data-lang="lua">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">local&lt;/span> &lt;span class="kr">function&lt;/span> &lt;span class="nf">switchOutputAfterExternalMicConnected&lt;/span>&lt;span class="p">()&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">current&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">hs.audiodevice&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">defaultInputDevice&lt;/span>&lt;span class="p">():&lt;/span>&lt;span class="n">name&lt;/span>&lt;span class="p">()&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Current device: &amp;#34;&lt;/span> &lt;span class="o">..&lt;/span> &lt;span class="n">current&lt;/span>&lt;span class="p">)&lt;/span>
@@ -75,45 +157,96 @@ Fun note: I previously tried to implement the same for &lt;a href="https://githu
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">end&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="crontab">Crontab&lt;/h3>
-&lt;p>If you need to execute something regularly, create a crontab for it. MacOS has [crontab](&lt;a href="https://alvinalexander.com/mac-os-x/mac-osx-startup-crontab-launchd-jobs/">https://crontab.guru/&lt;/a> which you can use for this.&lt;/p>
-&lt;p>Also can create push notifications using hammerspoon and calling an API to check for new notifications(for example Github).&lt;/p>
+&lt;p>If you need to execute something regularly, create a crontab for it.
+MacOS has &lt;a href="https://alvinalexander.com/mac-os-x/mac-osx-startup-crontab-launchd-jobs/">crontab&lt;/a>
+which you can use for this.&lt;/p>
+&lt;p>Also can create push notifications using hammerspoon and
+calling an API to check for new notifications(for example Github).&lt;/p>
 &lt;h2 id="terminal">Terminal&lt;/h2>
-&lt;p>I assume you do use terminal a lot, otherwise you would not read this far cause developers who don&amp;rsquo;t use terminal effectively don&amp;rsquo;t care much about the previous stuff either.&lt;/p>
+&lt;p>I assume you do use terminal a lot,
+otherwise you would not read this far cause developers who don&amp;rsquo;t use terminal
+effectively don&amp;rsquo;t care much about the previous stuff either.&lt;/p>
 &lt;p>Terminal is designed to be configured with functions for frequent commands.&lt;/p>
 &lt;p>I&amp;rsquo;m not gonna talk much about terminal but just make sure to:&lt;/p>
 &lt;ul>
-&lt;li>Use a &lt;a href="https://github.com/junegunn/fzf">fuzzy finder&lt;/a> for searching directories and history&lt;/li>
+&lt;li>Use a &lt;a href="https://github.com/junegunn/fzf">fuzzy finder&lt;/a>
+for searching directories and history&lt;/li>
 &lt;li>Create a lot of functions for frequent used commands&lt;/li>
 &lt;/ul>
 &lt;h3 id="create-functions">Create Functions&lt;/h3>
-&lt;p>For example I used to record a lot videos for my team and share them, but had to compress them before so I created this function:&lt;/p>
+&lt;p>For example I used to record a lot videos for my team and share them,
+but had to compress them before so I created this function:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fish" data-lang="fish">&lt;span class="line">&lt;span class="cl">&lt;span class="k">function&lt;/span> &lt;span class="nf">compress_vid&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nf">ffmpeg&lt;/span> &lt;span class="na">-i&lt;/span> &lt;span class="nv">$argv&lt;/span> &lt;span class="na">-vcodec&lt;/span> h264 &lt;span class="na">-acodec&lt;/span> aac &lt;span class="na">-strict&lt;/span> -&lt;span class="m">2&lt;/span> output.mp4
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">end&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Or you might be doing a lot of &lt;a href="https://github.com/Glyphack/dotfiles/blob/master/fish/functions/start-dynamodb.fish">dynamoDB&lt;/a> and &lt;a href="https://github.com/Glyphack/dotfiles/blob/master/fish/functions/start-kafka.fish">Kafka&lt;/a> development so have commands to ready your environment for test.&lt;/p>
-&lt;p>I&amp;rsquo;m using fish but this can be applied to other shells as well. In case you need to run particular commands every time like activating the python virtualenv, use a hook to auto activate it for you. I&amp;rsquo;m using &lt;a href="https://github.com/justinmayer/virtualfish">virtualFish&lt;/a> for this.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Or you might be doing a lot of
+&lt;a href="https://github.com/Glyphack/dotfiles/blob/master/fish/functions/start-dynamodb.fish">dynamoDB&lt;/a>
+and
+&lt;a href="https://github.com/Glyphack/dotfiles/blob/master/fish/functions/start-kafka.fish">Kafka&lt;/a>
+development so have commands to ready your environment for test.&lt;/p>
+&lt;p>I&amp;rsquo;m using fish but this can be applied to other shells as well.
+In case you regularly run particular commands like activating the python virtualenv,
+use a hook to auto activate it for you.
+I&amp;rsquo;m using &lt;a href="https://github.com/justinmayer/virtualfish">virtualFish&lt;/a> for this.&lt;/p>
 &lt;h3 id="fuzzy-finder">Fuzzy Finder&lt;/h3>
 &lt;p>After you installed fzf make sure to configure it for these shortcuts:&lt;/p>
 &lt;ul>
-&lt;li>&lt;a href="https://github.com/Glyphack/dotfiles/blob/master/fish/config.fish#L12">Alt+C&lt;/a>: for searching and navigating to a directory&lt;/li>
-&lt;li>&lt;a href="https://github.com/Glyphack/dotfiles/blob/master/fish/config.fish#L11">Ctrl+T&lt;/a>: to search the current dir and use the path&lt;/li>
-&lt;li>Ctrl+R: to search the history&lt;/li>
+&lt;li>&lt;a href="https://github.com/Glyphack/dotfiles/blob/master/fish/config.fish#L12">Alt+C&lt;/a>
+for searching and navigating to a directory&lt;/li>
+&lt;li>&lt;a href="https://github.com/Glyphack/dotfiles/blob/master/fish/config.fish#L11">Ctrl+T&lt;/a>
+to search the current dir and use the path&lt;/li>
+&lt;li>Ctrl+R to search the history&lt;/li>
 &lt;/ul>
-&lt;p>This Alt+C command is really handy for me to navigate and open projects, you can see that I set it to only search my development directory.&lt;/p>
-&lt;p>Also learn to configure the tools you use often, read their manuals to find out what features they have that might be useful for you.&lt;/p>
+&lt;p>This Alt+C command is really handy for me to navigate and open projects,
+you can see that I set it to only search my development directory.&lt;/p>
+&lt;p>Also learn to configure the tools you use often,
+read their manuals to find out what features they have that might be useful for you.&lt;/p>
 &lt;h3 id="configure-git">Configure Git&lt;/h3>
-&lt;p>A good one to start can be git, you can setup &lt;a href="https://github.com/Glyphack/dotfiles/blob/master/gitconf/.gitignore_global">global ignore file&lt;/a>, &lt;a href="https://github.com/Glyphack/dotfiles/blob/master/gitconf/.gitconfig#L8">aliases&lt;/a> and optional configurations for some projects. For example I override some configs when I&amp;rsquo;m in my company projects folder.&lt;/p>
-&lt;p>Take advantage of TUI apps like &lt;a href="https://github.com/jesseduffield/lazygit">lazy-git&lt;/a>, to make your work easier. IMO the only way to work with git should be the git client in your text editor. Having to open the text editor for only git operations might take your focus.&lt;/p>
+&lt;p>A good one to start can be git,
+you can setup &lt;a href="https://github.com/Glyphack/dotfiles/blob/master/gitconf/.gitignore_global">global ignore file&lt;/a>,
+&lt;a href="https://github.com/Glyphack/dotfiles/blob/master/gitconf/.gitconfig#L8">aliases&lt;/a>
+and optional configurations for some projects.
+For example I override some configs when I&amp;rsquo;m in my company projects folder.&lt;/p>
+&lt;p>Take advantage of TUI apps like &lt;a href="https://github.com/jesseduffield/lazygit">lazy-git&lt;/a>,
+to make your work easier.&lt;/p>
+&lt;p>IMO the only way to work with git should not be the git client in your text editor.
+Having to open the text editor for only git operations might take your focus.&lt;/p>
 &lt;h3 id="starship">Starship&lt;/h3>
-&lt;p>Use &lt;a href="https://starship.rs/">Starship&lt;/a>, it can give you information about the directory your in, like what git branch are you on or what AWS account is current being used.&lt;/p>
+&lt;p>Use &lt;a href="https://starship.rs/">Starship&lt;/a>,
+it can give you information about the directory your in,
+like what git branch are you on or what AWS account is current being used.&lt;/p>
+&lt;p>I use &lt;a href="https://github.com/Glyphack/dotfiles/blob/cc7bd423da69321036d1eba8ece9316801f6bd85/starship/starship.toml#L3">this setting to&lt;/a>
+have the AWS account name and region&lt;/p>
 &lt;h3 id="aws">AWS&lt;/h3>
 &lt;p>Since I mentioned AWS, make sure to use one of &lt;a href="https://github.com/99designs/aws-vault">aws-vault&lt;/a> or &lt;a href="https://github.com/benkehoe/aws-sso-util">aws-sso-util&lt;/a> to switch AWS accounts. You should be able to switch quickly for your testing and development, and this does not have to involve going to console and copying credentials every time.&lt;/p>
 &lt;h3 id="neovim">Neovim&lt;/h3>
-&lt;p>There are a lot of guides to configure and work with Neovim, I suggest &lt;a href="https://www.youtube.com/watch?v=w7i4amO_zaE">this&lt;/a> and &lt;a href="https://www.youtube.com/watch?v=stqUbv-5u2s">this&lt;/a>. You can also find the plugins/tools I use or think is interesting to check in my &lt;a href="https://github.com/stars/Glyphack/lists/tools">stars list&lt;/a>.&lt;/p>
+&lt;p>There are a lot of guides to configure and work with Neovim,
+I suggest &lt;a href="https://www.youtube.com/watch?v=w7i4amO_zaE">this&lt;/a>
+and
+&lt;a href="https://www.youtube.com/watch?v=stqUbv-5u2s">this&lt;/a>.
+You can also find the plugins/tools I use or think is interesting to check in my
+&lt;a href="https://github.com/stars/Glyphack/lists/tools">stars list&lt;/a>.&lt;/p>
 &lt;h3 id="learn-your-code-editor">Learn Your Code Editor&lt;/h3>
-&lt;p>Even if you don&amp;rsquo;t use something like Neovim, your editor supports a lot of customizations, and should be customized. When you find some action requires a lot of effort, try to customize it in your Editor.&lt;/p>
-&lt;p>For example, most of the time I stage part of the file I&amp;rsquo;m editing for commits. In VSCode you need to open the version control panel, scroll through the file and right click to select stage selected. This is super hard if you have to do it 20 times in a productive day. I have a config in my vim to directly stage hunks in my editor to commit, but I&amp;rsquo;m sure you can find a VSCode equivalent.&lt;/p>
-&lt;p>The moral of this part is, no matter what editor you use, after you realized some set of actions are the ones you do more than others try to customize your editor to allow those actions to be done more easily, without taking you out of the zone.&lt;/p></description></item><item><title>Rate Limiter From Scratch in Python Part 1</title><link>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-1/</link><pubDate>Tue, 14 Feb 2023 23:19:18 +0100</pubDate><guid>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-1/</guid><description>&lt;h2 id="introduction">Introduction&lt;/h2>
+&lt;p>Even if you don&amp;rsquo;t use something like Neovim,
+your editor supports a lot of customizations, and should be customized.
+When you find some action requires a lot of effort, try to customize it in your Editor.&lt;/p>
+&lt;p>For example, most of the time I stage part of the file I&amp;rsquo;m editing for commits.
+In VSCode you need to open the version control panel,
+scroll through the file and right click to select stage selected.
+This is super hard if you have to do it 20 times in a productive day.
+I have a config in my vim to directly stage hunks in my editor to commit,
+but I&amp;rsquo;m sure you can find a VSCode equivalent.&lt;/p>
+&lt;p>The moral of this part is,
+no matter what editor you use after you realized some set of
+actions are the ones you do more than others try to customize your editor to
+allow those actions to be done more easily,
+without taking you out of the zone.&lt;/p>
+&lt;h2 id="conclusion">Conclusion&lt;/h2>
+&lt;p>This was a long post, I wanted to go through my own configuration and
+update some stuff so decided to share it here as well.&lt;/p>
+&lt;p>Hope it&amp;rsquo;s useful for you and don&amp;rsquo;t forget the main point,
+customize your tools for your job to be able to get things done with less thinking.&lt;/p>
+&lt;p>If you use other tools customizations I&amp;rsquo;ll be happy to hear them.&lt;/p></description></item><item><title>Rate Limiter From Scratch in Python Part 1</title><link>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-1/</link><pubDate>Tue, 14 Feb 2023 23:19:18 +0100</pubDate><guid>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-1/</guid><description>&lt;h2 id="introduction">Introduction&lt;/h2>
 &lt;p>After reading &lt;a href="https://bytebytego.com/">ByteByteGo course&lt;/a> motivated me to write a rate limiter. So I decided to do it in &lt;a href="https://aosabook.org/en/500L/introduction.html">500lines&lt;/a> theme.
 We are going to focus on how to create the interfaces and components, to allow extensibility in the predicted ways.&lt;/p>
 &lt;p>You can find the full source code &lt;a href="https://github.com/Glyphack/hera-limit">here&lt;/a>.&lt;/p>
