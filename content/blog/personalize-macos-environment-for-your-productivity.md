@@ -27,7 +27,7 @@ configuring your tools.
 
 I first heard the term
 [Personalized Development Environment](https://www.youtube.com/watch?v=QMVIJhC9Veg)
-in the video he talks about why configuring Neovim editor for yourself is
+in the video tj talks about why configuring Neovim editor for yourself is
 useful and good investment.
 
 I think this approach works well with other tools too.
@@ -86,7 +86,7 @@ which include things like adding a shortcut for sleep.
 Text expanding is writing a small text and then it expands to a bigger text.
 
 For example instead of typing your work mail every time you,
-can only wirte `,wm` and it expands to your work mail.
+can only write `,wm` and it expands to your work mail.
 
 [TexExpander](https://textexpander.com/) is the tool I use for this.
 
@@ -170,17 +170,17 @@ and PRs:
 Another feature is to manage some application windows with hotkeys.
 This is useful 1,2 applications where you switch them all the time.
 For example for me it's terminal and browser:
-![Raycas Apps](/raycast-apps.png)
+![Raycast Apps](/raycast-apps.png)
 
 With this setting not only you can launch the app but you can focus the window
 anywhere with hotkey.
 
-#### Quicklinks
+#### QuickLinks
 
-Last feature to setup is Quicklinks,
+Last feature to setup is QuickLinks,
 with this you can predefine sites to open with some parameters,
-this can be used to search google, or translate a world.
-![Raycas Quicklinks](/raycast-quicklinks.png)
+this can be used to search google, or translate a word.
+![Raycast QuickLinks](/raycast-quicklinks.png)
 
 ## Automation tools
 
