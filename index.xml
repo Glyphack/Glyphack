@@ -1,4 +1,485 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Glyphack</title><link>https://glyphack.com/</link><description>Recent content on Glyphack</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Sun, 19 Feb 2023 20:58:33 +0100</lastBuildDate><atom:link href="https://glyphack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Personalize Macos Environment for Your Productivity</title><link>https://glyphack.com/blog/personalize-macos-environment-for-your-productivity/</link><pubDate>Sun, 19 Feb 2023 20:58:33 +0100</pubDate><guid>https://glyphack.com/blog/personalize-macos-environment-for-your-productivity/</guid><description>&lt;p>MacOS is already a polished environment,&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Glyphack</title><link>https://glyphack.com/</link><description>Recent content on Glyphack</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Tue, 21 Feb 2023 21:34:49 +0100</lastBuildDate><atom:link href="https://glyphack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Rate Limiter From Scratch in Python Part 2</title><link>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-2/</link><pubDate>Tue, 21 Feb 2023 21:34:49 +0100</pubDate><guid>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-2/</guid><description>&lt;!-- raw HTML omitted -->
+&lt;ul>
+&lt;li>&lt;a href="#introduction">Introduction&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#new-rate-limiting-algorithms">New Rate Limiting Algorithms&lt;/a>
+&lt;ul>
+&lt;li>&lt;a href="#fixed-window">Fixed Window&lt;/a>
+&lt;ul>
+&lt;li>&lt;a href="#test">Test&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;a href="#sliding-window-log">Sliding Window Log&lt;/a>
+&lt;ul>
+&lt;li>&lt;a href="#testing">Testing&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;a href="#sliding-window-count">Sliding Window Count&lt;/a>
+&lt;ul>
+&lt;li>&lt;a href="#tests">Tests&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;a href="#conclusion">Conclusion&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;!-- raw HTML omitted -->
+&lt;h2 id="introduction">Introduction&lt;/h2>
+&lt;p>In the last &lt;a href="./rate-limiter-from-scratch-in-python-1">post&lt;/a>
+I started writing a rate limiter.
+The project right now supports only 1 rate limiting algorithm(Token Bucket).&lt;/p>
+&lt;p>In this part we&amp;rsquo;re going to implement the following algorithms:&lt;/p>
+&lt;ul>
+&lt;li>Fixed window&lt;/li>
+&lt;li>Sliding window log&lt;/li>
+&lt;li>Sliding window count&lt;/li>
+&lt;/ul>
+&lt;p>We&amp;rsquo;ll see how each algorithm compares to another, and the trade offs.
+Also after implementing each one we&amp;rsquo;ll see how to abstractions we created
+previously helped minimizing the implementation for new algorithms.&lt;/p>
+&lt;p>At the end of this post we&amp;rsquo;ll add Redis as storage backend to our application.&lt;/p>
+&lt;h2 id="new-rate-limiting-algorithms">New Rate Limiting Algorithms&lt;/h2>
+&lt;p>Before implementing the algorithm we can start by adding them to our rate limiter
+service.&lt;/p>
+&lt;p>First we need to update the LimiterStrategy enum:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">LimitStrategies&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">str&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">Enum&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">TOKEN_BUCKET&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;token_bucket&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">FIXED_WINDOW&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;fixed_window&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">SLIDING_WINDOW_LOG&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;sliding_window_log&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">SLIDING_WINDOW_COUNTER&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;sliding_window_counter&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The code that initialized the limiter strategy objects is in rate limiter service.
+You can use a empty class(with no implementation) and implement it as we go
+through them one by one.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span> &lt;span class="n">descriptor&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">rule&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">descriptors&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">config&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">limit_strategy&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">LimitStrategies&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">TOKEN_BUCKET&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">limits&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">append&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">TokenBucket&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">storage_backend&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">storage_engine&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rule_descriptor&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">descriptor&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">elif&lt;/span> &lt;span class="n">config&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">limit_strategy&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">LimitStrategies&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">FIXED_WINDOW&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">limits&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">append&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">TokenBucket&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">storage_backend&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">storage_engine&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rule_descriptor&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">descriptor&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">elif&lt;/span> &lt;span class="n">config&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">limit_strategy&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">LimitStrategies&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">SLIDING_WINDOW_LOG&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">limits&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">append&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">TokenBucket&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">storage_backend&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">storage_engine&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rule_descriptor&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">descriptor&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">elif&lt;/span> &lt;span class="n">config&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">limit_strategy&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">LimitStrategies&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">SLIDING_WINDOW_COUNTER&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">limits&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">append&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">TokenBucket&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">storage_backend&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">storage_engine&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rule_descriptor&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">descriptor&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">raise&lt;/span> &lt;span class="ne">ValueError&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="sa">f&lt;/span>&lt;span class="s2">&amp;#34;Limit strategy &lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">config&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">limit_strategy&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2"> not supported&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="fixed-window">Fixed Window&lt;/h3>
+&lt;p>In the fixed window algorithm, we split the time into unit-size buckets.
+Each bucket has a specified capacity and can limit the requests once it&amp;rsquo;s reached.&lt;/p>
+&lt;p>For example, if our unit is 1 minute, our buckets would be 10:00, 10:01, and 10:02.&lt;/p>
+&lt;p>Now how can we choose the hash key?
+A hash key like &lt;code>path_1000_&amp;lt;key&amp;gt;_&amp;lt;value&amp;gt;&lt;/code> is good because
+it puts all requests from a specific entity to a path into the correct bucket.
+So we can query this key and check the count to determine the request.&lt;/p>
+&lt;p>But choosing the hour &amp;amp; minute combination to add time to the key is not going to work,
+because there might be collisions when the day passes and we reach that time again.&lt;/p>
+&lt;p>To overcome this problem, we can use &lt;a href="https://www.unixtimestamp.com/">timestmap&lt;/a>,
+since each time second has a unique timestamp, we resolve the collision.&lt;/p>
+&lt;p>Since the timestamp represents the seconds,
+we can&amp;rsquo;t create a bucket for minute intervals if we use this value directly in the cache.
+When the limiting unit is a minute, we need to find the value which
+is the same for every moment in a given minute.&lt;/p>
+&lt;p>We can do this by dividing the timestamp by our unit:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">current_interval&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nb">str&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">int&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">datetime&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">now&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">timestamp&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">interval_len_sec&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>this value will be the same for all moments in the interval.&lt;/p>
+&lt;p>We can see that based on how this interval is calculated,
+our limiter limits the requests for the window 10:00:00 and 10:01:00.
+But it does not check the window 10:00:30 and 10:01:30.
+This is the problem that sliding window algorithm solves,
+by not making the window fixed.&lt;/p>
+&lt;p>Now that we figured out the hard part let&amp;rsquo;s look at the code:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">FixedWindow&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">AbstractStrategy&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="fm">__init__&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">storage_backend&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">AbstractStorage&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rule_descriptor&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Descriptor&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">super&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">FixedWindow&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="fm">__init__&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">storage_backend&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">rule_descriptor&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">interval_len_sec&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">rule_descriptor&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">unit&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">to_seconds&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">interval_max&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">rule_descriptor&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">requests_per_unit&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="nf">do_limit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">request&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Request&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">request&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">request&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">counter_key&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">_get_counter_key&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">counter_key&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="kc">None&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="kc">False&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">_window_max_reached&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">counter_key&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="kc">True&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="kc">False&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="nf">_get_counter_key&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">current_interval&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nb">str&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">int&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">datetime&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">now&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">timestamp&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">interval_len_sec&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">descriptor&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">rule_descriptor&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">path&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">request&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">path&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">key&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">descriptor&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">key&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">value&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">request&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">descriptor&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">value&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="ow">not&lt;/span> &lt;span class="kc">None&lt;/span> &lt;span class="ow">and&lt;/span> &lt;span class="n">value&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="n">descriptor&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">value&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="kc">None&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">path&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">current_interval&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="s2">&amp;#34;_&amp;#34;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">key&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="s2">&amp;#34;_&amp;#34;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">value&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="nf">_window_max_reached&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">counter_key&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">counter&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">storage_backend&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">counter_key&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">counter&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="kc">None&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">storage_backend&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">set&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">counter_key&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">interval_len_sec&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="kc">False&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">elif&lt;/span> &lt;span class="n">counter&lt;/span> &lt;span class="o">&amp;gt;=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">interval_max&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="kc">True&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">counter&lt;/span> &lt;span class="o">+=&lt;/span> &lt;span class="mi">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">storage_backend&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">incr&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">counter_key&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="kc">False&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Notice that here we are using the &lt;code>incr&lt;/code> method from the storage.
+We haven&amp;rsquo;t implemented this functionality yet, but this is a good interface to add.&lt;/p>
+&lt;p>Since other storages such as redis has support for increment it&amp;rsquo;s better to use it,
+rather than get, increment and set the value approach.&lt;/p>
+&lt;p>So we add new method to &lt;code>AbstractStorage&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="nd">@abstractmethod&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">incr&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">raise&lt;/span> &lt;span class="ne">NotImplementedError&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>And implement it in the memory:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="nf">incr&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">str&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">key&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">+=&lt;/span> &lt;span class="mi">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">1&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="test">Test&lt;/h4>
+&lt;p>Testing this new strategy is so easy,
+since all of our strategies have the same interface(input/output) we can
+use pytest to &lt;a href="https://docs.pytest.org/en/6.2.x/parametrize.html">parameterize&lt;/a>
+the strategy that is being tested.&lt;/p>
+&lt;p>Let&amp;rsquo;s go back to the test we wrote for token bucket and rewrite it in this way:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="nd">@pytest.mark.parametrize&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;limit_strategy&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">TokenBucket&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">FixedWindow&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">I&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">test_apply_limit_per_unit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">local_storage&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">limit_strategy&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rule_descriptor&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Descriptor&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">key&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;user_id&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">requests_per_unit&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">unit&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">Unit&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">SECOND&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">token_bucket&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">limit_strategy&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">storage_backend&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">local_storage&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rule_descriptor&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">rule_descriptor&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">request&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Request&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">path&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;dd&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="s2">&amp;#34;user_id&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;1&amp;#34;&lt;/span>&lt;span class="p">})&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">assert&lt;/span> &lt;span class="n">token_bucket&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">do_limit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">request&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="kc">False&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">assert&lt;/span> &lt;span class="n">token_bucket&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">do_limit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">request&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="kc">True&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">test_now&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">datetime&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">datetime&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">now&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">datetime&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">timedelta&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">seconds&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">with&lt;/span> &lt;span class="n">freezegun&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">freeze_time&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">test_now&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">assert&lt;/span> &lt;span class="n">token_bucket&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">do_limit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">request&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="kc">False&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>the testing strategy is now passed to this test and it only tests the behavior.&lt;/p>
+&lt;p>Now we can rewrite the remaining tests as well:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="nd">@pytest.mark.parametrize&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;limit_strategy&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">TokenBucket&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">FixedWindow&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">I&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">test_apply_limit_per_value&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">local_storage&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">limit_strategy&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rule_descriptor&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Descriptor&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">key&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;user_id&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">requests_per_unit&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">unit&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">Unit&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">SECOND&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">token_bucket&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">limit_strategy&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">storage_backend&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">local_storage&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rule_descriptor&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">rule_descriptor&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">user_1_request&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Request&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">path&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;dd&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="s2">&amp;#34;user_id&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;1&amp;#34;&lt;/span>&lt;span class="p">})&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">user_2_request&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Request&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">path&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;dd&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="s2">&amp;#34;user_id&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;2&amp;#34;&lt;/span>&lt;span class="p">})&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">assert&lt;/span> &lt;span class="n">token_bucket&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">do_limit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">user_1_request&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="kc">False&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">assert&lt;/span> &lt;span class="n">token_bucket&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">do_limit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">user_2_request&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="kc">False&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">assert&lt;/span> &lt;span class="n">token_bucket&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">do_limit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">user_1_request&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="kc">True&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">assert&lt;/span> &lt;span class="n">token_bucket&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">do_limit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">user_2_request&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="kc">True&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nd">@pytest.mark.parametrize&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;limit_strategy&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">TokenBucket&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">FixedWindow&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">I&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">test_apply_limit_specific_value&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">local_storage&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">limit_strategy&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rule_descriptor&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Descriptor&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">key&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;user_id&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">value&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;1&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">requests_per_unit&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">unit&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">Unit&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">MINUTE&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">token_bucket&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">limit_strategy&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">storage_backend&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">local_storage&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rule_descriptor&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">rule_descriptor&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">user_1_req&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Request&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">path&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;dd&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="s2">&amp;#34;user_id&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;1&amp;#34;&lt;/span>&lt;span class="p">})&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">user_2_req&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Request&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">path&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;dd&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="s2">&amp;#34;user_id&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;2&amp;#34;&lt;/span>&lt;span class="p">})&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">assert&lt;/span> &lt;span class="n">token_bucket&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">do_limit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">user_1_req&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="kc">False&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">assert&lt;/span> &lt;span class="n">token_bucket&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">do_limit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">user_2_req&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="kc">False&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">assert&lt;/span> &lt;span class="n">token_bucket&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">do_limit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">user_1_req&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="kc">True&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="sliding-window-log">Sliding Window Log&lt;/h3>
+&lt;p>As discussed earlier, the sliding window log does not take the time window fixed.
+Imagine a request comes in at 10:00:30, instead of looking at request count in
+the window 10:00 to 10:01
+we check the number of requests in the window of 09:59:30 till that request.&lt;/p>
+&lt;p>So the steps are:&lt;/p>
+&lt;ol>
+&lt;li>When a new request comes in save the timestamp into a list&lt;/li>
+&lt;li>Count all the requests within the time unit of the arrived request&lt;/li>
+&lt;li>If count more than allowed requests limit the request&lt;/li>
+&lt;/ol>
+&lt;p>How this can be done?&lt;/p>
+&lt;p>We need to save the timestamp when each requests comes in.
+Then when the next request comes we need to query all requests in the previous minute.&lt;/p>
+&lt;p>Now the question is what data structure should be used here.
+We need a data structure which can search and return all the values within a range.&lt;/p>
+&lt;p>Redis provides &lt;a href="https://redis.io/docs/data-types/sorted-sets/">sorted sets&lt;/a>
+which can provide an efficient way for finding a range of values in a list.&lt;/p>
+&lt;p>Although sorted sets are
+&lt;a href="https://github.com/redis/redis/blob/unstable/src/t_zset.c">implemented&lt;/a>
+with hash map and &lt;a href="https://brilliant.org/wiki/skip-lists">skip list&lt;/a>,
+we are going to use a naive approach for implementing them in local memory storage.
+This can be a good topic for another post.&lt;/p>
+&lt;p>Let&amp;rsquo;s start implementing the algorithm.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">SlidingWindowLog&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">AbstractStrategy&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="fm">__init__&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">storage_backend&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">AbstractStorage&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rule_descriptor&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Descriptor&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">super&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">SlidingWindowLog&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="fm">__init__&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">storage_backend&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">rule_descriptor&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">interval_len_sec&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">rule_descriptor&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">unit&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">to_seconds&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">interval_max&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">rule_descriptor&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">requests_per_unit&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="nf">do_limit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">request&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Request&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">request&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">request&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">request_logs_key&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">_get_request_logs_key&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">request_logs_key&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="kc">None&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="kc">False&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">_window_max_reached&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">request_logs_key&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="kc">True&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="kc">False&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="nf">_get_request_logs_key&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">descriptor&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">rule_descriptor&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">path&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">request&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">path&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">key&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">descriptor&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">key&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">value&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">request&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">descriptor&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">value&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="ow">not&lt;/span> &lt;span class="kc">None&lt;/span> &lt;span class="ow">and&lt;/span> &lt;span class="n">value&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="n">descriptor&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">value&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="kc">None&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">path&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="s2">&amp;#34;_&amp;#34;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">key&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="s2">&amp;#34;_&amp;#34;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">value&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>First we get key of the list holding request logs.
+Then we check if current windows max request count is reached or not.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">_window_max_reached&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">window_key&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">storage_backend&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">sorted_set_remove&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">window_key&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">datetime&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">now&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">timestamp&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">interval_len_sec&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">current_window_req_count&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">storage_backend&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">sorted_set_count&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">window_key&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">datetime&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">now&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">timestamp&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">interval_len_sec&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">datetime&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">now&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">timestamp&lt;/span>&lt;span class="p">(),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">current_window_req_count&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="kc">None&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">storage_backend&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">sorted_set_add&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">window_key&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">datetime&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">now&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">timestamp&lt;/span>&lt;span class="p">())&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="kc">False&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">elif&lt;/span> &lt;span class="n">current_window_req_count&lt;/span> &lt;span class="o">&amp;gt;=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">interval_max&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="kc">True&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">storage_backend&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">sorted_set_add&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">window_key&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">datetime&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">now&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">timestamp&lt;/span>&lt;span class="p">())&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="kc">False&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Before checking the request count,
+we need to remove all the request that are not in the current window.&lt;/p>
+&lt;p>Then we count the requests within the time unit and check if
+it&amp;rsquo;s more than the allowed count for the interval.&lt;/p>
+&lt;h4 id="testing">Testing&lt;/h4>
+&lt;p>Same as how we tested the previous strategy we
+can add this new strategy to test parameters:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="nd">@pytest.mark.parametrize&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;limit_strategy&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">TokenBucket&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">FixedWindow&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">SlidingWindowLog&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>we can add this strategy to previous tests,
+but there&amp;rsquo;s also a new behavior we can test for this strategy.
+Since the sliding window algorithm does not allow over-limit requests
+at the edge of the time unit (like between 01:50 and 02:10) we can add test it.&lt;/p>
+&lt;p>So create a new test:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="nd">@pytest.mark.parametrize&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;limit_strategy&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">SlidingWindowLog&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">test_sliding_window_does_not_allow_requests_in_unit_edges&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">local_storage&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">limit_strategy&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rule_descriptor&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Descriptor&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">key&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;user_id&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">requests_per_unit&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">unit&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">Unit&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">MINUTE&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">sliding_window&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">limit_strategy&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">storage_backend&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">local_storage&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rule_descriptor&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">rule_descriptor&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">user_1_req&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Request&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">path&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;dd&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="s2">&amp;#34;user_id&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;1&amp;#34;&lt;/span>&lt;span class="p">})&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">current_time&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">datetime&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">datetime&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">now&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">replace&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">hour&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">minute&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">second&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">50&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">microsecond&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">with&lt;/span> &lt;span class="n">freezegun&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">freeze_time&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">current_time&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">assert&lt;/span> &lt;span class="n">sliding_window&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">do_limit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">user_1_req&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="kc">False&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">test_now&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">current_time&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">datetime&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">timedelta&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">seconds&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">15&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">with&lt;/span> &lt;span class="n">freezegun&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">freeze_time&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">test_now&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">assert&lt;/span> &lt;span class="n">sliding_window&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">do_limit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">user_1_req&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="kc">False&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">assert&lt;/span> &lt;span class="n">sliding_window&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">do_limit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">user_1_req&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="kc">True&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Notice in our test we set the initial time to a time near ending of a minute,
+then move the time forward to be in the next minute, previous algorithms wouldn&amp;rsquo;t
+block this.
+But since the window is not fixed in this limiter it will block the third request,
+even if it&amp;rsquo;s sent in the in the next minute. Nice improvement.&lt;/p>
+&lt;h3 id="sliding-window-count">Sliding Window Count&lt;/h3>
+&lt;p>The sliding window log solves the problem of allowing over-limit
+requests at unit edges.&lt;/p>
+&lt;p>But this algorithm uses more storage since it&amp;rsquo;s storing full timestmap.&lt;/p>
+&lt;p>To solve this problem, there is another approach to count requests in each window.
+When a request comes in calculate the current 1 minute window.
+This window spans the current minute and probably the previous minute.
+We can calculate what percentage of the rolling window is in previous window.
+Then we can use that percentage to assign a weight to previous window request count.&lt;/p>
+&lt;p>so it would be
+&lt;code>total_requests = previous_window_weight * previous_window_count + current_window_count&lt;/code>.&lt;/p>
+&lt;p>For the implementation we use the previous way to create keys for each interval.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">SlidingWindowCount&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">AbstractStrategy&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="fm">__init__&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">storage_backend&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">AbstractStorage&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rule_descriptor&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Descriptor&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">super&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">SlidingWindowCount&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="fm">__init__&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">storage_backend&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">rule_descriptor&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">interval_len_sec&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">rule_descriptor&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">unit&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">to_seconds&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">interval_max&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">rule_descriptor&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">requests_per_unit&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="nf">do_limit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">request&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Request&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">current_interval&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nb">str&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">int&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">datetime&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">now&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">timestamp&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">interval_len_sec&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">prev_interval&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nb">str&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">int&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">datetime&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">now&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">timestamp&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">interval_len_sec&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">key&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">rule_descriptor&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">key&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">path&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">request&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">path&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">value&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">request&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">previous_interval_key&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">_get_counter_key&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">prev_interval&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">path&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">current_interval_key&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">_get_counter_key&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">current_interval&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">path&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">previous_interval_key&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="kc">None&lt;/span> &lt;span class="ow">or&lt;/span> &lt;span class="n">current_interval_key&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="kc">None&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="kc">False&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">storage_backend&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">incr&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">current_interval_key&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">current_interval_counter&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">storage_backend&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">current_interval_key&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="ow">or&lt;/span> &lt;span class="mi">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">previous_interval_counter&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">storage_backend&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">previous_interval_key&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="ow">or&lt;/span> &lt;span class="mi">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">percent_of_previous_interval_overlap_current_window&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="mi">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">interval_len_sec&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="n">datetime&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">now&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">timestamp&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="o">%&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">interval_len_sec&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">/&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">interval_len_sec&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">total_requests&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">math&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">ceil&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">previous_interval_counter&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">*&lt;/span> &lt;span class="n">percent_of_previous_interval_overlap_current_window&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">+&lt;/span> &lt;span class="n">current_interval_counter&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">total_requests&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">interval_max&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="kc">True&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="kc">False&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="nf">_get_counter_key&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">interval&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">path&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">descriptor&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">rule_descriptor&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">key&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">descriptor&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">key&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">descriptor&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">value&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="ow">not&lt;/span> &lt;span class="kc">None&lt;/span> &lt;span class="ow">and&lt;/span> &lt;span class="n">value&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="n">descriptor&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">value&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="kc">None&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">path&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">interval&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="s2">&amp;#34;_&amp;#34;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">key&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="s2">&amp;#34;_&amp;#34;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">value&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Most of the code is similar to the sliding window log, except that we use
+both previous and current interval keys to count the requests.
+The mysterious formula &lt;code>datetime.now().timestamp() % self.interval_len_sec&lt;/code>
+always outputs
+the number of seconds remaining until the end of interval and diving this by
+the interval
+length will give us the percentage of the current window passed. Subtracting
+this from 1
+will give how much of the sliding window is in the past interval to calculate
+the weight.&lt;/p>
+&lt;p>Also since our calculation can result in a floating point number we can round it
+up or down. Rounding up is chosen in this case.&lt;/p>
+&lt;h4 id="tests">Tests&lt;/h4>
+&lt;p>Since this is another implementation for the sliding window, we can add it as a parameter
+to all previous tests and the sliding window test.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="nd">@pytest.mark.parametrize&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;limit_strategy&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">SlidingWindowLog&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">SlidingWindowCount&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">test_sliding_window_does_not_allow_requests_in_unit_edges&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>And finally running all the tests, results in 18 tests for all of our strategies
+with very minimal test code.
+It&amp;rsquo;s always good to write less code cause less code is better.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">tests&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">limit_strategy&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">test_limit_strategy&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">py&lt;/span> &lt;span class="o">..............&lt;/span> &lt;span class="p">[&lt;/span> &lt;span class="mi">77&lt;/span>&lt;span class="o">%&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">tests&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">service&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">test_limiter&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">py&lt;/span> &lt;span class="o">....&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mi">100&lt;/span>&lt;span class="o">%&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">===========================================================&lt;/span> &lt;span class="mi">18&lt;/span> &lt;span class="n">passed&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="mf">0.20&lt;/span>&lt;span class="n">s&lt;/span> &lt;span class="o">===========================================================&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="conclusion">Conclusion&lt;/h2>
+&lt;p>We now have implemented all different algorithms for our rate limiter.
+The true power of our abstractions are shown in the less code we have to
+write for each limiter, we can test them all with universal test cases,
+the rate limiter service can use them without knowing what the underlying strategy
+is.&lt;/p>
+&lt;p>In the next part we can see how to implement another storage backend such as redis,
+without having to change any code in rate limiting algorithms.&lt;/p></description></item><item><title>Personalize Macos Environment for Your Productivity</title><link>https://glyphack.com/blog/personalize-macos-environment-for-your-productivity/</link><pubDate>Sun, 19 Feb 2023 20:58:33 +0100</pubDate><guid>https://glyphack.com/blog/personalize-macos-environment-for-your-productivity/</guid><description>&lt;p>MacOS is already a polished environment,&lt;/p>
 &lt;p>Investing the time to personalize your tools and environment is a smart move,
 especially if you plan to do your current profession for years to come.
 With a set of personalized methods and tools,
@@ -247,37 +728,70 @@ update some stuff so decided to share it here as well.&lt;/p>
 &lt;p>Hope it&amp;rsquo;s useful for you and don&amp;rsquo;t forget the main point,
 customize your tools for your job to be able to get things done with less thinking.&lt;/p>
 &lt;p>If you use other tools customizations I&amp;rsquo;ll be happy to hear them.&lt;/p></description></item><item><title>Rate Limiter From Scratch in Python Part 1</title><link>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-1/</link><pubDate>Tue, 14 Feb 2023 23:19:18 +0100</pubDate><guid>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-1/</guid><description>&lt;h2 id="introduction">Introduction&lt;/h2>
-&lt;p>After reading &lt;a href="https://bytebytego.com/">ByteByteGo course&lt;/a> motivated me to write a rate limiter. So I decided to do it in &lt;a href="https://aosabook.org/en/500L/introduction.html">500lines&lt;/a> theme.
-We are going to focus on how to create the interfaces and components, to allow extensibility in the predicted ways.&lt;/p>
-&lt;p>You can find the full source code &lt;a href="https://github.com/Glyphack/hera-limit">here&lt;/a>.&lt;/p>
+&lt;p>After reading &lt;a href="https://bytebytego.com/">ByteByteGo course&lt;/a>
+motivated me to write a rate limiter.
+So I decided to do it in &lt;a href="https://aosabook.org/en/500L/introduction.html">500lines&lt;/a>
+theme.&lt;/p>
+&lt;p>We will focus on how to create the interfaces and components,
+to allow extensibility in the predicted ways.&lt;/p>
+&lt;p>You can find the complete source code &lt;a href="https://github.com/Glyphack/hera-limit">here&lt;/a>.&lt;/p>
 &lt;h2 id="what-is-a-rate-limiter">What is a Rate Limiter?&lt;/h2>
-&lt;p>Well there are a lot of &lt;a href="https://www.cloudflare.com/en-gb/learning/bots/what-is-rate-limiting/">great explanations&lt;/a> on what is a rate limier but I&amp;rsquo;ll give a very small introduction to it for this post.&lt;/p>
-&lt;p>Rate limiter is a software that limits how many times someone can repeat an action in your software. Take twitter as an example, they need to limit how many times someone can send a tweet per minute otherwise 1 person can create 1 million tweets in a second and fill up all of their server resources.&lt;/p>
+&lt;p>Well, there are a lot of
+&lt;a href="https://www.cloudflare.com/en-gb/learning/bots/what-is-rate-limiting/">great explanations&lt;/a>
+on what is a rate limiter, but I&amp;rsquo;ll give a minimal introduction to it for this post.&lt;/p>
+&lt;p>A rate limiter is software that limits how many times
+someone can repeat an action in your software. Take Twitter as an example;
+they need to specify how often someone can send a tweet per minute; otherwise,
+one person can create 1 million tweets in a second and fill up all their server resources.&lt;/p>
 &lt;h2 id="high-level-design">High Level Design&lt;/h2>
-&lt;p>First off what should our rate limiter do? Rate limiter should be a function that takes in a request, decides if the request can go through or not based on the current statistics.&lt;/p>
+&lt;p>First off, what should our rate limiter do?
+The rate limiter should be a function that takes in a request,
+decides if the request can go through or not based on the current statistics.&lt;/p>
 &lt;p>We are going to implement the following features:&lt;/p>
 &lt;ol>
-&lt;li>Rule based rate limiting: let user define rules with a simpler version(without nested rules) of &lt;a href="https://github.com/envoyproxy/ratelimit#configuration">envoy rate limit config&lt;/a>.&lt;/li>
+&lt;li>Rule-based rate limiting: let the user define rules
+&lt;ul>
+&lt;li>with a simpler version (without nested rules) of &lt;a href="https://github.com/envoyproxy/ratelimit#configuration">envoy rate limit config&lt;/a>.&lt;/li>
+&lt;/ul>
+&lt;/li>
 &lt;li>Support both local memory and Redis as storage backend&lt;/li>
 &lt;li>Support the following rate-limit algorithms:&lt;/li>
 &lt;li>Token bucket&lt;/li>
 &lt;li>Fixed window&lt;/li>
 &lt;li>Sliding window log&lt;/li>
 &lt;li>Sliding window counter&lt;/li>
-&lt;li>Distributed deployment model: deploying multiple instances with both consistent and eventual consistent models.&lt;/li>
+&lt;li>Distributed deployment model:
+&lt;ul>
+&lt;li>deploying multiple instances with consistent and eventual consistency models.&lt;/li>
+&lt;/ul>
+&lt;/li>
 &lt;/ol>
-&lt;p>What are the components in our system?&lt;/p>
+&lt;p>What are the components of our system?&lt;/p>
 &lt;p>&lt;img src="https://glyphack.com/rate-limiter-components.png" alt="System Components">&lt;/p>
 &lt;p>Breaking down the components:&lt;/p>
-&lt;p>Rules storage
-it is responsible for loading rules and providing them to rate limiter. Separating this component allows the service to not depend on how the rules should be loaded into the service. We want to start the application with a set of rules saved on disk, but it&amp;rsquo;s useful to be able to add/remove rules from an API endpoint while the application is running.
-Although we are not going to implement that part in this guide. It&amp;rsquo;s good to separate this for easier testing and future extensibility.&lt;/p>
-&lt;p>Storage&lt;/p>
-&lt;p>This component is responsible for holding data used by rate limiting algorithms. Creating an interface for storage is useful because we can ignore the underlying storage implementation in rate limit algorithms. This allows us to easily use multiple storage backends such as Redis or local memory without having to touch the rate limit algorithm code.
-For the above algorithms we can implement operations &lt;code>exists&lt;/code>, &lt;code>get_value&lt;/code>, &lt;code>set&lt;/code>, &lt;code>incr&lt;/code>.&lt;/p>
-&lt;p>Note that we have this assumption that our datastore for this software is a key/value store, we are not creating a generic store that can be used for other use cases. This helps with writing a simpler interface and implementation for storage. For example we don&amp;rsquo;t require to support a where/filtering clause.&lt;/p>
+&lt;p>&lt;strong>Rules storage&lt;/strong>:
+it is responsible for loading rules and providing them to the rate limiter.&lt;/p>
+&lt;p>Separating this component allows the service independent of how the rules
+should be loaded into the service.
+We want to start the application with a set of rules saved on disk,
+but it&amp;rsquo;s helpful to be able to add/remove rules from an API endpoint
+while the application is running.&lt;/p>
+&lt;p>Although we will not implement that part in this guide, separating this is good
+for easier testing and future extensibility.&lt;/p>
+&lt;p>&lt;strong>Storage&lt;/strong> :
+This component is responsible for holding data used by rate-limiting algorithms.&lt;/p>
+&lt;p>Creating an interface for storage is helpful because
+we can ignore the underlying storage implementation in rate limit algorithms.
+Allowing us to use multiple storage backends such as Redis or local memory
+without touching the rate limit algorithm code.
+We can implement operations &lt;code>exists&lt;/code>, &lt;code>get_value&lt;/code>, &lt;code>set&lt;/code>, &lt;code>incr&lt;/code> for the above algorithms.&lt;/p>
+&lt;p>Note that we assume that our data store for this software is a key/value store.
+We are not creating a general store that every application can use.
+This data store helps with writing a more straightforward interface
+and implementation for storage.
+For example, we don&amp;rsquo;t require to support where/filtering clause.&lt;/p>
 &lt;p>&lt;a href="https://www.youtube.com/watch?v=tKbV6BpH-C8">This video&lt;/a>
-gives a nice explanation on why sometimes we must do this.&lt;/p>
+gives a nice explanation of why sometimes we must do this.&lt;/p>
 &lt;style>
 #callout {
 background: #f9f9f9;
@@ -301,23 +815,35 @@ margin-left: 0.5em;
 &lt;/style>
 &lt;div id="callout" style="">
 &lt;div>✅&lt;/div>
-&lt;div id="callout-inner">In the above abstraction we are not creating a generic storage but only a key value store. This limits the extensibility of the code but makes the work easier. This is a good choice for rate limiter problem scope. Always be careful when creating a very generic abstraction.&lt;/div>
+&lt;div id="callout-inner"> In the above abstraction, we are not creating a generic storage but only a key-value store. This abstraction limits the extensibility of the code but makes the work easier. Which makes it a good choice for rate limiter problem scope. Always be careful when creating a very generic abstraction.&lt;/div>
 &lt;/div>
-&lt;p>Limit Strategy: This component implements the rate limit algorithms without knowing about the underlying storage or API implementation. It should take in a storage and a request and provide a result whether it&amp;rsquo;s limited or not.
-The request details are important to decide whether to limit or not, but we only the request data, IP, and path. So it&amp;rsquo;s better to only take in these values and not depend on a particular request type, then in the future we can write adapters to convert a gRPC request to this functions input format.&lt;/p>
+&lt;p>&lt;strong>Limit Strategy&lt;/strong>:
+This component implements the rate limit algorithms without knowing the
+underlying storage or API implementation.&lt;/p>
+&lt;p>It should take in storage and a request and provide a result whether it&amp;rsquo;s limited.&lt;/p>
+&lt;p>The request details are essential to decide whether to limit,
+but we only need the request data, IP, and path.
+So it&amp;rsquo;s better only to take in these values and
+not depend on a particular request type.
+Then in the future, we can write adapters to convert a gRPC request to this
+function&amp;rsquo;s input format.&lt;/p>
 &lt;p>Service: takes care of orchestrating all the components.
-Upon startup it loads all the rules into memory and creates a list of limit strategies to check.
-Flow of handling requests:&lt;/p>
+Upon startup, it loads all the rules into memory and creates a list of limit strategies to check.
+The flow of handling requests:&lt;/p>
 &lt;ol>
 &lt;li>Run all the rules that apply to the request path&lt;/li>
-&lt;li>rules provide an answer whether to allow or deny the request.&lt;/li>
+&lt;li>Rules answer whether to allow or deny the request.&lt;/li>
 &lt;/ol>
-&lt;p>API: This layer is an interface for other programs to call the rate limiter, for example this part can be exposed to the API gateway. We are not going to implement the API but we implement the logic to rate limit requests. Separating the API and rate limit service is helpful as we can expose different interfaces to integrate with different tools, for example:&lt;/p>
+&lt;p>&lt;strong>API&lt;/strong>: This layer is an interface for other programs to call the rate limiter.&lt;/p>
+&lt;p>For example, this part can be exposed to the API gateway. We will not implement the API, but we will implement the logic to rate limit requests. Separating the API and rate limit service is helpful as we can expose different interfaces to integrate with other tools, for example:&lt;/p>
 &lt;ul>
 &lt;li>Importing the rate limiter directly into the app&lt;/li>
 &lt;li>Making it available as a &lt;a href="https://docs.konghq.com/gateway/latest/plugin-development/">Kong plugin&lt;/a>&lt;/li>
 &lt;/ul>
-&lt;p>The rule structure is part of application interface. Users can define them to rate limit the services, and just like an API we don&amp;rsquo;t change them much. On the other hand the LimitStrategy and Storage can be swapped and replaced with different implementations. So a rule can stay the same while the limiter enforcing the rule can be changed to relax the rule or make it more strict.&lt;/p>
+&lt;p>The rule structure is part of the application interface. Users can define them to rate limit the services,
+and just like an API, we don&amp;rsquo;t change them much.&lt;/p>
+&lt;p>On the other hand, the LimitStrategy and Storage can be swapped and replaced with different implementations.
+So a rule can stay the same while the limiter enforcing the rule can be changed to relax the rule or make it more strict.&lt;/p>
 &lt;h2 id="implementation">Implementation&lt;/h2>
 &lt;h3 id="defining-interfaces">Defining Interfaces&lt;/h3>
 &lt;p>Based on the above rule structure we can use the following structure:&lt;/p>
@@ -376,10 +902,15 @@ Flow of handling requests:&lt;/p>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nd">@abstractmethod&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="nf">set&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">ttl_seconds&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">int&lt;/span>&lt;span class="p">):&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">raise&lt;/span> &lt;span class="ne">NotImplementedError&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>get&lt;/code> and &lt;code>set&lt;/code> are the required methods for implementing the above algorithms. other operations such as &lt;a href="https://redis.io/commands/decr/">decr&lt;/a> are also available which can increase the performance of our code.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>get&lt;/code> and &lt;code>set&lt;/code> are the required methods for implementing the above algorithms.
+other operations such as &lt;a href="https://redis.io/commands/decr/">decr&lt;/a>
+are also available which can increase the performance of our code.&lt;/p>
 &lt;p>Limit strategies only depend on the storage &amp;amp; rule components.
-It should also have a request type for itself which can be used by other components calling it to pass in a request with a generic form. So it does not depend on a specific type of request, but only it&amp;rsquo;s data and path.
-The only public function is &lt;code>do_limit&lt;/code> which takes in a request and determines if it&amp;rsquo;s limited or not.&lt;/p>
+It should also have a request type for itself which can be used by
+other components calling it to pass in a request with a generic form.
+So it does not depend on a specific type of request, but only it&amp;rsquo;s data and path.&lt;/p>
+&lt;p>The only public function is &lt;code>do_limit&lt;/code>
+which takes in a request and determines if it&amp;rsquo;s limited or not.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">LimitStrategies&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">str&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">Enum&lt;/span>&lt;span class="p">):&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">TOKEN_BUCKET&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;token_bucket&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
@@ -408,226 +939,16 @@ The only public function is &lt;code>do_limit&lt;/code> which takes in a request
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">raise&lt;/span> &lt;span class="ne">NotImplementedError&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="token-bucket">Token Bucket&lt;/h3>
 &lt;p>Now that the interfaces are clear we can start implementing the algorithm.&lt;/p>
-&lt;p>From the rule strucutre, we can use the &lt;code>unit&lt;/code> to to refresh tokens in the bucket. and the &lt;code>request_per_unit&lt;/code> to determine bucket capacity.&lt;/p>
+&lt;p>From the rule structure,
+we can use the &lt;code>unit&lt;/code> to to refresh tokens in the bucket.
+and the &lt;code>request_per_unit&lt;/code> to determine bucket capacity.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">TokenBucket&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">AbstractStrategy&lt;/span>&lt;span class="p">):&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="fm">__init__&lt;/span>&lt;span class="p">(&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">storage_backend&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">AbstractStorage&lt;/span>&lt;span class="p">,&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rule_descriptor&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Descriptor&lt;/span>&lt;span class="p">,&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">):&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">super&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">TokenBucket&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="fm">__init__&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">storage_backend&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">rule_descriptor&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">unit&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">rule_descriptor&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">unit&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">capacity&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">rule_descriptor&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">requests_per_unit&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">refill_every_x_seconds&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">unit&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">to_seconds&lt;/span>&lt;span class="p">()&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>How does token bucket works?&lt;/p>
-&lt;p>&lt;a href="https://en.wikipedia.org/wiki/Token_bucket">Wikipedia definition&lt;/a> is pretty straightforward:&lt;/p>
-&lt;blockquote>
-&lt;ul>
-&lt;li>A token is added to the bucket every R seconds.&lt;/li>
-&lt;li>The bucket can hold at the most B tokens. If a token arrives when the bucket is full, it is discarded.&lt;/li>
-&lt;/ul>
-&lt;/blockquote>
-&lt;p>To translate it into code, for each request we create a key, this key consists of the request path and it&amp;rsquo;s value for the specified key.
-When a request comes in:&lt;/p>
-&lt;ul>
-&lt;li>We allow it if it&amp;rsquo;s not in the storage which means it&amp;rsquo;s the first time.&lt;/li>
-&lt;li>If key exists we try to consume one token from it and if it fails we deny&lt;/li>
-&lt;/ul>
-&lt;p>When do we do the refill?
-This part is handled by setting the ttl, after the ttl the bucket is gone and we recreate it and fill it with &lt;code>capacity&lt;/code>.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">do_limit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">request&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Request&lt;/span>&lt;span class="p">):&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">request&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">request&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">counter_key&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">_get_counter_key&lt;/span>&lt;span class="p">()&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">counter_key&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="kc">None&lt;/span>&lt;span class="p">:&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="kc">False&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">_consume&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">counter_key&lt;/span>&lt;span class="p">):&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="kc">False&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="kc">True&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">_get_counter_key&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">):&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">descriptor&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">rule_descriptor&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">path&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">request&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">path&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">key&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">descriptor&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">key&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">value&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">request&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="p">]&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">descriptor&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">value&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="ow">not&lt;/span> &lt;span class="kc">None&lt;/span> &lt;span class="ow">and&lt;/span> &lt;span class="n">value&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="n">descriptor&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">value&lt;/span>&lt;span class="p">:&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="kc">None&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span>&lt;span class="p">:&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">path&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="s2">&amp;#34;_&amp;#34;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">key&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="s2">&amp;#34;_&amp;#34;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">value&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">_consume&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">counter_key&lt;/span>&lt;span class="p">):&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">counter&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">storage_backend&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">counter_key&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">counter&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="kc">None&lt;/span>&lt;span class="p">:&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">counter&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">capacity&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">elif&lt;/span> &lt;span class="n">counter&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">:&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="kc">False&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">counter&lt;/span> &lt;span class="o">-=&lt;/span> &lt;span class="mi">1&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">storage_backend&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">set&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">counter_key&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">counter&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">refill_every_x_seconds&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="kc">True&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="implementing-local-cache">Implementing Local Cache&lt;/h3>
-&lt;p>With local cache we need to keep track of the data and ttl(time to live) values.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">datetime&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">datetime&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">timedelta&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">typing&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">Dict&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">hera_limit.storage.storage&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">AbstractStorage&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">Memory&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">AbstractStorage&lt;/span>&lt;span class="p">):&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="fm">__init__&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">):&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">data&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{}&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">ttl&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Dict&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="nb">str&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">datetime&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The set operation takes in a a string key and a string value. We don&amp;rsquo;t need to support more complex data structures(sets, maps) with this function as it&amp;rsquo;s not needed.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">set&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">str&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">str&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">ttl_seconds&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">int&lt;/span>&lt;span class="p">):&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">value&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">ttl&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">datetime&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">now&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">timedelta&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">seconds&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">ttl_seconds&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We add the key to both &lt;code>data&lt;/code> and &lt;code>ttl&lt;/code> to be able to determine if a key is expired or not.
-Now when getting a key we need to check the &lt;code>ttl&lt;/code> has not passed yet.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="p">):&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">key&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">ttl&lt;/span>&lt;span class="p">:&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">ttl&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">&amp;lt;&lt;/span> &lt;span class="n">datetime&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">now&lt;/span>&lt;span class="p">():&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">del&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">ttl&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="p">]&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">del&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="p">]&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="kc">None&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;style>
-#callout {
-background: #f9f9f9;
-padding: 1.5em 1.25em;
-border-radius: 3px;
-display: flex;
-flex-direction: row;
-margin-bottom: 20px;
-}
-#callout-inner {
-margin-left: 1em;
-}
-@media (max-width: 767px) {
-#callout {
-padding: 1.5em 0.75em 1.5em 0.6em;
-}
-#callout-inner {
-margin-left: 0.5em;
-}
-}
-&lt;/style>
-&lt;div id="callout" style="">
-&lt;div>💯&lt;/div>
-&lt;div id="callout-inner">An improvement idea is to create a process to remove keys with passed `ttl`. Currently if we add many keys but don&amp;#39;t retrieve them for a long time it can take space.&lt;/div>
-&lt;/div>
-&lt;h3 id="rate-limiter-service">Rate Limiter Service&lt;/h3>
-&lt;p>The service is just the orchestrator of our components. we haven&amp;rsquo;t defined an interface for it now because nothing depends on it.&lt;/p>
-&lt;p>When the service is started it takes in the rules and since each rule might have multiple descriptors we need to make sure to check all of those if a request path matches it.&lt;/p>
-&lt;p>The &lt;code>Config&lt;/code> class holds data such as which limiting strategy to use.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="nd">@dataclass&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">Config&lt;/span>&lt;span class="p">:&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">limit_strategy&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">LimitStrategies&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">RateLimitService&lt;/span>&lt;span class="p">:&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="fm">__init__&lt;/span>&lt;span class="p">(&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">config&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Config&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">storage_engine&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">AbstractStorage&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">rules&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">List&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">Rule&lt;/span>&lt;span class="p">]&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span> &lt;span class="kc">None&lt;/span>&lt;span class="p">:&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">rule_to_limits&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Dict&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">Rule&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">List&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">AbstractStrategy&lt;/span>&lt;span class="p">]]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{}&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">storage_engine&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">storage_engine&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span> &lt;span class="n">rule&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">rules&lt;/span>&lt;span class="p">:&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">rule_to_limits&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">rule&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[]&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span> &lt;span class="n">descriptor&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">rule&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">descriptors&lt;/span>&lt;span class="p">:&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">config&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">limit_strategy&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">LimitStrategies&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">TOKEN_BUCKET&lt;/span>&lt;span class="p">:&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">rule_to_limits&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">rule&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">append&lt;/span>&lt;span class="p">(&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">TokenBucket&lt;/span>&lt;span class="p">(&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">storage_backend&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">storage_engine&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rule_descriptor&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">descriptor&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span>&lt;span class="p">:&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">raise&lt;/span> &lt;span class="ne">NotImplementedError&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The limit function is going to find which rules apply for each request and apply all of its descriptors.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">do_limit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">request&lt;/span>&lt;span class="p">):&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">applied_rules&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[]&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span> &lt;span class="n">rule&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">limits&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">rule_to_limits&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">items&lt;/span>&lt;span class="p">():&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">rule&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">match&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">request&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">path&lt;/span>&lt;span class="p">):&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">applied_rules&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">append&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">limits&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span> &lt;span class="n">rule_limits&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">applied_rules&lt;/span>&lt;span class="p">:&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">rule_limits&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">do_limit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">request&lt;/span>&lt;span class="p">):&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="kc">True&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="kc">False&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="testing">Testing&lt;/h3>
-&lt;p>We did a lot of work before writing tests and it&amp;rsquo;s so unfortunate. I though having tests after setting up the interfaces would be better for this post. But never do this in real life!&lt;/p>
-&lt;p>We&amp;rsquo;re going to use &lt;code>pytest&lt;/code> to write tests and we can define the storage as a fixture to inject it in the test cases:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="nd">@pytest.fixture&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">local_storage&lt;/span>&lt;span class="p">():&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">yield&lt;/span> &lt;span class="n">memory&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">Memory&lt;/span>&lt;span class="p">()&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Also in order to test that the algorithm respects the time period of a limit,
-we need to mock the &lt;code>datetime.now()&lt;/code> in our tests.
-Install &lt;code>freezegun&lt;/code> to do this.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">pip install freezegun
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="test-token-bucket-algorithm">Test Token Bucket Algorithm&lt;/h4>
-&lt;p>There are three cases we can test for the implementation:&lt;/p>
-&lt;ul>
-&lt;li>When a bucket gets empty it should allow the request anymore&lt;/li>
-&lt;li>Algorithm respects key values, for example if user 1 requests too much only user 1 is limited.&lt;/li>
-&lt;li>If a value for a key is provided then we only limit requests with that value.&lt;/li>
-&lt;/ul>
-&lt;p>An important question that pops up is that how can we test the bucket refills? we need to wait for the &lt;code>ttl&lt;/code> to pass. We&amp;rsquo;re going to use python &lt;a href="https://docs.python.org/3/library/unittest.mock.html">mock&lt;/a> package and mock the time function that is available on the Memory to fast forward the time.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">test_token_bucket_apply_limit_per_unit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">local_storage&lt;/span>&lt;span class="p">):&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rule_descriptor&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Descriptor&lt;/span>&lt;span class="p">(&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">key&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;user_id&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">requests_per_unit&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">unit&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">Unit&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">SECOND&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">token_bucket&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">TokenBucket&lt;/span>&lt;span class="p">(&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">storage_backend&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">local_storage&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rule_descriptor&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">rule_descriptor&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">request&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Request&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">path&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;dd&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="s2">&amp;#34;user_id&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;1&amp;#34;&lt;/span>&lt;span class="p">})&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">assert&lt;/span> &lt;span class="n">token_bucket&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">do_limit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">request&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="kc">False&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">assert&lt;/span> &lt;span class="n">token_bucket&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">do_limit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">request&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="kc">True&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">time_now&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">datetime&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">datetime&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">now&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">datetime&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">timedelta&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">seconds&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">with&lt;/span> &lt;span class="n">freezegun&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">freeze_time&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">time_now&lt;/span>&lt;span class="p">):&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">assert&lt;/span> &lt;span class="n">token_bucket&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">do_limit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">request&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="kc">False&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">test_token_bucket_apply_limit_for_values&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">local_storage&lt;/span>&lt;span class="p">):&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rule_descriptor&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Descriptor&lt;/span>&lt;span class="p">(&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">key&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;user_id&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">requests_per_unit&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">unit&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">Unit&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">SECOND&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">token_bucket&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">TokenBucket&lt;/span>&lt;span class="p">(&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">storage_backend&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">local_storage&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rule_descriptor&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">rule_descriptor&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">user_1_request&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Request&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">path&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;dd&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="s2">&amp;#34;user_id&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;1&amp;#34;&lt;/span>&lt;span class="p">})&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">user_2_request&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Request&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">path&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;dd&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="s2">&amp;#34;user_id&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;2&amp;#34;&lt;/span>&lt;span class="p">})&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">assert&lt;/span> &lt;span class="n">token_bucket&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">do_limit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">user_1_request&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="kc">False&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">assert&lt;/span> &lt;span class="n">token_bucket&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">do_limit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">user_2_request&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="kc">False&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">assert&lt;/span> &lt;span class="n">token_bucket&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">do_limit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">user_1_request&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="kc">True&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">assert&lt;/span> &lt;span class="n">token_bucket&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">do_limit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">user_2_request&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="kc">True&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">test_token_bucket_apply_limit_specific_values&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">local_storage&lt;/span>&lt;span class="p">):&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rule_descriptor&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Descriptor&lt;/span>&lt;span class="p">(&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">key&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;user_id&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">value&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;1&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">requests_per_unit&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">unit&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">Unit&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">MINUTE&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">token_bucket&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">TokenBucket&lt;/span>&lt;span class="p">(&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">storage_backend&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">local_storage&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rule_descriptor&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">rule_descriptor&lt;/span>&lt;span class="p">,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">user_1_req&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Request&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">path&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;dd&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="s2">&amp;#34;user_id&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;1&amp;#34;&lt;/span>&lt;span class="p">})&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">user_2_req&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Request&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">path&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;dd&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="s2">&amp;#34;user_id&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;2&amp;#34;&lt;/span>&lt;span class="p">})&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">assert&lt;/span> &lt;span class="n">token_bucket&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">do_limit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">user_1_req&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="kc">False&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">assert&lt;/span> &lt;span class="n">token_bucket&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">do_limit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">user_2_req&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="kc">False&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">assert&lt;/span> &lt;span class="n">token_bucket&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">do_limit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">user_1_req&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="kc">True&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">su&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="test-rate-limiter-service">Test Rate Limiter Service&lt;/h4>
 &lt;p>For rate limiter service we need to create two fixtures, config and local storage:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="nd">@pytest.fixture&lt;/span>
@@ -670,7 +991,8 @@ untested strategy which is a nightmare).&lt;/p>
 I think this would be enough for one read,
 In the next post we will add more rate limiting algorithms and see
 how the current structure of the program can be extended.&lt;/p>
-&lt;p>You can find the &lt;a href="https://github.com/Glyphack/hera-limit">full source code&lt;/a> on my Github.&lt;/p></description></item><item><title>Everything you need to know about splitting CDK stacks</title><link>https://glyphack.com/blog/everything-about-splitting-cdk-stacks/</link><pubDate>Sun, 13 Nov 2022 09:49:50 +0330</pubDate><guid>https://glyphack.com/blog/everything-about-splitting-cdk-stacks/</guid><description>&lt;p>AWS CDK is a tool that lets you define your cloud resources
+&lt;p>You can find the &lt;a href="https://github.com/Glyphack/hera-limit">complete source code&lt;/a>
+on my Github.&lt;/p></description></item><item><title>Everything you need to know about splitting CDK stacks</title><link>https://glyphack.com/blog/everything-about-splitting-cdk-stacks/</link><pubDate>Sun, 13 Nov 2022 09:49:50 +0330</pubDate><guid>https://glyphack.com/blog/everything-about-splitting-cdk-stacks/</guid><description>&lt;p>AWS CDK is a tool that lets you define your cloud resources
 in a languages such as python.
 And like any other project as the codebase grows, it needs to be split into components.&lt;/p>
 &lt;p>CDK projects can be split into multiple stacks.
