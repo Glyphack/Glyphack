@@ -1,8 +1,8 @@
 ---
 title: "Rate Limiter From Scratch in Python Part 2"
 date: 2023-02-21T21:34:49+01:00
-draft: true
-tags: []
+draft: false
+tags: [coding]
 ---
 
 <!--toc:start-->
@@ -51,8 +51,9 @@ class LimitStrategies(str, Enum):
     SLIDING_WINDOW_COUNTER = "sliding_window_counter"
 ```
 
-And the code that initialized the limiter strategy objects in rate limiter service.
-You can use a empty class to and implement it as we go through them one by one.
+The code that initialized the limiter strategy objects is in rate limiter service.
+You can use a empty class(with no implementation) and implement it as we go
+through them one by one.
 
 ```python
             for descriptor in rule.descriptors:
@@ -70,8 +71,7 @@ You can use a empty class to and implement it as we go through them one by one.
                             rule_descriptor=descriptor,
                         )
                     )
-                elif config.limit_strategy == LimitStrategies.SLIDING_WINDOW_LOG:
-                    limits.append(
+                elif config.limit_strategy == LimitStrategies.SLIDING_WINDOW_LOG: limits.append(
                         TokenBucket(
                             storage_backend=self.storage_engine,
                             rule_descriptor=descriptor,
@@ -93,28 +93,28 @@ You can use a empty class to and implement it as we go through them one by one.
 
 ### Fixed Window
 
-In the fixed window algorithm we split the time into unit size buckets.
+In the fixed window algorithm, we split the time into unit-size buckets.
 Each bucket has a specified capacity and can limit the requests once it's reached.
 
-For example if our unit is 1 minute, our buckets would be: 10:00, 10:01, 10:02, ...
+For example, if our unit is 1 minute, our buckets would be 10:00, 10:01, and 10:02.
 
 Now how can we choose the hash key?
-a hash key like `path_1000_<key>_<value>` is good because
-it puts all requests coming from a specific entity to a path into the correct bucket.
-So we can query this key and check the count to determine if the request.
+A hash key like `path_1000_<key>_<value>` is good because
+it puts all requests from a specific entity to a path into the correct bucket.
+So we can query this key and check the count to determine the request.
 
-But choosing the hour minute combination to add time to the key is not gonna work,
-because there might be collisions, when the day passes and we reach that time again.
+But choosing the hour & minute combination to add time to the key is not going to work,
+because there might be collisions when the day passes and we reach that time again.
 
-To overcome this problem we can use [timestmap](https://www.unixtimestamp.com/),
-since each time second has a unique timestamp we resolve the collision.
+To overcome this problem, we can use [timestmap](https://www.unixtimestamp.com/),
+since each time second has a unique timestamp, we resolve the collision.
 
-Now since the timestmap represents the seconds,
-if we use this value directly in cache we can't create a bucket for minute intervals.
-When the limiting unit is a minute we need to find the value which
+Since the timestamp represents the seconds,
+we can't create a bucket for minute intervals if we use this value directly in the cache.
+When the limiting unit is a minute, we need to find the value which
 is the same for every moment in a given minute.
 
-This can be done by dividing the timestmap by our unit:
+We can do this by dividing the timestamp by our unit:
 
 ```python
 current_interval = str(int(datetime.now().timestamp() / self.interval_len_sec))
@@ -176,11 +176,11 @@ class FixedWindow(AbstractStrategy):
         return False
 ```
 
-Notice that here we are using the `incr` method of the storage.
+Notice that here we are using the `incr` method from the storage.
 We haven't implemented this functionality yet, but this is a good interface to add.
 
 Since other storages such as redis has support for increment it's better to use it,
-rather than get, increment and set the value.
+rather than get, increment and set the value approach.
 
 So we add new method to `AbstractStorage`:
 
