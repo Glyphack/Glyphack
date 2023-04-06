@@ -35,35 +35,35 @@ tags: ["coding"]
 
 ## Introduction
 
-Web crawler is a program that explores the internet
+Web crawler is a program that explores the Internet,
 by going to different websites and following any link it finds.
 
 Crawlers are interesting because they provide a way to gather data
 from the internet.
 This is especially useful for data mining purposes.
 
-You can find the full implementation in [the Github repository](https://github.com/Glyphack/crawler).
+You can find the full implementation in the [GitHub repository](https://github.com/Glyphack/crawler).
 
 [This post](https://cacm.acm.org/blogs/blog-cacm/153780-data-mining-the-web-via-crawling/fulltext)
-provides a good introduction on building a crawler.
+provides a good introduction to building a crawler.
 
 ## But Why Building Another Crawler?
 
 I wrote down my reasons in the [previous post](/rate-limiter-from-scratch-in-python-2)
-on why I'm building these stuff from sctrach,
-the short answer is that it seems simple until you try it.
+on why I'm building this stuff from sctrach.
+The short answer is that it seems simple until you try it.
 
 After reading through this project and implementing yourself,
 you will have a good understanding of how to write concurrent
-applications in golang.
+applications in Go.
 
 ## High Level Design
 
-We can look into what components a cralwer is made of, this helps
+Let's look into what components a cralwer is made of, this helps
 to structure our code.
 
 The following diagram shows the execution flow of our program and
-responsibilities of components.
+responsibilities of components:
 
 ![crawler-diagram](/crawler-diagram.excalidraw.svg)
 
@@ -71,43 +71,43 @@ Let's break it down:
 
 ### URL Frontier
 
-Collection of the URLs that will be crawled.
-It supports adding new URLs as we discover links in fetched pages.
+URL Frontier is a collection of URLs that are going to be crawled.
+It supports adding & consuming new URLs as we discover links in fetched pages.
 
 ### Selector
 
-To consume the URLs from frontier we can just get them one by one.
+To consume the URLs from frontier we can get them one by one.
 But this can cause problem if we want to distribute the URLs between multiple workers.
 
 The technique used here is called fan-out.
 
-For example if some URLs are more important to crawl first and each worker gets
+For example if some URLs are more important to crawl first, and each worker gets
 the next URL to crawl then those special URLs can't be crawled first.
-Another usefulness of this component is distributing URLs from one host to one worker,
-so the worker can make sure to not send too many requests to a single host.
-Best practice is to wait 2 seconds between requests for the same Host.
+Another usefulness of this component is distributing URLs from one host to one worker.
+So each worker can make sure to not send too many requests to a single Host.
+The best practice is to wait 2 seconds between requests for the same Host.
 
 ### Workers
 
-Each worker consumes from queues that selector fills and simply fetches the page.
+Each worker consumes from queues that selector fills and fetches the URL.
 
-The worker must handle failures and retry when a page fails to load.
+The worker must handle failures and retry when it fails to fetch a URL.
 Each worker also keeps track of URLs fetched to be polite.
 
 ### Fetcher
 
 This components is the reverse of selector component, it gathers
-results from different workers to a single queue.
+results from different workers to a single collection.
 
 This operation is called fan-in which is useful here because we
 can simplify the processor operations because it only needs to
-consume from a single result queue.
+consume from a single result channel.
 
 ### Content Processor
 
 After we get the result from each worker we ran different
 content processors on the result, this can be tasks like extracting
-new URLs or saving them on disk.
+new URLs or saving pages to the disk.
 
 Also note that this component does not apply a single
 logic on all results. We can register different processors,
@@ -118,7 +118,7 @@ implement this in code.
 
 ### Link Extractor
 
-The link extractor is a special processor we create in our app
+The link extractor is a special processor we create
 that uses a parser to parse the page content and insert URLs
 back to frontier.
 
@@ -127,7 +127,8 @@ back to frontier.
 ### Let's talk about channels
 
 channels are going to be used heavily in the implementation.
-I suggest you to make sure you understand their [fundamentals](https://go.dev/tour/concurrency/1)
+I suggest you to make sure you understand [fundamentals](https://go.dev/tour/concurrency/1)
+of channels.
 before reading the rest of this post.
 
 We can start with frontier since it's not dependent on any other component.
@@ -158,6 +159,7 @@ func NewFrontier(initialUrls []url.URL, exclude []string) *Frontier {
 
 The frontier uses a channel of urls to keep the added URLs.
 Since the channel is consumed then we keep a `history` of visited URLs.
+History can be later used to check whether we seen a URL or not.
 
 The `terminating` attribute is used so we can have a graceful termination.
 Since another goroutine is going to read from this channel, we might
@@ -203,15 +205,19 @@ func (f *Frontier) Get() chan *url.URL {
 ```
 
 This method simply checks if the url is seen or not and if it's not
-excluded it adds it to the channel.
+excluded adds it to the channel.
+
 This function is blocking unless another gorutine is consuming from the urls channel.
+Why is this important?
+because if we run the Add in a blocking way without consuming the urls
+we will block the goroutine & it's a deadlock.
 
 The `Get` function does not provide any abstraction here, but I like the idea that
 consumers don't have to know which channel they need to consume from.
 
 In case you are wondering what log package I'm using, it's [logrus](https://github.com/sirupsen/logrus).
 
-The next step is to create the component and orchestrates the whole application.
+The next step is to create the component and orchestrates the crawl process.
 
 Let's first define the configuration that user can pass to the crawler.
 
@@ -271,7 +277,7 @@ func (c *Crawler) AddProcessor(processor Processor) {
 }
 ```
 
-config comes from the user and by making it a separate struct we can easily modify
+Config comes from the user and by making it a separate struct we can easily modify
 it without changing the parameters we pass to create the crawler.
 We keep a deadLetter channel for the failed URLs to have a retry mechanism.
 
@@ -297,10 +303,13 @@ type Storage interface {
 
 ### Parser
 
-instead of parsing the content in the crawler we can provide an implementation
+Instead of parsing the content in the crawler we can provide an implementation
 for the filetypes we want to parse.
+We can have a single parser that handles all the file types but
+this way is much easier to extend.
 
-But why do we need the parser? after we fetch the page we need to parse it to get
+But why do we need the parser?
+After we fetch the page we need to parse it to get
 the links from it and add it to our frontier.
 
 ```go
@@ -317,16 +326,16 @@ type Parser interface {
 }
 ```
 
-parser can check the file extension to see if it's supported.
+Parser can check the file extension to see if it's supported,
 And parse the file into tokens.
 
 The token is parsed information from the content.
 This is a nice way to extend the material we parse from the page later.
-currently we only care about `a` tags which are links.
+Currently we only care about `a` tags which are links.
 
 ### Processor
 
-following the same idea with parsers, we can provide the crawler
+Following the same idea with parsers, we can provide the crawler
 processes to apply on the web pages.
 
 Some typical processes are:
@@ -334,7 +343,7 @@ Some typical processes are:
 - Saving the page
 - Extracting links from the page
 
-The interface for these is very simple:
+Let's define the interface based on the required actions.
 
 ```go
 type Processor interface {
@@ -342,9 +351,9 @@ type Processor interface {
 }
 ```
 
-The process function takes in the crawl result which we define later
-and perform an action on it. Since the function is going to be called by
-the crawler on each page we cannot get any return value and give it back to caller.
+The process function takes in the crawl result which we'll define later.
+The function is only going to return an error.
+Since a lot of operations can be done in this function we are not returning any value.
 
 ### Distribute and Collect Result from Workers
 
@@ -380,7 +389,7 @@ Here we start by creating an input channel and an output channel for each worker
 There is a done channel here as well. It's a practice in go to use an empty
 channel to notify the goroutines that the process is done or cancelled.
 
-then a function will start ditributing URLs from frontier to worker channels.
+Then a function will start ditributing URLs from frontier to worker channels.
 
 Finally we have a another function that merges results from worker outputs.
 
@@ -410,7 +419,7 @@ func distributeUrls(frontier *frontier.Frontier, distributedInputs []chan *url.U
 
 Here we have a for loop over a channel.
 This means that our function never exits until the frontier closes the channel.
-For each url coming into the channel we take it and assign it to a channel.
+For each url coming into the channel we take it and assign it to a worker input channel.
 
 The assignment algorithm is very simple, we have a list of already assigned hosts.
 If a host is new we assign it randomly, otherwise we send it to the assigned host.
@@ -667,7 +676,7 @@ func getSavePath(url *url.URL) string {
 }
 ```
 
-and again we add it easily to the crawler:
+And again we add it easily to the crawler:
 
 ```go
     c.AddProcessor(&SaveToFile{storageBackend: c.storage})
