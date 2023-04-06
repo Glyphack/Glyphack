@@ -1,36 +1,37 @@
-<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=generator content="Hugo 0.111.3"><title>Building a Web Crawler in Golang - Glyphack</title><meta name=description content="Introduction But Why Building Another Crawler? High Level Design URL Frontier Selector Workers Fetcher Content Processor Link Extractor Implementation Let&rsquo;s talk about channels Storage Parser Processor Distribute and Collect Result from Workers Worker Extracting Links Saving Content Running Processors Failed URLs HTML parser Putting it All Together Conclusion Introduction Web crawler is a program that explores the internet by going to different websites and following any link it finds."><link rel=stylesheet href=/css/ui.css><script defer src=/js/dark-mode.js></script>
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=generator content="Hugo 0.111.3"><title>Building a Web Crawler in Golang - Glyphack</title><meta name=description content="Introduction But Why Building Another Crawler? High Level Design URL Frontier Selector Workers Fetcher Content Processor Link Extractor Implementation Let&rsquo;s talk about channels Storage Parser Processor Distribute and Collect Result from Workers Worker Extracting Links Saving Content Running Processors Failed URLs HTML parser Putting it All Together Conclusion Introduction Web crawler is a program that explores the Internet, by going to different websites and following any link it finds."><link rel=stylesheet href=/css/ui.css><script defer src=/js/dark-mode.js></script>
 <link disabled id=dark-mode-theme rel=stylesheet href=/css/dark.css><link rel=stylesheet href="https://fonts.googleapis.com/css?family=Fira+Mono|Lato|Raleway"></head><body><header class="container no-print"><div class=u-header><nav class=bar><ul><li><a href=/><img class=icon-text src=/img/prev.svg></a></li><li><img class=icon-text id=dark-mode-toggle src=/img/moon-regular.svg alt="Toggle Dark Mode"></a></li><li><a href=/blog/>Blog</a></li></ul></nav></div></header><main class=container><article><header><hgroup id=brand><h1>Building a Web Crawler in Golang</h1><h5><time datetime="2023-03-20 18:17:24 +0100 +0100">Mar 20, 2023</time>
 <span class=no-print>-
 <a href=/tags/coding>coding</a>
-<span></h5></hgroup><hr class=sep></header><ul><li><a href=#introduction>Introduction</a></li><li><a href=#but-why-building-another-crawler>But Why Building Another Crawler?</a></li><li><a href=#high-level-design>High Level Design</a><ul><li><a href=#url-frontier>URL Frontier</a></li><li><a href=#selector>Selector</a></li><li><a href=#workers>Workers</a></li><li><a href=#fetcher>Fetcher</a></li><li><a href=#content-processor>Content Processor</a></li><li><a href=#link-extractor>Link Extractor</a></li></ul></li><li><a href=#implementation>Implementation</a><ul><li><a href=#lets-talk-about-channels>Let&rsquo;s talk about channels</a></li><li><a href=#storage>Storage</a></li><li><a href=#parser>Parser</a></li><li><a href=#processor>Processor</a></li><li><a href=#distribute-and-collect-result-from-workers>Distribute and Collect Result from Workers</a></li><li><a href=#worker>Worker</a></li><li><a href=#extracting-links>Extracting Links</a></li><li><a href=#saving-content>Saving Content</a></li><li><a href=#running-processors>Running Processors</a></li><li><a href=#failed-urls>Failed URLs</a></li><li><a href=#html-parser>HTML parser</a></li><li><a href=#putting-it-all-together>Putting it All Together</a></li></ul></li><li><a href=#conclusion>Conclusion</a></li></ul><h2 id=introduction>Introduction</h2><p>Web crawler is a program that explores the internet
+<span></h5></hgroup><hr class=sep></header><ul><li><a href=#introduction>Introduction</a></li><li><a href=#but-why-building-another-crawler>But Why Building Another Crawler?</a></li><li><a href=#high-level-design>High Level Design</a><ul><li><a href=#url-frontier>URL Frontier</a></li><li><a href=#selector>Selector</a></li><li><a href=#workers>Workers</a></li><li><a href=#fetcher>Fetcher</a></li><li><a href=#content-processor>Content Processor</a></li><li><a href=#link-extractor>Link Extractor</a></li></ul></li><li><a href=#implementation>Implementation</a><ul><li><a href=#lets-talk-about-channels>Let&rsquo;s talk about channels</a></li><li><a href=#storage>Storage</a></li><li><a href=#parser>Parser</a></li><li><a href=#processor>Processor</a></li><li><a href=#distribute-and-collect-result-from-workers>Distribute and Collect Result from Workers</a></li><li><a href=#worker>Worker</a></li><li><a href=#extracting-links>Extracting Links</a></li><li><a href=#saving-content>Saving Content</a></li><li><a href=#running-processors>Running Processors</a></li><li><a href=#failed-urls>Failed URLs</a></li><li><a href=#html-parser>HTML parser</a></li><li><a href=#putting-it-all-together>Putting it All Together</a></li></ul></li><li><a href=#conclusion>Conclusion</a></li></ul><h2 id=introduction>Introduction</h2><p>Web crawler is a program that explores the Internet,
 by going to different websites and following any link it finds.</p><p>Crawlers are interesting because they provide a way to gather data
 from the internet.
-This is especially useful for data mining purposes.</p><p>You can find the full implementation in <a href=https://github.com/Glyphack/crawler>the Github repository</a>.</p><p><a href=https://cacm.acm.org/blogs/blog-cacm/153780-data-mining-the-web-via-crawling/fulltext>This post</a>
-provides a good introduction on building a crawler.</p><h2 id=but-why-building-another-crawler>But Why Building Another Crawler?</h2><p>I wrote down my reasons in the <a href=/rate-limiter-from-scratch-in-python-2>previous post</a>
-on why I&rsquo;m building these stuff from sctrach,
-the short answer is that it seems simple until you try it.</p><p>After reading through this project and implementing yourself,
+This is especially useful for data mining purposes.</p><p>You can find the full implementation in the <a href=https://github.com/Glyphack/crawler>GitHub repository</a>.</p><p><a href=https://cacm.acm.org/blogs/blog-cacm/153780-data-mining-the-web-via-crawling/fulltext>This post</a>
+provides a good introduction to building a crawler.</p><h2 id=but-why-building-another-crawler>But Why Building Another Crawler?</h2><p>I wrote down my reasons in the <a href=/rate-limiter-from-scratch-in-python-2>previous post</a>
+on why I&rsquo;m building this stuff from sctrach.
+The short answer is that it seems simple until you try it.</p><p>After reading through this project and implementing yourself,
 you will have a good understanding of how to write concurrent
-applications in golang.</p><h2 id=high-level-design>High Level Design</h2><p>We can look into what components a cralwer is made of, this helps
+applications in Go.</p><h2 id=high-level-design>High Level Design</h2><p>Let&rsquo;s look into what components a cralwer is made of, this helps
 to structure our code.</p><p>The following diagram shows the execution flow of our program and
-responsibilities of components.</p><p><img src=/crawler-diagram.excalidraw.svg alt=crawler-diagram></p><p>Let&rsquo;s break it down:</p><h3 id=url-frontier>URL Frontier</h3><p>Collection of the URLs that will be crawled.
-It supports adding new URLs as we discover links in fetched pages.</p><h3 id=selector>Selector</h3><p>To consume the URLs from frontier we can just get them one by one.
-But this can cause problem if we want to distribute the URLs between multiple workers.</p><p>The technique used here is called fan-out.</p><p>For example if some URLs are more important to crawl first and each worker gets
+responsibilities of components:</p><p><img src=/crawler-diagram.excalidraw.svg alt=crawler-diagram></p><p>Let&rsquo;s break it down:</p><h3 id=url-frontier>URL Frontier</h3><p>URL Frontier is a collection of URLs that are going to be crawled.
+It supports adding & consuming new URLs as we discover links in fetched pages.</p><h3 id=selector>Selector</h3><p>To consume the URLs from frontier we can get them one by one.
+But this can cause problem if we want to distribute the URLs between multiple workers.</p><p>The technique used here is called fan-out.</p><p>For example if some URLs are more important to crawl first, and each worker gets
 the next URL to crawl then those special URLs can&rsquo;t be crawled first.
-Another usefulness of this component is distributing URLs from one host to one worker,
-so the worker can make sure to not send too many requests to a single host.
-Best practice is to wait 2 seconds between requests for the same Host.</p><h3 id=workers>Workers</h3><p>Each worker consumes from queues that selector fills and simply fetches the page.</p><p>The worker must handle failures and retry when a page fails to load.
+Another usefulness of this component is distributing URLs from one host to one worker.
+So each worker can make sure to not send too many requests to a single Host.
+The best practice is to wait 2 seconds between requests for the same Host.</p><h3 id=workers>Workers</h3><p>Each worker consumes from queues that selector fills and fetches the URL.</p><p>The worker must handle failures and retry when it fails to fetch a URL.
 Each worker also keeps track of URLs fetched to be polite.</p><h3 id=fetcher>Fetcher</h3><p>This components is the reverse of selector component, it gathers
-results from different workers to a single queue.</p><p>This operation is called fan-in which is useful here because we
+results from different workers to a single collection.</p><p>This operation is called fan-in which is useful here because we
 can simplify the processor operations because it only needs to
-consume from a single result queue.</p><h3 id=content-processor>Content Processor</h3><p>After we get the result from each worker we ran different
+consume from a single result channel.</p><h3 id=content-processor>Content Processor</h3><p>After we get the result from each worker we ran different
 content processors on the result, this can be tasks like extracting
-new URLs or saving them on disk.</p><p>Also note that this component does not apply a single
+new URLs or saving pages to the disk.</p><p>Also note that this component does not apply a single
 logic on all results. We can register different processors,
 like a plugin system to expand this component.</p><p>Later we discuss how we can use strategy design pattern to
-implement this in code.</p><h3 id=link-extractor>Link Extractor</h3><p>The link extractor is a special processor we create in our app
+implement this in code.</p><h3 id=link-extractor>Link Extractor</h3><p>The link extractor is a special processor we create
 that uses a parser to parse the page content and insert URLs
 back to frontier.</p><h2 id=implementation>Implementation</h2><h3 id=lets-talk-about-channels>Let&rsquo;s talk about channels</h3><p>channels are going to be used heavily in the implementation.
-I suggest you to make sure you understand their <a href=https://go.dev/tour/concurrency/1>fundamentals</a>
+I suggest you to make sure you understand <a href=https://go.dev/tour/concurrency/1>fundamentals</a>
+of channels.
 before reading the rest of this post.</p><p>We can start with frontier since it&rsquo;s not dependent on any other component.</p><p>I&rsquo;ll create a new package frontier:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span> <span class=nx>Frontier</span> <span class=kd>struct</span> <span class=p>{</span>
 </span></span><span class=line><span class=cl>    <span class=nx>urls</span>        <span class=kd>chan</span> <span class=o>*</span><span class=nx>url</span><span class=p>.</span><span class=nx>URL</span>
 </span></span><span class=line><span class=cl>    <span class=nx>history</span>     <span class=kd>map</span><span class=p>[</span><span class=nx>url</span><span class=p>.</span><span class=nx>URL</span><span class=p>]</span><span class=nx>time</span><span class=p>.</span><span class=nx>Time</span>
@@ -51,7 +52,8 @@ before reading the rest of this post.</p><p>We can start with frontier since it&
 </span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nx>f</span>
 </span></span><span class=line><span class=cl><span class=p>}</span>
 </span></span></code></pre></div><p>The frontier uses a channel of urls to keep the added URLs.
-Since the channel is consumed then we keep a <code>history</code> of visited URLs.</p><p>The <code>terminating</code> attribute is used so we can have a graceful termination.
+Since the channel is consumed then we keep a <code>history</code> of visited URLs.
+History can be later used to check whether we seen a URL or not.</p><p>The <code>terminating</code> attribute is used so we can have a graceful termination.
 Since another goroutine is going to read from this channel, we might
 want to wait until all the URLs are consumed and meanwhile don&rsquo;t add any new URLs.</p><p>Next we need a method to add a new url.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>func</span> <span class=p>(</span><span class=nx>f</span> <span class=o>*</span><span class=nx>Frontier</span><span class=p>)</span> <span class=nf>Add</span><span class=p>(</span><span class=nx>url</span> <span class=o>*</span><span class=nx>url</span><span class=p>.</span><span class=nx>URL</span><span class=p>)</span> <span class=kt>bool</span> <span class=p>{</span>
 </span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=nx>f</span><span class=p>.</span><span class=nx>terminating</span> <span class=p>{</span>
@@ -88,9 +90,11 @@ want to wait until all the URLs are consumed and meanwhile don&rsquo;t add any n
 </span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nx>f</span><span class=p>.</span><span class=nx>urls</span>
 </span></span><span class=line><span class=cl><span class=p>}</span>
 </span></span></code></pre></div><p>This method simply checks if the url is seen or not and if it&rsquo;s not
-excluded it adds it to the channel.
-This function is blocking unless another gorutine is consuming from the urls channel.</p><p>The <code>Get</code> function does not provide any abstraction here, but I like the idea that
-consumers don&rsquo;t have to know which channel they need to consume from.</p><p>In case you are wondering what log package I&rsquo;m using, it&rsquo;s <a href=https://github.com/sirupsen/logrus>logrus</a>.</p><p>The next step is to create the component and orchestrates the whole application.</p><p>Let&rsquo;s first define the configuration that user can pass to the crawler.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span> <span class=nx>Config</span> <span class=kd>struct</span> <span class=p>{</span>
+excluded adds it to the channel.</p><p>This function is blocking unless another gorutine is consuming from the urls channel.
+Why is this important?
+because if we run the Add in a blocking way without consuming the urls
+we will block the goroutine & it&rsquo;s a deadlock.</p><p>The <code>Get</code> function does not provide any abstraction here, but I like the idea that
+consumers don&rsquo;t have to know which channel they need to consume from.</p><p>In case you are wondering what log package I&rsquo;m using, it&rsquo;s <a href=https://github.com/sirupsen/logrus>logrus</a>.</p><p>The next step is to create the component and orchestrates the crawl process.</p><p>Let&rsquo;s first define the configuration that user can pass to the crawler.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span> <span class=nx>Config</span> <span class=kd>struct</span> <span class=p>{</span>
 </span></span><span class=line><span class=cl>    <span class=nx>MaxRedirects</span>    <span class=kt>int</span>
 </span></span><span class=line><span class=cl>    <span class=nx>RevisitDelay</span>    <span class=nx>time</span><span class=p>.</span><span class=nx>Duration</span>
 </span></span><span class=line><span class=cl>    <span class=nx>WorkerCount</span>     <span class=kt>int</span>
@@ -140,7 +144,7 @@ consumers don&rsquo;t have to know which channel they need to consume from.</p><
 </span></span><span class=line><span class=cl><span class=kd>func</span> <span class=p>(</span><span class=nx>c</span> <span class=o>*</span><span class=nx>Crawler</span><span class=p>)</span> <span class=nf>AddProcessor</span><span class=p>(</span><span class=nx>processor</span> <span class=nx>Processor</span><span class=p>)</span> <span class=p>{</span>
 </span></span><span class=line><span class=cl>    <span class=nx>c</span><span class=p>.</span><span class=nx>processors</span> <span class=p>=</span> <span class=nb>append</span><span class=p>(</span><span class=nx>c</span><span class=p>.</span><span class=nx>processors</span><span class=p>,</span> <span class=nx>processor</span><span class=p>)</span>
 </span></span><span class=line><span class=cl><span class=p>}</span>
-</span></span></code></pre></div><p>config comes from the user and by making it a separate struct we can easily modify
+</span></span></code></pre></div><p>Config comes from the user and by making it a separate struct we can easily modify
 it without changing the parameters we pass to create the crawler.
 We keep a deadLetter channel for the failed URLs to have a retry mechanism.</p><p>The crawler takes in other components let&rsquo;s break them down:</p><h3 id=storage>Storage</h3><p>Storage is an interface that exposes method to save data.
 This helps with extending the processor without changing it&rsquo;s code.</p><p>Whatever storage implementation we use we need to implement
@@ -151,8 +155,11 @@ the following methods:</p><div class=highlight><pre tabindex=0 class=chroma><cod
 </span></span><span class=line><span class=cl>    <span class=nf>Set</span><span class=p>(</span><span class=nx>path</span> <span class=kt>string</span><span class=p>,</span> <span class=nx>value</span> <span class=kt>string</span><span class=p>)</span> <span class=kt>error</span>
 </span></span><span class=line><span class=cl>    <span class=nf>Delete</span><span class=p>(</span><span class=nx>path</span> <span class=kt>string</span><span class=p>)</span> <span class=kt>error</span>
 </span></span><span class=line><span class=cl><span class=p>}</span>
-</span></span></code></pre></div><h3 id=parser>Parser</h3><p>instead of parsing the content in the crawler we can provide an implementation
-for the filetypes we want to parse.</p><p>But why do we need the parser? after we fetch the page we need to parse it to get
+</span></span></code></pre></div><h3 id=parser>Parser</h3><p>Instead of parsing the content in the crawler we can provide an implementation
+for the filetypes we want to parse.
+We can have a single parser that handles all the file types but
+this way is much easier to extend.</p><p>But why do we need the parser?
+After we fetch the page we need to parse it to get
 the links from it and add it to our frontier.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kn>package</span> <span class=nx>parser</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl><span class=kd>type</span> <span class=nx>Token</span> <span class=kd>struct</span> <span class=p>{</span>
@@ -164,16 +171,16 @@ the links from it and add it to our frontier.</p><div class=highlight><pre tabin
 </span></span><span class=line><span class=cl>    <span class=nf>IsSupportedExtension</span><span class=p>(</span><span class=nx>extension</span> <span class=kt>string</span><span class=p>)</span> <span class=kt>bool</span>
 </span></span><span class=line><span class=cl>    <span class=nf>Parse</span><span class=p>(</span><span class=nx>content</span> <span class=kt>string</span><span class=p>)</span> <span class=p>([]</span><span class=nx>Token</span><span class=p>,</span> <span class=kt>error</span><span class=p>)</span>
 </span></span><span class=line><span class=cl><span class=p>}</span>
-</span></span></code></pre></div><p>parser can check the file extension to see if it&rsquo;s supported.
+</span></span></code></pre></div><p>Parser can check the file extension to see if it&rsquo;s supported,
 And parse the file into tokens.</p><p>The token is parsed information from the content.
 This is a nice way to extend the material we parse from the page later.
-currently we only care about <code>a</code> tags which are links.</p><h3 id=processor>Processor</h3><p>following the same idea with parsers, we can provide the crawler
-processes to apply on the web pages.</p><p>Some typical processes are:</p><ul><li>Saving the page</li><li>Extracting links from the page</li></ul><p>The interface for these is very simple:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span> <span class=nx>Processor</span> <span class=kd>interface</span> <span class=p>{</span>
+Currently we only care about <code>a</code> tags which are links.</p><h3 id=processor>Processor</h3><p>Following the same idea with parsers, we can provide the crawler
+processes to apply on the web pages.</p><p>Some typical processes are:</p><ul><li>Saving the page</li><li>Extracting links from the page</li></ul><p>Let&rsquo;s define the interface based on the required actions.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span> <span class=nx>Processor</span> <span class=kd>interface</span> <span class=p>{</span>
 </span></span><span class=line><span class=cl>    <span class=nf>Process</span><span class=p>(</span><span class=nx>CrawlResult</span><span class=p>)</span> <span class=kt>error</span>
 </span></span><span class=line><span class=cl><span class=p>}</span>
-</span></span></code></pre></div><p>The process function takes in the crawl result which we define later
-and perform an action on it. Since the function is going to be called by
-the crawler on each page we cannot get any return value and give it back to caller.</p><h3 id=distribute-and-collect-result-from-workers>Distribute and Collect Result from Workers</h3><p>In the earlier section we discussed how can we parallelize the crawling
+</span></span></code></pre></div><p>The process function takes in the crawl result which we&rsquo;ll define later.
+The function is only going to return an error.
+Since a lot of operations can be done in this function we are not returning any value.</p><h3 id=distribute-and-collect-result-from-workers>Distribute and Collect Result from Workers</h3><p>In the earlier section we discussed how can we parallelize the crawling
 task by distrubting the urls into multiple queues and assign workers to each
 queue.</p><p>Let&rsquo;s implement this functionality, We can create a new function called <code>Start</code>
 for the crawler struct:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>func</span> <span class=p>(</span><span class=nx>c</span> <span class=o>*</span><span class=nx>Crawler</span><span class=p>)</span> <span class=nf>Start</span><span class=p>()</span> <span class=p>{</span>
@@ -194,7 +201,7 @@ for the crawler struct:</p><div class=highlight><pre tabindex=0 class=chroma><co
 </span></span><span class=line><span class=cl>    <span class=nx>mergedResults</span> <span class=o>:=</span> <span class=nb>make</span><span class=p>(</span><span class=kd>chan</span> <span class=nx>CrawlResult</span><span class=p>)</span>
 </span></span><span class=line><span class=cl>    <span class=k>go</span> <span class=nf>mergeResults</span><span class=p>(</span><span class=nx>workersResults</span><span class=p>,</span> <span class=nx>mergedResults</span><span class=p>)</span>
 </span></span></code></pre></div><p>Here we start by creating an input channel and an output channel for each worker.</p><p>There is a done channel here as well. It&rsquo;s a practice in go to use an empty
-channel to notify the goroutines that the process is done or cancelled.</p><p>then a function will start ditributing URLs from frontier to worker channels.</p><p>Finally we have a another function that merges results from worker outputs.</p><p>Note that these two functions and worker start are executed in a separate goroutine.
+channel to notify the goroutines that the process is done or cancelled.</p><p>Then a function will start ditributing URLs from frontier to worker channels.</p><p>Finally we have a another function that merges results from worker outputs.</p><p>Note that these two functions and worker start are executed in a separate goroutine.
 So they will continuously consume from frontier, add to worker input channel,
 and put merge the result into a single output channel.</p><p>How can we implement the distribute and merge mechanisms?
 <a href=https://go.dev/blog/pipelines>This post</a> fully explains the fan-in and fan-out.</p><p>Let&rsquo;s create a separate file and implement these two functions.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>func</span> <span class=nf>distributeUrls</span><span class=p>(</span><span class=nx>frontier</span> <span class=o>*</span><span class=nx>frontier</span><span class=p>.</span><span class=nx>Frontier</span><span class=p>,</span> <span class=nx>distributedInputs</span> <span class=p>[]</span><span class=kd>chan</span> <span class=o>*</span><span class=nx>url</span><span class=p>.</span><span class=nx>URL</span><span class=p>)</span> <span class=p>{</span>
@@ -211,7 +218,7 @@ and put merge the result into a single output channel.</p><p>How can we implemen
 </span></span><span class=line><span class=cl><span class=p>}</span>
 </span></span></code></pre></div><p>Here we have a for loop over a channel.
 This means that our function never exits until the frontier closes the channel.
-For each url coming into the channel we take it and assign it to a channel.</p><p>The assignment algorithm is very simple, we have a list of already assigned hosts.
+For each url coming into the channel we take it and assign it to a worker input channel.</p><p>The assignment algorithm is very simple, we have a list of already assigned hosts.
 If a host is new we assign it randomly, otherwise we send it to the assigned host.</p><p>Now let&rsquo;s implement the merger:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>func</span> <span class=nf>mergeResults</span><span class=p>(</span><span class=nx>workersResults</span> <span class=p>[]</span><span class=kd>chan</span> <span class=nx>CrawlResult</span><span class=p>,</span> <span class=nx>out</span> <span class=kd>chan</span> <span class=nx>CrawlResult</span><span class=p>)</span> <span class=p>{</span>
 </span></span><span class=line><span class=cl>    <span class=nx>collect</span> <span class=o>:=</span> <span class=kd>func</span><span class=p>(</span><span class=nx>in</span> <span class=kd>chan</span> <span class=nx>CrawlResult</span><span class=p>)</span> <span class=p>{</span>
 </span></span><span class=line><span class=cl>        <span class=k>for</span> <span class=nx>result</span> <span class=o>:=</span> <span class=k>range</span> <span class=nx>in</span> <span class=p>{</span>
@@ -387,7 +394,7 @@ This processor uses the storage backend provided to the crawler to store pages.<
 </span></span><span class=line><span class=cl>    <span class=nx>savePath</span> <span class=o>:=</span> <span class=nx>path</span><span class=p>.</span><span class=nf>Join</span><span class=p>(</span><span class=nx>url</span><span class=p>.</span><span class=nx>Host</span><span class=p>,</span> <span class=nx>fileName</span><span class=p>)</span>
 </span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nx>savePath</span>
 </span></span><span class=line><span class=cl><span class=p>}</span>
-</span></span></code></pre></div><p>and again we add it easily to the crawler:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl>    <span class=nx>c</span><span class=p>.</span><span class=nf>AddProcessor</span><span class=p>(</span><span class=o>&amp;</span><span class=nx>SaveToFile</span><span class=p>{</span><span class=nx>storageBackend</span><span class=p>:</span> <span class=nx>c</span><span class=p>.</span><span class=nx>storage</span><span class=p>})</span>
+</span></span></code></pre></div><p>And again we add it easily to the crawler:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl>    <span class=nx>c</span><span class=p>.</span><span class=nf>AddProcessor</span><span class=p>(</span><span class=o>&amp;</span><span class=nx>SaveToFile</span><span class=p>{</span><span class=nx>storageBackend</span><span class=p>:</span> <span class=nx>c</span><span class=p>.</span><span class=nx>storage</span><span class=p>})</span>
 </span></span></code></pre></div><h3 id=running-processors>Running Processors</h3><p>The final step in our start method is to run processors on results.</p><p>Since the list of processors can be extended and we must not block the
 goroutine, we execute each of them in a separate goroutine.</p><p>This is important because if we can&rsquo;t consume from the merged results fast enough
 then each worker might wait until the processors are ran so they can send to channel.
