@@ -22,6 +22,12 @@ pygmentsUseClasses = true
 [[menu.main]]
 name = "Blog"
 url = "/blog/"
+[[menu.main]]
+name = "Projects"
+url = "https://glyphack.notion.site/Public-Projects-36b1d12fba0b424cafddb7157c6094c8"
+[[menu.main]]
+name = "Reading List"
+url = "https://glyphack.notion.site/0a261efcc2a3458f901ff5a8f41c75d9?v=ddcd3b12e6ab44b59320c88637ce9776"
 
 [taxonomies]
 tag = "tags"
@@ -33,9 +39,9 @@ debugCSS = false
 customCSS = []
 
 # Site meta description
-description = "Hi, I'm Shaygan. I'm a software engineer(and sometimes a data engineer). I'm passionate about building things, helping and sharing things I've learned with people. If you want to know more about me visit the links below, If you want to know me even more send me a game invite on Lichess."
+description = "Hey there, I'm Shaygan! I love creating and sharing my knowledge with others. If you're curious to learn more about me, check out the links below. And if you want to take our friendship to the next level, challenge me to a game on Lichess!"
 # Site's Tagline (Subtitle or Keyword)
-tagline = "Hi, I'm Shaygan. I'm a software engineer(and sometimes a data engineer). I'm passionate about building things, helping and sharing things I've learned with people. If you want to know more about me visit the links below, If you want to know me even more send me a game invite on Lichess."
+tagline = "Hey there, I'm Shaygan! I love creating and sharing my knowledge with others. If you're curious to learn more about me, check out the links below. And if you want to take our friendship to the next level, challenge me to a game on Lichess!"
 # URL to license file, can be outside of your domain
 # licenseURL = "/about/license"
 
