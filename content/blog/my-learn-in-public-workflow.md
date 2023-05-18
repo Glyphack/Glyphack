@@ -1,7 +1,7 @@
 ---
 title: "My Learn in Public Workflow"
 date: 2023-05-18T14:07:58+02:00
-draft: true
+draft: false
 tags: []
 ---
 
@@ -59,12 +59,16 @@ whenever I write a page for something I learned that means I have
 a topic to do reasearch on so I put it in the content list.
 
 I like to set a schedule to remind myself about picking up
-the stuff I left. So just by setting a 1 hour time block every week I can
-research more on that topic and write down all the stuff I know.
+the stuff I left. So just by setting a 2 hour time block every week I can
+research more on one of the topics on my list and write down all the stuff I know.
+Or not even writing down but to connect different notes I have on the topic.
 It might become a post worthy content or not, anyway It's there and can be shared.
 
 So it's really simlple but you need to keep the list and ideas somewhere,
 otherwise you never know what to talk about when it comes to sharing.
+After a while when the knowledge piles up in a topic.
+You can spend small time connecting all your learnings together,
+and create learning exhaust.
 
 There's another aspect of learning in public, which is to share what you're doing.
 
