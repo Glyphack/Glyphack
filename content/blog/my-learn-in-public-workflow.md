@@ -1,11 +1,9 @@
 ---
-title: "My Learn in Public Workflow"
+title: "Trying Out Learning In Public"
 date: 2023-05-18T14:07:58+02:00
 draft: false
 tags: []
 ---
-
-The audience of this post are people who want to share their learnings in public.
 
 A while back I read about [learning in public](https://www.swyx.io/learn-in-public)
 from swyx:
