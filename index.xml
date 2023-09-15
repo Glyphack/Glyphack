@@ -1,5 +1,50 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Glyphack</title><link>https://glyphack.com/</link><description>Recent content on Glyphack</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 18 May 2023 14:07:58 +0200</lastBuildDate><atom:link href="https://glyphack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>My Learn in Public Workflow</title><link>https://glyphack.com/blog/my-learn-in-public-workflow/</link><pubDate>Thu, 18 May 2023 14:07:58 +0200</pubDate><guid>https://glyphack.com/blog/my-learn-in-public-workflow/</guid><description>&lt;p>The audience of this post are people who want to share their learnings in public.&lt;/p>
-&lt;p>A while back I read about &lt;a href="https://www.swyx.io/learn-in-public">learning in public&lt;/a>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Glyphack</title><link>https://glyphack.com/</link><description>Recent content on Glyphack</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 15 Sep 2023 19:50:19 +0200</lastBuildDate><atom:link href="https://glyphack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Compilers Resources</title><link>https://glyphack.com/blog/compiler-resources/</link><pubDate>Fri, 15 Sep 2023 19:50:19 +0200</pubDate><guid>https://glyphack.com/blog/compiler-resources/</guid><description>&lt;p>This post is a compilation of great resources I found while building a type checker for Python.
+These resources are free and highly focused on specific topics, making them ideal for learning by doing rather than sifting through extensive materials.&lt;/p>
+&lt;h2 id="parser">Parser&lt;/h2>
+&lt;p>When it comes to writing a parser, your approach depends on your project&amp;rsquo;s goals.
+For compilers or interpreters, you can use a parser generator.
+However, if you&amp;rsquo;re working on tools like formatters or language servers, your parser needs to handle broken code gracefully.&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://boshen.github.io/javascript-parser-in-rust/">&lt;strong>&amp;ldquo;Write JS Parser in Rust&amp;rdquo;&lt;/strong>&lt;/a> by Boshen is an excellent introductory guide.&lt;/li>
+&lt;li>For resilient parsing, check out this tutorial on &lt;a href="https://matklad.github.io/2023/05/21/resilient-ll-parsing-tutorial.html">&lt;strong>resilient LL parsing&lt;/strong>&lt;/a>.&lt;/li>
+&lt;li>Your language&amp;rsquo;s official documentation. For Python, there is &lt;a href="https://docs.python.org/3/library/ast.html">&lt;strong>Python AST module&lt;/strong>&lt;/a>.&lt;/li>
+&lt;li>If you&amp;rsquo;re interested in RustPython, they offer an example implementation of a lexer &lt;a href="https://rustpython.github.io/website/rustpython_parser/index.html">&lt;strong>here&lt;/strong>&lt;/a>.&lt;/li>
+&lt;/ul>
+&lt;h2 id="stanford-compilers-class">Stanford Compilers Class&lt;/h2>
+&lt;p>For a comprehensive understanding of relevant topics, consider following the &lt;a href="http://openclassroom.stanford.edu/MainFolder/CoursePage.php?course=Compilers">&lt;strong>Stanford Compilers Class&lt;/strong>&lt;/a>. Although I haven&amp;rsquo;t watched it personally, I found this &lt;a href="https://pgrandinetti.github.io/compilers/">&lt;strong>guide&lt;/strong>&lt;/a> based on the class quite helpful.&lt;/p>
+&lt;h2 id="crafting-interpreters">Crafting Interpreters&lt;/h2>
+&lt;p>It goes without saying that &lt;a href="https://craftinginterpreters.com/">&lt;strong>&amp;ldquo;Crafting Interpreters&amp;rdquo;&lt;/strong>&lt;/a> is an indispensable resource for this journey. I recommend reading it chapter by chapter as you build your project.&lt;/p>
+&lt;h2 id="symbol-table">Symbol Table&lt;/h2>
+&lt;p>This &lt;a href="https://eli.thegreenplace.net/2010/09/18/python-internals-symbol-tables-part-1/">&lt;strong>series on the Python symbol table implementation&lt;/strong>&lt;/a>
+from Eli Bendersky is useful for learning how does a symbol table works:&lt;/p>
+&lt;ul>
+&lt;li>RustPython&amp;rsquo;s &lt;a href="https://rustpython.github.io/website/rustpython_compiler/symboltable/struct.SymbolTable.html">&lt;strong>SymbolTable&lt;/strong>&lt;/a> implementation.&lt;/li>
+&lt;/ul>
+&lt;h2 id="semantic-analyzer">Semantic Analyzer&lt;/h2>
+&lt;p>While resources specific to the semantic analysis phase are scarce, you can find inspiration and solutions in existing projects:&lt;/p>
+&lt;ul>
+&lt;li>MyPy offers valuable insights into semantic analysis on their &lt;a href="https://github.com/python/mypy/wiki/Semantic-Analyzer">&lt;strong>wiki&lt;/strong>&lt;/a>.&lt;/li>
+&lt;li>Pyright&amp;rsquo;s &lt;a href="https://github.com/microsoft/pyright/blob/eb98cdda4ecfb4d2ce2fb1d4b9ce7848ab439c32/packages/pyright-internal/src/analyzer/binder.ts">&lt;strong>binder.ts&lt;/strong>&lt;/a> is another resource worth exploring.&lt;/li>
+&lt;/ul>
+&lt;h2 id="type-checking">Type Checking&lt;/h2>
+&lt;p>To delve deeper into type checking, it&amp;rsquo;s often best to study code from various projects:&lt;/p>
+&lt;ul>
+&lt;li>Check out the design of &lt;a href="https://github.com/quora/pyanalyze/blob/master/docs/design.md">&lt;strong>pyanalyze&lt;/strong>&lt;/a> for Python.&lt;/li>
+&lt;li>For MyPy, the &lt;a href="https://github.com/python/mypy/wiki/Type-Checker">&lt;strong>Type Checker&lt;/strong>&lt;/a> wiki provides valuable insights.&lt;/li>
+&lt;li>Dive into the internal details of the &lt;a href="https://github.com/quora/pyanalyze/blob/master/docs/design.md">&lt;strong>Jedi language server&lt;/strong>&lt;/a>.&lt;/li>
+&lt;/ul>
+&lt;h2 id="programming-language-zoo">Programming Language Zoo&lt;/h2>
+&lt;p>If your language closely resembles one of those in the &lt;a href="https://plzoo.andrej.com/language/poly.html">&lt;strong>Programming Languages Zoo&lt;/strong>&lt;/a>, studying their code can be immensely helpful due to their brevity and simplicity.&lt;/p>
+&lt;h2 id="explaining-rust-analyzer">Explaining Rust Analyzer&lt;/h2>
+&lt;p>For a comprehensive understanding of language servers, file systems, updates, and testing, check out this &lt;a href="https://www.youtube.com/playlist?list=PLhb66M_x9UmrqXhQuIpWC5VgTdrGxMx3y">&lt;strong>YouTube playlist&lt;/strong>&lt;/a>.&lt;/p>
+&lt;h2 id="lsp-language-server-protocol">LSP (Language Server Protocol)&lt;/h2>
+&lt;p>Implementing the Language Server Protocol (LSP) can be simplified with &lt;a href="https://github.com/ebkalderon/tower-lsp">&lt;strong>Tower LSP&lt;/strong>&lt;/a>, a powerful tool for quick setup. If you choose to implement the LSP protocol yourself, you can use it as a reference.&lt;/p>
+&lt;h2 id="oxc">Oxc&lt;/h2>
+&lt;p>you can explore the &lt;a href="https://github.com/web-infra-dev/oxc">&lt;strong>oxc GitHub repository&lt;/strong>&lt;/a>. This repository provides a great implementation of a set of JS tools.
+You can delve into different packages within the codebase to understand the design patterns used for each part and how they are implemented.&lt;/p>
+&lt;h2 id="final-words">Final Words&lt;/h2>
+&lt;p>After this journey I found out that nothing is more fun than compilers.
+If you know more resources, please send them to me.&lt;/p></description></item><item><title>Trying Out Learning In Public</title><link>https://glyphack.com/blog/my-learn-in-public-workflow/</link><pubDate>Thu, 18 May 2023 14:07:58 +0200</pubDate><guid>https://glyphack.com/blog/my-learn-in-public-workflow/</guid><description>&lt;p>A while back I read about &lt;a href="https://www.swyx.io/learn-in-public">learning in public&lt;/a>
 from swyx:&lt;/p>
 &lt;blockquote>
 &lt;p>At some point people will start asking you for help because of all the stuff you put out.&lt;/p>
