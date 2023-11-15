@@ -6,8 +6,12 @@ So why didn&amp;rsquo;t I do this earlier?&lt;/p>
 &lt;p>It was because I never exposed myself to the opportunity.
 I usually avoided reading docs from start to finish or diving into the code of the tool I was using.&lt;/p>
 &lt;p>The &lt;a href="https://github.com/python/cpython/pull/104986">first&lt;/a> &amp;amp; &lt;a href="https://github.com/python/cpython/pull/104986">second PR&lt;/a> were the result of reading the grammar and &lt;code>ast&lt;/code> package docs and finding inconsistencies.&lt;/p>
-&lt;p>Well, I think that when we start out programming, it&amp;rsquo;s best to be exposed to these opportunities of reading the actual framework/tool documentation and trying to understand and contribute if there&amp;rsquo;s something to improve.
-Or just, in general, look more into the source rather than reaching for tutorials.&lt;/p></description></item><item><title>Compilers Resources</title><link>https://glyphack.com/blog/compiler-resources/</link><pubDate>Fri, 15 Sep 2023 19:50:19 +0200</pubDate><guid>https://glyphack.com/blog/compiler-resources/</guid><description>&lt;p>This post is a compilation of great resources I found while building a type checker for Python.
+&lt;p>Also after I was working on my type checker I started reading PEPs and playing around with other Python type checkers such as pyright.
+Then suddenly ( I found )[https://github.com/quora/pyanalyze/issues/707] a rule in PEP-586(&lt;a href="https://peps.python.org/pep-0586/#illegal-parameters-for-literal-at-type-check-time">https://peps.python.org/pep-0586/#illegal-parameters-for-literal-at-type-check-time&lt;/a>)
+which was not possible to implement with Python ast structure.
+I haven&amp;rsquo;t started an issue for this one yet because it requires more effort but it&amp;rsquo;s another opportunity.&lt;/p>
+&lt;p>I think that when we start programming journey, it&amp;rsquo;s best to be exposed to these opportunities of reading the actual framework/tool documentation.
+Or just, in general, look more into the source/docs rather than reaching for tutorials.&lt;/p></description></item><item><title>Compilers Resources</title><link>https://glyphack.com/blog/compiler-resources/</link><pubDate>Fri, 15 Sep 2023 19:50:19 +0200</pubDate><guid>https://glyphack.com/blog/compiler-resources/</guid><description>&lt;p>This post is a compilation of great resources I found while building a type checker for Python.
 These resources are free and highly focused on specific topics, making them ideal for learning by doing rather than sifting through extensive materials.&lt;/p>
 &lt;h2 id="parser">Parser&lt;/h2>
 &lt;p>When it comes to writing a parser, your approach depends on your project&amp;rsquo;s goals.
