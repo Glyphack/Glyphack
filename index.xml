@@ -1,4 +1,284 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Glyphack</title><link>https://glyphack.com/</link><description>Recent content on Glyphack</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 19 Sep 2023 22:23:48 +0200</lastBuildDate><atom:link href="https://glyphack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>TIL Secret to Open Source Contribution &amp; Contributing to Python Docs</title><link>https://glyphack.com/blog/contributing-to-python-docs/</link><pubDate>Tue, 19 Sep 2023 22:23:48 +0200</pubDate><guid>https://glyphack.com/blog/contributing-to-python-docs/</guid><description>&lt;p>I think I learned something about contributing to open source that, if I knew a couple of years back, I could have done much more open source contributions.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Glyphack</title><link>https://glyphack.com/</link><description>Recent content on Glyphack</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 30 Dec 2023 10:54:35 +0100</lastBuildDate><atom:link href="https://glyphack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>A Better Keyboard</title><link>https://glyphack.com/blog/a-better-keyboard/</link><pubDate>Sat, 30 Dec 2023 10:54:35 +0100</pubDate><guid>https://glyphack.com/blog/a-better-keyboard/</guid><description>&lt;p>When it comes to boosting productivity, there’s a common tool present in every OS that often goes unnoticed - your keyboard.&lt;/p>
+&lt;p>Imagine you want to make a better keyboard.
+Seems like a hard challenge for every company.
+What if &amp;lsquo;better&amp;rsquo; meant compressing multiple key presses into one? Or have shortcut for your frequent actions.
+If you minimize the effort to use it then you are making it better for yourself.&lt;/p>
+&lt;p>The challenge lies in the keyboard&amp;rsquo;s limited keys, and hard to press combinations like &lt;code>ctrl + alt + any key&lt;/code>.&lt;/p>
+&lt;p>Most of us learn to use tools as they are, a commendable first step.
+But why stop there? By settling for the status quo, we miss out on potential improvements.
+After all, no product is tailored to your specific needs.&lt;/p>
+&lt;p>None of the products produced are going to be designed based on your specific needs.
+One of the advantages of trying to use keyboard to make repetitive tasks easier is to reduce the attention needed for them.
+When these tasks will be easy enough that doing them &lt;a href="https://www.scattered-thoughts.net/writing/moving-faster/">won&amp;rsquo;t require attention&lt;/a>.
+Just like how when you learn touch typing, and suddenly you are just writing instead of looking at the keyboard, or frequently press the wrong key.
+You get faster.&lt;/p>
+&lt;p>Before going into details, keep in mind that the goal is to make your workflow easier.
+Some of these suggestions might be useful and others might be not.
+Take away the ideas with yourself and adjust it accordingly.&lt;/p>
+&lt;p>I implemented the improvements using the following tools:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://www.raycast.com/">Raycast&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.hammerspoon.org/">Hammerspoon&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://karabiner-elements.pqrs.org/">Karabiner&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>These tools are exclusively for Mac. There are other alternatives such as:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://www.scriptkit.com/">Script Kit&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.autohotkey.com/">Auto Hotkey&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>Remapping Keys&lt;/strong>&lt;/p>
+&lt;p>Our keyboards are not designed for heavy usage of shortcuts.
+So you can start making shortcuts for stuff by setting them to &lt;code>ctrl + T&lt;/code>,&lt;/p>
+&lt;p>This method presents two significant challenges:&lt;/p>
+&lt;ul>
+&lt;li>The easily accessible keys are already assigned, such as CMD + T.&lt;/li>
+&lt;li>Complex combinations become cumbersome: try pressing CMD + ALT + CTRL + T, and you’ll likely find it inconvenient.&amp;quot;&lt;/li>
+&lt;/ul>
+&lt;p>The idea is that some keys can be used to do more than one thing.
+What keys can be used like this? Let&amp;rsquo;s take a look at different keys.&lt;/p>
+&lt;ul>
+&lt;li>Keys you hold down to change how &lt;em>other&lt;/em> keys behave, but that (usually) don&amp;rsquo;t do anything if you use them on their own (like Shift and Control).
+&lt;ul>
+&lt;li>Shift&lt;/li>
+&lt;li>control&lt;/li>
+&lt;li>alt&lt;/li>
+&lt;li>caps lock&lt;/li>
+&lt;li>command&lt;/li>
+&lt;li>fn&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Keys that you press and release but don&amp;rsquo;t want to &amp;ldquo;repeat&amp;rdquo; as you hold them (like Escape or Insert).
+&lt;ul>
+&lt;li>Escape&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Keys that you sometimes press and release, but sometimes want to repeat (like holding Space to insert a bunch of spaces, or Backspace to kill a bunch of characters). (&lt;a href="https://read.readwise.io/read/01hdv48rq2vwcsdv4r5kc2cstm">View Highlight&lt;/a>)
+&lt;ul>
+&lt;li>Space&lt;/li>
+&lt;li>Backspace&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>You can use the keys that are designed to only be held to do a new thing if they are pressed.&lt;/p>
+&lt;p>I have set the following setting for Caps lock keys:&lt;/p>
+&lt;ul>
+&lt;li>On hold: hyper key(CMD + CTRL + SHIFT + ALT)&lt;/li>
+&lt;li>On press: Escape&lt;/li>
+&lt;/ul>
+&lt;p>Why hyper?
+Because this new key press cannot conflict with any other shortcuts
+This allows you to create shortcuts like: caps lock + H/J/K/L which is pretty comfortable to press.&lt;/p>
+&lt;p>You can do this using a &lt;a href="https://karabiner-elements.pqrs.org/docs/manual/configuration/configure-complex-modifications/#create-your-own-rules">complex modification&lt;/a> in Karabiner:&lt;/p>
+&lt;pre tabindex="0">&lt;code>{
+&amp;#34;description&amp;#34;: &amp;#34;Capslock to Hyper&amp;#34;,
+&amp;#34;manipulators&amp;#34;: [
+{
+&amp;#34;description&amp;#34;: &amp;#34;Click to Capslock, Hold to Hyper&amp;#34;,
+&amp;#34;from&amp;#34;: {
+&amp;#34;key_code&amp;#34;: &amp;#34;caps_lock&amp;#34;,
+&amp;#34;modifiers&amp;#34;: {
+&amp;#34;optional&amp;#34;: [
+&amp;#34;any&amp;#34;
+]
+}
+},
+&amp;#34;to&amp;#34;: [
+{
+&amp;#34;key_code&amp;#34;: &amp;#34;right_shift&amp;#34;,
+&amp;#34;modifiers&amp;#34;: [
+&amp;#34;right_command&amp;#34;,
+&amp;#34;right_control&amp;#34;,
+&amp;#34;right_option&amp;#34;
+]
+}
+],
+&amp;#34;to_if_alone&amp;#34;: [
+{
+&amp;#34;key_code&amp;#34;: &amp;#34;escape&amp;#34;
+}
+],
+&amp;#34;type&amp;#34;: &amp;#34;basic&amp;#34;
+}
+]
+}
+&lt;/code>&lt;/pre>&lt;p>This key now can be used as your new shortcut key.
+&lt;code>hyper + t&lt;/code> can be mapped to an action globally and does not conflict with anything.
+So any key on the keyboard can now be used for shortcuts, allowing numerous customizations.&lt;/p>
+&lt;p>If there are keys on your keyboard that you don&amp;rsquo;t use you can map them to frequently used keys.
+For example for vim users, the right command key on macs can be remapped to control.
+This makes pressing vim shortcuts like &lt;code>CTRL + A&lt;/code> easier.&lt;/p>
+&lt;p>I have a split keyboard, so keys under my thumbs are easy to press, and I remapped them to do more stuff than usual.&lt;/p>
+&lt;p>&lt;img src="https://glyphack.com/split-keyboard-remapping.excalidraw.svg" alt="">&lt;/p>
+&lt;p>Take away is that make shortcuts easier to press.&lt;/p>
+&lt;p>&lt;strong>Better Hotkeys&lt;/strong>&lt;/p>
+&lt;p>There are some default hotkeys on every system like &lt;code>alt+tab&lt;/code>.
+This gives you a bit more advantage over switching windows with a mouse, &lt;a href="https://www.youtube.com/watch?app=desktop&amp;amp;v=Px0_8J0Wb-s">but there is room for improvements&lt;/a>.
+These shortcuts are designed for general problems.
+You can improve it for your own workflow.&lt;/p>
+&lt;p>First example is alt tabbing to switch windows.
+This simple thing that you probably do 100 times a day requires to:&lt;/p>
+&lt;ul>
+&lt;li>Take hand off home row&lt;/li>
+&lt;li>Press them multiple times to find the window you want&lt;/li>
+&lt;li>And if you have multiple windows then press &lt;code>ctrl+tab&lt;/code> or &lt;code>command+~&lt;/code> to get there
+Wouldn&amp;rsquo;t it be good if you could do 80% of these window switches with a single shortcut that is more ergonomic?
+It depends, I switch between Browser, terminal and note app multiple times most of the time.
+You can assign a hotkey for these and only use alt tab for when you need to switch infrequently used windows.&lt;/li>
+&lt;/ul>
+&lt;p>If your editor is not in your terminal you wanna also add editor to this list.&lt;/p>
+&lt;p>&lt;a href="https://rakhesh.com/coding/using-hammerspoon-to-switch-apps/">This&lt;/a>
+Hammerspoon configuration allows launching and switching between application windows.&lt;/p>
+&lt;p>&lt;a href="https://github.com/jasonrudolph/keyboard#hyper-key-for-quickly-launching-apps">This&lt;/a>
+is another one, again using Hammerspoon.&lt;/p>
+&lt;p>&lt;strong>Shortcut for frequent actions&lt;/strong>&lt;/p>
+&lt;p>Other than switching apps there are some useful tools that is nice to have at hand.&lt;/p>
+&lt;p>Some suggestions are:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://www.raycast.com/extensions/calendar">Viewing schedule and join meetings&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.raycast.com/extensions/clipboard-history">Clipboard history&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.raycast.com/raycast/browser-bookmarks">Opening frequent web pages&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.hammerspoon.org/docs/hs.grid.html#:~:text=To%20resize%2Fmove%20the%20window,upper%2Dleft%20of%20the%20window.">Splitting, resizing &amp;amp; moving windows&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.raycast.com/changelog/1-19-0">Fuzzy find open windows&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>Raycast is easier to use for things you need to browse and search.
+For actions that don&amp;rsquo;t include search and selection Hammerspoon is good.&lt;/p>
+&lt;p>These mappings can look like this:&lt;/p>
+&lt;pre tabindex="0">&lt;code>hyper + A move window to left half of the screen
+hyper + S move window to bottom half of the screen
+hyper + D move window to right half of the screen
+hyper + W move window to top half of the screen
+hyper + L clipboard history
+hyper + ; browser bookmarks
+hyper + M search open windows
+&lt;/code>&lt;/pre>&lt;p>The following Hammerspoon config allows moving windows with shortcuts:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-lua" data-lang="lua">&lt;span class="line">&lt;span class="cl">&lt;span class="n">WINDOW_MANAGEMENT_KEY&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="s2">&amp;#34;alt&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;command&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;ctrl&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;shift&amp;#34;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">hs.hotkey&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">bind&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">WINDOW_MANAGEMENT_KEY&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;a&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kr">function&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">hs.window&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">focusedWindow&lt;/span>&lt;span class="p">():&lt;/span>&lt;span class="n">moveToUnit&lt;/span>&lt;span class="p">({&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mf">0.5&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">1&lt;/span> &lt;span class="p">})&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">hs.hotkey&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">bind&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">WINDOW_MANAGEMENT_KEY&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;d&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kr">function&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">hs.window&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">focusedWindow&lt;/span>&lt;span class="p">():&lt;/span>&lt;span class="n">moveToUnit&lt;/span>&lt;span class="p">({&lt;/span> &lt;span class="mf">0.5&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mf">0.5&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">1&lt;/span> &lt;span class="p">})&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">hs.hotkey&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">bind&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">WINDOW_MANAGEMENT_KEY&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;w&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kr">function&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">hs.window&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">focusedWindow&lt;/span>&lt;span class="p">():&lt;/span>&lt;span class="n">moveToUnit&lt;/span>&lt;span class="p">({&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mf">0.5&lt;/span> &lt;span class="p">})&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">hs.hotkey&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">bind&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">WINDOW_MANAGEMENT_KEY&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;s&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kr">function&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">hs.window&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">focusedWindow&lt;/span>&lt;span class="p">():&lt;/span>&lt;span class="n">moveToUnit&lt;/span>&lt;span class="p">({&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mf">0.5&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mf">0.5&lt;/span> &lt;span class="p">})&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">-- center screewindow_management_key&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">hs.hotkey&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">bind&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">WINDOW_MANAGEMENT_KEY&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;c&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kr">function&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">hs.window&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">focusedWindow&lt;/span>&lt;span class="p">():&lt;/span>&lt;span class="n">centerOnScreen&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">-- full screen&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">hs.hotkey&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">bind&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">WINDOW_MANAGEMENT_KEY&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;i&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kr">function&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">hs.window&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">focusedWindow&lt;/span>&lt;span class="p">():&lt;/span>&lt;span class="n">moveToUnit&lt;/span>&lt;span class="p">({&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">1&lt;/span> &lt;span class="p">})&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>You can also use a layout mode for moving windows:
+&lt;a href="https://github.com/jasonrudolph/keyboard#window-layout-mode">https://github.com/jasonrudolph/keyboard#window-layout-mode&lt;/a>&lt;/p>
+&lt;p>&lt;strong>Symbol Layers&lt;/strong>&lt;/p>
+&lt;p>If you code a lot this will be your favorite section.
+Have you noticed how hard it is to type &lt;code>_&lt;/code>?
+You need to take fingers off the home row, hold shift and press a key.
+Both keys are pressed with pinky fingers.&lt;/p>
+&lt;p>I find the idea &lt;a href="https://gist.github.com/gsinclair/f4ab34da53034374eb6164698a0a8ace">here&lt;/a>,
+it suggests to map &lt;code>s+k&lt;/code> to a symbol like &lt;code>-&lt;/code>.&lt;/p>
+&lt;p>The idea is very similar to how we define different toggle and press behavior to keys.
+With Karabiner, you can modify s key to act like normal s but when pressed simultaneously with k become &lt;code>-&lt;/code>.&lt;/p>
+&lt;p>Concerned about accidentally typing &lt;code>sk&lt;/code> or &lt;code>-&lt;/code>? You can adjust the speed at which the shortcut triggers with the
+&lt;a href="https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to/hold-down-milliseconds/">hold down option&lt;/a>.&lt;/p>
+&lt;p>So imagine the following layout:&lt;/p>
+&lt;pre tabindex="0">&lt;code> y u i o
+a h j k l
+n m , .
+&lt;/code>&lt;/pre>&lt;p>When you press a with left hand and any of the right side can be mapped to a symbol.&lt;/p>
+&lt;p>s for symbols:&lt;/p>
+&lt;pre tabindex="0">&lt;code> y ` u # i $ o %
+s h ~ j - k - l !
+n m + , + . @
+&lt;/code>&lt;/pre>&lt;p>f for delimiters:&lt;/p>
+&lt;pre tabindex="0">&lt;code> y u { i } o ^
+f h &amp;lt; j ( k ) l &amp;amp;
+n &amp;gt; m [ , ] . *
+&lt;/code>&lt;/pre>&lt;p>So just set these stuff for different combinations that are hard to press.
+I even have &lt;code>a+u&lt;/code> for &lt;code>tab&lt;/code> and &lt;code>a+i&lt;/code> for &lt;code>ctrl+tab&lt;/code>.&lt;/p>
+&lt;p>For implementing this in Karabiner follow the guide above.
+You can also view my config and take inspirations from this &lt;a href="https://github.com/Glyphack/dotfiles/blob/20b97e675532db0bf8d73068fec1dd3050ad2fc5/karabiner/karabiner.json#L1">giant json&lt;/a>.&lt;/p>
+&lt;p>For doing normal JSON you need the following Karabiner rules for :&lt;/p>
+&lt;pre tabindex="0">&lt;code>{
+&amp;#34;from&amp;#34;: {
+&amp;#34;key_code&amp;#34;: &amp;#34;u&amp;#34;,
+&amp;#34;modifiers&amp;#34;: {
+&amp;#34;optional&amp;#34;: [
+&amp;#34;any&amp;#34;
+]
+}
+},
+&amp;#34;to&amp;#34;: [
+{
+&amp;#34;key_code&amp;#34;: &amp;#34;open_bracket&amp;#34;,
+&amp;#34;modifiers&amp;#34;: [
+&amp;#34;left_shift&amp;#34;
+]
+}
+],
+&amp;#34;conditions&amp;#34;: [
+{
+&amp;#34;name&amp;#34;: &amp;#34;f-mode&amp;#34;,
+&amp;#34;value&amp;#34;: 1,
+&amp;#34;type&amp;#34;: &amp;#34;variable_if&amp;#34;
+}
+],
+&amp;#34;type&amp;#34;: &amp;#34;basic&amp;#34;
+},
+{
+&amp;#34;type&amp;#34;: &amp;#34;basic&amp;#34;,
+&amp;#34;parameters&amp;#34;: {
+&amp;#34;basic.simultaneous_threshold_milliseconds&amp;#34;: 250
+},
+&amp;#34;to&amp;#34;: [
+{
+&amp;#34;set_variable&amp;#34;: {
+&amp;#34;name&amp;#34;: &amp;#34;f-mode&amp;#34;,
+&amp;#34;value&amp;#34;: 1
+}
+},
+{
+&amp;#34;key_code&amp;#34;: &amp;#34;open_bracket&amp;#34;,
+&amp;#34;modifiers&amp;#34;: [
+&amp;#34;left_shift&amp;#34;
+]
+}
+],
+&amp;#34;from&amp;#34;: {
+&amp;#34;simultaneous&amp;#34;: [
+{
+&amp;#34;key_code&amp;#34;: &amp;#34;f&amp;#34;
+},
+{
+&amp;#34;key_code&amp;#34;: &amp;#34;u&amp;#34;
+}
+],
+&amp;#34;simultaneous_options&amp;#34;: {
+&amp;#34;detect_key_down_uninterruptedly&amp;#34;: true,
+&amp;#34;key_down_order&amp;#34;: &amp;#34;strict&amp;#34;,
+&amp;#34;key_up_order&amp;#34;: &amp;#34;strict_inverse&amp;#34;,
+&amp;#34;key_up_when&amp;#34;: &amp;#34;any&amp;#34;,
+&amp;#34;to_after_key_up&amp;#34;: [
+{
+&amp;#34;set_variable&amp;#34;: {
+&amp;#34;name&amp;#34;: &amp;#34;f-mode&amp;#34;,
+&amp;#34;value&amp;#34;: 0
+}
+}
+]
+}
+}
+}
+&lt;/code>&lt;/pre>&lt;p>&lt;strong>Not Only Speed but ergonomics&lt;/strong>&lt;/p>
+&lt;p>These customizations help with removing uncomfortable keys you need to press.
+The benefits are immediate - less strain on your fingers and wrists due to reduced movement, and a mind unburdened from managing mundane tasks like locating the Terminal window.&lt;/p>
+&lt;p>Thank you for taking the time to read this post.
+I hope it has inspired you to explore the potential of your tools and consider making your tools.&lt;/p></description></item><item><title>TIL Secret to Open Source Contribution &amp; Contributing to Python Docs</title><link>https://glyphack.com/blog/contributing-to-python-docs/</link><pubDate>Tue, 19 Sep 2023 22:23:48 +0200</pubDate><guid>https://glyphack.com/blog/contributing-to-python-docs/</guid><description>&lt;p>I think I learned something about contributing to open source that, if I knew a couple of years back, I could have done much more open source contributions.&lt;/p>
 &lt;p>A while back, I started creating a &lt;a href="https://github.com/Glyphack/enderpy">hand-written parser for Python&lt;/a>.
 I ended up also contributing some fixes to Python docs.
 This was particularly interesting to me because it did not require really advanced knowledge, and the stuff there that was incorrect or outdated had been there for years.
