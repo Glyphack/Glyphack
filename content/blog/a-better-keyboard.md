@@ -48,32 +48,32 @@ So you can start making shortcuts for stuff by setting them to `ctrl + T`,
 This method presents two significant challenges:
 
 - The easily accessible keys are already assigned, such as CMD + T.
-- Complex combinations become cumbersome: try pressing CMD + ALT + CTRL + T, and you’ll likely find it inconvenient."
+- Complex combinations become cumbersome: try pressing CMD + ALT + ctrl + T, and you’ll likely find it inconvenient."
 
 The idea is that some keys can be used to do more than one thing.
 What keys can be used like this? Let's take a look at different keys.
 - Keys you hold down to change how *other* keys behave, but that (usually) don't do anything if you use them on their own (like Shift and Control).
 	- Shift
-	- control
-	- alt
-	- caps lock
-	- command
-	- fn
+	- Control
+	- Alt
+	- Caps lock
+	- Command
+	- Fn
 - Keys that you press and release but don't want to "repeat" as you hold them (like Escape or Insert).
 	- Escape
-- Keys that you sometimes press and release, but sometimes want to repeat (like holding Space to insert a bunch of spaces, or Backspace to kill a bunch of characters). ([View Highlight](https://read.readwise.io/read/01hdv48rq2vwcsdv4r5kc2cstm))
+- Keys that you sometimes press and release, but sometimes want to repeat (like holding Space to insert a bunch of spaces, or Backspace to kill a bunch of characters).
 	- Space
 	- Backspace
 
 You can use the keys that are designed to only be held to do a new thing if they are pressed.
 
 I have set the following setting for Caps lock keys:
-- On hold: hyper key(CMD + CTRL + SHIFT + ALT)
-- On press: Escape
+- On hold: hyper key(CMD + ctrl + SHIFT + ALT)
+- On press: escape
 
 Why hyper?
 Because this new key press cannot conflict with any other shortcuts
-This allows you to create shortcuts like: caps lock + H/J/K/L which is pretty comfortable to press.
+This allows you to create shortcuts like: hyper + H/J/K/L which is pretty comfortable to press.
 
 You can do this using a [complex modification](https://karabiner-elements.pqrs.org/docs/manual/configuration/configure-complex-modifications/#create-your-own-rules) in Karabiner:
 
@@ -118,7 +118,7 @@ So any key on the keyboard can now be used for shortcuts, allowing numerous cust
 
 If there are keys on your keyboard that you don't use you can map them to frequently used keys.
 For example for vim users, the right command key on macs can be remapped to control.
-This makes pressing vim shortcuts like `CTRL + A` easier.
+This makes pressing vim shortcuts like `ctrl + A` easier.
 
 I have a split keyboard, so keys under my thumbs are easy to press, and I remapped them to do more stuff than usual.
 
