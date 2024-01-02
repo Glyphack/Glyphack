@@ -2,7 +2,7 @@
 title: "A Better Keyboard"
 date: 2023-12-30T10:54:35+01:00
 draft: false
-tags: []
+tags: [tools]
 ---
 
 When it comes to boosting productivity, there’s a common tool present in every OS that often goes unnoticed - your keyboard.
