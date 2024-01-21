@@ -39,10 +39,10 @@ debugCSS = false
 customCSS = []
 
 # Site meta description
-description = "Hey there, I'm Shaygan! I love programming & building stuff. You can checkout my Github if you are interested to learn more. When I'm not doing that, I enjoy reading math, and playing chess(We can play!)."
+description = "Hey, I'm Shaygan! I love to code & build stuff. I'm interested in dev tools, and compilers. You can checkout my Github for more details. Reach out if you wanna talk open source, coding, or chess."
 
 # Site's Tagline (Subtitle or Keyword)
-tagline = "Hey there, I'm Shaygan! I love programming & building stuff. You can checkout my Github if you are interested to learn more. When I'm not doing that, I enjoy reading math, and playing chess."
+tagline = "Hey, I'm Shaygan! I love to code & build stuff. I'm interested in dev tools, and compilers. You can checkout my Github for more details. Reach out if you wanna talk open source, coding, or chess."
 # URL to license file, can be outside of your domain
 # licenseURL = "/about/license"
 
