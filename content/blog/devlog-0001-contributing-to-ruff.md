@@ -6,7 +6,7 @@ tags: ["devlog"]
 ---
 
 Last week I wanted to start contributing to rust.
-I was working on Adding uninitialized attribute access check to Ruff.
+I was working on Adding [uninitialized attribute access check](https://github.com/astral-sh/ruff/pull/9513) to Ruff.
 
 I did it and learned a lot about how to track attributes in Python code.
 A gist of it would be, you need to go over the class, in each function when something is assigned to a name you need to check if that name is self or cls.
@@ -34,7 +34,7 @@ I also used the cargo benchmark and critcmp to compare results between my commit
 It was caused because I added a new vector to each scope to keep track of undefined attribute accesses.
 But I realized I can just have a global vector for the whole file and store the undefined attribute along with it's scope.
 
-With a local vector and many allocations:
+With a vector on every scope and many allocations:
 
 ```
 linter/default-rules/large/dataset.py       1.00    455.7±6.28µs    89.3 MB/sec    1.14   519.6±19.69µs    78.3 MB/sec
@@ -44,7 +44,7 @@ linter/default-rules/pydantic/types.py      1.00    194.5±4.85µs   131.2 MB/se
 linter/default-rules/unicode/pypinyin.py    1.00     31.7±0.29µs   132.6 MB/sec    1.06     33.7±1.64µs   124.7 MB/sec
 ```
 
-After using a global vector:
+After using a global vector for the whole program:
 
 ```
 linter/default-rules/large/dataset.py       1.00    455.7±6.28µs    89.3 MB/sec    1.03    469.9±5.46µs    86.6 MB/sec
