@@ -1,0 +1,37 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=generator content="Hugo 0.122.0"><title>Devlog 0001: Contributing to Ruff, Profiling, Python Types Conformance Tests - Glyphack</title>
+<meta name=description content="Last week I wanted to start contributing to rust. I was working on Adding uninitialized attribute access check to Ruff.
+I did it and learned a lot about how to track attributes in Python code. A gist of it would be, you need to go over the class, in each function when something is assigned to a name you need to check if that name is self or cls. And you do this by checking if it matches the first argument of that function."><link rel=stylesheet href=/css/ui.css><script defer src=/js/dark-mode.js></script><link disabled id=dark-mode-theme rel=stylesheet href=/css/dark.css><link rel=stylesheet href="https://fonts.googleapis.com/css?family=Fira+Mono|Lato|Raleway"></head><body><header class="container no-print"><div class=u-header><nav class=bar><ul><li><a href=/><img class=icon-text src=/img/prev.svg></a></li><li><img class=icon-text id=dark-mode-toggle src=/img/moon-regular.svg alt="Toggle Dark Mode"></a></li><li><a href=/blog/>Blog</a></li><li><a href=https://glyphack.notion.site/Public-Projects-36b1d12fba0b424cafddb7157c6094c8>Projects</a></li><li><a href="https://glyphack.notion.site/0a261efcc2a3458f901ff5a8f41c75d9?v=ddcd3b12e6ab44b59320c88637ce9776">Reading List</a></li></ul></nav></div></header><main class=container><article><header><hgroup id=brand><h1>Devlog 0001: Contributing to Ruff, Profiling, Python Types Conformance Tests</h1><h5><time datetime="2024-02-03 10:56:48 +0100 +0100">Feb 03, 2024</time>
+<span class=no-print>-
+<a href=/tags/devlog>devlog</a>
+<span></h5></hgroup><hr class=sep></header><p>Last week I wanted to start contributing to rust.
+I was working on Adding uninitialized attribute access check to Ruff.</p><p>I did it and learned a lot about how to track attributes in Python code.
+A gist of it would be, you need to go over the class, in each function when something is assigned to a name you need to check if that name is self or cls.
+And you do this by checking if it matches the first argument of that function.
+Then if the function is a class method it&rsquo;s cls and otherwise self.</p><p>I also learned about profiling.
+After finishing the implementation I realized the benchmarks are failing.
+So I need see how did I mess up the performance. It is not because of the rule but because of the code I added to the visitor to keep track of attribute initialization and access.
+But first we need to profile.</p><p>I found two resources for doing it.
+Maybe I can do a separate note on Rust profiling.
+<a href=https://nnethercote.github.io/perf-book/>Rust Performance Book</a> which has a profiling section.
+<a href=https://docs.astral.sh/ruff/contributing/#profiling-projects>Amazing guide for Ruff Only</a></p><p>The interesting part is that Macos is not good for profiling, or at least I could not easily learn to use the tools.
+I used cargo instruments, the output can be opened with instruments app.
+But I could not find traces for the functions I added(skill issue.)</p><p>In the end I ended up using <a href=https://github.com/mstange/samply>Samply</a> which was better.</p><p>I also used the cargo benchmark and critcmp to compare results between my commits and found the perf issue.</p><p>It was caused because I added a new vector to each scope to keep track of undefined attribute accesses.
+But I realized I can just have a global vector for the whole file and store the undefined attribute along with it&rsquo;s scope.</p><p>With a local vector and many allocations:</p><pre tabindex=0><code>linter/default-rules/large/dataset.py       1.00    455.7±6.28µs    89.3 MB/sec    1.14   519.6±19.69µs    78.3 MB/sec
+linter/default-rules/numpy/ctypeslib.py     1.00     86.9±1.62µs   191.5 MB/sec    1.14     99.3±6.53µs   167.8 MB/sec
+linter/default-rules/numpy/globals.py       1.00     12.5±0.19µs   236.4 MB/sec    1.05     13.1±0.10µs   225.1 MB/sec
+linter/default-rules/pydantic/types.py      1.00    194.5±4.85µs   131.2 MB/sec    1.16   226.3±42.70µs   112.7 MB/sec
+linter/default-rules/unicode/pypinyin.py    1.00     31.7±0.29µs   132.6 MB/sec    1.06     33.7±1.64µs   124.7 MB/sec
+</code></pre><p>After using a global vector:</p><pre tabindex=0><code>linter/default-rules/large/dataset.py       1.00    455.7±6.28µs    89.3 MB/sec    1.03    469.9±5.46µs    86.6 MB/sec
+linter/default-rules/numpy/ctypeslib.py     1.00     86.9±1.62µs   191.5 MB/sec    1.02     88.8±1.47µs   187.6 MB/sec
+linter/default-rules/numpy/globals.py       1.00     12.5±0.19µs   236.4 MB/sec    1.04     13.0±0.10µs   227.1 MB/sec
+linter/default-rules/pydantic/types.py      1.00    194.5±4.85µs   131.2 MB/sec    1.03    201.2±4.70µs   126.8 MB/sec
+linter/default-rules/unicode/pypinyin.py    1.00     31.7±0.29µs   132.6 MB/sec    1.03     32.7±0.28µs   128.7 MB/sec
+</code></pre><p>I also learned that codespeed is a wonderful tool for exploring performance changes between my commits.
+<a href=https://codspeed.io/astral-sh/ruff/branches/Glyphack:linter-pylint-E0203>Example</a>, next time I use this.</p><p>For enderpy I was looking for a test suite that I can develop against until my type checker is complete.
+Luckily it exists! You can view it <a href=https://github.com/python/typing/tree/main/conformance>here</a>.
+It does not have a basic test case were you only have functions and variables but that one is easy to come up with myself.</p></article><nav class="no-print post-nav"><a class=prev-post href=https://glyphack.com/blog/five-thousands-lines-of-kotlin/><img class=icon-text src=/img/prev.svg>Five Thousands Lines of Kotlin</a></nav><div id=disqus_thread class=no-print></div><script type=text/javascript>(function(){if(window.location.hostname=="localhost")return;var t,e=document.createElement("script");e.type="text/javascript",e.async=!0,t="glyphack",e.src="//"+t+".disqus.com/embed.js",(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(e)})()</script><noscript>Please enable JavaScript to view the <a href=http://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><hr class=sep></main><footer class="container no-print"><div class=u-footer><a href=mailto:sh.hooshyari@gmail.com><img class=icon-social src=/img/email.svg alt="Email Me!"></a>
+<a href=https://github.com/glyphack/><img class=icon-social src=/img/github.svg alt=Github></a>
+<a href=https://twitter.com/GlyphackDev><img class=icon-social src=/img/twitter.svg alt=Twitter></a>
+<a href=https://glyphack.com/index.xml target=_blank><img class=icon-social src=/img/feed.svg alt=Feed></a>
+<a href=https://www.twitch.tv/glyphack><img class=icon-social src=/img/twitch.svg alt=Twitch></a><p>Theme used: <a href=https://github.com/yursan9/manis-hugo-theme>Manis</a><br></p><a href=#brand><img class=icon-text src=/img/toup.svg alt="To Up">
+<span>Back to Up</span></a></div></footer></body></html>
