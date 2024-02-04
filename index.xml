@@ -13,10 +13,12 @@ Maybe I can do a separate note on Rust profiling.
 &lt;a href="https://nnethercote.github.io/perf-book/">Rust Performance Book&lt;/a> which has a profiling section.
 &lt;a href="https://docs.astral.sh/ruff/contributing/#profiling-projects">Amazing guide for Ruff Only&lt;/a>&lt;/p>
 &lt;p>The interesting part is that Macos is not good for profiling, or at least I could not easily learn to use the tools.
-I used cargo instruments, the output can be opened with instruments app.
-But I could not find traces for the functions I added(skill issue.)&lt;/p>
+I used cargo instruments, the output can be opened with instruments app. Instruments app is dog shit.
+I expected some kind of home page, documentation or something when I search for it like &lt;a href="https://jetbrains.com/help/idea/profiler-intro.html">this&lt;/a>.
+But nothing.&lt;/p>
+&lt;p>So I could not find traces for the functions I added(skill issue.) I gave up.&lt;/p>
 &lt;p>In the end I ended up using &lt;a href="https://github.com/mstange/samply">Samply&lt;/a> which was better.&lt;/p>
-&lt;p>I also used the cargo benchmark and critcmp to compare results between my commits and found the perf issue.&lt;/p>
+&lt;p>I also used the cargo benchmark and &lt;a href="https://github.com/BurntSushi/critcmp">critcmp&lt;/a> to compare results between my commits and found the perf issue.&lt;/p>
 &lt;p>It was caused because I added a new vector to each scope to keep track of undefined attribute accesses.
 But I realized I can just have a global vector for the whole file and store the undefined attribute along with it&amp;rsquo;s scope.&lt;/p>
 &lt;p>With a vector on every scope and many allocations:&lt;/p>
@@ -288,7 +290,7 @@ Have you noticed how hard it is to type &lt;code>_&lt;/code>?
 You need to take fingers off the home row, hold shift and press a key.
 Both keys are pressed with pinky fingers.&lt;/p>
 &lt;p>I find the idea &lt;a href="https://gist.github.com/gsinclair/f4ab34da53034374eb6164698a0a8ace">here&lt;/a>,
-it suggests to map &lt;code>s+k&lt;/code> to a symbol like &lt;code>-&lt;/code>.&lt;/p>
+it suggests to map &lt;code>(holding s)+k&lt;/code> to a symbol like &lt;code>-&lt;/code>.&lt;/p>
 &lt;p>The idea is very similar to how we define different toggle and press behavior to keys.
 With Karabiner, you can modify s key to act like normal s but when pressed simultaneously with k become &lt;code>-&lt;/code>.&lt;/p>
 &lt;p>Concerned about accidentally typing &lt;code>sk&lt;/code> or &lt;code>-&lt;/code>? You can adjust the speed at which the shortcut triggers with the
@@ -297,12 +299,13 @@ With Karabiner, you can modify s key to act like normal s but when pressed simul
 &lt;pre tabindex="0">&lt;code> y u i o
 a h j k l
 n m , .
-&lt;/code>&lt;/pre>&lt;p>When you press a with left hand and any of the right side can be mapped to a symbol.&lt;/p>
-&lt;p>s for symbols:&lt;/p>
+&lt;/code>&lt;/pre>&lt;p>When you hold a with left hand and any of the right keys it can be mapped to a symbol.&lt;/p>
+&lt;p>Here&amp;rsquo;s my layout. I mention the key you need to hold on the left and what new keys are mapped to on the right.&lt;/p>
+&lt;p>&lt;code>s&lt;/code> for symbols:&lt;/p>
 &lt;pre tabindex="0">&lt;code> y ` u # i $ o %
 s h ~ j - k - l !
 n m + , + . @
-&lt;/code>&lt;/pre>&lt;p>f for delimiters:&lt;/p>
+&lt;/code>&lt;/pre>&lt;p>&lt;code>f&lt;/code> for delimiters:&lt;/p>
 &lt;pre tabindex="0">&lt;code> y u { i } o ^
 f h &amp;lt; j ( k ) l &amp;amp;
 n &amp;gt; m [ , ] . *
