@@ -214,7 +214,7 @@ You need to take fingers off the home row, hold shift and press a key.
 Both keys are pressed with pinky fingers.
 
 I find the idea [here](https://gist.github.com/gsinclair/f4ab34da53034374eb6164698a0a8ace),
-it suggests to map `s+k` to a symbol like `-`.
+it suggests to map `(holding s)+k` to a symbol like `-`.
 
 The idea is very similar to how we define different toggle and press behavior to keys.
 With Karabiner, you can modify s key to act like normal s but when pressed simultaneously with k become `-`.
@@ -230,9 +230,11 @@ a   h j k l
     n m , .
 ```
 
-When you press a with left hand and any of the right side can be mapped to a symbol.
+When you hold a with left hand and any of the right keys it can be mapped to a symbol.
 
-s for symbols:
+Here's my layout. I mention the key you need to hold on the left and what new keys are mapped to on the right.
+
+`s` for symbols:
 
 ```
     y ` u # i $ o %
@@ -240,7 +242,7 @@ s   h ~ j - k - l !
     n   m + , + . @
 ```
 
-f for delimiters:
+`f` for delimiters:
 
 ```
     y   u { i } o ^

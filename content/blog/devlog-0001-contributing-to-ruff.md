@@ -24,12 +24,15 @@ Maybe I can do a separate note on Rust profiling.
 [Amazing guide for Ruff Only](https://docs.astral.sh/ruff/contributing/#profiling-projects)
 
 The interesting part is that Macos is not good for profiling, or at least I could not easily learn to use the tools.
-I used cargo instruments, the output can be opened with instruments app.
-But I could not find traces for the functions I added(skill issue.)
+I used cargo instruments, the output can be opened with instruments app. Instruments app is dog shit.
+I expected some kind of home page, documentation or something when I search for it like [this](https://jetbrains.com/help/idea/profiler-intro.html).
+But nothing.
+
+So I could not find traces for the functions I added(skill issue.) I gave up.
 
 In the end I ended up using [Samply](https://github.com/mstange/samply) which was better.
 
-I also used the cargo benchmark and critcmp to compare results between my commits and found the perf issue.
+I also used the cargo benchmark and [critcmp](https://github.com/BurntSushi/critcmp) to compare results between my commits and found the perf issue.
 
 It was caused because I added a new vector to each scope to keep track of undefined attribute accesses.
 But I realized I can just have a global vector for the whole file and store the undefined attribute along with it's scope.
