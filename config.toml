@@ -23,8 +23,8 @@ pygmentsUseClasses = true
 name = "Blog"
 url = "/blog/"
 [[menu.main]]
-name = "Projects"
-url = "https://glyphack.notion.site/Public-Projects-36b1d12fba0b424cafddb7157c6094c8"
+name = "Now"
+url = "/now/"
 [[menu.main]]
 name = "Reading List"
 url = "https://glyphack.notion.site/0a261efcc2a3458f901ff5a8f41c75d9?v=ddcd3b12e6ab44b59320c88637ce9776"
