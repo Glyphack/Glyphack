@@ -70,7 +70,7 @@ colorTheme = "#ff6565"
 # Maximum number of item in Latest Posts or Works
 latestCount = 3
 # Path to site's favicon image
-faviconImg = ""
+faviconImg = "https://avatars.githubusercontent.com/u/20788334?v=4"
 # Date format in item list
 dateFmt = "Jan 02, 2006"
 
