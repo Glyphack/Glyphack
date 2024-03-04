@@ -1,4 +1,28 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Glyphack</title><link>https://glyphack.com/</link><description>Recent content on Glyphack</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 03 Feb 2024 10:56:48 +0100</lastBuildDate><atom:link href="https://glyphack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Devlog 0001: Contributing to Ruff, Profiling, Python Types Conformance Tests</title><link>https://glyphack.com/blog/devlog-0001-contributing-to-ruff/</link><pubDate>Sat, 03 Feb 2024 10:56:48 +0100</pubDate><guid>https://glyphack.com/blog/devlog-0001-contributing-to-ruff/</guid><description>&lt;p>Last week I wanted to start contributing to rust.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Glyphack</title><link>https://glyphack.com/</link><description>Recent content on Glyphack</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 04 Mar 2024 15:40:55 +0100</lastBuildDate><atom:link href="https://glyphack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>What I'm Doing Now</title><link>https://glyphack.com/now/</link><pubDate>Mon, 04 Mar 2024 15:40:55 +0100</pubDate><guid>https://glyphack.com/now/</guid><description>&lt;p>This is my now page, which lists what I&amp;rsquo;m thinking and working on right now.
+If you are not familiar with &lt;a href="https://nownownow.com/about">now pages&lt;/a>, consider creating one.&lt;/p>
+&lt;p>Updated March 3rd, 2024 from Amsterdam.&lt;/p>
+&lt;h2 id="release-enderpy-python-type-checker">Release Enderpy Python Type Checker&lt;/h2>
+&lt;p>I&amp;rsquo;m so interested in developer tools, so interested that I decided to build a tool myself.
+The goal is to be faster than other type checkers.&lt;/p>
+&lt;p>I keep the project status on it&amp;rsquo;s homepage: &lt;a href="https://github.com/glyphack/enderpy">https://github.com/glyphack/enderpy&lt;/a>&lt;/p>
+&lt;p>I&amp;rsquo;ve been reading and digesting a lot of topics related to compilers, Python, and Rust.
+I feel there&amp;rsquo;s much more exciting topics to discover by continuing this project.&lt;/p>
+&lt;p>I always wanted to work in a company where the product is a dev tool.
+But it&amp;rsquo;s not so easy to get into one with a resume full of web development.
+The project also gives me experience and knowledge required to work on what I like more.&lt;/p>
+&lt;h2 id="learning-dutch">Learning Dutch&lt;/h2>
+&lt;p>I think learning Dutch would be a huge quality of life improvement.&lt;/p>
+&lt;h2 id="gardening">Gardening&lt;/h2>
+&lt;p>I&amp;rsquo;m practicing growing plants in my apartment both for decoration and consumption.
+This is another step to be a little bit more independent.&lt;/p>
+&lt;h2 id="self-hosting">Self Hosting&lt;/h2>
+&lt;p>I&amp;rsquo;m trying to eliminate my use of cloud based technologies.
+Instead I&amp;rsquo;m trying to use software that is local, or open source, or I own the data.
+It&amp;rsquo;s a big change, I&amp;rsquo;m practising with self hosting some software on my Raspberry Pi.&lt;/p>
+&lt;p>It&amp;rsquo;s fascinating to me that the stuff I have to do to setup servers is so different from my day job.
+In my day job we live few levels of abstraction above the running server.
+I don&amp;rsquo;t even know who runs the code I deploy and how.&lt;/p>
+&lt;p>I want to rely on things that a single person can maintain.&lt;/p></description></item><item><title>Devlog 0001: Contributing to Ruff, Profiling, Python Types Conformance Tests</title><link>https://glyphack.com/blog/devlog-0001-contributing-to-ruff/</link><pubDate>Sat, 03 Feb 2024 10:56:48 +0100</pubDate><guid>https://glyphack.com/blog/devlog-0001-contributing-to-ruff/</guid><description>&lt;p>Last week I wanted to start contributing to rust.
 I was working on Adding &lt;a href="https://github.com/astral-sh/ruff/pull/9513">uninitialized attribute access check&lt;/a> to Ruff.&lt;/p>
 &lt;p>I did it and learned a lot about how to track attributes in Python code.
 A gist of it would be, you need to go over the class, in each function when something is assigned to a name you need to check if that name is self or cls.
