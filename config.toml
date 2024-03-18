@@ -75,7 +75,7 @@ faviconImg = "https://avatars.githubusercontent.com/u/20788334?v=4"
 dateFmt = "Jan 02, 2006"
 
 # Code Highlighting (HighlightJS)
-highlightJs = false
+highlightJs = true
 highlightJsLanguages = ["go"]
 highlightJsStyle = "ocean"
 
