@@ -1,7 +1,7 @@
 ---
 title: "Expertise Beyond Validation"
 date: 2024-04-16T21:48:35+02:00
-draft: true
+draft: false
 tags: []
 ---
 
