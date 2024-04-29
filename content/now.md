@@ -7,7 +7,7 @@ layout: staticpage
 This is my now page, which lists what I'm thinking and working on right now.
 If you are not familiar with [now pages](https://nownownow.com/about), consider creating one.
 
-Updated March 3rd, 2024 from Amsterdam.
+Updated April 29th, 2024 from Amsterdam.
 
 ## Release Enderpy Python Type Checker
 
