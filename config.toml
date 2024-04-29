@@ -42,7 +42,7 @@ customCSS = []
 description = "Hey, I'm Shaygan! I love to code & build stuff. I'm interested in dev tools, and compilers. You can checkout my Github for more details. Reach out if you wanna talk open source, coding, or chess."
 
 # Site's Tagline (Subtitle or Keyword)
-tagline = "Hey, I'm Shaygan! I love to code & build stuff. I'm interested in dev tools, and compilers. You can checkout my Github for more details. Reach out if you wanna talk open source, coding, or chess."
+tagline = "Hey, I'm Shaygan! I love to code & build stuff. I'm interested in dev tools, and compilers. You can checkout my Github for more details. Reach out if you wanna talk about open source, life, or chess. I also stream on my coding journey to a python type checker on Twitch."
 # URL to license file, can be outside of your domain
 # licenseURL = "/about/license"
 
