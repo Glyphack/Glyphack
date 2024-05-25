@@ -9,9 +9,6 @@ pluralizeListTitles = false
 # Minimum number of posts before paginate navigation show up
 paginate = 20
 
-# Your disqus shortname
-disqusShortname = "glyphack"
-googleAnalytics = "G-8LYVTHE5XD"
 defaultContentLanguage = "en"
 
 # Code Highlighting (Chroma)
@@ -50,16 +47,6 @@ tagline = "Hey, I'm Shaygan! I love to code & build stuff. I'm interested in dev
 mainSections = ["blog", "post"]
 # Configure which sections for Latest Works
 workSections = ["work"]
-
-# List of sections that support disqus comments
-disqusSections = ["blog"]
-# List of sections that support utterances comments
-# utterancesSections = ["blog"]
-
-# Utterances Configuration
-# utterancesRepo = ""
-# utterancesTheme = "github-light"
-# utterancesLabel = ""
 
 # 404 Configuration
 head404 = "Sorry, I can't find what you want."
