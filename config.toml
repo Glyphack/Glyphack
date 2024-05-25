@@ -16,6 +16,9 @@ pygmentsCodeFences = true
 pygmentsUseClasses = true
 
 [[params.menu]]
+name = "Home"
+url = "/"
+[[params.menu]]
 name = "Blog"
 url = "/blog/"
 [[params.menu]]
