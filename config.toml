@@ -1,6 +1,6 @@
 baseURL = "https://glyphack.com/"
 title = "Glyphack"
-theme = "manis-hugo-theme"
+theme = "typo"
 
 # Copyright notice. Note: You can use HTML tag here
 # copyright = "&copy; 2019 Yurizal Susanto"
@@ -15,16 +15,30 @@ defaultContentLanguage = "en"
 pygmentsCodeFences = true
 pygmentsUseClasses = true
 
-[menu]
-[[menu.main]]
+[[params.menu]]
 name = "Blog"
 url = "/blog/"
-[[menu.main]]
+[[params.menu]]
 name = "Now"
 url = "/now/"
-[[menu.main]]
+[[params.menu]]
 name = "Reading List"
 url = "https://glyphack.notion.site/0a261efcc2a3458f901ff5a8f41c75d9?v=ddcd3b12e6ab44b59320c88637ce9776"
+[[params.social]]
+name = "email"
+url = "sh.hooshyari@gmail.com"
+[[params.social]]
+name = "github"
+url = "https://github.com/glyphack"
+[[params.social]]
+name = "twitch"
+url = "https://www.twitch.tv/glyphack"
+[[params.social]]
+name = "youtube"
+url = "https://www.youtube.com/@glyphack"
+[[params.social]]
+name = "x"
+url = "https://x.com/glyphack"
 
 [taxonomies]
 tag = "tags"
@@ -35,18 +49,14 @@ debugCSS = false
 # Custom CSS
 customCSS = []
 
-# Site meta description
-description = "Hey, I'm Shaygan! I love to code & build stuff. I'm interested in dev tools, and compilers. You can checkout my Github for more details. Reach out if you wanna talk open source, coding, or chess."
+homeIntroTitle = ""
+homeIntroContent = "Hey, I'm Shaygan! I love to code & build stuff. I'm interested in dev tools, and compilers. You can checkout my Github for more details. Reach out if you wanna talk open source, coding, or chess."
 
-# Site's Tagline (Subtitle or Keyword)
-tagline = "Hey, I'm Shaygan! I love to code & build stuff. I'm interested in dev tools, and compilers. You can checkout my Github for more details. Reach out if you wanna talk about open source, life, or chess. I also stream on my coding journey to a python type checker on Twitch."
-# URL to license file, can be outside of your domain
-# licenseURL = "/about/license"
-
-# Configure which sections for Latest Posts
-mainSections = ["blog", "post"]
-# Configure which sections for Latest Works
-workSections = ["work"]
+homeCollectionTitle = 'Blog'
+homeCollection = 'blog'
+# Lists parameters
+paginationSize = 100
+listDateFormat = '2 Jan 2006'
 
 # 404 Configuration
 head404 = "Sorry, I can't find what you want."
@@ -65,10 +75,3 @@ dateFmt = "Jan 02, 2006"
 highlightJs = true
 highlightJsLanguages = ["go"]
 highlightJsStyle = "ocean"
-
-# Social Links
-email = "sh.hooshyari@gmail.com"
-github = "https://github.com/glyphack/"
-twitter = "https://twitter.com/Glyphack"
-twitch = "https://www.twitch.tv/glyphack"
-youtube = "https://www.youtube.com/@glyphack"
