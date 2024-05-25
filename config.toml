@@ -48,6 +48,7 @@ tag = "tags"
 debugCSS = false
 # Custom CSS
 customCSS = []
+theme = 'light'
 
 homeIntroTitle = ""
 homeIntroContent = "Hey, I'm Shaygan! I love to code & build stuff. I'm interested in dev tools, and compilers. You can checkout my Github for more details. Reach out if you wanna talk open source, coding, or chess."
