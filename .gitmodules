@@ -1,3 +1,3 @@
 [submodule "manis-hugo-theme"]
-	path = manis-hugo-theme
+	path = themes/manis-hugo-theme
 	url = https://github.com/Glyphack/manis-hugo-theme
