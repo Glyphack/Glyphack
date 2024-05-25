@@ -31,7 +31,7 @@ This helps me with finding:
 One of the ways to avoid doing work is being busy deciding non important stuff.
 There are many decisions to make daily optimizing all is not possible.
 In these situations I try to get it done, and move on.
-Imagine if it's deciding between something that does not matter much, I'd roll a dice.
+Imagine if it's deciding between something that does not matter much, I'd roll a die.
 Rolling a dice for stuff that are not the main goal is good because it helps to make a decision and have more time.
 When I free up enough time with useless stuff, I get bored then I do something else. I can repeat this process over and over to get to important work finally.
 
@@ -54,13 +54,13 @@ Sometimes the distractions are so reachable that avoiding it requires effort.
 In this case making it harder to reach would be better.
 If I sit down to write(like right now) I turn off wifi to write the first draft.
 If I cannot remember something or want to check it I put a note.
-After finishing I can use the internet to address those notes.
+After finishing, I can use the internet to address those notes.
 This gets harder with things like programming where I need to look up libraries or install them, [but doable](https://twitter.com/mitchellh/status/1781840288300097896).
 Prepare a list of tasks, download the resources offline, get it done.
 
 Sometimes the reason to procrastinate about something comes from how it's done.
 I was watching an old talk from DHH about his experience building 37signals.
-In the talk [he mentions](<[https://youtu.be/MlhAkNWC1qo?t=1190](https://youtu.be/MlhAkNWC1qo?t=1190)>) how he limited the amount of hours he could be putting into building their products.
+In the talk [he mentions](https://youtu.be/MlhAkNWC1qo?t=1190) how he limited the amount of hours he could be putting into building their products.
 How could limiting the hours produce better results? One reason is that you have no room for procrastination.
 If I do something for only 1 hour a day, that hour is either spent on the work or gone.
 And when it's gone I can feel it because I did not get anything done.
@@ -73,4 +73,4 @@ Which alerts the brain more.
 It's better to waste time in obvious ways than with fake work.
 Because fake work requires more effort to notice.
 
-The worst kind of effort is the one that produces nothing and fighting that is the first step to get to boredom. After stating at the blank page for a while, writing will follow.
+The worst kind of effort is the one that produces nothing and fighting that is the first step to get to boredom. After staring at the blank page for a while, writing will follow.
