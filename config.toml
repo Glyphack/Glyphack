@@ -42,6 +42,9 @@ url = "https://www.youtube.com/@glyphack"
 [[params.social]]
 name = "x"
 url = "https://x.com/glyphack"
+[[params.social]]
+name = "rss"
+url = "https://glyphack.com/index.xml"
 
 [taxonomies]
 tag = "tags"
