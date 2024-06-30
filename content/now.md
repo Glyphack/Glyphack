@@ -54,6 +54,14 @@ Right now I'm hosting my own:
 - VPN
 - YouTube Clone
 
+## Working on Pytest
+
+I joined [pytest dev sprint](https://github.com/pytest-dev/sprint/) Last month in Austria. During the sprint I worked on two improvements for fixtures and assertions. The changes are quite big so I'm going to work on them for a while and submit results as a PR.
+
+I learned a lot from the core contributors there. I'm going to submit a proposal to talk at [pycon NL](https://pythonconferentie.nl/) about my experience attending this event.
+
+Also I just learned that how much magic is done in pytest to help end user have better experience in testing. I feel this is missing in golang.
+
 ## Getting a Cat
 
 I'm going to visit a shelter soon and adopt a cat!
