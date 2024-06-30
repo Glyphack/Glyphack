@@ -379,6 +379,10 @@ I don&amp;rsquo;t even know who runs the code I deploy and how.&lt;/p>
 &lt;li>VPN&lt;/li>
 &lt;li>YouTube Clone&lt;/li>
 &lt;/ul>
+&lt;h2 id="working-on-pytest">Working on Pytest&lt;/h2>
+&lt;p>I joined &lt;a href="https://github.com/pytest-dev/sprint/">pytest dev sprint&lt;/a> Last month in Austria. During the sprint I worked on two improvements for fixtures and assertions. The changes are quite big so I&amp;rsquo;m going to work on them for a while and submit results as a PR.&lt;/p>
+&lt;p>I learned a lot from the core contributors there. I&amp;rsquo;m going to submit a proposal to talk at &lt;a href="https://pythonconferentie.nl/">pycon NL&lt;/a> about my experience attending this event.&lt;/p>
+&lt;p>Also I just learned that how much magic is done in pytest to help end user have better experience in testing. I feel this is missing in golang.&lt;/p>
 &lt;h2 id="getting-a-cat">Getting a Cat&lt;/h2>
 &lt;p>I&amp;rsquo;m going to visit a shelter soon and adopt a cat!&lt;/p></description></item><item><title>Devlog 0001: Contributing to Ruff, Profiling, Python Types Conformance Tests</title><link>https://glyphack.com/blog/devlog-0001-contributing-to-ruff/</link><pubDate>Sat, 03 Feb 2024 10:56:48 +0100</pubDate><guid>https://glyphack.com/blog/devlog-0001-contributing-to-ruff/</guid><description>&lt;p>Last week I wanted to start contributing to rust.
 I was working on Adding &lt;a href="https://github.com/astral-sh/ruff/pull/9513">uninitialized attribute access check&lt;/a> to Ruff.&lt;/p>
