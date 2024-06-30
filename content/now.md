@@ -7,9 +7,11 @@ layout: staticpage
 This is my now page, which lists what I'm thinking and working on right now.
 If you are not familiar with [now pages](https://nownownow.com/about), consider creating one.
 
-Updated April 29th, 2024 from Amsterdam.
+Updated Jun 30th, 2024 from Amsterdam.
 
 ## Release Enderpy Python Type Checker
+
+Update 30-06-2024: Daniel Woznicki, a new contributor joined the project.
 
 I'm so interested in developer tools, so interested that I decided to build a tool myself.
 The goal is to be faster than other type checkers.
@@ -24,13 +26,15 @@ The project also gives me experience and knowledge required to work on what I li
 ## Learning Dutch
 
 I think learning Dutch would be a huge quality of life improvement.
+After about 40 hours now I can read and understand dutch. Hearing is still hard but I can do greeting with others in dutch.
 
 ## Gardening
 
 I'm practicing growing plants in my apartment both for decoration and consumption.
 This is another step to be a little bit more independent.
 
-I have 15 plants now. I still haven't harvested any vegetables, that's my next step.
+I have 20+ pots and I'm harvesting herbs. It feels good to make food with my own herbs.
+I got a gardening pot and going to fill that with soil on the balcony and grew larger plants.
 
 ## Self Hosting
 
@@ -50,8 +54,6 @@ Right now I'm hosting my own:
 - VPN
 - YouTube Clone
 
-## Experience Leaving Off The Grid
+## Getting a Cat
 
-I'm going for a week to a cabin in the woods.
-I don't have any expectations.
-I just want to know how am I going to entertain myself without internet.
+I'm going to visit a shelter soon and adopt a cat!
