@@ -393,7 +393,7 @@ But I also saw it in product companies, and I&amp;rsquo;m shocked. I don&amp;rsq
 &lt;p>So don&amp;rsquo;t be afraid to realized you made a mistake, that&amp;rsquo;s part of the journey.
 Use it and rewrite your software to be better.&lt;/p></description></item><item><title>What I'm Doing Now</title><link>https://glyphack.com/now/</link><pubDate>Mon, 04 Mar 2024 15:40:55 +0100</pubDate><guid>https://glyphack.com/now/</guid><description>&lt;p>This is my now page, which lists what I&amp;rsquo;m thinking and working on right now.
 If you are not familiar with &lt;a href="https://nownownow.com/about">now pages&lt;/a>, consider creating one.&lt;/p>
-&lt;p>Updated Jun 30th, 2024 from Amsterdam.&lt;/p>
+&lt;p>Updated Aug 20th, 2024 from Amsterdam.&lt;/p>
 &lt;h2 id="release-enderpy-python-type-checker">Release Enderpy Python Type Checker&lt;/h2>
 &lt;p>Update 30-06-2024: Daniel Woznicki, a new contributor joined the project.&lt;/p>
 &lt;p>I&amp;rsquo;m so interested in developer tools, so interested that I decided to build a tool myself.
@@ -409,8 +409,16 @@ After about 40 hours now I can read and understand dutch. Hearing is still hard 
 &lt;h2 id="gardening">Gardening&lt;/h2>
 &lt;p>I&amp;rsquo;m practicing growing plants in my apartment both for decoration and consumption.
 This is another step to be a little bit more independent.&lt;/p>
-&lt;p>I have 20+ pots and I&amp;rsquo;m harvesting herbs. It feels good to make food with my own herbs.
+&lt;p>I have 20+ pots, and I&amp;rsquo;m harvesting herbs. It feels good to make food with my own herbs.
 I got a gardening pot and going to fill that with soil on the balcony and grew larger plants.&lt;/p>
+&lt;h2 id="working-on-pytest">Working on Pytest&lt;/h2>
+&lt;p>I joined &lt;a href="https://github.com/pytest-dev/sprint/">pytest dev sprint&lt;/a> Last month in Austria. During the sprint I worked on two improvements for fixtures and assertions. The changes are quite big, so I&amp;rsquo;m going to work on them for a while and submit results as a PR.&lt;/p>
+&lt;p>I learned a lot from the core contributors there. I&amp;rsquo;m going to submit a proposal to talk at &lt;a href="https://pythonconferentie.nl/">pycon NL&lt;/a> about my experience attending this event.&lt;/p>
+&lt;h2 id="released-a-new-tool">Released a New Tool&lt;/h2>
+&lt;p>I created &lt;a href="https://github.com/Glyphack/gotest">gotest&lt;/a> to add missing features to &lt;code>go test&lt;/code> command.
+I&amp;rsquo;m going to use it on my projects and improve slowly but reach out if you like to contribute.&lt;/p>
+&lt;h2 id="i-got-a-cat">I Got a Cat&lt;/h2>
+&lt;p>I got a lovely cat. Having more fun now.&lt;/p>
 &lt;h2 id="self-hosting">Self Hosting&lt;/h2>
 &lt;p>I&amp;rsquo;m trying to eliminate my use of cloud based technologies.
 Instead, I&amp;rsquo;m trying to use software that is local, or open source, or I own the data.
@@ -424,13 +432,7 @@ I don&amp;rsquo;t even know who runs the code I deploy and how.&lt;/p>
 &lt;li>Chat Server (Matrix Dendrite)&lt;/li>
 &lt;li>VPN&lt;/li>
 &lt;li>YouTube Clone&lt;/li>
-&lt;/ul>
-&lt;h2 id="working-on-pytest">Working on Pytest&lt;/h2>
-&lt;p>I joined &lt;a href="https://github.com/pytest-dev/sprint/">pytest dev sprint&lt;/a> Last month in Austria. During the sprint I worked on two improvements for fixtures and assertions. The changes are quite big so I&amp;rsquo;m going to work on them for a while and submit results as a PR.&lt;/p>
-&lt;p>I learned a lot from the core contributors there. I&amp;rsquo;m going to submit a proposal to talk at &lt;a href="https://pythonconferentie.nl/">pycon NL&lt;/a> about my experience attending this event.&lt;/p>
-&lt;p>Also I just learned that how much magic is done in pytest to help end user have better experience in testing. I feel this is missing in golang.&lt;/p>
-&lt;h2 id="getting-a-cat">Getting a Cat&lt;/h2>
-&lt;p>I&amp;rsquo;m going to visit a shelter soon and adopt a cat!&lt;/p></description></item><item><title>Devlog 0001: Contributing to Ruff, Profiling, Python Types Conformance Tests</title><link>https://glyphack.com/blog/devlog-0001-contributing-to-ruff/</link><pubDate>Sat, 03 Feb 2024 10:56:48 +0100</pubDate><guid>https://glyphack.com/blog/devlog-0001-contributing-to-ruff/</guid><description>&lt;p>Last week I wanted to start contributing to rust.
+&lt;/ul></description></item><item><title>Devlog 0001: Contributing to Ruff, Profiling, Python Types Conformance Tests</title><link>https://glyphack.com/blog/devlog-0001-contributing-to-ruff/</link><pubDate>Sat, 03 Feb 2024 10:56:48 +0100</pubDate><guid>https://glyphack.com/blog/devlog-0001-contributing-to-ruff/</guid><description>&lt;p>Last week I wanted to start contributing to rust.
 I was working on Adding &lt;a href="https://github.com/astral-sh/ruff/pull/9513">uninitialized attribute access check&lt;/a> to Ruff.&lt;/p>
 &lt;p>I did it and learned a lot about how to track attributes in Python code.
 A gist of it would be, you need to go over the class, in each function when something is assigned to a name you need to check if that name is self or cls.
