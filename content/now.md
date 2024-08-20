@@ -7,7 +7,7 @@ layout: staticpage
 This is my now page, which lists what I'm thinking and working on right now.
 If you are not familiar with [now pages](https://nownownow.com/about), consider creating one.
 
-Updated Jun 30th, 2024 from Amsterdam.
+Updated Aug 20th, 2024 from Amsterdam.
 
 ## Release Enderpy Python Type Checker
 
@@ -33,8 +33,23 @@ After about 40 hours now I can read and understand dutch. Hearing is still hard 
 I'm practicing growing plants in my apartment both for decoration and consumption.
 This is another step to be a little bit more independent.
 
-I have 20+ pots and I'm harvesting herbs. It feels good to make food with my own herbs.
+I have 20+ pots, and I'm harvesting herbs. It feels good to make food with my own herbs.
 I got a gardening pot and going to fill that with soil on the balcony and grew larger plants.
+
+## Working on Pytest
+
+I joined [pytest dev sprint](https://github.com/pytest-dev/sprint/) Last month in Austria. During the sprint I worked on two improvements for fixtures and assertions. The changes are quite big, so I'm going to work on them for a while and submit results as a PR.
+
+I learned a lot from the core contributors there. I'm going to submit a proposal to talk at [pycon NL](https://pythonconferentie.nl/) about my experience attending this event.
+
+## Released a New Tool
+
+I created [gotest](https://github.com/Glyphack/gotest) to add missing features to `go test` command.
+I'm going to use it on my projects and improve slowly but reach out if you like to contribute.
+
+## I Got a Cat
+
+I got a lovely cat. Having more fun now.
 
 ## Self Hosting
 
@@ -53,15 +68,3 @@ Right now I'm hosting my own:
 - Chat Server (Matrix Dendrite)
 - VPN
 - YouTube Clone
-
-## Working on Pytest
-
-I joined [pytest dev sprint](https://github.com/pytest-dev/sprint/) Last month in Austria. During the sprint I worked on two improvements for fixtures and assertions. The changes are quite big so I'm going to work on them for a while and submit results as a PR.
-
-I learned a lot from the core contributors there. I'm going to submit a proposal to talk at [pycon NL](https://pythonconferentie.nl/) about my experience attending this event.
-
-Also I just learned that how much magic is done in pytest to help end user have better experience in testing. I feel this is missing in golang.
-
-## Getting a Cat
-
-I'm going to visit a shelter soon and adopt a cat!
