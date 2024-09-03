@@ -5,3 +5,4 @@
 - 🎥 Where to see me: https://www.twitch.tv/glyphack
 
 
+I'm mostly busy with Building [a type checker for Python](https://github.com/Glyphack/enderpy). Let me know if you are interested!
