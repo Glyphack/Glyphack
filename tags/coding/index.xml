@@ -1,6 +1,75 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Coding on Glyphack</title><link>https://glyphack.com/tags/coding/</link><description>Recent content in Coding on Glyphack</description><generator>Hugo</generator><language>en</language><lastBuildDate>Mon, 20 Mar 2023 18:17:24 +0100</lastBuildDate><atom:link href="https://glyphack.com/tags/coding/index.xml" rel="self" type="application/rss+xml"/><item><title>Building a Web Crawler in Golang</title><link>https://glyphack.com/blog/build-a-crawler-in-golang/</link><pubDate>Mon, 20 Mar 2023 18:17:24 +0100</pubDate><guid>https://glyphack.com/blog/build-a-crawler-in-golang/</guid><description>Introduction But Why Building Another Crawler? High Level Design URL Frontier Selector Workers Fetcher Content Processor Link Extractor Implementation Let&amp;rsquo;s talk about channels Storage Parser Processor Distribute and Collect Result from Workers Worker Extracting Links Saving Content Running Processors Failed URLs HTML parser Putting it All Together Conclusion Introduction Web crawler is a program that explores the Internet, by going to different websites and following any link it finds.</description></item><item><title>Rate Limiter From Scratch in Python Part 2</title><link>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-2/</link><pubDate>Tue, 21 Feb 2023 21:34:49 +0100</pubDate><guid>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-2/</guid><description>Introduction New Rate Limiting Algorithms Fixed Window Test Sliding Window Log Testing Sliding Window Count Tests Conclusion Introduction In the last post I started writing a rate limiter. The project right now supports only 1 rate limiting algorithm(Token Bucket).
-In this part we&amp;rsquo;re going to implement the following algorithms:
-Fixed window Sliding window log Sliding window count We&amp;rsquo;ll see how each algorithm compares to another, and the trade offs. Also after implementing each one we&amp;rsquo;ll see how to abstractions we created previously helped minimizing the implementation for new algorithms.</description></item><item><title>Rate Limiter From Scratch in Python Part 1</title><link>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-1/</link><pubDate>Tue, 14 Feb 2023 23:19:18 +0100</pubDate><guid>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-1/</guid><description>Introduction After reading ByteByteGo course motivated me to write a rate limiter. So I decided to do it in 500lines theme.
-We will focus on how to create the interfaces and components, to allow extensibility in the predicted ways.
-You can find the complete source code here.
-What is a Rate Limiter? Well, there are a lot of great explanations on what is a rate limiter, but I&amp;rsquo;ll give a minimal introduction to it for this post.</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Coding on Glyphack</title><link>https://glyphack.com/tags/coding/</link><description>Recent content in Coding on Glyphack</description><generator>Hugo</generator><language>en</language><lastBuildDate>Mon, 20 Mar 2023 18:17:24 +0100</lastBuildDate><atom:link href="https://glyphack.com/tags/coding/index.xml" rel="self" type="application/rss+xml"/><item><title>Building a Web Crawler in Golang</title><link>https://glyphack.com/blog/build-a-crawler-in-golang/</link><pubDate>Mon, 20 Mar 2023 18:17:24 +0100</pubDate><guid>https://glyphack.com/blog/build-a-crawler-in-golang/</guid><description>&lt;!-- raw HTML omitted -->
+&lt;ul>
+&lt;li>&lt;a href="#introduction">Introduction&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#but-why-building-another-crawler">But Why Building Another Crawler?&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#high-level-design">High Level Design&lt;/a>
+&lt;ul>
+&lt;li>&lt;a href="#url-frontier">URL Frontier&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#selector">Selector&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#workers">Workers&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#fetcher">Fetcher&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#content-processor">Content Processor&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#link-extractor">Link Extractor&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;a href="#implementation">Implementation&lt;/a>
+&lt;ul>
+&lt;li>&lt;a href="#lets-talk-about-channels">Let&amp;rsquo;s talk about channels&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#storage">Storage&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#parser">Parser&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#processor">Processor&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#distribute-and-collect-result-from-workers">Distribute and Collect Result from Workers&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#worker">Worker&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#extracting-links">Extracting Links&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#saving-content">Saving Content&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#running-processors">Running Processors&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#failed-urls">Failed URLs&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#html-parser">HTML parser&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#putting-it-all-together">Putting it All Together&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;a href="#conclusion">Conclusion&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;!-- raw HTML omitted -->
+&lt;h2 id="introduction">Introduction&lt;/h2>
+&lt;p>Web crawler is a program that explores the Internet,
+by going to different websites and following any link it finds.&lt;/p></description></item><item><title>Rate Limiter From Scratch in Python Part 2</title><link>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-2/</link><pubDate>Tue, 21 Feb 2023 21:34:49 +0100</pubDate><guid>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-2/</guid><description>&lt;!-- raw HTML omitted -->
+&lt;ul>
+&lt;li>&lt;a href="#introduction">Introduction&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#new-rate-limiting-algorithms">New Rate Limiting Algorithms&lt;/a>
+&lt;ul>
+&lt;li>&lt;a href="#fixed-window">Fixed Window&lt;/a>
+&lt;ul>
+&lt;li>&lt;a href="#test">Test&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;a href="#sliding-window-log">Sliding Window Log&lt;/a>
+&lt;ul>
+&lt;li>&lt;a href="#testing">Testing&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;a href="#sliding-window-count">Sliding Window Count&lt;/a>
+&lt;ul>
+&lt;li>&lt;a href="#tests">Tests&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;a href="#conclusion">Conclusion&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;!-- raw HTML omitted -->
+&lt;h2 id="introduction">Introduction&lt;/h2>
+&lt;p>In the last &lt;a href="./rate-limiter-from-scratch-in-python-1">post&lt;/a>
+I started writing a rate limiter.
+The project right now supports only 1 rate limiting algorithm(Token Bucket).&lt;/p></description></item><item><title>Rate Limiter From Scratch in Python Part 1</title><link>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-1/</link><pubDate>Tue, 14 Feb 2023 23:19:18 +0100</pubDate><guid>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-1/</guid><description>&lt;h2 id="introduction">Introduction&lt;/h2>
+&lt;p>After reading &lt;a href="https://bytebytego.com/">ByteByteGo course&lt;/a>
+motivated me to write a rate limiter.
+So I decided to do it in &lt;a href="https://aosabook.org/en/500L/introduction.html">500lines&lt;/a>
+theme.&lt;/p>
+&lt;p>We will focus on how to create the interfaces and components,
+to allow extensibility in the predicted ways.&lt;/p>
+&lt;p>You can find the complete source code &lt;a href="https://github.com/Glyphack/hera-limit">here&lt;/a>.&lt;/p>
+&lt;h2 id="what-is-a-rate-limiter">What is a Rate Limiter?&lt;/h2>
+&lt;p>Well, there are a lot of
+&lt;a href="https://www.cloudflare.com/en-gb/learning/bots/what-is-rate-limiting/">great explanations&lt;/a>
+on what is a rate limiter, but I&amp;rsquo;ll give a minimal introduction to it for this post.&lt;/p></description></item></channel></rss>
