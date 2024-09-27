@@ -82,7 +82,11 @@ from swyx:&lt;/p>
 &lt;/blockquote>
 &lt;p>The idea is promising people who learns in public get more reputaiton.
 This extra reputation makes it easier to find friends, &lt;a href="https://simonwillison.net/2021/Jul/17/standing-out/">get jobs&lt;/a>
-and so on.&lt;/p></description></item><item><title>Building a Web Crawler in Golang</title><link>https://glyphack.com/blog/build-a-crawler-in-golang/</link><pubDate>Mon, 20 Mar 2023 18:17:24 +0100</pubDate><guid>https://glyphack.com/blog/build-a-crawler-in-golang/</guid><description>&lt;!-- raw HTML omitted -->
+and so on.&lt;/p>
+&lt;p>Starting to learn in public is a hard path,
+the people that are learning in public like swyx and &lt;a href="https://nicolevanderhoeven.com/">nicole van derhoeven&lt;/a>
+each have their own way, and both are successful with it.
+So there&amp;rsquo;s no one way to do this.&lt;/p></description></item><item><title>Building a Web Crawler in Golang</title><link>https://glyphack.com/blog/build-a-crawler-in-golang/</link><pubDate>Mon, 20 Mar 2023 18:17:24 +0100</pubDate><guid>https://glyphack.com/blog/build-a-crawler-in-golang/</guid><description>&lt;!-- raw HTML omitted -->
 &lt;ul>
 &lt;li>&lt;a href="#introduction">Introduction&lt;/a>&lt;/li>
 &lt;li>&lt;a href="#but-why-building-another-crawler">But Why Building Another Crawler?&lt;/a>&lt;/li>
@@ -145,7 +149,16 @@ by going to different websites and following any link it finds.&lt;/p></descript
 &lt;h2 id="introduction">Introduction&lt;/h2>
 &lt;p>In the last &lt;a href="./rate-limiter-from-scratch-in-python-1">post&lt;/a>
 I started writing a rate limiter.
-The project right now supports only 1 rate limiting algorithm(Token Bucket).&lt;/p></description></item><item><title>Personalize Macos Environment for Your Productivity</title><link>https://glyphack.com/blog/personalize-macos-environment-for-your-productivity/</link><pubDate>Sun, 19 Feb 2023 20:58:33 +0100</pubDate><guid>https://glyphack.com/blog/personalize-macos-environment-for-your-productivity/</guid><description>&lt;p>MacOS is already a polished environment,&lt;/p>
+The project right now supports only 1 rate limiting algorithm(Token Bucket).&lt;/p>
+&lt;p>In this part we&amp;rsquo;re going to implement the following algorithms:&lt;/p>
+&lt;ul>
+&lt;li>Fixed window&lt;/li>
+&lt;li>Sliding window log&lt;/li>
+&lt;li>Sliding window count&lt;/li>
+&lt;/ul>
+&lt;p>We&amp;rsquo;ll see how each algorithm compares to another, and the trade offs.
+Also after implementing each one we&amp;rsquo;ll see how to abstractions we created
+previously helped minimizing the implementation for new algorithms.&lt;/p></description></item><item><title>Personalize Macos Environment for Your Productivity</title><link>https://glyphack.com/blog/personalize-macos-environment-for-your-productivity/</link><pubDate>Sun, 19 Feb 2023 20:58:33 +0100</pubDate><guid>https://glyphack.com/blog/personalize-macos-environment-for-your-productivity/</guid><description>&lt;p>MacOS is already a polished environment,&lt;/p>
 &lt;p>Investing the time to personalize your tools and environment is a smart move,
 especially if you plan to do your current profession for years to come.
 With a set of personalized methods and tools,
