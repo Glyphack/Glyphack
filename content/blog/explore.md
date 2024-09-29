@@ -6,6 +6,7 @@ tags: []
 ---
 
 I was talking with my girlfriend recently about how to find something you are passionate about.
+
 Having something you’re truly passionate about gives you a reason to get up in the morning and makes life more enjoyable.
 It’s more than just a hobby, it’s [one of the key ingredients](https://paulgraham.com/genius.html) to doing great work.
 
