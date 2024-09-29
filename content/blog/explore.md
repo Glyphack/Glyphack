@@ -1,5 +1,5 @@
 ---
-title: "Explore"
+title: "How to Discover Interests"
 date: 2024-09-29T21:31:32+02:00
 draft: false
 tags: []
