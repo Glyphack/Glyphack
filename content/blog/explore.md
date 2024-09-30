@@ -54,7 +54,7 @@ Parents want their kids to end up in one of the professions they think is a good
 If the desired outcome for someone is that their kid must become an X they tell them next step to practice that and see if they enjoy it.
 They also don't want risks for their kid, so they point out something that sounds safe and good enough.
 
-When I look at my past a find a lot of good stuff when I was exploring.
+When I look at my past I find a lot of good stuff when I was exploring.
 Exploring is about being curious and pursuing whatever you don’t know when you come across it. If you find yourself continually spending time on a subject, that’s a sign of genuine interest.
 Also exploring will give you more options to choose compared to when you start.
 At the beginning you have one topic in mind but when you go deep you find more topics.
