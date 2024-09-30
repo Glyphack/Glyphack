@@ -33,7 +33,6 @@ It's not bad to do this, but we should be aware that it can create a false sense
 And this problem is not only in parents advice, but on the internet as well.
 It might sound a good idea to lookup introduction to different professions online and make a judgement based on that.
 But introductory materials online are very high level.
-They discuss
 For example if you search for how to become a programmer the first pages you're going to land on is horrible.
 They are going to you the list of programming languages with how many jobs are on the market for each one, or list of different areas that you can work in how much you get paid for each one.
 Leaving one thinking which one should they use first.
