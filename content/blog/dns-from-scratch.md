@@ -1,5 +1,5 @@
 ---
-title: "Writing a DNS From Scratch"
+title: "Writing a DNS server From Scratch"
 date: 2024-10-12T13:09:53+02:00
 draft: false
 tags: [programming]
