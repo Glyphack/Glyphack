@@ -98,7 +98,7 @@ This was particularly interesting to me because it did not require really advanc
 So why didn&amp;rsquo;t I do this earlier?&lt;/p></description></item><item><title>Compilers Resources</title><link>https://glyphack.com/blog/compiler-resources/</link><pubDate>Fri, 15 Sep 2023 19:50:19 +0200</pubDate><guid>https://glyphack.com/blog/compiler-resources/</guid><description>&lt;p>This post is a compilation of great resources I found while building a type checker for Python.
 These resources are free and highly focused on specific topics, making them ideal for learning by doing rather than going through extensive materials.&lt;/p>
 &lt;h2 id="parser">Parser&lt;/h2>
-&lt;p>When it comes to writing a parser, your approach depends on your project&amp;rsquo;s goals.
+&lt;p>There are different ways to approach parsing. You can either write one by hand or use a parser generator.
 For compilers or interpreters, you can use a parser generator.
 However, if you&amp;rsquo;re working on tools like formatters or language servers, your parser needs to handle broken code gracefully. This can be either done with a tool like treesitter that can handle broken code to some extent and also by writing your own. Of course writing your own is more fun.&lt;/p></description></item><item><title>Trying Out Learning In Public</title><link>https://glyphack.com/blog/my-learn-in-public-workflow/</link><pubDate>Thu, 18 May 2023 14:07:58 +0200</pubDate><guid>https://glyphack.com/blog/my-learn-in-public-workflow/</guid><description>&lt;p>A while back I read about &lt;a href="https://www.swyx.io/learn-in-public">learning in public&lt;/a>
 from swyx:&lt;/p>

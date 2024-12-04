@@ -1092,7 +1092,7 @@ I haven&amp;rsquo;t started an issue for this one yet because it requires more e
 Or just, in general, look more into the source/docs rather than reaching for tutorials.&lt;/p></description></item><item><title>Compilers Resources</title><link>https://glyphack.com/blog/compiler-resources/</link><pubDate>Fri, 15 Sep 2023 19:50:19 +0200</pubDate><guid>https://glyphack.com/blog/compiler-resources/</guid><description>&lt;p>This post is a compilation of great resources I found while building a type checker for Python.
 These resources are free and highly focused on specific topics, making them ideal for learning by doing rather than going through extensive materials.&lt;/p>
 &lt;h2 id="parser">Parser&lt;/h2>
-&lt;p>When it comes to writing a parser, your approach depends on your project&amp;rsquo;s goals.
+&lt;p>There are different ways to approach parsing. You can either write one by hand or use a parser generator.
 For compilers or interpreters, you can use a parser generator.
 However, if you&amp;rsquo;re working on tools like formatters or language servers, your parser needs to handle broken code gracefully. This can be either done with a tool like treesitter that can handle broken code to some extent and also by writing your own. Of course writing your own is more fun.&lt;/p>
 &lt;ul>
@@ -1104,15 +1104,13 @@ However, if you&amp;rsquo;re working on tools like formatters or language server
 &lt;h2 id="compilers--interpreters">Compilers &amp;amp; Interpreters&lt;/h2>
 &lt;p>&lt;a href="https://craftinginterpreters.com/">&lt;strong>&amp;ldquo;Crafting Interpreters&amp;rdquo;&lt;/strong>&lt;/a> is an essential resource for compilers. I recommend reading it chapter by chapter as you build your project.&lt;/p>
 &lt;p>For a comprehensive understanding of relevant topics, consider following the &lt;a href="http://openclassroom.stanford.edu/MainFolder/CoursePage.php?course=Compilers">&lt;strong>Stanford Compilers Class&lt;/strong>&lt;/a>. Although I haven&amp;rsquo;t watched it personally, I found this &lt;a href="https://pgrandinetti.github.io/compilers/">&lt;strong>guide&lt;/strong>&lt;/a> based on the class quite helpful.&lt;/p>
-&lt;p>Reading through finished implementations is pretty important.
+&lt;p>You can find examples of implemented programming languages and use them as a reference
 &lt;a href="https://plzoo.andrej.com/language/poly.html">&lt;strong>Programming Languages Zoo&lt;/strong>&lt;/a> is one resource for this.&lt;/p>
 &lt;h3 id="symbol-table">Symbol Table&lt;/h3>
 &lt;p>For symbol table you need to check the language implementation and know the scoping rules, private/public, and different kinds of symbols. There&amp;rsquo;s no all in one solution.&lt;/p>
 &lt;p>This &lt;a href="https://eli.thegreenplace.net/2010/09/18/python-internals-symbol-tables-part-1/">&lt;strong>series on the Python symbol table implementation&lt;/strong>&lt;/a>
 from Eli Bendersky is useful for learning how does a symbol table works.&lt;/p>
-&lt;ul>
-&lt;li>RustPython&amp;rsquo;s &lt;a href="https://rustpython.github.io/website/rustpython_compiler/symboltable/struct.SymbolTable.html">&lt;strong>SymbolTable&lt;/strong>&lt;/a> implementation.&lt;/li>
-&lt;/ul>
+&lt;p>RustPython&amp;rsquo;s &lt;a href="https://rustpython.github.io/website/rustpython_compiler/symboltable/struct.SymbolTable.html">&lt;strong>SymbolTable&lt;/strong>&lt;/a> implementation.&lt;/p>
 &lt;h2 id="semantic-analyzer">Semantic Analyzer&lt;/h2>
 &lt;p>While resources specific to the semantic analysis phase are scarce, you can find inspiration and solutions in existing projects:&lt;/p>
 &lt;ul>
@@ -1134,7 +1132,8 @@ They will teach you the rules and how to do it.&lt;/p>
 &lt;p>&lt;a href="https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/">&lt;strong>LSP specifications&lt;/strong>&lt;/a> are very easy to read. It&amp;rsquo;s long but you don&amp;rsquo;t need everything in the beginning.
 To skip the part of defning every structure yourself you can use &lt;a href="https://github.com/ebkalderon/tower-lsp">&lt;strong>Tower LSP&lt;/strong>&lt;/a>.&lt;/p>
 &lt;h2 id="linters">Linters&lt;/h2>
-&lt;p>Same as with type checking, for linters it&amp;rsquo;s best to look into implementations and learn from them.&lt;/p>
+&lt;p>Same as with type checking, for linters it&amp;rsquo;s best to look into implementations and learn from them.
+Specially linters have a lot in common with compilers and interpreters because they just emit a human readable error instead of machine code.&lt;/p>
 &lt;p>The following tools are useful to understand how analysis is done and errors are reported:&lt;/p>
 &lt;ul>
 &lt;li>&lt;a href="https://github.com/web-infra-dev/oxc">&lt;strong>oxc&lt;/strong>&lt;/a>&lt;/li>
