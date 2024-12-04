@@ -10,7 +10,7 @@ These resources are free and highly focused on specific topics, making them idea
 
 ## Parser
 
-When it comes to writing a parser, your approach depends on your project's goals.
+There are different ways to approach parsing. You can either write one by hand or use a parser generator.
 For compilers or interpreters, you can use a parser generator.
 However, if you're working on tools like formatters or language servers, your parser needs to handle broken code gracefully. This can be either done with a tool like treesitter that can handle broken code to some extent and also by writing your own. Of course writing your own is more fun.
 
@@ -25,7 +25,7 @@ However, if you're working on tools like formatters or language servers, your pa
 
 For a comprehensive understanding of relevant topics, consider following the [**Stanford Compilers Class**](http://openclassroom.stanford.edu/MainFolder/CoursePage.php?course=Compilers). Although I haven't watched it personally, I found this [**guide**](https://pgrandinetti.github.io/compilers/) based on the class quite helpful.
 
-Reading through finished implementations is pretty important. 
+You can find examples of implemented programming languages and use them as a reference 
 [**Programming Languages Zoo**](https://plzoo.andrej.com/language/poly.html) is one resource for this.
 
 ### Symbol Table
@@ -35,7 +35,8 @@ For symbol table you need to check the language implementation and know the scop
 This [**series on the Python symbol table implementation**](https://eli.thegreenplace.net/2010/09/18/python-internals-symbol-tables-part-1/)
 from Eli Bendersky is useful for learning how does a symbol table works.
 
-- RustPython's [**SymbolTable**](https://rustpython.github.io/website/rustpython_compiler/symboltable/struct.SymbolTable.html) implementation.
+RustPython's [**SymbolTable**](https://rustpython.github.io/website/rustpython_compiler/symboltable/struct.SymbolTable.html) implementation.
+
 
 ## Semantic Analyzer
 
@@ -65,6 +66,7 @@ To skip the part of defning every structure yourself you can use [**Tower LSP**]
 ## Linters
 
 Same as with type checking, for linters it's best to look into implementations and learn from them.
+Specially linters have a lot in common with compilers and interpreters because they just emit a human readable error instead of machine code.
 
 The following tools are useful to understand how analysis is done and errors are reported:
 - [**oxc**](https://github.com/web-infra-dev/oxc)
