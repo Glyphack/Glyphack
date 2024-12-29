@@ -1,4 +1,17 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Blog on Glyphack</title><link>https://glyphack.com/blog/</link><description>Recent content in Blog on Glyphack</description><generator>Hugo</generator><language>en</language><lastBuildDate>Sat, 02 Nov 2024 11:11:05 +0100</lastBuildDate><atom:link href="https://glyphack.com/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Devlog 2</title><link>https://glyphack.com/blog/devlog-2/</link><pubDate>Sat, 02 Nov 2024 11:11:05 +0100</pubDate><guid>https://glyphack.com/blog/devlog-2/</guid><description>&lt;p>Random notes from past month.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Blog on Glyphack</title><link>https://glyphack.com/blog/</link><description>Recent content in Blog on Glyphack</description><generator>Hugo</generator><language>en</language><lastBuildDate>Sun, 29 Dec 2024 19:32:07 +0100</lastBuildDate><atom:link href="https://glyphack.com/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Dev Tools at Work</title><link>https://glyphack.com/blog/dev-tools-at-work/</link><pubDate>Sun, 29 Dec 2024 19:32:07 +0100</pubDate><guid>https://glyphack.com/blog/dev-tools-at-work/</guid><description>&lt;p>Look, I&amp;rsquo;ve got to tell you about something that&amp;rsquo;s been driving me absolutely bonkers lately.&lt;/p>
+&lt;p>I was reading this old post from Brad Fitzpatrick, talking about why he thought open source contributors suddenly disappear after joining Google:&lt;/p>
+&lt;blockquote>
+&lt;ul>
+&lt;li>They&amp;rsquo;re busy. Google seems to suck everybody&amp;rsquo;s free time, and then some. It&amp;rsquo;s not that Google is forcing them to work all the time, but they are anyway because there are so many cool things that can be done. I often joke that I have seven 20% projects.
+&lt;ul>
+&lt;li>The Google development environment is so nice. The source control, build system, code review tools, debuggers, profilers, submit queues, continuous builds, test bots, documentation, and all associated machinery and processes are incredibly well done. It&amp;rsquo;s very easy to hack on anything, anywhere and submit patches to anybody, and notably: to find who or what list to submit patches to. Generally submitting a patch is the best way to even start a discussion about a feature, showing that you&amp;rsquo;re serious, even if your patch is wrong.
+&lt;a href="https://brad.livejournal.com/2409049.html">https://brad.livejournal.com/2409049.html&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/blockquote>
+&lt;p>I cannot imagine how the work is so fun there than people vanish into the air after joining google.
+Or how someone gets caught up in seven different 20% projects because the dev environment is basically developer nirvana.&lt;/p></description></item><item><title>Devlog 2</title><link>https://glyphack.com/blog/devlog-2/</link><pubDate>Sat, 02 Nov 2024 11:11:05 +0100</pubDate><guid>https://glyphack.com/blog/devlog-2/</guid><description>&lt;p>Random notes from past month.&lt;/p>
 &lt;p>&lt;strong>New Projects&lt;/strong>&lt;/p>
 &lt;p>I spent about a year building &lt;a href="https://github.com/Glyphack/enderpy">my own tool-chain&lt;/a> for building a python type checker. It inspired by what ruff was doing for Python linting and wanted to do the same for type checker.
 A few months ago I found out that astral team are building a type checker. So I decided to redirect my energy toward that.
