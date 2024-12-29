@@ -57,9 +57,9 @@ And I think the reason is that the incentive for working on tools is not there.
 The author of the projects make this beautiful README, Makefile, example code that would make everyone get up and running with project in seconds. Why? Because they&amp;rsquo;re trying to get that promotion&lt;/p>
 &lt;p>Fast-forward six months and the project document is out of date, the Makefile is so broken that you make your own scripts to work on the project.
 When tools and projects don&amp;rsquo;t have good dev tools you can&amp;rsquo;t just start working on a project to evaluate an idea.
-Want to try out a new idea on the codebase? Good luck with that!
-The typical experience goes something like this: you clone the repo (assuming you can find it), follow the setup instructions, and then you hit some obscure error message as result of mixing 10 tools. With the poor error handling you have to dig in the code, find which one is not working as expected and start fixing code or your environment.
-And this isn&amp;rsquo;t just annoying - it&amp;rsquo;s toxic to innovation. How the hell is anyone supposed to prototype big ideas when they can&amp;rsquo;t even get the damn thing to compile?&lt;/p>
+Want to try out a new idea on the codebase? Good luck with that!&lt;/p>
+&lt;p>The typical experience goes something like this: you clone the repo (assuming you can find it), follow the setup instructions, and then you hit some obscure error message as result of mixing 10 tools. With the poor error handling you have to dig in the code, find which one is not working as expected and start fixing code or your environment.&lt;/p>
+&lt;p>And this isn&amp;rsquo;t just annoying - it&amp;rsquo;s toxic to innovation. How the hell is anyone supposed to prototype big ideas when they can&amp;rsquo;t even get the damn thing to compile?&lt;/p>
 &lt;p>Document the contributing process. Constantly update the docs and review that in the code review.
 Make sure the examples work, the tools integrate nicely in a project.
 For example if your project has a debugger make sure your changes won&amp;rsquo;t break the debugger.
