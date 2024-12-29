@@ -2,14 +2,11 @@
 &lt;p>I was reading this old post from Brad Fitzpatrick, talking about why he thought open source contributors suddenly disappear after joining Google:&lt;/p>
 &lt;blockquote>
 &lt;ul>
-&lt;li>They&amp;rsquo;re busy. Google seems to suck everybody&amp;rsquo;s free time, and then some. It&amp;rsquo;s not that Google is forcing them to work all the time, but they are anyway because there are so many cool things that can be done. I often joke that I have seven 20% projects.
-&lt;ul>
-&lt;li>The Google development environment is so nice. The source control, build system, code review tools, debuggers, profilers, submit queues, continuous builds, test bots, documentation, and all associated machinery and processes are incredibly well done. It&amp;rsquo;s very easy to hack on anything, anywhere and submit patches to anybody, and notably: to find who or what list to submit patches to. Generally submitting a patch is the best way to even start a discussion about a feature, showing that you&amp;rsquo;re serious, even if your patch is wrong.
-&lt;a href="https://brad.livejournal.com/2409049.html">https://brad.livejournal.com/2409049.html&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;/li>
+&lt;li>They&amp;rsquo;re busy. Google seems to suck everybody&amp;rsquo;s free time, and then some. It&amp;rsquo;s not that Google is forcing them to work all the time, but they are anyway because there are so many cool things that can be done. I often joke that I have seven 20% projects.&lt;/li>
+&lt;li>The Google development environment is so nice. The source control, build system, code review tools, debuggers, profilers, submit queues, continuous builds, test bots, documentation, and all associated machinery and processes are incredibly well done. It&amp;rsquo;s very easy to hack on anything, anywhere and submit patches to anybody, and notably: to find who or what list to submit patches to. Generally submitting a patch is the best way to even start a discussion about a feature, showing that you&amp;rsquo;re serious, even if your patch is wrong.&lt;/li>
 &lt;/ul>
 &lt;/blockquote>
+&lt;p>&lt;a href="https://brad.livejournal.com/2409049.html">https://brad.livejournal.com/2409049.html&lt;/a>&lt;/p>
 &lt;p>I cannot imagine how the work is so fun there than people vanish into the air after joining google.
 Or how someone gets caught up in seven different 20% projects because the dev environment is basically developer nirvana.&lt;/p>
 &lt;p>I like being busy when there is a lot to work on.
@@ -30,7 +27,7 @@ This seems dangerous, he might get fired right?
 No, John&amp;rsquo;s a hero because he&amp;rsquo;s mastered the art of producing artifacts - not actual, useful code, mind you, but the kind of artifacts that look good in performance reviews. Meeting notes. Project proposals. Progress updates. It&amp;rsquo;s like a cargo cult of productivity.&lt;/p>
 &lt;p>Few months later the something similar happens.
 Sarah wants a small new feature to make her work more enjoyable.
-Engineering and sales teams chat, they decide that this bug is not very easy to fix.
+Engineering and sales teams chat, they decide that this bug is not easy to fix.
 But there is an easy work around that adds few more steps to Sarah&amp;rsquo;s work.
 So they decide to fix the bug when the engineering team has some free time.
 The free time definitely does not happen a lot.
@@ -51,7 +48,7 @@ A lot of times the ideas will not be useful and be discarded.
 Trying out ideas teaches people and give them more experience.
 Makes them better in generating next ideas.
 Just shipping the thing and deciding what to do next is faster and more fun.&lt;/p>
-&lt;p>Let people use their curiosity and don&amp;rsquo;t block it with processes.&lt;/p>
+&lt;p>Let people use their curiosity and don&amp;rsquo;t block them with processes.&lt;/p>
 &lt;p>&lt;strong>Having good tools&lt;/strong>&lt;/p>
 &lt;p>There are countless times I found projects that have out-of-date documents, misconfigured tools, examples that won&amp;rsquo;t run anymore.
 I honestly have no idea how someone can be maintaining a project where Makefile is broken. Do you even use it?&lt;/p>
