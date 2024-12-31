@@ -1,4 +1,39 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Home on Glyphack</title><link>https://glyphack.com/</link><description>Recent content in Home on Glyphack</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 29 Dec 2024 19:32:07 +0100</lastBuildDate><atom:link href="https://glyphack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Dev Tools at Work</title><link>https://glyphack.com/blog/dev-tools-at-work/</link><pubDate>Sun, 29 Dec 2024 19:32:07 +0100</pubDate><guid>https://glyphack.com/blog/dev-tools-at-work/</guid><description>&lt;p>I was reading this old post from Brad Fitzpatrick, talking about why he thought open source contributors suddenly disappear after joining Google:&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Home on Glyphack</title><link>https://glyphack.com/</link><description>Recent content in Home on Glyphack</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 31 Dec 2024 18:00:17 +0100</lastBuildDate><atom:link href="https://glyphack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>On Tracking Time</title><link>https://glyphack.com/blog/tracking-time/</link><pubDate>Tue, 31 Dec 2024 18:00:17 +0100</pubDate><guid>https://glyphack.com/blog/tracking-time/</guid><description>&lt;p>One week I suddenly realized I did so much during the week but there&amp;rsquo;s nothing to show for it.
+You know that feeling that you don&amp;rsquo;t have anything to tell your friend that you did that week.&lt;/p>
+&lt;p>I gave time tracking a shot to see what will I find.
+Rescue time looked like a simple tool that gets the job done. I used Activity Watch before and the main lacking feature was syncing and the mobile app (at the time they now have a new mobile app.)&lt;/p>
+&lt;p>Turns out my feeling was right, next week I saw around 8 hours of my week during work time spent in meeting, Slack in discussions.
+Other than that it showed me how much time I spend on social media and other things that does not achieve anything.
+So basically I was spending a lot of time on things that don&amp;rsquo;t produce anything. It&amp;rsquo;s not fun to talk with someone about how many work discussions they had last week.&lt;/p>
+&lt;p>After a couple of months I notice the change in how I use my time.
+I don&amp;rsquo;t really use the time tracking to find out how much time I spend on what.
+I just use it to find out if I spend too much time idling and not doing anything or not.
+These days even if I don&amp;rsquo;t use it any more I will keep the few habits it helped me to create.&lt;/p>
+&lt;p>&lt;strong>Use devices purposely&lt;/strong>&lt;/p>
+&lt;p>Use the phone or the computer for a purpose.
+This is basically what all the app blockers do. They want to block the distractions so you think okay what did I want to do?&lt;/p>
+&lt;p>Sometimes there is nothing to do with your phone. You just want the time to pass or rest a bit.
+What about reading a book, sleeping or doing something that requires no effort?&lt;/p>
+&lt;p>&lt;strong>Think about total time spent&lt;/strong>&lt;/p>
+&lt;p>It&amp;rsquo;s easy to notice when you spend 1 hour in a day scrolling through content and not doing anything.
+But it&amp;rsquo;s harder to notice it if it&amp;rsquo;s half an hour every day. But if you think about it that results in 3.5 hours per week.
+3 hours sounds a lot really a lot can be done with that time, even adding it to the sleep sounds better.&lt;/p>
+&lt;p>I tracked time for the full month and saw how much time I&amp;rsquo;m spending on things that are not really useful.
+I tried to limit them. As a result I just did what was necessary.
+For example what I mentioned all the time in discussions at work. I limited that to a certain amount per day. This forced me to say what I had to say in slack and continue doing what I was doing.&lt;/p>
+&lt;p>&lt;strong>Do not care too much about the graphs&lt;/strong>&lt;/p>
+&lt;p>These apps usually give you a lot of scores, graphs and data to play with.
+I don&amp;rsquo;t think it&amp;rsquo;s useful to look at them.
+It&amp;rsquo;s a distraction, and it can drag you down into optimizing the wrong thing.&lt;/p>
+&lt;p>The most important part is that, you spend time on what you want and distractions are not in your way.
+This can be seen by how much time you are spending on the distractions during the day.
+So I think if the distractions are taking very little time. Then the rest of the time is free.
+Free time plus boredom is all needed to do what you want to do. Unless you don&amp;rsquo;t want &lt;a href="https://paulgraham.com/want.html">what you want&lt;/a>.&lt;/p>
+&lt;hr>
+&lt;p>I don&amp;rsquo;t know if time tracking is necessary or not.
+Maybe after a while these habits are shaped, so it&amp;rsquo;s not needed any more.
+I think if there&amp;rsquo;s something that grabs your attention, and you want to do it, you will do it. No focus or do not disturb mode needed for true captivation.
+But all the other times it&amp;rsquo;s easy to get distracted and not find the intriguing.&lt;/p></description></item><item><title>Dev Tools at Work</title><link>https://glyphack.com/blog/dev-tools-at-work/</link><pubDate>Sun, 29 Dec 2024 19:32:07 +0100</pubDate><guid>https://glyphack.com/blog/dev-tools-at-work/</guid><description>&lt;p>I was reading this old post from Brad Fitzpatrick, talking about why he thought open source contributors suddenly disappear after joining Google:&lt;/p>
 &lt;blockquote>
 &lt;ul>
 &lt;li>They&amp;rsquo;re busy. Google seems to suck everybody&amp;rsquo;s free time, and then some. It&amp;rsquo;s not that Google is forcing them to work all the time, but they are anyway because there are so many cool things that can be done. I often joke that I have seven 20% projects.&lt;/li>
