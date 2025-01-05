@@ -7,28 +7,22 @@ layout: staticpage
 This is my now page, which lists what I'm thinking and working on right now.
 If you are not familiar with [now pages](https://nownownow.com/about), consider creating one.
 
-Updated Aug 20th, 2024 from Amsterdam.
+Updated Jan 5th, 2025 from Amsterdam.
 
-## Release Enderpy Python Type Checker
+## Contributing to Red Knot Python Type Checker
 
-Update 30-06-2024: Daniel Woznicki, a new contributor joined the project.
+Initially I wanted to build my own type checker. 
+After some time I found out about red knot that is another work in progress python type checker.
+Since developing a type checker for python is a lot of work I decided to dedicate my effort to contribute to this project.
 
-I'm so interested in developer tools, so interested that I decided to build a tool myself.
-The goal is to be faster than other type checkers.
-It involves reading and digesting a lot of topics related to compilers, Python, and Rust.
+## Got a 3D Printer
 
-I keep the project status on its homepage: <https://github.com/glyphack/enderpy>
-
-I always wanted to work in a company where the product is a dev tool.
-But it's not so easy to get into one with a resume full of web development.
-The project also gives me experience and knowledge required to work on what I like more.
-
-## Learning Dutch
-
-I think learning Dutch would be a huge quality of life improvement.
-After about 40 hours now I can read and understand dutch. Hearing is still hard but I can do greeting with others in dutch.
+I bought a 3D printer. I printed prepared models and it's pretty cool.
+Now I'm trying to learn how to design my own models.
 
 ## Gardening
+
+Winter has come and plants are preserving their energy. I'm waiting for Sprint to plant new stuff.
 
 I'm practicing growing plants in my apartment both for decoration and consumption.
 This is another step to be a little bit more independent.
@@ -36,35 +30,7 @@ This is another step to be a little bit more independent.
 I have 20+ pots, and I'm harvesting herbs. It feels good to make food with my own herbs.
 I got a gardening pot and going to fill that with soil on the balcony and grew larger plants.
 
-## Working on Pytest
+## Looking for Something New
 
-I joined [pytest dev sprint](https://github.com/pytest-dev/sprint/) Last month in Austria. During the sprint I worked on two improvements for fixtures and assertions. The changes are quite big, so I'm going to work on them for a while and submit results as a PR.
-
-I learned a lot from the core contributors there. I'm going to submit a proposal to talk at [pycon NL](https://pythonconferentie.nl/) about my experience attending this event.
-
-## Released a New Tool
-
-I created [gotest](https://github.com/Glyphack/gotest) to add missing features to `go test` command.
-I'm going to use it on my projects and improve slowly but reach out if you like to contribute.
-
-## I Got a Cat
-
-I got a lovely cat. Having more fun now.
-
-## Self Hosting
-
-I'm trying to eliminate my use of cloud based technologies.
-Instead, I'm trying to use software that is local, or open source, or I own the data.
-It's a big change, I'm practicing with self-hosting some software on my Raspberry Pi.
-
-It's fascinating that the stuff I have to do to set up servers is so different from my day job.
-In my day job we live few levels of abstraction above the running server.
-I don't even know who runs the code I deploy and how.
-
-I want to rely on things that a single person can maintain.
-
-Right now I'm hosting my own:
-
-- Chat Server (Matrix Dendrite)
-- VPN
-- YouTube Clone
+I'm looking for a problem to solve something that occupies my mind and give me energy every day I wake up.
+I'm solving codecrafters.io challenges right now. It might inspire me to do something different.
