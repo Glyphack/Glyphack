@@ -122,8 +122,7 @@ and so on.&lt;/p>
 &lt;p>Starting to learn in public is a hard path,
 the people that are learning in public like swyx and &lt;a href="https://nicolevanderhoeven.com/">nicole van derhoeven&lt;/a>
 each have their own way, and both are successful with it.
-So there&amp;rsquo;s no one way to do this.&lt;/p></description></item><item><title>Building a Web Crawler in Golang</title><link>https://glyphack.com/blog/build-a-crawler-in-golang/</link><pubDate>Mon, 20 Mar 2023 18:17:24 +0100</pubDate><guid>https://glyphack.com/blog/build-a-crawler-in-golang/</guid><description>&lt;!-- raw HTML omitted -->
-&lt;ul>
+So there&amp;rsquo;s no one way to do this.&lt;/p></description></item><item><title>Building a Web Crawler in Golang</title><link>https://glyphack.com/blog/build-a-crawler-in-golang/</link><pubDate>Mon, 20 Mar 2023 18:17:24 +0100</pubDate><guid>https://glyphack.com/blog/build-a-crawler-in-golang/</guid><description>&lt;ul>
 &lt;li>&lt;a href="#introduction">Introduction&lt;/a>&lt;/li>
 &lt;li>&lt;a href="#but-why-building-another-crawler">But Why Building Another Crawler?&lt;/a>&lt;/li>
 &lt;li>&lt;a href="#high-level-design">High Level Design&lt;/a>
@@ -154,11 +153,12 @@ So there&amp;rsquo;s no one way to do this.&lt;/p></description></item><item><ti
 &lt;/li>
 &lt;li>&lt;a href="#conclusion">Conclusion&lt;/a>&lt;/li>
 &lt;/ul>
-&lt;!-- raw HTML omitted -->
 &lt;h2 id="introduction">Introduction&lt;/h2>
 &lt;p>Web crawler is a program that explores the Internet,
-by going to different websites and following any link it finds.&lt;/p></description></item><item><title>Rate Limiter From Scratch in Python Part 2</title><link>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-2/</link><pubDate>Tue, 21 Feb 2023 21:34:49 +0100</pubDate><guid>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-2/</guid><description>&lt;!-- raw HTML omitted -->
-&lt;ul>
+by going to different websites and following any link it finds.&lt;/p>
+&lt;p>Crawlers are interesting because they provide a way to gather data
+from the internet.
+This is especially useful for data mining purposes.&lt;/p></description></item><item><title>Rate Limiter From Scratch in Python Part 2</title><link>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-2/</link><pubDate>Tue, 21 Feb 2023 21:34:49 +0100</pubDate><guid>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-2/</guid><description>&lt;ul>
 &lt;li>&lt;a href="#introduction">Introduction&lt;/a>&lt;/li>
 &lt;li>&lt;a href="#new-rate-limiting-algorithms">New Rate Limiting Algorithms&lt;/a>
 &lt;ul>
@@ -181,7 +181,6 @@ by going to different websites and following any link it finds.&lt;/p></descript
 &lt;/li>
 &lt;li>&lt;a href="#conclusion">Conclusion&lt;/a>&lt;/li>
 &lt;/ul>
-&lt;!-- raw HTML omitted -->
 &lt;h2 id="introduction">Introduction&lt;/h2>
 &lt;p>In the last &lt;a href="./rate-limiter-from-scratch-in-python-1">post&lt;/a>
 I started writing a rate limiter.
