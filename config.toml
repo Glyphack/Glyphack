@@ -27,6 +27,9 @@ url = "/now/"
 [[params.menu]]
 name = "Reading List"
 url = "https://glyphack.notion.site/0a261efcc2a3458f901ff5a8f41c75d9?v=ddcd3b12e6ab44b59320c88637ce9776"
+[[params.menu]]
+name = "Resume"
+url = "https://docs.google.com/document/d/1XgC2Va8ZgJ2DrmRKpgd_7iVjv8aASnn8nzl6DgkR1mg/edit?usp=sharing"
 [[params.social]]
 name = "email"
 url = "sh.hooshyari@gmail.com"
