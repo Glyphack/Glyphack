@@ -1,11 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Blog on Glyphack</title><link>https://glyphack.com/blog/</link><description>Recent content in Blog on Glyphack</description><generator>Hugo</generator><language>en</language><lastBuildDate>Wed, 29 Jan 2025 22:32:33 +0100</lastBuildDate><atom:link href="https://glyphack.com/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Can Data Fool You?</title><link>https://glyphack.com/blog/fooled-by-data/</link><pubDate>Wed, 29 Jan 2025 22:32:33 +0100</pubDate><guid>https://glyphack.com/blog/fooled-by-data/</guid><description>&lt;p>I was taking some time off the blogging and doing more programming lately.
-But suddenly a shocking experience made me write this story.&lt;/p>
-&lt;p>Maybe before we go into the story I should give you a little bit of background.
-If you haven&amp;rsquo;t been living in a cave you know how hot being data driven is.&lt;/p>
-&lt;p>Now what does it mean to use data to make decisions?
-If you cannot make a decision just run both under some experiment and decide based on the result.
-If you have a problem with too many factors, and it&amp;rsquo;s hard to decide and reason about every aspect of it this approach sounds more reasonable.
-But here&amp;rsquo;s why I think this misses a point.&lt;/p></description></item><item><title>On Tracking Time</title><link>https://glyphack.com/blog/tracking-time/</link><pubDate>Tue, 31 Dec 2024 18:00:17 +0100</pubDate><guid>https://glyphack.com/blog/tracking-time/</guid><description>&lt;p>One week I suddenly realized I did so much during the week but there&amp;rsquo;s nothing to show for it.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Blog on Glyphack</title><link>https://glyphack.com/blog/</link><description>Recent content in Blog on Glyphack</description><generator>Hugo</generator><language>en</language><lastBuildDate>Wed, 29 Jan 2025 22:32:33 +0100</lastBuildDate><atom:link href="https://glyphack.com/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Can Data Fool You?</title><link>https://glyphack.com/blog/fooled-by-data/</link><pubDate>Wed, 29 Jan 2025 22:32:33 +0100</pubDate><guid>https://glyphack.com/blog/fooled-by-data/</guid><description>&lt;p>Recently, A personal experience showed me how something widely accepted might be wrong.
+I didn&amp;rsquo;t want to lose this opportunity to write about it.&lt;/p>
+&lt;p>If you haven&amp;rsquo;t been living under a cave, you know data-driven decision making is a must these days.
+So, if you cannot make a decision just run both under some experiment and decide based on the result.
+If you have a problem that is hard to answer, you just try different answers.
+Then you pick the one that makes more money or whatever thing you want.&lt;/p></description></item><item><title>On Tracking Time</title><link>https://glyphack.com/blog/tracking-time/</link><pubDate>Tue, 31 Dec 2024 18:00:17 +0100</pubDate><guid>https://glyphack.com/blog/tracking-time/</guid><description>&lt;p>One week I suddenly realized I did so much during the week but there&amp;rsquo;s nothing to show for it.
 You know that feeling that you don&amp;rsquo;t have anything to tell your friend that you did that week.&lt;/p>
 &lt;p>I gave time tracking a shot to see what will I find.
 Rescue time looked like a simple tool that gets the job done. I used Activity Watch before and the main lacking feature was syncing and the mobile app (at the time they now have a new mobile app.)&lt;/p></description></item><item><title>Dev Tools at Work</title><link>https://glyphack.com/blog/dev-tools-at-work/</link><pubDate>Sun, 29 Dec 2024 19:32:07 +0100</pubDate><guid>https://glyphack.com/blog/dev-tools-at-work/</guid><description>&lt;p>I was reading this old post from Brad Fitzpatrick, talking about why he thought open source contributors suddenly disappear after joining Google:&lt;/p>
@@ -13,8 +11,7 @@ Rescue time looked like a simple tool that gets the job done. I used Activity Wa
 &lt;ul>
 &lt;li>They&amp;rsquo;re busy. Google seems to suck everybody&amp;rsquo;s free time, and then some. It&amp;rsquo;s not that Google is forcing them to work all the time, but they are anyway because there are so many cool things that can be done. I often joke that I have seven 20% projects.&lt;/li>
 &lt;li>The Google development environment is so nice. The source control, build system, code review tools, debuggers, profilers, submit queues, continuous builds, test bots, documentation, and all associated machinery and processes are incredibly well done. It&amp;rsquo;s very easy to hack on anything, anywhere and submit patches to anybody, and notably: to find who or what list to submit patches to. Generally submitting a patch is the best way to even start a discussion about a feature, showing that you&amp;rsquo;re serious, even if your patch is wrong.&lt;/li>
-&lt;/ul>
-&lt;/blockquote>
+&lt;/ul>&lt;/blockquote>
 &lt;p>&lt;a href="https://brad.livejournal.com/2409049.html">https://brad.livejournal.com/2409049.html&lt;/a>&lt;/p></description></item><item><title>Devlog 2</title><link>https://glyphack.com/blog/devlog-2/</link><pubDate>Sat, 02 Nov 2024 11:11:05 +0100</pubDate><guid>https://glyphack.com/blog/devlog-2/</guid><description>&lt;p>Random notes from past month.&lt;/p>
 &lt;p>&lt;strong>New Projects&lt;/strong>&lt;/p>
 &lt;p>I spent about a year building &lt;a href="https://github.com/Glyphack/enderpy">my own tool-chain&lt;/a> for building a python type checker. It inspired by what ruff was doing for Python linting and wanted to do the same for type checker.
@@ -121,15 +118,10 @@ However, if you&amp;rsquo;re working on tools like formatters or language server
 from swyx:&lt;/p>
 &lt;blockquote>
 &lt;p>At some point people will start asking you for help because of all the stuff you put out.&lt;/p>
-&lt;p>80% of developers are “dark”, they dont write or speak or participate in public tech discourse.&lt;/p>
-&lt;/blockquote>
+&lt;p>80% of developers are “dark”, they dont write or speak or participate in public tech discourse.&lt;/p>&lt;/blockquote>
 &lt;p>The idea is promising people who learns in public get more reputaiton.
 This extra reputation makes it easier to find friends, &lt;a href="https://simonwillison.net/2021/Jul/17/standing-out/">get jobs&lt;/a>
-and so on.&lt;/p>
-&lt;p>Starting to learn in public is a hard path,
-the people that are learning in public like swyx and &lt;a href="https://nicolevanderhoeven.com/">nicole van derhoeven&lt;/a>
-each have their own way, and both are successful with it.
-So there&amp;rsquo;s no one way to do this.&lt;/p></description></item><item><title>Building a Web Crawler in Golang</title><link>https://glyphack.com/blog/build-a-crawler-in-golang/</link><pubDate>Mon, 20 Mar 2023 18:17:24 +0100</pubDate><guid>https://glyphack.com/blog/build-a-crawler-in-golang/</guid><description>&lt;ul>
+and so on.&lt;/p></description></item><item><title>Building a Web Crawler in Golang</title><link>https://glyphack.com/blog/build-a-crawler-in-golang/</link><pubDate>Mon, 20 Mar 2023 18:17:24 +0100</pubDate><guid>https://glyphack.com/blog/build-a-crawler-in-golang/</guid><description>&lt;ul>
 &lt;li>&lt;a href="#introduction">Introduction&lt;/a>&lt;/li>
 &lt;li>&lt;a href="#but-why-building-another-crawler">But Why Building Another Crawler?&lt;/a>&lt;/li>
 &lt;li>&lt;a href="#high-level-design">High Level Design&lt;/a>
