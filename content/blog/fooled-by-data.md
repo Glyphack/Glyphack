@@ -5,53 +5,50 @@ draft: false
 tags: []
 ---
 
-I was taking some time off the blogging and doing more programming lately.
-But suddenly a shocking experience made me write this story.
+Recently, A personal experience showed me how something widely accepted might be wrong.
+I didn't want to lose this opportunity to write about it.
 
-Maybe before we go into the story I should give you a little bit of background.
-If you haven't been living in a cave you know how hot being data driven is.
+If you haven't been living under a cave, you know data-driven decision making is a must these days.
+So, if you cannot make a decision just run both under some experiment and decide based on the result.
+If you have a problem that is hard to answer, you just try different answers.
+Then you pick the one that makes more money or whatever thing you want.
 
-Now what does it mean to use data to make decisions?
-If you cannot make a decision just run both under some experiment and decide based on the result.
-If you have a problem with too many factors, and it's hard to decide and reason about every aspect of it this approach sounds more reasonable.
-But here's why I think this misses a point.
+Imagine you don't know what's the maximum price you can sell a book that people keep buying it.
+You can sell it more expensive and expect less sales while having more profit on each book or the other way around.
+Now the data boss comes up with this neat idea.
+Let's sell the book with two different prices in two markets and see how much profit do we make.
+Sounds good right?
+Imagine maybe one market was Inevitably going to like the book less.
+You can imagine a million reasons that this might happen.
+You know how accidentally stuff go viral.
+
+When you are done with the experiment you try to find the patterns and decide what to do based on the data.
+Unless something is terribly wrong(10x books sold in one area) you don't suspect the result.
+"Oh, maybe it's expensive and people didn't buy it.", you say forgetting how many things can affect this.
+Another problem with these experiments is how long are you going to continue this. There is no answer, and you can slow yourself down significantly.
 
 Few days ago I was working on some piece of code.
-After running it a few times turned out the calculations were wrong.
-And I knew before me someone worked on this feature and released it. They even collected the data and showed that it was working positively.
-So turns out, this piece of code was running in an A/B test for weeks. And after the analysis it seemed to be working good, so the code was left there and nobody looked at it again.
+Buried down deep in codebase everyone forgot about it once it was launched and the metrics looked good.
+Only one point was missed, the calculations were wrong.
+Now the person working on this before me definitely relied on the metrics to assure the change is making good impact.
+And indeed the change was good overall because the metrics showed that compared to the product before change.
 
-Running an A/B test to verify a calculation is correct, or a fix is working is one of the worst solutions.
-The moment you see the charts go up you attribute that to the code you changed.
-Would you possibly think with yourself that, the code might be wrong?
+This is why I prefer to use thinking instead when it's possible to decide about something.
+When one solution is obviously worth (code that does not work) why bother trying it?
+The moment you see the charts go up you attribute that to the code you changed no matter correct or wrong.
 Could it be that the code is wrong, but the result is better due to some other thing that we don't know?
+So you lose the opportunity to think more, maybe the wrong code is better because something else is broken.
 
-Imagine you want to sell a book but don't know what price would yield the most profit.
-You can sell it more expensive and expect less sales while having more profit on each book or the other way around.
-Now your data boss comes up with this neat idea.
-Let's sell the book with two different prices in two markets and see how much profit do we make.
-Now imagine maybe one market was Inevitably going to like the book less. You can imagine a million reasons that this might happen. You know how suddenly something can go viral.
-This definitely affects the data.
-Once you see this you try to explain your decision with the data.
-Oh, maybe it's expensive and people didn't buy it.
-Unless something is terribly wrong(10x books sold in one area) you don't suspect the result.
-Also, how are you going to decide on how long should we continue it? When do you know you are done? It's all approximations.
+My experience is limited, but you can check more [examples](https://www.goodreads.com/book/show/13530973-antifragile) on why you might misunderstand a phenomenon and come up with wrong answers and [how data can fool you](https://www.youtube.com/watch?v=QBe8lJdpvDU)
 
-While this was a hypothetical examples there are more [resources](https://www.goodreads.com/book/show/13530973-antifragile) on why you might misunderstand a phenomenon and come up with wrong answers and [how data can fool you](https://www.youtube.com/watch?v=QBe8lJdpvDU)
+Remember learning multiplication tables?
+Your teacher didn't say "just keep guessing numbers until your test scores improve."
+That would be absurd. Yet somehow, that's exactly what we're doing with our code: throw something at the wall, check if the metrics went up, ship it if they did.
 
-What is better than approximation? Logic.
-Don't you remember how did you learn the multiplication table in school?
-You didn't randomly say numbers and find which numbers are getting you a better grade. That's what LLMs do and that's why their numerical calculations suck.
-You did trial and error for some time and then started to have some understanding and made decisions afterwards.
+Maybe imposing constraints would get us out of this situation. You don't have all the time to try everything, just think what would be useful.
 
-One thing I should be very careful with is to not fool myself with data. Having data about something is good. But why not combine it with some logic?
-Correctness of a code is determinable by running it and checking the result.
-But if you say we write the code and let the data decide if it was better or not, you end up in a mess.
-Everything might be wrong, it might have performed better in the charts.
-But it's wrong, at that point either you are wrong, or you messed something up, and you are in the mercy of the world that boosted your results with something you don't know about.
+Here's the thing about understanding versus just observing: if you see something work and think you know why, you should be able to do it again.
+That's the difference between actual understanding and just having a good story about what happened.
+Let me put it this way: if you run an A/B test and conclude "Oh, users love blue buttons!" then you should be able to predict when blue buttons will work again.
 
-It's easy to see something happening and thinking you exactly know why.
-But if the same thing stopped happening you couldn't make it happen.
-If you exactly knew why you could have made it happen again.
-When you can't, it means that you didn't really in the first time.
-If you ever did an A/B test and found out why something is better try to use that idea again. It should be consistent, if it's not then something's wrong.
+So, data is good, but why not combine it with some thinking?
