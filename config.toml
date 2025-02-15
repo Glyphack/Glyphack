@@ -6,9 +6,6 @@ theme = "typo"
 # copyright = "&copy; 2019 Yurizal Susanto"
 pluralizeListTitles = false
 
-# Minimum number of posts before paginate navigation show up
-paginate = 20
-
 defaultContentLanguage = "en"
 
 # Code Highlighting (Chroma)
@@ -60,7 +57,7 @@ customCSS = []
 theme = 'light'
 
 homeIntroTitle = ""
-homeIntroContent = "Hey, I'm Shaygan! I love to code & build stuff. I'm interested in dev tools, and compilers. You can checkout my Github for more details. Reach out if you wanna talk open source, coding, or chess."
+homeIntroContent = "I'm Shaygan. Ik ben makelaar in code. I'm interested in compilers. You can checkout my Github for more details."
 
 homeCollectionTitle = 'Blog'
 homeCollection = 'blog'
