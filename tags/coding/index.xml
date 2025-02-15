@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Coding on Glyphack</title><link>https://glyphack.com/tags/coding/</link><description>Recent content in Coding on Glyphack</description><generator>Hugo</generator><language>en</language><lastBuildDate>Mon, 20 Mar 2023 18:17:24 +0100</lastBuildDate><atom:link href="https://glyphack.com/tags/coding/index.xml" rel="self" type="application/rss+xml"/><item><title>Building a Web Crawler in Golang</title><link>https://glyphack.com/blog/build-a-crawler-in-golang/</link><pubDate>Mon, 20 Mar 2023 18:17:24 +0100</pubDate><guid>https://glyphack.com/blog/build-a-crawler-in-golang/</guid><description>&lt;ul>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Coding on Glyphack</title><link>https://glyphack.com/tags/coding/</link><description>Recent content in Coding on Glyphack</description><generator>Hugo</generator><language>en</language><lastBuildDate>Sat, 15 Feb 2025 18:02:46 +0100</lastBuildDate><atom:link href="https://glyphack.com/tags/coding/index.xml" rel="self" type="application/rss+xml"/><item><title>Devlog 3: Coding a redis clone in C and things I learned</title><link>https://glyphack.com/blog/devlog-3/</link><pubDate>Sat, 15 Feb 2025 18:02:46 +0100</pubDate><guid>https://glyphack.com/blog/devlog-3/</guid><description>&lt;p>About two months ago I started the build your own Redis challenge from &lt;a href="codecrafters.io">codecrafters.io&lt;/a>.
+I decided to do this in C. Initially I was just curious to do it in C. Doing it in C thought me a lot of stuff that otherwise I would have not learned. Another bonus point was that I could tweak the performance to be on par with Redis server.&lt;/p>
+&lt;p>C always seemed like an impossible language to me. Working so much in garbage collected languages with rich standard libraries made me think C is hard.
+Now I think C is not hard. Whatever you write gets executed the way you wrote it. Little abstractions make it a great language to implement what you want and have control over your program.
+Topics like Async programming, managing memory are broad topics. I agree that it&amp;rsquo;s hard to achieve the same level of concurrency that you have in Python in C. But writing a small version that works for a specific use case is not impossible.
+It&amp;rsquo;s possible to implement hash map, Async, memory arena(for easier memory management), and your own string type with a few lines of C code, thanks to blogs like &lt;a href="https://nullprogram.com">null program&lt;/a>&lt;/p></description></item><item><title>Building a Web Crawler in Golang</title><link>https://glyphack.com/blog/build-a-crawler-in-golang/</link><pubDate>Mon, 20 Mar 2023 18:17:24 +0100</pubDate><guid>https://glyphack.com/blog/build-a-crawler-in-golang/</guid><description>&lt;ul>
 &lt;li>&lt;a href="#introduction">Introduction&lt;/a>&lt;/li>
 &lt;li>&lt;a href="#but-why-building-another-crawler">But Why Building Another Crawler?&lt;/a>&lt;/li>
 &lt;li>&lt;a href="#high-level-design">High Level Design&lt;/a>
@@ -29,12 +34,12 @@
 &lt;/li>
 &lt;li>&lt;a href="#conclusion">Conclusion&lt;/a>&lt;/li>
 &lt;/ul>
-&lt;h2 id="introduction">Introduction&lt;/h2>
+&lt;h2 class="heading" id="introduction">
+ Introduction
+ &lt;a class="anchor" href="#introduction">#&lt;/a>
+&lt;/h2>
 &lt;p>Web crawler is a program that explores the Internet,
-by going to different websites and following any link it finds.&lt;/p>
-&lt;p>Crawlers are interesting because they provide a way to gather data
-from the internet.
-This is especially useful for data mining purposes.&lt;/p></description></item><item><title>Rate Limiter From Scratch in Python Part 2</title><link>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-2/</link><pubDate>Tue, 21 Feb 2023 21:34:49 +0100</pubDate><guid>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-2/</guid><description>&lt;ul>
+by going to different websites and following any link it finds.&lt;/p></description></item><item><title>Rate Limiter From Scratch in Python Part 2</title><link>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-2/</link><pubDate>Tue, 21 Feb 2023 21:34:49 +0100</pubDate><guid>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-2/</guid><description>&lt;ul>
 &lt;li>&lt;a href="#introduction">Introduction&lt;/a>&lt;/li>
 &lt;li>&lt;a href="#new-rate-limiting-algorithms">New Rate Limiting Algorithms&lt;/a>
 &lt;ul>
@@ -57,7 +62,10 @@ This is especially useful for data mining purposes.&lt;/p></description></item><
 &lt;/li>
 &lt;li>&lt;a href="#conclusion">Conclusion&lt;/a>&lt;/li>
 &lt;/ul>
-&lt;h2 id="introduction">Introduction&lt;/h2>
+&lt;h2 class="heading" id="introduction">
+ Introduction
+ &lt;a class="anchor" href="#introduction">#&lt;/a>
+&lt;/h2>
 &lt;p>In the last &lt;a href="./rate-limiter-from-scratch-in-python-1">post&lt;/a>
 I started writing a rate limiter.
 The project right now supports only 1 rate limiting algorithm(Token Bucket).&lt;/p>
@@ -69,7 +77,10 @@ The project right now supports only 1 rate limiting algorithm(Token Bucket).&lt;
 &lt;/ul>
 &lt;p>We&amp;rsquo;ll see how each algorithm compares to another, and the trade offs.
 Also after implementing each one we&amp;rsquo;ll see how to abstractions we created
-previously helped minimizing the implementation for new algorithms.&lt;/p></description></item><item><title>Rate Limiter From Scratch in Python Part 1</title><link>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-1/</link><pubDate>Tue, 14 Feb 2023 23:19:18 +0100</pubDate><guid>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-1/</guid><description>&lt;h2 id="introduction">Introduction&lt;/h2>
+previously helped minimizing the implementation for new algorithms.&lt;/p></description></item><item><title>Rate Limiter From Scratch in Python Part 1</title><link>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-1/</link><pubDate>Tue, 14 Feb 2023 23:19:18 +0100</pubDate><guid>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-1/</guid><description>&lt;h2 class="heading" id="introduction">
+ Introduction
+ &lt;a class="anchor" href="#introduction">#&lt;/a>
+&lt;/h2>
 &lt;p>After reading &lt;a href="https://bytebytego.com/">ByteByteGo course&lt;/a>
 motivated me to write a rate limiter.
 So I decided to do it in &lt;a href="https://aosabook.org/en/500L/introduction.html">500lines&lt;/a>
@@ -77,7 +88,10 @@ theme.&lt;/p>
 &lt;p>We will focus on how to create the interfaces and components,
 to allow extensibility in the predicted ways.&lt;/p>
 &lt;p>You can find the complete source code &lt;a href="https://github.com/Glyphack/hera-limit">here&lt;/a>.&lt;/p>
-&lt;h2 id="what-is-a-rate-limiter">What is a Rate Limiter?&lt;/h2>
+&lt;h2 class="heading" id="what-is-a-rate-limiter">
+ What is a Rate Limiter?
+ &lt;a class="anchor" href="#what-is-a-rate-limiter">#&lt;/a>
+&lt;/h2>
 &lt;p>Well, there are a lot of
 &lt;a href="https://www.cloudflare.com/en-gb/learning/bots/what-is-rate-limiting/">great explanations&lt;/a>
 on what is a rate limiter, but I&amp;rsquo;ll give a minimal introduction to it for this post.&lt;/p></description></item></channel></rss>

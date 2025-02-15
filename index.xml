@@ -1,4 +1,74 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Home on Glyphack</title><link>https://glyphack.com/</link><description>Recent content in Home on Glyphack</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 29 Jan 2025 22:32:33 +0100</lastBuildDate><atom:link href="https://glyphack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Can Data Fool You?</title><link>https://glyphack.com/blog/fooled-by-data/</link><pubDate>Wed, 29 Jan 2025 22:32:33 +0100</pubDate><guid>https://glyphack.com/blog/fooled-by-data/</guid><description>&lt;p>Recently, A personal experience showed me how something widely accepted might be wrong.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Home on Glyphack</title><link>https://glyphack.com/</link><description>Recent content in Home on Glyphack</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 15 Feb 2025 18:02:46 +0100</lastBuildDate><atom:link href="https://glyphack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Devlog 3: Coding a redis clone in C and things I learned</title><link>https://glyphack.com/blog/devlog-3/</link><pubDate>Sat, 15 Feb 2025 18:02:46 +0100</pubDate><guid>https://glyphack.com/blog/devlog-3/</guid><description>&lt;p>About two months ago I started the build your own Redis challenge from &lt;a href="codecrafters.io">codecrafters.io&lt;/a>.
+I decided to do this in C. Initially I was just curious to do it in C. Doing it in C thought me a lot of stuff that otherwise I would have not learned. Another bonus point was that I could tweak the performance to be on par with Redis server.&lt;/p>
+&lt;p>C always seemed like an impossible language to me. Working so much in garbage collected languages with rich standard libraries made me think C is hard.
+Now I think C is not hard. Whatever you write gets executed the way you wrote it. Little abstractions make it a great language to implement what you want and have control over your program.
+Topics like Async programming, managing memory are broad topics. I agree that it&amp;rsquo;s hard to achieve the same level of concurrency that you have in Python in C. But writing a small version that works for a specific use case is not impossible.
+It&amp;rsquo;s possible to implement hash map, Async, memory arena(for easier memory management), and your own string type with a few lines of C code, thanks to blogs like &lt;a href="https://nullprogram.com">null program&lt;/a>&lt;/p>
+&lt;p>I think I&amp;rsquo;ll use the below techniques I learned for any C program I create. I wish it was easier to package them so I can reuse it in different projects.&lt;/p>
+&lt;p>The source code is at &lt;a href="https://github.com/Glyphack/redis-clone">glyphack/redis-clone&lt;/a>.&lt;/p>
+&lt;p>The below are things I learned about C programming.&lt;/p>
+&lt;h2 class="heading" id="awesome-compiler-flags">
+Awesome Compiler Flags
+&lt;a class="anchor" href="#awesome-compiler-flags">#&lt;/a>
+&lt;/h2>
+&lt;p>I don&amp;rsquo;t know why nobody told me this. C can have stacktraces. It can detect race conditions. It can detect use after free. It can do a lot of stuff by just adding more compiler flags.&lt;/p>
+&lt;p>You can compile your program with flags:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>-fsanitize=undefined&lt;/code> to crash on undefined behavior scenarios&lt;/li>
+&lt;li>&lt;code>-fsanitize=thread&lt;/code> to crash when threads have race condition(this is actually what powers Golang race detector)&lt;/li>
+&lt;/ul>
+&lt;p>And if there is a race condition in your program you will see something like:&lt;/p>
+&lt;pre tabindex="0">&lt;code>==================
+WARNING: ThreadSanitizer: data race (pid=12345)
+Read of size 4 at 0x000000601040 by thread T2:
+#0 thread_func (source.c:7) in main
+#1 start_thread (pthread_create.c:XXX)
+Previous write of size 4 at 0x000000601040 by thread T1:
+#0 thread_func (source.c:7) in main
+#1 start_thread (pthread_create.c:XXX)
+Location is global &amp;#39;shared_var&amp;#39; defined in source.c:5
+==================
+&lt;/code>&lt;/pre>&lt;p>I built my program in debug mode with these flags and ran a tester that would insert and get values from the server. It detected a lot of bugs for me while pointing out the exact line the problem happened.&lt;/p>
+&lt;h2 class="heading" id="memory-arena">
+Memory Arena
+&lt;a class="anchor" href="#memory-arena">#&lt;/a>
+&lt;/h2>
+&lt;p>I used a &lt;a href="https://nullprogram.com/blog/2023/09/27/">memory arena&lt;/a> to minimize the number of &lt;code>malloc&lt;/code> and &lt;code>free&lt;/code> calls in the code.
+It makes code faster but in the end I realized how much simplified the code gets.
+It&amp;rsquo;s basically like having a garbage collector and you know when it happens.&lt;/p>
+&lt;h2 class="heading" id="custom-string-type">
+Custom String Type
+&lt;a class="anchor" href="#custom-string-type">#&lt;/a>
+&lt;/h2>
+&lt;p>One of the problems I faced soon after working with C was that, sometimes I wanted to keep a reference to middle of a giant string. Imagine you get a request and extract a field name from it. Now you have two options, either &lt;code>memcpy&lt;/code> that substring into a new string and add a &lt;code>\0&lt;/code> or make a pointer to the starting offset of the substring.
+When you keep the offset you cannot use it in most of other places because you don&amp;rsquo;t know the end of this string, and C strings end with &lt;code>\0&lt;/code>.
+I followed the advice in &lt;a href="https://nullprogram.com/blog/2023/10/08/">this post&lt;/a> and it made code a lot smaller(no extra string creation and &lt;code>malloc&lt;/code> calls) and simpler because working with a string when you know the length is just easier. Plus if you are worried you would lose the benefits of C string functions don&amp;rsquo;t worry there is not much functionality there. You can implement it yourself.&lt;/p>
+&lt;h2 class="heading" id="hash-map">
+Hash Map
+&lt;a class="anchor" href="#hash-map">#&lt;/a>
+&lt;/h2>
+&lt;p>I followed &lt;a href="https://nullprogram.com/blog/2023/09/30/">this post&lt;/a> to implement a hash map. Initially my program was using a thread per connection so I tried to extend the lock free version to work with my program.
+In the end I implemented Asynchronous code to handle multiple connections, removed the threads, and just used the hash map that is explain in the post.&lt;/p>
+&lt;h2 class="heading" id="redis-replication">
+Redis Replication
+&lt;a class="anchor" href="#redis-replication">#&lt;/a>
+&lt;/h2>
+&lt;p>The Redis replication is initially simple to implement I did not implement the full protocol.
+The basic functionality is to handshake with the master node and master node has to keep a list of replicas to forward write messages to.
+The way multiple nodes stay in sync is by using replication offset that master checks for periodically. I did not implement any recovery case for when a replica is out of sync.&lt;/p>
+&lt;h2 class="heading" id="asynchronous-programming">
+Asynchronous Programming
+&lt;a class="anchor" href="#asynchronous-programming">#&lt;/a>
+&lt;/h2>
+&lt;p>This is my favorite topic. I finally got a clue what actually happens in higher level languages. Before actually doing this I read and heard some words but it all felt like buzzwords to me.
+What does it mean each coroutine has a stack? Why can&amp;rsquo;t you run a blocking task inside an asynchronous function? I learned all after I implemented this.&lt;/p>
+&lt;p>The interesting part is, implementing basic asynchronous I/O is not hard, making it general and cross platform is. This is what other programming languages did.&lt;/p>
+&lt;p>To serve multiple clients concurrently we need a way to read from all of them without ever waiting for one client and &lt;strong>blocking&lt;/strong> others.
+So what we really need is, a way to tell which clients are ready to read, which are ready to write and instead of waiting for the ones that are not ready just skip and serve other clients.
+I recommend following &lt;a href="https://build-your-own.org/redis/05_event_loop_intro">this guide&lt;/a>. I ended up switching to &lt;code>kqueue&lt;/code> from &lt;code>poll&lt;/code> to achieve better performance on MacOS.&lt;/p>
+&lt;hr>
+&lt;p>I think this database can be a good base program to expand to any kind of future databases I want to write.
+I can reuse the existing protocol to exchange messages and add my custom logic or &lt;a href="https://eli.thegreenplace.net/2020/implementing-raft-part-0-introduction/">implement Raft&lt;/a>.&lt;/p></description></item><item><title>Can Data Fool You?</title><link>https://glyphack.com/blog/fooled-by-data/</link><pubDate>Wed, 29 Jan 2025 22:32:33 +0100</pubDate><guid>https://glyphack.com/blog/fooled-by-data/</guid><description>&lt;p>Recently, A personal experience showed me how something widely accepted might be wrong.
 I didn&amp;rsquo;t want to lose this opportunity to write about it.&lt;/p>
 &lt;p>If you haven&amp;rsquo;t been living under a cave, you know data-driven decision making is a must these days.
 So, if you cannot make a decision just run both under some experiment and decide based on the result.
@@ -785,20 +855,32 @@ But I also saw it in product companies, and I&amp;rsquo;m shocked. I don&amp;rsq
 Use it and rewrite your software to be better.&lt;/p></description></item><item><title>What I'm Doing Now</title><link>https://glyphack.com/now/</link><pubDate>Mon, 04 Mar 2024 15:40:55 +0100</pubDate><guid>https://glyphack.com/now/</guid><description>&lt;p>This is my now page, which lists what I&amp;rsquo;m thinking and working on right now.
 If you are not familiar with &lt;a href="https://nownownow.com/about">now pages&lt;/a>, consider creating one.&lt;/p>
 &lt;p>Updated Jan 5th, 2025 from Amsterdam.&lt;/p>
-&lt;h2 id="contributing-to-red-knot-python-type-checker">Contributing to Red Knot Python Type Checker&lt;/h2>
+&lt;h2 class="heading" id="contributing-to-red-knot-python-type-checker">
+Contributing to Red Knot Python Type Checker
+&lt;a class="anchor" href="#contributing-to-red-knot-python-type-checker">#&lt;/a>
+&lt;/h2>
 &lt;p>Initially I wanted to build my own type checker.
 After some time I found out about red knot that is another work in progress python type checker.
 Since developing a type checker for python is a lot of work I decided to dedicate my effort to contribute to this project.&lt;/p>
-&lt;h2 id="got-a-3d-printer">Got a 3D Printer&lt;/h2>
+&lt;h2 class="heading" id="got-a-3d-printer">
+Got a 3D Printer
+&lt;a class="anchor" href="#got-a-3d-printer">#&lt;/a>
+&lt;/h2>
 &lt;p>I bought a 3D printer. I printed prepared models and it&amp;rsquo;s pretty cool.
 Now I&amp;rsquo;m trying to learn how to design my own models.&lt;/p>
-&lt;h2 id="gardening">Gardening&lt;/h2>
+&lt;h2 class="heading" id="gardening">
+Gardening
+&lt;a class="anchor" href="#gardening">#&lt;/a>
+&lt;/h2>
 &lt;p>Winter has come and plants are preserving their energy. I&amp;rsquo;m waiting for Sprint to plant new stuff.&lt;/p>
 &lt;p>I&amp;rsquo;m practicing growing plants in my apartment both for decoration and consumption.
 This is another step to be a little bit more independent.&lt;/p>
 &lt;p>I have 20+ pots, and I&amp;rsquo;m harvesting herbs. It feels good to make food with my own herbs.
 I got a gardening pot and going to fill that with soil on the balcony and grew larger plants.&lt;/p>
-&lt;h2 id="looking-for-something-new">Looking for Something New&lt;/h2>
+&lt;h2 class="heading" id="looking-for-something-new">
+Looking for Something New
+&lt;a class="anchor" href="#looking-for-something-new">#&lt;/a>
+&lt;/h2>
 &lt;p>I&amp;rsquo;m looking for a problem to solve something that occupies my mind and give me energy every day I wake up.
 I&amp;rsquo;m solving codecrafters.io challenges right now. It might inspire me to do something different.&lt;/p></description></item><item><title>Devlog 0001: Contributing to Ruff, Profiling, Python Types Conformance Tests</title><link>https://glyphack.com/blog/devlog-0001-contributing-to-ruff/</link><pubDate>Sat, 03 Feb 2024 10:56:48 +0100</pubDate><guid>https://glyphack.com/blog/devlog-0001-contributing-to-ruff/</guid><description>&lt;p>Last week I wanted to start contributing to rust.
 I was working on Adding &lt;a href="https://github.com/astral-sh/ruff/pull/9513">uninitialized attribute access check&lt;/a> to Ruff.&lt;/p>
@@ -1022,9 +1104,10 @@ This makes pressing vim shortcuts like &lt;code>ctrl + A&lt;/code> easier.&lt;/p
 &lt;p>
 &lt;figure class="">
 &lt;div>
-&lt;img loading="lazy" alt="" src=" /split-keyboard-remapping.excalidraw.svg">
+&lt;img loading="lazy" alt="" src="https://glyphack.com/split-keyboard-remapping.excalidraw.svg" >
 &lt;/div>
-&lt;/figure>&lt;/p>
+&lt;/figure>
+&lt;/p>
 &lt;p>Take away is that make shortcuts easier to press.&lt;/p>
 &lt;p>&lt;strong>Better Hotkeys&lt;/strong>&lt;/p>
 &lt;p>There are some default hotkeys on every system like &lt;code>alt+tab&lt;/code>.
@@ -1210,7 +1293,10 @@ I haven&amp;rsquo;t started an issue for this one yet because it requires more e
 &lt;p>I think that when we start programming journey, it&amp;rsquo;s best to be exposed to these opportunities of reading the actual framework/tool documentation.
 Or just, in general, look more into the source/docs rather than reaching for tutorials.&lt;/p></description></item><item><title>Compilers Resources</title><link>https://glyphack.com/blog/compiler-resources/</link><pubDate>Fri, 15 Sep 2023 19:50:19 +0200</pubDate><guid>https://glyphack.com/blog/compiler-resources/</guid><description>&lt;p>This post is a compilation of great resources I found while building a type checker for Python.
 These resources are free and highly focused on specific topics, making them ideal for learning by doing rather than going through extensive materials.&lt;/p>
-&lt;h2 id="parser">Parser&lt;/h2>
+&lt;h2 class="heading" id="parser">
+Parser
+&lt;a class="anchor" href="#parser">#&lt;/a>
+&lt;/h2>
 &lt;p>There are different ways to approach parsing. You can either write one by hand or use a parser generator.
 For compilers or interpreters, you can use a parser generator.
 However, if you&amp;rsquo;re working on tools like formatters or language servers, your parser needs to handle broken code gracefully. This can be either done with a tool like treesitter that can handle broken code to some extent and also by writing your own. Of course writing your own is more fun.&lt;/p>
@@ -1220,23 +1306,35 @@ However, if you&amp;rsquo;re working on tools like formatters or language server
 &lt;li>Your language&amp;rsquo;s official documentation. For Python, there is &lt;a href="https://docs.python.org/3/library/ast.html">&lt;strong>Python AST module&lt;/strong>&lt;/a>.&lt;/li>
 &lt;li>Look into implementation of open source linters or compilers. &lt;a href="https://github.com/RustPython/Parser/blob/main/parser/src/lexer.rs">&lt;strong>RustPython Lexer&lt;/strong>&lt;/a> is a good one for python.&lt;/li>
 &lt;/ul>
-&lt;h2 id="compilers--interpreters">Compilers &amp;amp; Interpreters&lt;/h2>
+&lt;h2 class="heading" id="compilers--interpreters">
+Compilers &amp;amp; Interpreters
+&lt;a class="anchor" href="#compilers--interpreters">#&lt;/a>
+&lt;/h2>
 &lt;p>&lt;a href="https://craftinginterpreters.com/">&lt;strong>&amp;ldquo;Crafting Interpreters&amp;rdquo;&lt;/strong>&lt;/a> is an essential resource for compilers. I recommend reading it chapter by chapter as you build your project.&lt;/p>
 &lt;p>For a comprehensive understanding of relevant topics, consider following the &lt;a href="http://openclassroom.stanford.edu/MainFolder/CoursePage.php?course=Compilers">&lt;strong>Stanford Compilers Class&lt;/strong>&lt;/a>. Although I haven&amp;rsquo;t watched it personally, I found this &lt;a href="https://pgrandinetti.github.io/compilers/">&lt;strong>guide&lt;/strong>&lt;/a> based on the class quite helpful.&lt;/p>
 &lt;p>You can find examples of implemented programming languages and use them as a reference
 &lt;a href="https://plzoo.andrej.com/language/poly.html">&lt;strong>Programming Languages Zoo&lt;/strong>&lt;/a> is one resource for this.&lt;/p>
-&lt;h3 id="symbol-table">Symbol Table&lt;/h3>
+&lt;h3 class="heading" id="symbol-table">
+Symbol Table
+&lt;a class="anchor" href="#symbol-table">#&lt;/a>
+&lt;/h3>
 &lt;p>For symbol table you need to check the language implementation and know the scoping rules, private/public, and different kinds of symbols. There&amp;rsquo;s no all in one solution.&lt;/p>
 &lt;p>This &lt;a href="https://eli.thegreenplace.net/2010/09/18/python-internals-symbol-tables-part-1/">&lt;strong>series on the Python symbol table implementation&lt;/strong>&lt;/a>
 from Eli Bendersky is useful for learning how does a symbol table works.&lt;/p>
 &lt;p>RustPython&amp;rsquo;s &lt;a href="https://rustpython.github.io/website/rustpython_compiler/symboltable/struct.SymbolTable.html">&lt;strong>SymbolTable&lt;/strong>&lt;/a> implementation.&lt;/p>
-&lt;h2 id="semantic-analyzer">Semantic Analyzer&lt;/h2>
+&lt;h2 class="heading" id="semantic-analyzer">
+Semantic Analyzer
+&lt;a class="anchor" href="#semantic-analyzer">#&lt;/a>
+&lt;/h2>
 &lt;p>While resources specific to the semantic analysis phase are scarce, you can find inspiration and solutions in existing projects:&lt;/p>
 &lt;ul>
 &lt;li>MyPy &lt;a href="https://github.com/python/mypy/wiki/Semantic-Analyzer">&lt;strong>wiki&lt;/strong>&lt;/a>.&lt;/li>
 &lt;li>Pyright&amp;rsquo;s &lt;a href="https://github.com/microsoft/pyright/blob/eb98cdda4ecfb4d2ce2fb1d4b9ce7848ab439c32/packages/pyright-internal/src/analyzer/binder.ts">&lt;strong>binder.ts&lt;/strong>&lt;/a> is an example of you would do it.&lt;/li>
 &lt;/ul>
-&lt;h2 id="type-checking">Type Checking&lt;/h2>
+&lt;h2 class="heading" id="type-checking">
+Type Checking
+&lt;a class="anchor" href="#type-checking">#&lt;/a>
+&lt;/h2>
 &lt;p>For type checking you are mostly interested in the type rules in that language.
 Therefore it&amp;rsquo;s good to check other type checker implementations.
 They will teach you the rules and how to do it.&lt;/p>
@@ -1246,11 +1344,17 @@ They will teach you the rules and how to do it.&lt;/p>
 &lt;li>internal details of &lt;a href="https://github.com/quora/pyanalyze/blob/master/docs/design.md">&lt;strong>Jedi language server&lt;/strong>&lt;/a>.&lt;/li>
 &lt;li>Pyright &lt;a href="https://github.com/microsoft/pyright/blob/main/docs/internals.md">&lt;strong>internals&lt;/strong>&lt;/a>&lt;/li>
 &lt;/ul>
-&lt;h2 id="lsp-language-server-protocol">LSP (Language Server Protocol)&lt;/h2>
+&lt;h2 class="heading" id="lsp-language-server-protocol">
+LSP (Language Server Protocol)
+&lt;a class="anchor" href="#lsp-language-server-protocol">#&lt;/a>
+&lt;/h2>
 &lt;p>For a comprehensive understanding of language servers, file systems, updates, and testing, check out this &lt;a href="https://www.youtube.com/playlist?list=PLhb66M_x9UmrqXhQuIpWC5VgTdrGxMx3y">&lt;strong>Explaining Rust AnalyzerYouTube playlist&lt;/strong>&lt;/a> from &lt;a href="https://matklad.github.io/">Matkald&lt;/a>.&lt;/p>
 &lt;p>&lt;a href="https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/">&lt;strong>LSP specifications&lt;/strong>&lt;/a> are very easy to read. It&amp;rsquo;s long but you don&amp;rsquo;t need everything in the beginning.
 To skip the part of defning every structure yourself you can use &lt;a href="https://github.com/ebkalderon/tower-lsp">&lt;strong>Tower LSP&lt;/strong>&lt;/a>.&lt;/p>
-&lt;h2 id="linters">Linters&lt;/h2>
+&lt;h2 class="heading" id="linters">
+Linters
+&lt;a class="anchor" href="#linters">#&lt;/a>
+&lt;/h2>
 &lt;p>Same as with type checking, for linters it&amp;rsquo;s best to look into implementations and learn from them.
 Specially linters have a lot in common with compilers and interpreters because they just emit a human readable error instead of machine code.&lt;/p>
 &lt;p>The following tools are useful to understand how analysis is done and errors are reported:&lt;/p>
@@ -1258,7 +1362,10 @@ Specially linters have a lot in common with compilers and interpreters because t
 &lt;li>&lt;a href="https://github.com/web-infra-dev/oxc">&lt;strong>oxc&lt;/strong>&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://github.com/astral-sh/ruff">Ruff&lt;/a>&lt;/li>
 &lt;/ul>
-&lt;h2 id="final-words">Final Words&lt;/h2>
+&lt;h2 class="heading" id="final-words">
+Final Words
+&lt;a class="anchor" href="#final-words">#&lt;/a>
+&lt;/h2>
 &lt;p>Compilers are super fun. If you have more resources please send them to me.&lt;/p></description></item><item><title>Trying Out Learning In Public</title><link>https://glyphack.com/blog/my-learn-in-public-workflow/</link><pubDate>Thu, 18 May 2023 14:07:58 +0200</pubDate><guid>https://glyphack.com/blog/my-learn-in-public-workflow/</guid><description>&lt;p>A while back I read about &lt;a href="https://www.swyx.io/learn-in-public">learning in public&lt;/a>
 from swyx:&lt;/p>
 &lt;blockquote>
@@ -1353,7 +1460,10 @@ and having fun along the way.&lt;/p></description></item><item><title>Building a
 &lt;/li>
 &lt;li>&lt;a href="#conclusion">Conclusion&lt;/a>&lt;/li>
 &lt;/ul>
-&lt;h2 id="introduction">Introduction&lt;/h2>
+&lt;h2 class="heading" id="introduction">
+Introduction
+&lt;a class="anchor" href="#introduction">#&lt;/a>
+&lt;/h2>
 &lt;p>Web crawler is a program that explores the Internet,
 by going to different websites and following any link it finds.&lt;/p>
 &lt;p>Crawlers are interesting because they provide a way to gather data
@@ -1362,14 +1472,20 @@ This is especially useful for data mining purposes.&lt;/p>
 &lt;p>You can find the full implementation in the &lt;a href="https://github.com/Glyphack/crawler">GitHub repository&lt;/a>.&lt;/p>
 &lt;p>&lt;a href="https://cacm.acm.org/blogs/blog-cacm/153780-data-mining-the-web-via-crawling/fulltext">This post&lt;/a>
 provides a good introduction to building a crawler.&lt;/p>
-&lt;h2 id="but-why-building-another-crawler">But Why Building Another Crawler?&lt;/h2>
+&lt;h2 class="heading" id="but-why-building-another-crawler">
+But Why Building Another Crawler?
+&lt;a class="anchor" href="#but-why-building-another-crawler">#&lt;/a>
+&lt;/h2>
 &lt;p>I wrote down my reasons in the &lt;a href="https://glyphack.com/rate-limiter-from-scratch-in-python-2">previous post&lt;/a>
 on why I&amp;rsquo;m building this stuff from sctrach.
 The short answer is that it seems simple until you try it.&lt;/p>
 &lt;p>After reading through this project and implementing yourself,
 you will have a good understanding of how to write concurrent
 applications in Go.&lt;/p>
-&lt;h2 id="high-level-design">High Level Design&lt;/h2>
+&lt;h2 class="heading" id="high-level-design">
+High Level Design
+&lt;a class="anchor" href="#high-level-design">#&lt;/a>
+&lt;/h2>
 &lt;p>Let&amp;rsquo;s look into what components a cralwer is made of, this helps
 to structure our code.&lt;/p>
 &lt;p>The following diagram shows the execution flow of our program and
@@ -1377,14 +1493,21 @@ responsibilities of components:&lt;/p>
 &lt;p>
 &lt;figure class="">
 &lt;div>
-&lt;img loading="lazy" alt="crawler-diagram" src=" /crawler-diagram.excalidraw.svg">
+&lt;img loading="lazy" alt="crawler-diagram" src="https://glyphack.com/crawler-diagram.excalidraw.svg" >
 &lt;/div>
-&lt;/figure>&lt;/p>
+&lt;/figure>
+&lt;/p>
 &lt;p>Let&amp;rsquo;s break it down:&lt;/p>
-&lt;h3 id="url-frontier">URL Frontier&lt;/h3>
+&lt;h3 class="heading" id="url-frontier">
+URL Frontier
+&lt;a class="anchor" href="#url-frontier">#&lt;/a>
+&lt;/h3>
 &lt;p>URL Frontier is a collection of URLs that are going to be crawled.
 It supports adding &amp;amp; consuming new URLs as we discover links in fetched pages.&lt;/p>
-&lt;h3 id="selector">Selector&lt;/h3>
+&lt;h3 class="heading" id="selector">
+Selector
+&lt;a class="anchor" href="#selector">#&lt;/a>
+&lt;/h3>
 &lt;p>To consume the URLs from frontier we can get them one by one.
 But this can cause problem if we want to distribute the URLs between multiple workers.&lt;/p>
 &lt;p>The technique used here is called fan-out.&lt;/p>
@@ -1393,17 +1516,26 @@ the next URL to crawl then those special URLs can&amp;rsquo;t be crawled first.
 Another usefulness of this component is distributing URLs from one host to one worker.
 So each worker can make sure to not send too many requests to a single Host.
 The best practice is to wait 2 seconds between requests for the same Host.&lt;/p>
-&lt;h3 id="workers">Workers&lt;/h3>
+&lt;h3 class="heading" id="workers">
+Workers
+&lt;a class="anchor" href="#workers">#&lt;/a>
+&lt;/h3>
 &lt;p>Each worker consumes from queues that selector fills and fetches the URL.&lt;/p>
 &lt;p>The worker must handle failures and retry when it fails to fetch a URL.
 Each worker also keeps track of URLs fetched to be polite.&lt;/p>
-&lt;h3 id="fetcher">Fetcher&lt;/h3>
+&lt;h3 class="heading" id="fetcher">
+Fetcher
+&lt;a class="anchor" href="#fetcher">#&lt;/a>
+&lt;/h3>
 &lt;p>This components is the reverse of selector component, it gathers
 results from different workers to a single collection.&lt;/p>
 &lt;p>This operation is called fan-in which is useful here because we
 can simplify the processor operations because it only needs to
 consume from a single result channel.&lt;/p>
-&lt;h3 id="content-processor">Content Processor&lt;/h3>
+&lt;h3 class="heading" id="content-processor">
+Content Processor
+&lt;a class="anchor" href="#content-processor">#&lt;/a>
+&lt;/h3>
 &lt;p>After we get the result from each worker we ran different
 content processors on the result, this can be tasks like extracting
 new URLs or saving pages to the disk.&lt;/p>
@@ -1412,12 +1544,21 @@ logic on all results. We can register different processors,
 like a plugin system to expand this component.&lt;/p>
 &lt;p>Later we discuss how we can use strategy design pattern to
 implement this in code.&lt;/p>
-&lt;h3 id="link-extractor">Link Extractor&lt;/h3>
+&lt;h3 class="heading" id="link-extractor">
+Link Extractor
+&lt;a class="anchor" href="#link-extractor">#&lt;/a>
+&lt;/h3>
 &lt;p>The link extractor is a special processor we create
 that uses a parser to parse the page content and insert URLs
 back to frontier.&lt;/p>
-&lt;h2 id="implementation">Implementation&lt;/h2>
-&lt;h3 id="lets-talk-about-channels">Let&amp;rsquo;s talk about channels&lt;/h3>
+&lt;h2 class="heading" id="implementation">
+Implementation
+&lt;a class="anchor" href="#implementation">#&lt;/a>
+&lt;/h2>
+&lt;h3 class="heading" id="lets-talk-about-channels">
+Let&amp;rsquo;s talk about channels
+&lt;a class="anchor" href="#lets-talk-about-channels">#&lt;/a>
+&lt;/h3>
 &lt;p>channels are going to be used heavily in the implementation.
 I suggest you to make sure you understand &lt;a href="https://go.dev/tour/concurrency/1">fundamentals&lt;/a>
 of channels.
@@ -1549,7 +1690,10 @@ consumers don&amp;rsquo;t have to know which channel they need to consume from.&
 it without changing the parameters we pass to create the crawler.
 We keep a deadLetter channel for the failed URLs to have a retry mechanism.&lt;/p>
 &lt;p>The crawler takes in other components let&amp;rsquo;s break them down:&lt;/p>
-&lt;h3 id="storage">Storage&lt;/h3>
+&lt;h3 class="heading" id="storage">
+Storage
+&lt;a class="anchor" href="#storage">#&lt;/a>
+&lt;/h3>
 &lt;p>Storage is an interface that exposes method to save data.
 This helps with extending the processor without changing it&amp;rsquo;s code.&lt;/p>
 &lt;p>Whatever storage implementation we use we need to implement
@@ -1561,7 +1705,10 @@ the following methods:&lt;/p>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nf">Set&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">path&lt;/span> &lt;span class="kt">string&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">value&lt;/span> &lt;span class="kt">string&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="kt">error&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nf">Delete&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">path&lt;/span> &lt;span class="kt">string&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="kt">error&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="parser">Parser&lt;/h3>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 class="heading" id="parser">
+Parser
+&lt;a class="anchor" href="#parser">#&lt;/a>
+&lt;/h3>
 &lt;p>Instead of parsing the content in the crawler we can provide an implementation
 for the filetypes we want to parse.
 We can have a single parser that handles all the file types but
@@ -1585,7 +1732,10 @@ And parse the file into tokens.&lt;/p>
 &lt;p>The token is parsed information from the content.
 This is a nice way to extend the material we parse from the page later.
 Currently we only care about &lt;code>a&lt;/code> tags which are links.&lt;/p>
-&lt;h3 id="processor">Processor&lt;/h3>
+&lt;h3 class="heading" id="processor">
+Processor
+&lt;a class="anchor" href="#processor">#&lt;/a>
+&lt;/h3>
 &lt;p>Following the same idea with parsers, we can provide the crawler
 processes to apply on the web pages.&lt;/p>
 &lt;p>Some typical processes are:&lt;/p>
@@ -1600,7 +1750,10 @@ processes to apply on the web pages.&lt;/p>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The process function takes in the crawl result which we&amp;rsquo;ll define later.
 The function is only going to return an error.
 Since a lot of operations can be done in this function we are not returning any value.&lt;/p>
-&lt;h3 id="distribute-and-collect-result-from-workers">Distribute and Collect Result from Workers&lt;/h3>
+&lt;h3 class="heading" id="distribute-and-collect-result-from-workers">
+Distribute and Collect Result from Workers
+&lt;a class="anchor" href="#distribute-and-collect-result-from-workers">#&lt;/a>
+&lt;/h3>
 &lt;p>In the earlier section we discussed how can we parallelize the crawling
 task by distrubting the urls into multiple queues and assign workers to each
 queue.&lt;/p>
@@ -1671,7 +1824,10 @@ Then we loop over the workers and call this function on all the output channels.
 &lt;p>So this starts a goroutine per worker that listens to output channel.
 The result is put into the merged output channel.&lt;/p>
 &lt;p>Pretty simple yet powerful technique to parallelize a task.&lt;/p>
-&lt;h3 id="worker">Worker&lt;/h3>
+&lt;h3 class="heading" id="worker">
+Worker
+&lt;a class="anchor" href="#worker">#&lt;/a>
+&lt;/h3>
 &lt;p>To implement the worker we first need to define the struct and crawl result.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">type&lt;/span> &lt;span class="nx">CrawlResult&lt;/span> &lt;span class="kd">struct&lt;/span> &lt;span class="p">{&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">Url&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="nx">url&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">URL&lt;/span>
@@ -1772,7 +1928,10 @@ Since we have to sleep and it slows down.&lt;/p>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="kc">true&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="extracting-links">Extracting Links&lt;/h3>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 class="heading" id="extracting-links">
+Extracting Links
+&lt;a class="anchor" href="#extracting-links">#&lt;/a>
+&lt;/h3>
 &lt;p>To extract a link we implement the Processor interface we defined above.&lt;/p>
 &lt;p>This processor takes in parsers and crawl result then outputs links.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">type&lt;/span> &lt;span class="nx">LinkExtractor&lt;/span> &lt;span class="kd">struct&lt;/span> &lt;span class="p">{&lt;/span>
@@ -1834,7 +1993,10 @@ URL is identical to current page.&lt;/p>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">_&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nx">c&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">frontier&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Add&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">newUrl&lt;/span>&lt;span class="p">)&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}()&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="saving-content">Saving Content&lt;/h3>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 class="heading" id="saving-content">
+Saving Content
+&lt;a class="anchor" href="#saving-content">#&lt;/a>
+&lt;/h3>
 &lt;p>To save the content we use another processor.
 This processor uses the storage backend provided to the crawler to store pages.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">type&lt;/span> &lt;span class="nx">SaveToFile&lt;/span> &lt;span class="kd">struct&lt;/span> &lt;span class="p">{&lt;/span>
@@ -1863,7 +2025,10 @@ This processor uses the storage backend provided to the crawler to store pages.&
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>And again we add it easily to the crawler:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">c&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">AddProcessor&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="o">&amp;amp;&lt;/span>&lt;span class="nx">SaveToFile&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="nx">storageBackend&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nx">c&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">storage&lt;/span>&lt;span class="p">})&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="running-processors">Running Processors&lt;/h3>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 class="heading" id="running-processors">
+Running Processors
+&lt;a class="anchor" href="#running-processors">#&lt;/a>
+&lt;/h3>
 &lt;p>The final step in our start method is to run processors on results.&lt;/p>
 &lt;p>Since the list of processors can be extended and we must not block the
 goroutine, we execute each of them in a separate goroutine.&lt;/p>
@@ -1880,7 +2045,10 @@ Remember the send to channel blocks until the consumer is ready.&lt;/p>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}(&lt;/span>&lt;span class="nx">processor&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">result&lt;/span>&lt;span class="p">)&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="failed-urls">Failed URLs&lt;/h3>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 class="heading" id="failed-urls">
+Failed URLs
+&lt;a class="anchor" href="#failed-urls">#&lt;/a>
+&lt;/h3>
 &lt;p>This part is open ended and you can try it as an exercise.
 We only consume the failed ones and log them to the console.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="line">&lt;span class="cl"> &lt;span class="k">go&lt;/span> &lt;span class="kd">func&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">{&lt;/span>
@@ -1888,7 +2056,10 @@ We only consume the failed ones and log them to the console.&lt;/p>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">log&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Debugf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;Dismissed %s&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">deadUrl&lt;/span>&lt;span class="p">)&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}()&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="html-parser">HTML parser&lt;/h3>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 class="heading" id="html-parser">
+HTML parser
+&lt;a class="anchor" href="#html-parser">#&lt;/a>
+&lt;/h3>
 &lt;p>We need to implement at least 1 parser so our crawler can
 parse HTML pages.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">package&lt;/span> &lt;span class="nx">parser&lt;/span>
@@ -1948,7 +2119,10 @@ parse HTML pages.&lt;/p>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The parsing process is straight forward, we use a parser package and
 walk over the elements and extract the ones with &lt;code>a&lt;/code> tag and &lt;code>href&lt;/code> attribute.&lt;/p>
-&lt;h3 id="putting-it-all-together">Putting it All Together&lt;/h3>
+&lt;h3 class="heading" id="putting-it-all-together">
+Putting it All Together
+&lt;a class="anchor" href="#putting-it-all-together">#&lt;/a>
+&lt;/h3>
 &lt;p>We finally have everything needed to crawl some pages.&lt;/p>
 &lt;p>The parser we created is not a program, it&amp;rsquo;s a library.
 This can be imported and be started within another program.&lt;/p>
@@ -1978,7 +2152,10 @@ We&amp;rsquo;ll create a main function to test it out:&lt;/p>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">crawler&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nf">Start&lt;/span>&lt;span class="p">()&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="conclusion">Conclusion&lt;/h2>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 class="heading" id="conclusion">
+Conclusion
+&lt;a class="anchor" href="#conclusion">#&lt;/a>
+&lt;/h2>
 &lt;p>Going through building this crawler and facing many deadlocks taught me a lot
 about goalng.
 And writing about this was a good practice to question my design and
@@ -2008,7 +2185,10 @@ those mistakes as I did.&lt;/p></description></item><item><title>Rate Limiter Fr
 &lt;/li>
 &lt;li>&lt;a href="#conclusion">Conclusion&lt;/a>&lt;/li>
 &lt;/ul>
-&lt;h2 id="introduction">Introduction&lt;/h2>
+&lt;h2 class="heading" id="introduction">
+Introduction
+&lt;a class="anchor" href="#introduction">#&lt;/a>
+&lt;/h2>
 &lt;p>In the last &lt;a href="./rate-limiter-from-scratch-in-python-1">post&lt;/a>
 I started writing a rate limiter.
 The project right now supports only 1 rate limiting algorithm(Token Bucket).&lt;/p>
@@ -2022,7 +2202,10 @@ The project right now supports only 1 rate limiting algorithm(Token Bucket).&lt;
 Also after implementing each one we&amp;rsquo;ll see how to abstractions we created
 previously helped minimizing the implementation for new algorithms.&lt;/p>
 &lt;p>At the end of this post we&amp;rsquo;ll add Redis as storage backend to our application.&lt;/p>
-&lt;h2 id="new-rate-limiting-algorithms">New Rate Limiting Algorithms&lt;/h2>
+&lt;h2 class="heading" id="new-rate-limiting-algorithms">
+New Rate Limiting Algorithms
+&lt;a class="anchor" href="#new-rate-limiting-algorithms">#&lt;/a>
+&lt;/h2>
 &lt;p>Before implementing the algorithm we can start by adding them to our rate limiter
 service.&lt;/p>
 &lt;p>First we need to update the LimiterStrategy enum:&lt;/p>
@@ -2066,7 +2249,10 @@ through them one by one.&lt;/p>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">raise&lt;/span> &lt;span class="ne">ValueError&lt;/span>&lt;span class="p">(&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="sa">f&lt;/span>&lt;span class="s2">&amp;#34;Limit strategy &lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">config&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">limit_strategy&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2"> not supported&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="fixed-window">Fixed Window&lt;/h3>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 class="heading" id="fixed-window">
+Fixed Window
+&lt;a class="anchor" href="#fixed-window">#&lt;/a>
+&lt;/h3>
 &lt;p>In the fixed window algorithm, we split the time into unit-size buckets.
 Each bucket has a specified capacity and can limit the requests once it&amp;rsquo;s reached.&lt;/p>
 &lt;p>For example, if our unit is 1 minute, our buckets would be 10:00, 10:01, and 10:02.&lt;/p>
@@ -2148,7 +2334,10 @@ rather than get, increment and set the value approach.&lt;/p>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">+=&lt;/span> &lt;span class="mi">1&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span>&lt;span class="p">:&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">1&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="test">Test&lt;/h4>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 class="heading" id="test">
+Test
+&lt;a class="anchor" href="#test">#&lt;/a>
+&lt;/h4>
 &lt;p>Testing this new strategy is so easy,
 since all of our strategies have the same interface(input/output) we can
 use pytest to &lt;a href="https://docs.pytest.org/en/6.2.x/parametrize.html">parameterize&lt;/a>
@@ -2230,7 +2419,10 @@ the strategy that is being tested.&lt;/p>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">assert&lt;/span> &lt;span class="n">token_bucket&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">do_limit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">user_1_req&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="kc">False&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">assert&lt;/span> &lt;span class="n">token_bucket&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">do_limit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">user_2_req&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="kc">False&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">assert&lt;/span> &lt;span class="n">token_bucket&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">do_limit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">user_1_req&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="kc">True&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="sliding-window-log">Sliding Window Log&lt;/h3>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 class="heading" id="sliding-window-log">
+Sliding Window Log
+&lt;a class="anchor" href="#sliding-window-log">#&lt;/a>
+&lt;/h3>
 &lt;p>As discussed earlier, the sliding window log does not take the time window fixed.
 Imagine a request comes in at 10:00:30, instead of looking at request count in
 the window 10:00 to 10:01
@@ -2309,7 +2501,10 @@ Then we check if current windows max request count is reached or not.&lt;/p>
 we need to remove all the request that are not in the current window.&lt;/p>
 &lt;p>Then we count the requests within the time unit and check if
 it&amp;rsquo;s more than the allowed count for the interval.&lt;/p>
-&lt;h4 id="testing">Testing&lt;/h4>
+&lt;h4 class="heading" id="testing">
+Testing
+&lt;a class="anchor" href="#testing">#&lt;/a>
+&lt;/h4>
 &lt;p>Same as how we tested the previous strategy we
 can add this new strategy to test parameters:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="nd">@pytest.mark.parametrize&lt;/span>&lt;span class="p">(&lt;/span>
@@ -2360,7 +2555,10 @@ then move the time forward to be in the next minute, previous algorithms wouldn&
 block this.
 But since the window is not fixed in this limiter it will block the third request,
 even if it&amp;rsquo;s sent in the in the next minute. Nice improvement.&lt;/p>
-&lt;h3 id="sliding-window-count">Sliding Window Count&lt;/h3>
+&lt;h3 class="heading" id="sliding-window-count">
+Sliding Window Count
+&lt;a class="anchor" href="#sliding-window-count">#&lt;/a>
+&lt;/h3>
 &lt;p>The sliding window log solves the problem of allowing over-limit
 requests at unit edges.&lt;/p>
 &lt;p>But this algorithm uses more storage since it&amp;rsquo;s storing full timestmap.&lt;/p>
@@ -2439,7 +2637,10 @@ will give how much of the sliding window is in the past interval to calculate
 the weight.&lt;/p>
 &lt;p>Also since our calculation can result in a floating point number we can round it
 up or down. Rounding up is chosen in this case.&lt;/p>
-&lt;h4 id="tests">Tests&lt;/h4>
+&lt;h4 class="heading" id="tests">
+Tests
+&lt;a class="anchor" href="#tests">#&lt;/a>
+&lt;/h4>
 &lt;p>Since this is another implementation for the sliding window, we can add it as a parameter
 to all previous tests and the sliding window test.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="nd">@pytest.mark.parametrize&lt;/span>&lt;span class="p">(&lt;/span>
@@ -2457,7 +2658,10 @@ It&amp;rsquo;s always good to write less code cause less code is better.&lt;/p>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">tests&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">service&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">test_limiter&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">py&lt;/span> &lt;span class="o">....&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mi">100&lt;/span>&lt;span class="o">%&lt;/span>&lt;span class="p">]&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">===========================================================&lt;/span> &lt;span class="mi">18&lt;/span> &lt;span class="n">passed&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="mf">0.20&lt;/span>&lt;span class="n">s&lt;/span> &lt;span class="o">===========================================================&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="conclusion">Conclusion&lt;/h2>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 class="heading" id="conclusion">
+Conclusion
+&lt;a class="anchor" href="#conclusion">#&lt;/a>
+&lt;/h2>
 &lt;p>We now have implemented all different algorithms for our rate limiter.
 The true power of our abstractions are shown in the less code we have to
 write for each limiter, we can test them all with universal test cases,
@@ -2475,7 +2679,10 @@ While not everything may be applicable to you,
 you&amp;rsquo;re sure to find some good ideas to steal or improve upon.
 We&amp;rsquo;ll go through a list of regular tasks that developers face and
 show you how customized tools can make your work easier and more enjoyable.&lt;/p>
-&lt;h2 id="why">Why?&lt;/h2>
+&lt;h2 class="heading" id="why">
+Why?
+&lt;a class="anchor" href="#why">#&lt;/a>
+&lt;/h2>
 &lt;p>If you&amp;rsquo;re already sold to this idea go ahead and start,
 otherwise keep reading so I can convince you why you might want to start
 configuring your tools.&lt;/p>
@@ -2501,17 +2708,26 @@ it&amp;rsquo;s a lot if you have to altTab to your browser find the browser tab 
 write in the search box, what if you could get a floating window that give you
 what you need inside the text editor so you don&amp;rsquo;t loose the focus?
 or even worse opening the browser and end up scrolling reddit.&lt;/p>
-&lt;h2 id="how-to-start">How to Start&lt;/h2>
+&lt;h2 class="heading" id="how-to-start">
+How to Start
+&lt;a class="anchor" href="#how-to-start">#&lt;/a>
+&lt;/h2>
 &lt;p>Since this is all about your own workflow,
 I can&amp;rsquo;t give you instructions on what to configure.&lt;/p>
 &lt;p>But I give you ideas about what can be done,
 and next time you wish something was easier to do take a look and see
 which tool can help you with it.&lt;/p>
-&lt;h3 id="keyboard">Keyboard&lt;/h3>
+&lt;h3 class="heading" id="keyboard">
+Keyboard
+&lt;a class="anchor" href="#keyboard">#&lt;/a>
+&lt;/h3>
 &lt;p>Keyboard is the main input to do your work,
 there&amp;rsquo;s not much to customize about the mouse but keyboard has a lot of possibilities.&lt;/p>
 &lt;p>note that using the following tools without knowing touch typing is not possible.&lt;/p>
-&lt;h3 id="remapping">Remapping&lt;/h3>
+&lt;h3 class="heading" id="remapping">
+Remapping
+&lt;a class="anchor" href="#remapping">#&lt;/a>
+&lt;/h3>
 &lt;p>Try remapping the keys that you don&amp;rsquo;t use often to things that you miss on the
 keyboard, some examples are:&lt;/p>
 &lt;ul>
@@ -2522,7 +2738,10 @@ keyboard, some examples are:&lt;/p>
 &lt;p>&lt;a href="https://karabiner-elements.pqrs.org/">Karabiner&lt;/a> can be used for this purpose.&lt;/p>
 &lt;p>it supports more &lt;a href="https://ke-complex-modifications.pqrs.org/">complex modifications&lt;/a>
 which include things like adding a shortcut for sleep.&lt;/p>
-&lt;h3 id="expanding">Expanding&lt;/h3>
+&lt;h3 class="heading" id="expanding">
+Expanding
+&lt;a class="anchor" href="#expanding">#&lt;/a>
+&lt;/h3>
 &lt;p>Text expanding is writing a small text and then it expands to a bigger text.&lt;/p>
 &lt;p>For example instead of typing your work mail every time you,
 can only write &lt;code>,wm&lt;/code> and it expands to your work mail.&lt;/p>
@@ -2540,7 +2759,10 @@ to share something with others:&lt;/p>
 I deal with a lot of json outputs everyday and being able to format it without
 opening a website and paste the json in and format it to look at what it I can
 continue my work in my environment.&lt;/p>
-&lt;h3 id="raycast">Raycast&lt;/h3>
+&lt;h3 class="heading" id="raycast">
+Raycast
+&lt;a class="anchor" href="#raycast">#&lt;/a>
+&lt;/h3>
 &lt;p>While other suggestions have multiple implementations that you can use,
 I don&amp;rsquo;t think there&amp;rsquo;s a better launcher than &lt;a href="https://www.raycast.com">Raycast&lt;/a>.&lt;/p>
 &lt;p>What does it do?&lt;/p>
@@ -2549,7 +2771,10 @@ find files and perform actions. I suggest reading through their
 &lt;a href="https://manual.raycast.com/">manual&lt;/a> to understand all it can do.
 With Raycast you can integrate the stuff you need while reading/coding to quickly
 pull them off without leaving your current work.&lt;/p>
-&lt;h4 id="extensions">Extensions&lt;/h4>
+&lt;h4 class="heading" id="extensions">
+Extensions
+&lt;a class="anchor" href="#extensions">#&lt;/a>
+&lt;/h4>
 &lt;p>Raycast is easy to extend yourself, every time you find yourself doing something
 over an over or need to open something regularly, take a look at it&amp;rsquo;s
 &lt;a href="https://www.raycast.com/store">store&lt;/a>
@@ -2559,9 +2784,10 @@ searching &amp;ldquo;extensions&amp;rdquo; in Raycast search bar.&lt;/p>
 &lt;p>For example these are some of the things I&amp;rsquo;m using
 &lt;figure class="">
 &lt;div>
-&lt;img loading="lazy" alt="My Raycast" src=" /my-raycast.png">
+&lt;img loading="lazy" alt="My Raycast" src="https://glyphack.com/my-raycast.png" >
 &lt;/div>
-&lt;/figure>&lt;/p>
+&lt;/figure>
+&lt;/p>
 &lt;p>Notice that you can &lt;a href="https://raycastapp.notion.site/Command-Aliases-and-Hotkeys-43cba38c19dd4000bc75404c11eb0f80">set hotkeys&lt;/a>
 for most used commands to activate them immediately.&lt;/p>
 &lt;p>&lt;a href="https://www.raycast.com/raycast/browser-bookmarks">Search bookmarks&lt;/a>
@@ -2587,31 +2813,46 @@ Can be useful if you happen to do open source, it can search repos,
 and PRs:
 &lt;figure class="">
 &lt;div>
-&lt;img loading="lazy" alt="Raycast Github" src=" /raycast-github-pr.png">
+&lt;img loading="lazy" alt="Raycast Github" src="https://glyphack.com/raycast-github-pr.png" >
 &lt;/div>
-&lt;/figure>&lt;/p>
-&lt;h4 id="apps">Apps&lt;/h4>
+&lt;/figure>
+&lt;/p>
+&lt;h4 class="heading" id="apps">
+Apps
+&lt;a class="anchor" href="#apps">#&lt;/a>
+&lt;/h4>
 &lt;p>Another feature is to manage some application windows with hotkeys.
 This is useful 1,2 applications where you switch them all the time.
 For example for me it&amp;rsquo;s terminal and browser:
 &lt;figure class="">
 &lt;div>
-&lt;img loading="lazy" alt="Raycast Apps" src=" /raycast-apps.png">
+&lt;img loading="lazy" alt="Raycast Apps" src="https://glyphack.com/raycast-apps.png" >
 &lt;/div>
-&lt;/figure>&lt;/p>
+&lt;/figure>
+&lt;/p>
 &lt;p>With this setting not only you can launch the app but you can focus the window
 anywhere with hotkey.&lt;/p>
-&lt;h4 id="quicklinks">QuickLinks&lt;/h4>
+&lt;h4 class="heading" id="quicklinks">
+QuickLinks
+&lt;a class="anchor" href="#quicklinks">#&lt;/a>
+&lt;/h4>
 &lt;p>Last feature to setup is QuickLinks,
 with this you can predefine sites to open with some parameters,
 this can be used to search google, or translate a word.
 &lt;figure class="">
 &lt;div>
-&lt;img loading="lazy" alt="Raycast QuickLinks" src=" /raycast-quicklinks.png">
+&lt;img loading="lazy" alt="Raycast QuickLinks" src="https://glyphack.com/raycast-quicklinks.png" >
 &lt;/div>
-&lt;/figure>&lt;/p>
-&lt;h2 id="automation-tools">Automation tools&lt;/h2>
-&lt;h3 id="hammerspoon">Hammerspoon&lt;/h3>
+&lt;/figure>
+&lt;/p>
+&lt;h2 class="heading" id="automation-tools">
+Automation tools
+&lt;a class="anchor" href="#automation-tools">#&lt;/a>
+&lt;/h2>
+&lt;h3 class="heading" id="hammerspoon">
+Hammerspoon
+&lt;a class="anchor" href="#hammerspoon">#&lt;/a>
+&lt;/h3>
 &lt;p>This one&amp;rsquo;s the most powerful tool, it&amp;rsquo;s a bridge between MacOS and Lua. You can
 &lt;a href="https://www.hammerspoon.org/docs/index.html">customize anything&lt;/a>
 with it&amp;rsquo;s builtin libraries called spoons.&lt;/p>
@@ -2638,13 +2879,19 @@ this one sets my output to speakers when my external mic &amp;amp; speaker is co
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">hs.audiodevice&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">findOutputByName&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;MacBook Pro Speakers&amp;#34;&lt;/span>&lt;span class="p">):&lt;/span>&lt;span class="n">setDefaultOutputDevice&lt;/span>&lt;span class="p">()&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">end&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="crontab">Crontab&lt;/h3>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 class="heading" id="crontab">
+Crontab
+&lt;a class="anchor" href="#crontab">#&lt;/a>
+&lt;/h3>
 &lt;p>If you need to execute something regularly, create a crontab for it.
 MacOS has &lt;a href="https://alvinalexander.com/mac-os-x/mac-osx-startup-crontab-launchd-jobs/">crontab&lt;/a>
 which you can use for this.&lt;/p>
 &lt;p>Also can create push notifications using hammerspoon and
 calling an API to check for new notifications(for example Github).&lt;/p>
-&lt;h2 id="terminal">Terminal&lt;/h2>
+&lt;h2 class="heading" id="terminal">
+Terminal
+&lt;a class="anchor" href="#terminal">#&lt;/a>
+&lt;/h2>
 &lt;p>I assume you do use terminal a lot,
 otherwise you would not read this far cause developers who don&amp;rsquo;t use terminal
 effectively don&amp;rsquo;t care much about the previous stuff either.&lt;/p>
@@ -2655,7 +2902,10 @@ effectively don&amp;rsquo;t care much about the previous stuff either.&lt;/p>
 for searching directories and history&lt;/li>
 &lt;li>Create a lot of functions for frequent used commands&lt;/li>
 &lt;/ul>
-&lt;h3 id="create-functions">Create Functions&lt;/h3>
+&lt;h3 class="heading" id="create-functions">
+Create Functions
+&lt;a class="anchor" href="#create-functions">#&lt;/a>
+&lt;/h3>
 &lt;p>For example I used to record a lot videos for my team and share them,
 but had to compress them before so I created this function:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fish" data-lang="fish">&lt;span class="line">&lt;span class="cl">&lt;span class="k">function&lt;/span> &lt;span class="nf">compress_vid&lt;/span>
@@ -2670,7 +2920,10 @@ development so have commands to ready your environment for test.&lt;/p>
 In case you regularly run particular commands like activating the python virtualenv,
 use a hook to auto activate it for you.
 I&amp;rsquo;m using &lt;a href="https://github.com/justinmayer/virtualfish">virtualFish&lt;/a> for this.&lt;/p>
-&lt;h3 id="fuzzy-finder">Fuzzy Finder&lt;/h3>
+&lt;h3 class="heading" id="fuzzy-finder">
+Fuzzy Finder
+&lt;a class="anchor" href="#fuzzy-finder">#&lt;/a>
+&lt;/h3>
 &lt;p>After you installed fzf make sure to configure it for these shortcuts:&lt;/p>
 &lt;ul>
 &lt;li>&lt;a href="https://github.com/Glyphack/dotfiles/blob/master/fish/config.fish#L12">Alt+C&lt;/a>
@@ -2683,7 +2936,10 @@ to search the current dir and use the path&lt;/li>
 you can see that I set it to only search my development directory.&lt;/p>
 &lt;p>Also learn to configure the tools you use often,
 read their manuals to find out what features they have that might be useful for you.&lt;/p>
-&lt;h3 id="configure-git">Configure Git&lt;/h3>
+&lt;h3 class="heading" id="configure-git">
+Configure Git
+&lt;a class="anchor" href="#configure-git">#&lt;/a>
+&lt;/h3>
 &lt;p>A good one to start can be git,
 you can setup &lt;a href="https://github.com/Glyphack/dotfiles/blob/master/gitconf/.gitignore_global">global ignore file&lt;/a>,
 &lt;a href="https://github.com/Glyphack/dotfiles/blob/master/gitconf/.gitconfig#L8">aliases&lt;/a>
@@ -2693,22 +2949,34 @@ For example I override some configs when I&amp;rsquo;m in my company projects fo
 to make your work easier.&lt;/p>
 &lt;p>IMO the only way to work with git should not be the git client in your text editor.
 Having to open the text editor for only git operations might take your focus.&lt;/p>
-&lt;h3 id="starship">Starship&lt;/h3>
+&lt;h3 class="heading" id="starship">
+Starship
+&lt;a class="anchor" href="#starship">#&lt;/a>
+&lt;/h3>
 &lt;p>Use &lt;a href="https://starship.rs/">Starship&lt;/a>,
 it can give you information about the directory your in,
 like what git branch are you on or what AWS account is current being used.&lt;/p>
 &lt;p>I use &lt;a href="https://github.com/Glyphack/dotfiles/blob/cc7bd423da69321036d1eba8ece9316801f6bd85/starship/starship.toml#L3">this setting to&lt;/a>
 have the AWS account name and region&lt;/p>
-&lt;h3 id="aws">AWS&lt;/h3>
+&lt;h3 class="heading" id="aws">
+AWS
+&lt;a class="anchor" href="#aws">#&lt;/a>
+&lt;/h3>
 &lt;p>Since I mentioned AWS, make sure to use one of &lt;a href="https://github.com/99designs/aws-vault">aws-vault&lt;/a> or &lt;a href="https://github.com/benkehoe/aws-sso-util">aws-sso-util&lt;/a> to switch AWS accounts. You should be able to switch quickly for your testing and development, and this does not have to involve going to console and copying credentials every time.&lt;/p>
-&lt;h3 id="neovim">Neovim&lt;/h3>
+&lt;h3 class="heading" id="neovim">
+Neovim
+&lt;a class="anchor" href="#neovim">#&lt;/a>
+&lt;/h3>
 &lt;p>There are a lot of guides to configure and work with Neovim,
 I suggest &lt;a href="https://www.youtube.com/watch?v=w7i4amO_zaE">this&lt;/a>
 and
 &lt;a href="https://www.youtube.com/watch?v=stqUbv-5u2s">this&lt;/a>.
 You can also find the plugins/tools I use or think is interesting to check in my
 &lt;a href="https://github.com/stars/Glyphack/lists/tools">stars list&lt;/a>.&lt;/p>
-&lt;h3 id="learn-your-code-editor">Learn Your Code Editor&lt;/h3>
+&lt;h3 class="heading" id="learn-your-code-editor">
+Learn Your Code Editor
+&lt;a class="anchor" href="#learn-your-code-editor">#&lt;/a>
+&lt;/h3>
 &lt;p>Even if you don&amp;rsquo;t use something like Neovim,
 your editor supports a lot of customizations, and should be customized.
 When you find some action requires a lot of effort, try to customize it in your Editor.&lt;/p>
@@ -2723,12 +2991,18 @@ no matter what editor you use after you realized some set of
 actions are the ones you do more than others try to customize your editor to
 allow those actions to be done more easily,
 without taking you out of the zone.&lt;/p>
-&lt;h2 id="conclusion">Conclusion&lt;/h2>
+&lt;h2 class="heading" id="conclusion">
+Conclusion
+&lt;a class="anchor" href="#conclusion">#&lt;/a>
+&lt;/h2>
 &lt;p>This was a long post, I wanted to go through my own configuration and
 update some stuff so decided to share it here as well.&lt;/p>
 &lt;p>Hope it&amp;rsquo;s useful for you and don&amp;rsquo;t forget the main point,
 customize your tools for your job to be able to get things done with less thinking.&lt;/p>
-&lt;p>If you use other tools customizations I&amp;rsquo;ll be happy to hear them.&lt;/p></description></item><item><title>Rate Limiter From Scratch in Python Part 1</title><link>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-1/</link><pubDate>Tue, 14 Feb 2023 23:19:18 +0100</pubDate><guid>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-1/</guid><description>&lt;h2 id="introduction">Introduction&lt;/h2>
+&lt;p>If you use other tools customizations I&amp;rsquo;ll be happy to hear them.&lt;/p></description></item><item><title>Rate Limiter From Scratch in Python Part 1</title><link>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-1/</link><pubDate>Tue, 14 Feb 2023 23:19:18 +0100</pubDate><guid>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-1/</guid><description>&lt;h2 class="heading" id="introduction">
+Introduction
+&lt;a class="anchor" href="#introduction">#&lt;/a>
+&lt;/h2>
 &lt;p>After reading &lt;a href="https://bytebytego.com/">ByteByteGo course&lt;/a>
 motivated me to write a rate limiter.
 So I decided to do it in &lt;a href="https://aosabook.org/en/500L/introduction.html">500lines&lt;/a>
@@ -2736,7 +3010,10 @@ theme.&lt;/p>
 &lt;p>We will focus on how to create the interfaces and components,
 to allow extensibility in the predicted ways.&lt;/p>
 &lt;p>You can find the complete source code &lt;a href="https://github.com/Glyphack/hera-limit">here&lt;/a>.&lt;/p>
-&lt;h2 id="what-is-a-rate-limiter">What is a Rate Limiter?&lt;/h2>
+&lt;h2 class="heading" id="what-is-a-rate-limiter">
+What is a Rate Limiter?
+&lt;a class="anchor" href="#what-is-a-rate-limiter">#&lt;/a>
+&lt;/h2>
 &lt;p>Well, there are a lot of
 &lt;a href="https://www.cloudflare.com/en-gb/learning/bots/what-is-rate-limiting/">great explanations&lt;/a>
 on what is a rate limiter, but I&amp;rsquo;ll give a minimal introduction to it for this post.&lt;/p>
@@ -2744,7 +3021,10 @@ on what is a rate limiter, but I&amp;rsquo;ll give a minimal introduction to it 
 someone can repeat an action in your software. Take Twitter as an example;
 they need to specify how often someone can send a tweet per minute; otherwise,
 one person can create 1 million tweets in a second and fill up all their server resources.&lt;/p>
-&lt;h2 id="high-level-design">High Level Design&lt;/h2>
+&lt;h2 class="heading" id="high-level-design">
+High Level Design
+&lt;a class="anchor" href="#high-level-design">#&lt;/a>
+&lt;/h2>
 &lt;p>First off, what should our rate limiter do?
 The rate limiter should be a function that takes in a request,
 decides if the request can go through or not based on the current statistics.&lt;/p>
@@ -2771,9 +3051,10 @@ decides if the request can go through or not based on the current statistics.&lt
 &lt;p>
 &lt;figure class="">
 &lt;div>
-&lt;img loading="lazy" alt="System Components" src=" /rate-limiter-components.png">
+&lt;img loading="lazy" alt="System Components" src="https://glyphack.com/rate-limiter-components.png" >
 &lt;/div>
-&lt;/figure>&lt;/p>
+&lt;/figure>
+&lt;/p>
 &lt;p>Breaking down the components:&lt;/p>
 &lt;p>&lt;strong>Rules storage&lt;/strong>:
 it is responsible for loading rules and providing them to the rate limiter.&lt;/p>
@@ -2850,8 +3131,14 @@ The flow of handling requests:&lt;/p>
 and just like an API, we don&amp;rsquo;t change them much.&lt;/p>
 &lt;p>On the other hand, the LimitStrategy and Storage can be swapped and replaced with different implementations.
 So a rule can stay the same while the limiter enforcing the rule can be changed to relax the rule or make it more strict.&lt;/p>
-&lt;h2 id="implementation">Implementation&lt;/h2>
-&lt;h3 id="defining-interfaces">Defining Interfaces&lt;/h3>
+&lt;h2 class="heading" id="implementation">
+Implementation
+&lt;a class="anchor" href="#implementation">#&lt;/a>
+&lt;/h2>
+&lt;h3 class="heading" id="defining-interfaces">
+Defining Interfaces
+&lt;a class="anchor" href="#defining-interfaces">#&lt;/a>
+&lt;/h3>
 &lt;p>Based on the above rule structure we can use the following structure:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">dataclasses&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">dataclass&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">enum&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">Enum&lt;/span>
@@ -2943,7 +3230,10 @@ which takes in a request and determines if it&amp;rsquo;s limited or not.&lt;/p>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">request&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Request&lt;/span>&lt;span class="p">,&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">):&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">raise&lt;/span> &lt;span class="ne">NotImplementedError&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="token-bucket">Token Bucket&lt;/h3>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 class="heading" id="token-bucket">
+Token Bucket
+&lt;a class="anchor" href="#token-bucket">#&lt;/a>
+&lt;/h3>
 &lt;p>Now that the interfaces are clear we can start implementing the algorithm.&lt;/p>
 &lt;p>From the rule structure,
 we can use the &lt;code>unit&lt;/code> to to refresh tokens in the bucket.
@@ -2955,7 +3245,10 @@ and the &lt;code>request_per_unit&lt;/code> to determine bucket capacity.&lt;/p>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rule_descriptor&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Descriptor&lt;/span>&lt;span class="p">,&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">):&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">su&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="test-rate-limiter-service">Test Rate Limiter Service&lt;/h4>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 class="heading" id="test-rate-limiter-service">
+Test Rate Limiter Service
+&lt;a class="anchor" href="#test-rate-limiter-service">#&lt;/a>
+&lt;/h4>
 &lt;p>For rate limiter service we need to create two fixtures, config and local storage:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="nd">@pytest.fixture&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">local_storage&lt;/span>&lt;span class="p">():&lt;/span>
@@ -2992,7 +3285,10 @@ untested strategy which is a nightmare).&lt;/p>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">time_now&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">datetime&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">datetime&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">now&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">datetime&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">timedelta&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">seconds&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="p">)&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">with&lt;/span> &lt;span class="n">freezegun&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">freeze_time&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">time_now&lt;/span>&lt;span class="p">):&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">assert&lt;/span> &lt;span class="n">rate_limit_service&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">do_limit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">request&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="ow">is&lt;/span> &lt;span class="kc">False&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="conclusion">Conclusion&lt;/h2>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 class="heading" id="conclusion">
+Conclusion
+&lt;a class="anchor" href="#conclusion">#&lt;/a>
+&lt;/h2>
 &lt;p>So far we have a working rate limiter with one implemented rule.
 I think this would be enough for one read,
 In the next post we will add more rate limiting algorithms and see
@@ -3014,7 +3310,10 @@ and avoiding common pitfalls like dependency issues.&lt;/p>
 &lt;li>What cross-stack dependencies are created?&lt;/li>
 &lt;/ul>
 &lt;p>I’m sharing the lessons I learned writing and refactoring multiple cdk projects.&lt;/p>
-&lt;h2 id="splitting-stacks">Splitting stacks&lt;/h2>
+&lt;h2 class="heading" id="splitting-stacks">
+Splitting stacks
+&lt;a class="anchor" href="#splitting-stacks">#&lt;/a>
+&lt;/h2>
 &lt;p>When components can be deployed separately, it&amp;rsquo;s good to split the stacks.
 Smaller stacks are deployed faster and it&amp;rsquo;s easier to maintain them.&lt;/p>
 &lt;p>You can extract some parts of a stack into another stack and add it as a dependency.
@@ -3024,7 +3323,10 @@ Keep in mind that when &lt;code>StackA&lt;/code> depends on &lt;code>StackB&lt;/
 &lt;li>When stacks are deployed &lt;code>StackB&lt;/code> cannot be updated without updating &lt;code>StackA&lt;/code> first.&lt;/li>
 &lt;/ul>
 &lt;p>This two way relation can cause problems which we&amp;rsquo;ll talk about it later.&lt;/p>
-&lt;h3 id="how-to-decide-the-number-of-stacks">How to Decide the Number of Stacks?&lt;/h3>
+&lt;h3 class="heading" id="how-to-decide-the-number-of-stacks">
+How to Decide the Number of Stacks?
+&lt;a class="anchor" href="#how-to-decide-the-number-of-stacks">#&lt;/a>
+&lt;/h3>
 &lt;p>A simple rule for separation is based on:&lt;/p>
 &lt;ol>
 &lt;li>Application domain&lt;/li>
@@ -3034,7 +3336,10 @@ Keep in mind that when &lt;code>StackA&lt;/code> depends on &lt;code>StackB&lt;/
 Separating based on life cycle can be done for rarely deployed resources like databases.&lt;/p>
 &lt;p>You can find a good reference on these examples and stacks in
 &lt;a href="https://github.com/kevinslin/open-cdk#stacks">open-cdk guide&lt;/a>.&lt;/p>
-&lt;h2 id="creating-constructs">Creating constructs&lt;/h2>
+&lt;h2 class="heading" id="creating-constructs">
+Creating constructs
+&lt;a class="anchor" href="#creating-constructs">#&lt;/a>
+&lt;/h2>
 &lt;p>CDK has another solution for having smaller stacks
 which is creating a re-suable component called construct.
 To decide whether a code should be a stack or a construct we can check:&lt;/p>
@@ -3045,7 +3350,10 @@ To decide whether a code should be a stack or a construct we can check:&lt;/p>
 &lt;p>Creating constructs is also easier;
 because you are not introducing any dependencies between stacks.
 If you delete an stack all constructs inside it are removed.&lt;/p>
-&lt;h2 id="separated-stacks-and-dependencies">Separated Stacks and Dependencies&lt;/h2>
+&lt;h2 class="heading" id="separated-stacks-and-dependencies">
+Separated Stacks and Dependencies
+&lt;a class="anchor" href="#separated-stacks-and-dependencies">#&lt;/a>
+&lt;/h2>
 &lt;p>Imagine we have an API with lambda and API gateway, and a route53 hosted zone.
 This infrastructure has two properties:&lt;/p>
 &lt;ul>
@@ -3062,10 +3370,14 @@ So it&amp;rsquo;s better to deploy it separately, once.&lt;/li>
 &lt;p>
 &lt;figure class="">
 &lt;div>
-&lt;img loading="lazy" alt="example-cdk-stack" src=" /example-cdk-stack-deps.excalidraw.png">
+&lt;img loading="lazy" alt="example-cdk-stack" src="https://glyphack.com/example-cdk-stack-deps.excalidraw.png" >
 &lt;/div>
-&lt;/figure>&lt;/p>
-&lt;h3 id="dependency-problem-and-solution">Dependency problem and Solution&lt;/h3>
+&lt;/figure>
+&lt;/p>
+&lt;h3 class="heading" id="dependency-problem-and-solution">
+Dependency problem and Solution
+&lt;a class="anchor" href="#dependency-problem-and-solution">#&lt;/a>
+&lt;/h3>
 &lt;p>What dependencies did we create?
 If our API endpoint changes then the Hosted zone needs to be updated
 to point to the new endpoint.
@@ -3100,7 +3412,10 @@ to be redeployed.&lt;/p>
 The EC2 id must be set in load balancer to route the traffic.&lt;/p>
 &lt;p>If we try to separate these into load balancer and app stacks,
 when ever we want to redeploy the EC2 the other stack must be destroyed and redeployed.&lt;/p>
-&lt;h3 id="remove-security-group-dependencies">Remove Security Group dependencies&lt;/h3>
+&lt;h3 class="heading" id="remove-security-group-dependencies">
+Remove Security Group dependencies
+&lt;a class="anchor" href="#remove-security-group-dependencies">#&lt;/a>
+&lt;/h3>
 &lt;p>A common dependency between stacks is the security group rules.
 For example we have a database with and we want our EC2 to access it.
 One solution could be:&lt;/p>
@@ -3125,12 +3440,18 @@ We can just flip the dependency.&lt;/p>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Ec2&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">connections&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">allowTo&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">Db&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="p">...)&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>With this method your database is not aware of what resources are connected to it.
 You made it a high level policy and other services are now aware of how to connect.&lt;/p>
-&lt;h3 id="remove-unnecessary-dependencies">Remove unnecessary dependencies&lt;/h3>
+&lt;h3 class="heading" id="remove-unnecessary-dependencies">
+Remove unnecessary dependencies
+&lt;a class="anchor" href="#remove-unnecessary-dependencies">#&lt;/a>
+&lt;/h3>
 &lt;p>Removing redundant dependencies reduces the overhead of managing them between stacks.
 The security group was an example of how to do this.
 Important lesson here is to understand how each line of
 CDK is connecting your resources together.&lt;/p>
-&lt;h2 id="conclusion">Conclusion&lt;/h2>
+&lt;h2 class="heading" id="conclusion">
+Conclusion
+&lt;a class="anchor" href="#conclusion">#&lt;/a>
+&lt;/h2>
 &lt;p>Knowing how to split stacks is an art of managing dependencies.
 When I first started to do it before knowing these topics, I ran into
 issues I did not except and it helped me see the problem from a different aspect.
@@ -3140,7 +3461,10 @@ but most of the time I found myself starting to pickup something to read or alre
 rule for myself to write down everything I want to do for the day first, helped to overcome this habit.&lt;/p>
 &lt;p>Since then I found some improvements that can be done along with writing down the plan for the day. I&amp;rsquo;ll list my observation here, and my
 goal is to implement these in the &lt;a href="https://github.com/Glyphack/koal">koal&lt;/a> app, as a default way of planning the day.&lt;/p>
-&lt;h2 id="choosing-what-to-do">Choosing what to do&lt;/h2>
+&lt;h2 class="heading" id="choosing-what-to-do">
+Choosing what to do
+&lt;a class="anchor" href="#choosing-what-to-do">#&lt;/a>
+&lt;/h2>
 &lt;p>I have a long list of things I want to try/learn/experiment; and the list continues to expand everyday when I come across new things.
 So in this situation my mind is full of different things to do, I cannot concentrate on one thing and finish it in a reasonable time.
 Sometimes I saw that It&amp;rsquo;s been months that I&amp;rsquo;m working on something without making much progress and that was because I did not spend
@@ -3167,7 +3491,10 @@ I decided to re plan my goals so they are:&lt;/p>
 &lt;/ul>
 &lt;p>Then I picked only 5 or 6 goals at each point, I had to have enough time for all of them to make continuous progress on each.
 Each day I started by browsing my current work, thinking what is the next small step I can take today and write it down in Koal.&lt;/p>
-&lt;h2 id="repetitive-tasks">Repetitive tasks&lt;/h2>
+&lt;h2 class="heading" id="repetitive-tasks">
+Repetitive tasks
+&lt;a class="anchor" href="#repetitive-tasks">#&lt;/a>
+&lt;/h2>
 &lt;p>There are things I want to do everyday, like my morning routine.
 Having a prepared list of these kind of work saves a lot of time,
 because I don&amp;rsquo;t have to remember, and write them down everyday.
@@ -3177,7 +3504,10 @@ like for chess I wanted to play a game everyday.&lt;/p>
 added meditation to this list, only by seeing this everyday I did not forgot about it.&lt;/p>
 &lt;p>For me this list is very simple, I just wrote down things I have to do. There are some things that I don&amp;rsquo;t
 do everyday but I still listed them only to not forget to do them.&lt;/p>
-&lt;h2 id="being-focused-on-tasks">Being focused on tasks&lt;/h2>
+&lt;h2 class="heading" id="being-focused-on-tasks">
+Being focused on tasks
+&lt;a class="anchor" href="#being-focused-on-tasks">#&lt;/a>
+&lt;/h2>
 &lt;p>I continued with my approach for some time and realized there are somethings I need to do to improve my focus.&lt;/p>
 &lt;p>Sometimes I tried to do multi tasking because I had number of small things to do, So when I was waiting for something to finish
 I started writing down an email, and if it was finished I got back to it and then I lost my focus.&lt;/p>
@@ -3193,7 +3523,10 @@ while I&amp;rsquo;m blocked on my current task.&lt;/p>
 &lt;li>Use a pomodoro or a time tracker, this helps to focus because it only requires a short amount of focused work.&lt;/li>
 &lt;li>Rewarding myself after the focus time, &lt;a href="https://www.frugalconfessions.com/save-me-money/reward-yourself/">this list&lt;/a> is a good one if you want to get started&lt;/li>
 &lt;/ul>
-&lt;h2 id="having-an-uninterrupted-focus-time">Having an uninterrupted focus time&lt;/h2>
+&lt;h2 class="heading" id="having-an-uninterrupted-focus-time">
+Having an uninterrupted focus time
+&lt;a class="anchor" href="#having-an-uninterrupted-focus-time">#&lt;/a>
+&lt;/h2>
 &lt;p>Not all of the day I have the same productivity and energy, I found that I achieve the most when I&amp;rsquo;m working uninterrupted.
 To leverage this, I started to mark a time window of 2-3 hours for doing focused and uninterrupted work.
 This is really important to set right, in different days I have meetings at different hours and some days I have a busy morning,
@@ -3201,7 +3534,10 @@ and some days I have a busy afternoon.
 I try to find a time window that I can block for myself to focus on important things I have to do.&lt;/p>
 &lt;p>In the planning I also write down when is this uninterrupted focus time, when the time comes I put my phone away and minimize
 the chance of loosing focus.&lt;/p>
-&lt;h2 id="choosing-one-thing-to-complete-everyday">Choosing one thing to complete everyday&lt;/h2>
+&lt;h2 class="heading" id="choosing-one-thing-to-complete-everyday">
+Choosing one thing to complete everyday
+&lt;a class="anchor" href="#choosing-one-thing-to-complete-everyday">#&lt;/a>
+&lt;/h2>
 &lt;p>While I have a list of things to do, I know what is the most important one for today to complete.
 This can be something from my work that I want to get done, or reaching a milestone in one of the goals.
 This task is very important because it brings me joy and motivation when I finish it.&lt;/p>
@@ -3215,18 +3551,27 @@ When I know today is the day for it to be done I use my most productive time to 
 I made a lot more progress in my goals. Because I was finishing these important milestones when it was needed for progress.
 It&amp;rsquo;s like there are some parts of each goal which require a lot of effort to get it done.
 If I don&amp;rsquo;t put some serious time on my goals from time to time I cannot make significant progress.&lt;/p>
-&lt;h2 id="writing-down-detailed-to-dos">Writing down detailed to-dos&lt;/h2>
+&lt;h2 class="heading" id="writing-down-detailed-to-dos">
+Writing down detailed to-dos
+&lt;a class="anchor" href="#writing-down-detailed-to-dos">#&lt;/a>
+&lt;/h2>
 &lt;p>While to-do list should be short I found it useful to add what I need for the task to be done in the task.
 When I add an entry of reading the article about something I attach the link there.
 If I want to check the to-do search the google for the article and read it I might encounter
 things that can steal my focus along the way, like finding another interesting article in the search result.&lt;/p>
-&lt;h2 id="leverage-boredom">Leverage Boredom&lt;/h2>
+&lt;h2 class="heading" id="leverage-boredom">
+Leverage Boredom
+&lt;a class="anchor" href="#leverage-boredom">#&lt;/a>
+&lt;/h2>
 &lt;p>People &lt;a href="https://www.science.org/content/article/people-would-rather-be-electrically-shocked-left-alone-their-thoughts">do anything&lt;/a> to escape boredom.&lt;/p>
 &lt;p>When I plan my day I try to plan as much as I can so I don&amp;rsquo;t do anything outside the planning, in this way I either have to do the stuff
 I planned for or do nothing. This helps to avoid procrastination.&lt;/p>
 &lt;p>This is very hard to get write, I sometimes forget some chore tasks or something unplanned happens, but the good part is most of the day
 I&amp;rsquo;m facing my plan and can&amp;rsquo;t do other things before complete the tasks.&lt;/p>
-&lt;h2 id="rewarding">Rewarding&lt;/h2>
+&lt;h2 class="heading" id="rewarding">
+Rewarding
+&lt;a class="anchor" href="#rewarding">#&lt;/a>
+&lt;/h2>
 &lt;p>Most of my motivation to do something comes from either the joy of doing the thing or the joy of finishing it.
 For some goals(specially the ones that takes more time) it&amp;rsquo;s hard to have these two.
 For example if your goal is to study for something for 3-4 months it&amp;rsquo;s gonna be very hard to keep the motivation.
@@ -3237,7 +3582,10 @@ One other effective method is to reward yourself with money after doing somethin
 time I do X and use that money to buy something I like.
 When I started streaming my rule was that I won&amp;rsquo;t buy fancy mic/webcam stuff until I create videos for certain amount of time.&lt;/p>
 &lt;p>One way to apply this can be by having a list of rewards beside items planned for the day.&lt;/p>
-&lt;h2 id="conclusion">Conclusion&lt;/h2>
+&lt;h2 class="heading" id="conclusion">
+Conclusion
+&lt;a class="anchor" href="#conclusion">#&lt;/a>
+&lt;/h2>
 &lt;p>Using this approach and planning the tasks in the beginning of the day, helped me a lot on being more organized, and following
 my goals. To summarize the full list into steps for planning the day:&lt;/p>
 &lt;ol>
@@ -3262,14 +3610,18 @@ and apply required transformations.
 All stream processing frameworks such as Kafka Streams support doing stream
 joins to denormalize the data and while they offer very straightforward
 performant solutions the join support is limited in some cases.&lt;/p>
-&lt;h2 id="streaming-changes-from-database">Streaming Changes from Database&lt;/h2>
+&lt;h2 class="heading" id="streaming-changes-from-database">
+Streaming Changes from Database
+&lt;a class="anchor" href="#streaming-changes-from-database">#&lt;/a>
+&lt;/h2>
 &lt;p>We can start by implementing a change data capture system with a tool like
 Debizium and Apache Kafka. An example architecture is the following picture:
 &lt;figure class="">
 &lt;div>
-&lt;img loading="lazy" alt="streaming-database-changes" src=" /streaming-database-changes.excalidraw.png">
+&lt;img loading="lazy" alt="streaming-database-changes" src="https://glyphack.com/streaming-database-changes.excalidraw.png" >
 &lt;/div>
-&lt;/figure>&lt;/p>
+&lt;/figure>
+&lt;/p>
 &lt;p>Now the downstream services can use the data product topic coming out of Kafka.
 Let&amp;rsquo;s focus on how to implement the stream processing component.&lt;/p>
 &lt;p>As discussed earlier this use case is very suitable for a tool like Kafka
@@ -3288,12 +3640,16 @@ This approach will result in the following diagram&lt;/p>
 &lt;p>
 &lt;figure class="">
 &lt;div>
-&lt;img loading="lazy" alt="reparition-data-join" src=" /repartion-data-to-join.excalidraw.png">
+&lt;img loading="lazy" alt="reparition-data-join" src="https://glyphack.com/repartion-data-to-join.excalidraw.png" >
 &lt;/div>
-&lt;/figure>&lt;/p>
+&lt;/figure>
+&lt;/p>
 &lt;p>This can lead to a very expensive solution both in terms of cost and
 development.&lt;/p>
-&lt;h2 id="problem-and-possible-solutions">Problem and Possible Solutions&lt;/h2>
+&lt;h2 class="heading" id="problem-and-possible-solutions">
+Problem and Possible Solutions
+&lt;a class="anchor" href="#problem-and-possible-solutions">#&lt;/a>
+&lt;/h2>
 &lt;p>Now that we know the pattern and the limit let&amp;rsquo;s try to solve it with for an
 example business.&lt;/p>
 &lt;p>My goal is to find a solution which is easy to implement not the fastest one
@@ -3306,9 +3662,10 @@ it&amp;rsquo;s interactions with the platform into an easy to use data structure
 &lt;p>Let&amp;rsquo;s start by giving a very simple example data model:
 &lt;figure class="">
 &lt;div>
-&lt;img loading="lazy" alt="github-example-data-model" src=" /github-example-data-model.excalidraw.png">
+&lt;img loading="lazy" alt="github-example-data-model" src="https://glyphack.com/github-example-data-model.excalidraw.png" >
 &lt;/div>
-&lt;/figure>&lt;/p>
+&lt;/figure>
+&lt;/p>
 &lt;p>With following definitions:&lt;/p>
 &lt;p>&lt;strong>User&lt;/strong>&lt;/p>
 &lt;ul>
@@ -3399,19 +3756,26 @@ to get the result.&lt;/p>
 structure.
 This means to embed all pull requests into record as a list, and add
 payment_verified value as a single value.&lt;/p>
-&lt;h2 id="solutions">Solutions&lt;/h2>
+&lt;h2 class="heading" id="solutions">
+Solutions
+&lt;a class="anchor" href="#solutions">#&lt;/a>
+&lt;/h2>
 &lt;p>To give a solution I&amp;rsquo;m focusing on providing something that can work at huge
 scale, imagine we are going to create a hundred data products so system should
 make it very easy to onboard a new table.&lt;/p>
-&lt;h3 id="solution-1-using-rdbms">Solution 1: Using RDBMS&lt;/h3>
+&lt;h3 class="heading" id="solution-1-using-rdbms">
+Solution 1: Using RDBMS
+&lt;a class="anchor" href="#solution-1-using-rdbms">#&lt;/a>
+&lt;/h3>
 &lt;p>I started with the idea of why not just moving all the computation on the database?
 After all the SQL language has nice features to do these transformations.&lt;/p>
 &lt;p>
 &lt;figure class="">
 &lt;div>
-&lt;img loading="lazy" alt="rdbms-solution" src=" /running-transformations-on-db.excalidraw.png">
+&lt;img loading="lazy" alt="rdbms-solution" src="https://glyphack.com/running-transformations-on-db.excalidraw.png" >
 &lt;/div>
-&lt;/figure>&lt;/p>
+&lt;/figure>
+&lt;/p>
 &lt;p>With this method we can have a generic application that reads streams and place
 them in database under a table with the topic name.
 So to onboard a new topic we have to feed this service two values:&lt;/p>
@@ -3428,20 +3792,29 @@ So to onboard a new topic we have to feed this service two values:&lt;/p>
 &lt;p>After lambda is triggered it will lookup the mapping and run the SQL query. In our case it will get the user back with all matched pull request.
 Now we need a custom logic in lambda to embed all the matched Pull Request
 entities into &lt;code>UserInfo&lt;/code> message.&lt;/p>
-&lt;h4 id="benefits">Benefits&lt;/h4>
+&lt;h4 class="heading" id="benefits">
+Benefits
+&lt;a class="anchor" href="#benefits">#&lt;/a>
+&lt;/h4>
 &lt;ul>
 &lt;li>Implementation is very generic&lt;/li>
 &lt;li>We have all the capabilities of SQL to do the processing&lt;/li>
 &lt;li>Each topic can be joined with any other topic with any valid SQL condition&lt;/li>
 &lt;/ul>
-&lt;h4 id="drawbacks">Drawbacks&lt;/h4>
+&lt;h4 class="heading" id="drawbacks">
+Drawbacks
+&lt;a class="anchor" href="#drawbacks">#&lt;/a>
+&lt;/h4>
 &lt;ul>
 &lt;li>The fact that we put all the computation on the database and specially join
 queries will result in a huge amount of costs&lt;/li>
 &lt;li>The architecture is not truly real-time, we should utilize indexes on
 database to make sure query returns with low latency&lt;/li>
 &lt;/ul>
-&lt;h3 id="solution-2-join-data-in-stream-processor">Solution 2: Join Data In Stream Processor&lt;/h3>
+&lt;h3 class="heading" id="solution-2-join-data-in-stream-processor">
+Solution 2: Join Data In Stream Processor
+&lt;a class="anchor" href="#solution-2-join-data-in-stream-processor">#&lt;/a>
+&lt;/h3>
 &lt;p>To attempt to fix the previous solution drawbacks, a reasonable way can be moving the join logic to stream processor application.&lt;/p>
 &lt;p>In this case the stream processor has a data store named state store that is used to keep track of latests state of records consumed.
 To get a better understand of how the state store works, Imagine the scenario:&lt;/p>
@@ -3456,7 +3829,7 @@ To get a better understand of how the state store works, Imagine the scenario:&l
 &lt;p>
 &lt;figure class="">
 &lt;div>
-&lt;img loading="lazy" alt="join data in processor" src=" /join-in-processor-rdbms.excalidraw.png">
+&lt;img loading="lazy" alt="join data in processor" src="https://glyphack.com/join-in-processor-rdbms.excalidraw.png" >
 &lt;/div>
 &lt;/figure>
 This is how the example procedure looks like:&lt;/p>
@@ -3471,18 +3844,27 @@ Here also based on the join type we either publish a new &lt;code>user_info&lt;/
 &lt;li>If user event is consumed even if it do not match any pull request the &lt;code>user_info&lt;/code> message must be published.&lt;/li>
 &lt;li>If pull_request event is consumed &lt;code>user_info&lt;/code> message will only be published when pull request matches a user record, then the application updates the corresponding &lt;code>user_info&lt;/code> message with the new pull request and publishes the message again.&lt;/li>
 &lt;/ol>
-&lt;h4 id="benefits-1">Benefits&lt;/h4>
+&lt;h4 class="heading" id="benefits-1">
+Benefits
+&lt;a class="anchor" href="#benefits-1">#&lt;/a>
+&lt;/h4>
 &lt;ul>
 &lt;li>Ability to execute all SQL queries&lt;/li>
 &lt;li>Can do complex joins&lt;/li>
 &lt;li>Can index database on the fields that are queried for joins to decrease the processing time&lt;/li>
 &lt;/ul>
-&lt;h4 id="drawbacks-1">Drawbacks&lt;/h4>
+&lt;h4 class="heading" id="drawbacks-1">
+Drawbacks
+&lt;a class="anchor" href="#drawbacks-1">#&lt;/a>
+&lt;/h4>
 &lt;ul>
 &lt;li>The RDBMS database is used for a lot of read/write operations which can become slow and expensive&lt;/li>
 &lt;li>The join logic is split in processing events from left and right side of the join.&lt;/li>
 &lt;/ul>
-&lt;h3 id="using-another-database-as-state-store">Using Another Database as State Store&lt;/h3>
+&lt;h3 class="heading" id="using-another-database-as-state-store">
+Using Another Database as State Store
+&lt;a class="anchor" href="#using-another-database-as-state-store">#&lt;/a>
+&lt;/h3>
 &lt;p>Following the idea of previous solution to move the join logic to application, we can make an adjustment to DB choice.
 The pattern is inserting a record but retrieving it only by specific fields.
 Usually key value store databases provide fast read and writes with this limitation.&lt;/p>
@@ -3517,17 +3899,26 @@ volume of data.
 But we are creating duplicate data to be able to execute these queries, this can also be solved with
 Secondary Indexes in DynamoDB. Secondary Indexes can be fine for small number of joins but if we want to join the User
 with 20 different tables the cost of User table with 20 SI will be high and more than having the auxiliary tables.&lt;/p>
-&lt;h4 id="benefits-2">Benefits&lt;/h4>
+&lt;h4 class="heading" id="benefits-2">
+Benefits
+&lt;a class="anchor" href="#benefits-2">#&lt;/a>
+&lt;/h4>
 &lt;ul>
 &lt;li>Can support large volume of data&lt;/li>
 &lt;li>Application can support multiple joins on a single record with low process time.(DynamoDB can provide 10ms read times)&lt;/li>
 &lt;/ul>
-&lt;h4 id="drawbacks-2">Drawbacks&lt;/h4>
+&lt;h4 class="heading" id="drawbacks-2">
+Drawbacks
+&lt;a class="anchor" href="#drawbacks-2">#&lt;/a>
+&lt;/h4>
 &lt;ul>
 &lt;li>Data is duplicated&lt;/li>
 &lt;li>Coordination of what tables and fields to query makes the application complex, the given example has 6 steps for a single join&lt;/li>
 &lt;/ul>
-&lt;h3 id="leveraging-the-dynamodb-global-secondary-indexes">Leveraging the DynamoDB Global Secondary Indexes&lt;/h3>
+&lt;h3 class="heading" id="leveraging-the-dynamodb-global-secondary-indexes">
+Leveraging the DynamoDB Global Secondary Indexes
+&lt;a class="anchor" href="#leveraging-the-dynamodb-global-secondary-indexes">#&lt;/a>
+&lt;/h3>
 &lt;p>The previous solution was really close to achieve a very good result but still the 1 lookup and 1 query per join statement can cause
 long process time in some cases.
 Now we&amp;rsquo;ll try to exploit another feature of DynamoDB, Global Secondary Indexes, to solve this problem.&lt;/p>
@@ -3563,23 +3954,38 @@ Also we now can get back all pull requests for a user with a single query, this 
 &lt;p>To manage the GSI fields and what they are used for in each record we need another storage to save this information.
 We can have a small PostgreSQL instance that knows for example in User records the GSI_1 field is used to join with Pull Request entity.&lt;/p></description></item><item><title>How to Setup 2 Factor Authentication Code Generator on PC</title><link>https://glyphack.com/blog/setup-2fa-on-pc/</link><pubDate>Thu, 17 Mar 2022 23:19:14 +0330</pubDate><guid>https://glyphack.com/blog/setup-2fa-on-pc/</guid><description>&lt;p>I use 2 factor authentication with almost all of my accounts, the only downside of this is that when I need to access something frequently or automate some task I have to manually enter this code from my phone.&lt;/p>
 &lt;p>So I searched a bit and found these tools to make this process easier, I imported 2fa keys to my laptop and can generate keys with a command so I can copy the code and also the command can be used in automated tasks. Note that in this way anyone with access to your laptop has access to 2fa codes too.&lt;/p>
-&lt;h2 id="setup-2fa-code-on-your-machine">Setup 2FA code on your machine&lt;/h2>
+&lt;h2 class="heading" id="setup-2fa-code-on-your-machine">
+Setup 2FA code on your machine
+&lt;a class="anchor" href="#setup-2fa-code-on-your-machine">#&lt;/a>
+&lt;/h2>
 &lt;p>Here&amp;rsquo;s the process:&lt;/p>
-&lt;h3 id="1-export-2fa-accounts-from-google-authenticator">1. Export 2FA Accounts From Google Authenticator&lt;/h3>
+&lt;h3 class="heading" id="1-export-2fa-accounts-from-google-authenticator">
+1. Export 2FA Accounts From Google Authenticator
+&lt;a class="anchor" href="#1-export-2fa-accounts-from-google-authenticator">#&lt;/a>
+&lt;/h3>
 &lt;p>You probably have already setup your accounts with google authenticator. You can use the &lt;a href="https://support.google.com/accounts/thread/107807857/how-to-export-2fa-codes-from-google-authenticator?hl=en">export option&lt;/a> to export the accounts you need. Export will be a qr code so you need a way to convert it to text. On mac I did it with &lt;a href="https://apps.apple.com/us/app/qr-journal/id483820530?mt=12">qr journal&lt;/a> .&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">brew install --cask qr-journal
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="2-extract-account-secret-key">2. Extract Account Secret Key&lt;/h3>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 class="heading" id="2-extract-account-secret-key">
+2. Extract Account Secret Key
+&lt;a class="anchor" href="#2-extract-account-secret-key">#&lt;/a>
+&lt;/h3>
 &lt;p>Once you have the qr code as text you can use &lt;a href="https://github.com/scito/extract_otp_secret_keys">extract_otp_secret_keys&lt;/a> to read the text and get the secret strings. save exported qr code in a text file and read it with like this:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">gh repo clone scito/extract_otp_secret_keys
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">python extract_otp_secret_keys/extract_otp_secret_keys.py -p exported.txt
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This will output the final secret key for accounts.&lt;/p>
-&lt;h3 id="3-install-a-2fa-code-generator">3. Install a 2FA Code Generator&lt;/h3>
+&lt;h3 class="heading" id="3-install-a-2fa-code-generator">
+3. Install a 2FA Code Generator
+&lt;a class="anchor" href="#3-install-a-2fa-code-generator">#&lt;/a>
+&lt;/h3>
 &lt;p>I used the &lt;a href="https://github.com/rsc/2fa">2fa&lt;/a> app to import accounts in terminal.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">go install rsc.io/2fa@latest
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">2fa -add account_name
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now that you have this you can use the command &lt;code>2fa&lt;/code> to get all of your accounts 2FA codes or &lt;code>2fa account_name&lt;/code> to get the 2FA code for a specific account, the latter is useful when writing scripts.&lt;/p></description></item><item><title>Fixing One Bug Leads to Another</title><link>https://glyphack.com/blog/fixing-one-bug-leads-to-another/</link><pubDate>Sat, 05 Feb 2022 09:49:50 +0330</pubDate><guid>https://glyphack.com/blog/fixing-one-bug-leads-to-another/</guid><description>&lt;p>One thing that frequently frustrates me when I&amp;rsquo;m working is sloppy work. I&amp;rsquo;m using the word &amp;ldquo;work&amp;rdquo; here because it can refer to anything, but here I&amp;rsquo;ll talk about sloppy code.&lt;/p>
 &lt;p>Recently, someone from my previous team asked me to help them fix an issue on a system while the maintainer was not available. At first, I discussed this with my team lead and didn&amp;rsquo;t get involved in the issue, but after a week, the problem was still there, and they asked me for my help again. So I finally decided to give it a try.&lt;/p>
-&lt;h2 id="the-story">The story&lt;/h2>
+&lt;h2 class="heading" id="the-story">
+The story
+&lt;a class="anchor" href="#the-story">#&lt;/a>
+&lt;/h2>
 &lt;p>The issue was that one of the microservices was consuming messages twice from a Kafka topic. Kafka client consumes a message in this order:&lt;/p>
 &lt;ol>
 &lt;li>Read a new message&lt;/li>
@@ -3610,13 +4016,20 @@ The issue was that Kafka has a &lt;a href="https://docs.confluent.io/platform/cu
 &lt;p>The point here is that the second bug was buried under the first issue, and I brought it up by fixing the first one. Kind of a rabbit hole, and who knows, I would not face &lt;a href="https://en.wikipedia.org/wiki/Lernaean_Hydra">Hydra&lt;/a> if I continued fixing the problem?
 &lt;figure class="">
 &lt;div>
-&lt;img loading="lazy" alt="Hydra, a see monster that that as soon as one head was cut off, two more heads would emerge from the fresh wound" src=" /Hydra.png">
+&lt;img loading="lazy" alt="Hydra, a see monster that that as soon as one head was cut off, two more heads would emerge from the fresh wound" src="https://glyphack.com/Hydra.png" >
 &lt;/div>
-&lt;/figure>&lt;/p>
-&lt;h2 id="yak-shaving">Yak shaving&lt;/h2>
+&lt;/figure>
+&lt;/p>
+&lt;h2 class="heading" id="yak-shaving">
+Yak shaving
+&lt;a class="anchor" href="#yak-shaving">#&lt;/a>
+&lt;/h2>
 &lt;p>The more precise term about this situation is &lt;a href="https://seths.blog/2005/03/dont_shave_that/">Yak Shaving&lt;/a>. It&amp;rsquo;s a situation where you have to fix something else before working on the current issue.
 It is essential to be ready to go down this path before actually starting. For me, it was always a frustrating experience because You can&amp;rsquo;t get it done, and estimations become incorrect, then you have no clue where you are until you can resolve the final issue.&lt;/p>
-&lt;h2 id="what-did-i-learn">What did I learn&lt;/h2>
+&lt;h2 class="heading" id="what-did-i-learn">
+What did I learn
+&lt;a class="anchor" href="#what-did-i-learn">#&lt;/a>
+&lt;/h2>
 &lt;p>Some bug fixes seem easy to solve, like this one. You and the others might have no idea why some issue is happening. When a request like this comes to me from now on, I&amp;rsquo;ll be asking for a time to investigate the issue and how it is happening. It might take more time; in this case, I only had a couple of days to work on it, so I would not have a chance to fix the issue.
 I&amp;rsquo;m not saying all the bug fixes should be like this; if you worked with a system and know why something is wrong and are sure about the system behavior based on experience, go ahead and work on the fix. But for me, there were a lot of changes to the system after I left the team, so the system was not what I used to know.&lt;/p>
 &lt;p>And also, don&amp;rsquo;t forget the chance of ending up in a Yak Shaving. Investigate enough to see if anything else is wrong except the current issue.
@@ -3630,31 +4043,64 @@ As said in pragmatic programmer&lt;/p>
 &lt;li>If situation X happens, do my teammates have to call someone to know what is happening?
 So every day, when one of these happens, think about the answers and see how well your documentation is. For example, when you get similar questions from teammates about a system, think of it as a failure in the documentation system, not all questions can be answered inside docs, but the frequent ones must be answered.&lt;/li>
 &lt;/ol>
-&lt;h2 id="avoid-common-problems-of-technical-software-documentation">Avoid Common Problems of Technical Software Documentation&lt;/h2>
+&lt;h2 class="heading" id="avoid-common-problems-of-technical-software-documentation">
+Avoid Common Problems of Technical Software Documentation
+&lt;a class="anchor" href="#avoid-common-problems-of-technical-software-documentation">#&lt;/a>
+&lt;/h2>
 &lt;p>So what are the problems that can be in your technical notes?&lt;/p>
-&lt;h3 id="non-existent-documents">Non existent documents&lt;/h3>
-&lt;h4 id="no-entry-point-link-around-a-topic">No Entry Point Link Around a Topic&lt;/h4>
+&lt;h3 class="heading" id="non-existent-documents">
+Non existent documents
+&lt;a class="anchor" href="#non-existent-documents">#&lt;/a>
+&lt;/h3>
+&lt;h4 class="heading" id="no-entry-point-link-around-a-topic">
+No Entry Point Link Around a Topic
+&lt;a class="anchor" href="#no-entry-point-link-around-a-topic">#&lt;/a>
+&lt;/h4>
 &lt;p>There is no primary documentation around a topic; you have to pass multiple links when someone is on boarded or read a single document after cloning the repo.&lt;/p>
-&lt;h4 id="cover-all-information-needed-for-a-project">Cover all information needed for a project&lt;/h4>
+&lt;h4 class="heading" id="cover-all-information-needed-for-a-project">
+Cover all information needed for a project
+&lt;a class="anchor" href="#cover-all-information-needed-for-a-project">#&lt;/a>
+&lt;/h4>
 &lt;p>If someone joins your team, they need information on how a system works. They also have to know how to set up their local and sandbox environment and use it.&lt;/p>
-&lt;h3 id="hidden-documents">Hidden Documents&lt;/h3>
-&lt;h4 id="nesting-overuse">Nesting Overuse&lt;/h4>
+&lt;h3 class="heading" id="hidden-documents">
+Hidden Documents
+&lt;a class="anchor" href="#hidden-documents">#&lt;/a>
+&lt;/h3>
+&lt;h4 class="heading" id="nesting-overuse">
+Nesting Overuse
+&lt;a class="anchor" href="#nesting-overuse">#&lt;/a>
+&lt;/h4>
 &lt;p>Having sub-pages inside sub-pages makes the text to be scattered in different documents. Suppose someone reads a note on compiling a project. They also have to find the testing guide and deployment guide next to that text. It can be another section within that doc or a document next to it. Just make sure you don&amp;rsquo;t need to browse again to find those.
 This pattern is similar to coupling the code that is related to each other like putting it inside a single module.&lt;/p>
-&lt;h4 id="multiple-channels">Multiple channels&lt;/h4>
+&lt;h4 class="heading" id="multiple-channels">
+Multiple channels
+&lt;a class="anchor" href="#multiple-channels">#&lt;/a>
+&lt;/h4>
 &lt;p>Some materials might be found on the slack channel, others on your documentation tool. Keep all of them in one place as much as possible.&lt;/p>
-&lt;h3 id="inaccurate-documents">Inaccurate Documents&lt;/h3>
+&lt;h3 class="heading" id="inaccurate-documents">
+Inaccurate Documents
+&lt;a class="anchor" href="#inaccurate-documents">#&lt;/a>
+&lt;/h3>
 &lt;p>If the documents are not updated along with the code, they become inaccurate as you change the software. One possible solution is to link the code and document together(by using Readme file) so more people will see the document while writing code.
 Here you can see that why is it valuable to have a single document for a topic, for example here if you have 4 documents that has to change after changing system codes then it&amp;rsquo;s much harder to update the documents that a single document.&lt;/p>
-&lt;h3 id="obsolete-documents">Obsolete Documents&lt;/h3>
+&lt;h3 class="heading" id="obsolete-documents">
+Obsolete Documents
+&lt;a class="anchor" href="#obsolete-documents">#&lt;/a>
+&lt;/h3>
 &lt;p>If a design is changed and older design decisions don&amp;rsquo;t apply anymore, archive them.&lt;/p>
-&lt;h3 id="afterthought-documents">Afterthought Documents&lt;/h3>
+&lt;h3 class="heading" id="afterthought-documents">
+Afterthought Documents
+&lt;a class="anchor" href="#afterthought-documents">#&lt;/a>
+&lt;/h3>
 &lt;p>This is a problem because if you write your docs after delivering a project, you will end up:&lt;/p>
 &lt;ol>
 &lt;li>Forgetting to include important notes on the topic because you are in the &lt;a href="https://en.wikipedia.org/wiki/Curse_of_knowledge">curse of knowledge&lt;/a>.&lt;/li>
 &lt;li>Have to explain the project to someone personally if you need to hand it over in the middle.&lt;/li>
 &lt;/ol>
-&lt;h2 id="how-to-make-technical-documentations-better">How to Make Technical Documentations Better&lt;/h2>
+&lt;h2 class="heading" id="how-to-make-technical-documentations-better">
+How to Make Technical Documentations Better
+&lt;a class="anchor" href="#how-to-make-technical-documentations-better">#&lt;/a>
+&lt;/h2>
 &lt;p>It&amp;rsquo;s essential to organize documents so that it&amp;rsquo;s visible to everyone.&lt;/p>
 &lt;p>&lt;strong>Be Careful with Nesting&lt;/strong>
 When newcomers open the documentation, they should locate all the required information they need to work on the project. This means in your top-level page you should have all the topics you want to explain visible there as links or sub-pages.
@@ -3671,7 +4117,10 @@ Write documents with the mindset of other people are going to use them. so you s
 &lt;li>Ask your team to review the docs you write&lt;/li>
 &lt;li>Put new pages you create on draft&lt;/li>
 &lt;/ul>
-&lt;h2 id="other-resources">Other resources&lt;/h2>
+&lt;h2 class="heading" id="other-resources">
+Other resources
+&lt;a class="anchor" href="#other-resources">#&lt;/a>
+&lt;/h2>
 &lt;ul>
 &lt;li>
 &lt;p>&lt;a href="https://microsoft.github.io/code-with-engineering-playbook/documentation/guidance/project-and-repositories/">Documenting code repositories&lt;/a>&lt;/p>
@@ -3682,14 +4131,20 @@ Write documents with the mindset of other people are going to use them. so you s
 &lt;/ul></description></item><item><title>How I Stay Focused and Manage Time</title><link>https://glyphack.com/blog/how-i-stay-focused-and-manage-time/</link><pubDate>Mon, 03 Jan 2022 19:10:52 +0330</pubDate><guid>https://glyphack.com/blog/how-i-stay-focused-and-manage-time/</guid><description>&lt;p>A few weeks ago, I experienced one of these busy weeks with lots of meetings, Slack messages, working on different tasks. Although I did many things, I didn&amp;rsquo;t feel like getting anything done. So I decided to see how can I improve this.&lt;/p>
 &lt;p>First of all, the cost of getting interrupted while developing is high. You need time to get back on what you were doing, and if this happens a lot, you can&amp;rsquo;t manage to get many things done.
 The second thing I noticed was that I have to do better with planning for my day. I have a mix of personal stuff, university, and work. Some days, I&amp;rsquo;m constantly switching between tasks with different contexts, and I get myself out of the zone.&lt;/p>
-&lt;h1 id="my-setup">My setup&lt;/h1>
+&lt;h1 class="heading" id="my-setup">
+My setup
+&lt;a class="anchor" href="#my-setup">#&lt;/a>
+&lt;/h1>
 &lt;p>I&amp;rsquo;ve experimented with different productivity tools for focus and time management tools. I was looking for a simple enough task manager with a built-in time tracker that you can decide on something you must do in the day and track your time while doing them for the rest of the day. I could not find such a tool, so I combined different apps to achieve this.&lt;/p>
-&lt;h3 id="daily-planning">Daily Planning&lt;/h3>
+&lt;h3 class="heading" id="daily-planning">
+Daily Planning
+&lt;a class="anchor" href="#daily-planning">#&lt;/a>
+&lt;/h3>
 &lt;p>I use &lt;a href="https://www.notion.so/">Notion&lt;/a> as my general notebook to organize projects, learn lists, and other random things that gather here, not to forget them.
 I also started to use it as my time management tool just by creating a table where each row is a date, and inside that, I write my day plan:
 &lt;figure class="">
 &lt;div>
-&lt;img loading="lazy" alt="Daily planning with Notion" src=" /notion-day-plan.png">
+&lt;img loading="lazy" alt="Daily planning with Notion" src="https://glyphack.com/notion-day-plan.png" >
 &lt;/div>
 &lt;/figure>
 Of course, it does not offer any unique feature here that other apps don&amp;rsquo;t. I prefer to write down my tasks as raw notes instead of task management apps to keep them simple and easy enough to do every day.
@@ -3698,12 +4153,15 @@ This way, it helps me two organize my tasks such that:&lt;/p>
 &lt;li>I know what I want to do upfront, so I can plan to do them appropriately. For example, I can do all of my university stuff together to reduce context switching costs&lt;/li>
 &lt;li>If I can&amp;rsquo;t manage to do something on that day, it&amp;rsquo;s not lost, and I can move it to the next day&lt;/li>
 &lt;/ul>
-&lt;h3 id="time-tracking">Time Tracking&lt;/h3>
+&lt;h3 class="heading" id="time-tracking">
+Time Tracking
+&lt;a class="anchor" href="#time-tracking">#&lt;/a>
+&lt;/h3>
 &lt;p>I use &lt;a href="https://toggl.com/">Toggl&lt;/a> to track how much time I spend on a task and focus while working.
 Toggl has a concept of clients and tasks, I defined my clients as DataChef, University and Personal stuff and tasks are my current work, whenever I decide to work on something I start the timer choose the client and start working. The remarkable feature is that they have a Pomodoro timer too, and I use this technique to focus on my job.
 &lt;figure class="">
 &lt;div>
-&lt;img loading="lazy" alt="Toggl Timeline" src=" /toggl-timeline.png">
+&lt;img loading="lazy" alt="Toggl Timeline" src="https://glyphack.com/toggl-timeline.png" >
 &lt;/div>
 &lt;/figure>
 If you&amp;rsquo;re not familiar with Pomodoro, here is the procedure from Wikipedia&lt;/p>
@@ -3718,6 +4176,9 @@ If you&amp;rsquo;re not familiar with Pomodoro, here is the procedure from Wikip
 &lt;/ol>&lt;/blockquote>
 &lt;p>I prefer it over other Pomodoro apps because the features it provides, such as reminders, help me to continuously not lose focus and track time.
 I started using Toggl with 25 min focus 5 min break and increased the time to 45 min focus in just two weeks!&lt;/p>
-&lt;h1 id="conclusion">Conclusion&lt;/h1>
+&lt;h1 class="heading" id="conclusion">
+Conclusion
+&lt;a class="anchor" href="#conclusion">#&lt;/a>
+&lt;/h1>
 &lt;p>I think task management and time tracking are not only for teams, but people can also boost their productivity with these methods.
 I did not go over all the features of the tools I mentioned because it&amp;rsquo;s not the tools that are important but the techniques you put in place to help yourself with focus and time management.&lt;/p></description></item></channel></rss>
