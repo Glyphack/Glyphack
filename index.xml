@@ -1013,11 +1013,7 @@ Take away the ideas with yourself and adjust it accordingly.&lt;/p>
 &lt;li>&lt;a href="https://www.hammerspoon.org/">Hammerspoon&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://karabiner-elements.pqrs.org/">Karabiner&lt;/a>&lt;/li>
 &lt;/ul>
-&lt;p>These tools are exclusively for Mac. There are other alternatives such as:&lt;/p>
-&lt;ul>
-&lt;li>&lt;a href="https://www.scriptkit.com/">Script Kit&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://www.autohotkey.com/">Auto Hotkey&lt;/a>&lt;/li>
-&lt;/ul>
+&lt;p>These tools are exclusively for Mac. There are other alternatives for other platforms.&lt;/p>
 &lt;h2 class="heading" id="remapping-keys">
 Remapping Keys
 &lt;a class="anchor" href="#remapping-keys">#&lt;/a>
@@ -1260,7 +1256,8 @@ n &amp;gt; m [ , ] . *
 &lt;/code>&lt;/pre>&lt;p>So just set these stuff for different combinations that are hard to press.
 I even have &lt;code>a+u&lt;/code> for &lt;code>tab&lt;/code> and &lt;code>a+i&lt;/code> for &lt;code>ctrl+tab&lt;/code>.&lt;/p>
 &lt;p>For implementing this in Karabiner follow the guide above.
-You can also view my config and take inspirations from this &lt;a href="https://github.com/Glyphack/dotfiles/blob/20b97e675532db0bf8d73068fec1dd3050ad2fc5/karabiner/karabiner.json#L1">giant json&lt;/a>.&lt;/p>
+Since Karabiner uses json files for configuration writing all of this by hand is time consuming. You can use a tool like Goku (brew install yqrashawn/goku/goku) instead.
+Here is my &lt;a href="https://github.com/Glyphack/dotfiles/blob/20b97e675532db0bf8d73068fec1dd3050ad2fc5/karabiner/karabiner.json#L1">giant json&lt;/a> Karabiner configuration.&lt;/p>
 &lt;p>For doing normal JSON you need the following Karabiner rules for :&lt;/p>
 &lt;pre tabindex="0">&lt;code>{
 &amp;#34;from&amp;#34;: {
