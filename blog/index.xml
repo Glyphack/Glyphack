@@ -106,11 +106,13 @@ I was working on Adding &lt;a href="https://github.com/astral-sh/ruff/pull/9513"
 &lt;p>I did it and learned a lot about how to track attributes in Python code.
 A gist of it would be, you need to go over the class, in each function when something is assigned to a name you need to check if that name is self or cls.
 And you do this by checking if it matches the first argument of that function.
-Then if the function is a class method it&amp;rsquo;s cls and otherwise self.&lt;/p></description></item><item><title>Five Thousands Lines of Kotlin</title><link>https://glyphack.com/blog/five-thousands-lines-of-kotlin/</link><pubDate>Sun, 21 Jan 2024 14:43:03 +0100</pubDate><guid>https://glyphack.com/blog/five-thousands-lines-of-kotlin/</guid><description>&lt;p>This post is about my impression of Kotlin as a language after, well you guessed it, writing about five thousand lines of it. I will go through what I don&amp;rsquo;t like about it and whether I would use this language on my own(spoiler: I won&amp;rsquo;t unless I have to.) I started using Kotlin only because of the new job. In my job I worked on server applications only, with the added spice of enterprise software practices.&lt;/p></description></item><item><title>A Better Keyboard</title><link>https://glyphack.com/blog/a-better-keyboard/</link><pubDate>Sat, 30 Dec 2023 10:54:35 +0100</pubDate><guid>https://glyphack.com/blog/a-better-keyboard/</guid><description>&lt;p>When it comes to boosting productivity, there’s a common tool present in every OS that often goes unnoticed - your keyboard.&lt;/p>
-&lt;p>Imagine you want to make a better keyboard.
+Then if the function is a class method it&amp;rsquo;s cls and otherwise self.&lt;/p></description></item><item><title>Five Thousands Lines of Kotlin</title><link>https://glyphack.com/blog/five-thousands-lines-of-kotlin/</link><pubDate>Sun, 21 Jan 2024 14:43:03 +0100</pubDate><guid>https://glyphack.com/blog/five-thousands-lines-of-kotlin/</guid><description>&lt;p>This post is about my impression of Kotlin as a language after, well you guessed it, writing about five thousand lines of it. I will go through what I don&amp;rsquo;t like about it and whether I would use this language on my own(spoiler: I won&amp;rsquo;t unless I have to.) I started using Kotlin only because of the new job. In my job I worked on server applications only, with the added spice of enterprise software practices.&lt;/p></description></item><item><title>A Better Keyboard</title><link>https://glyphack.com/blog/a-better-keyboard/</link><pubDate>Sat, 30 Dec 2023 10:54:35 +0100</pubDate><guid>https://glyphack.com/blog/a-better-keyboard/</guid><description>&lt;p>Imagine you want to make a better keyboard.
 Seems like a hard challenge for every company.
 What if &amp;lsquo;better&amp;rsquo; meant compressing multiple key presses into one? Or have shortcut for your frequent actions.
-If you minimize the effort to use it then you are making it better for yourself.&lt;/p></description></item><item><title>TIL Secret to Open Source Contribution &amp; Contributing to Python Docs</title><link>https://glyphack.com/blog/contributing-to-python-docs/</link><pubDate>Tue, 19 Sep 2023 22:23:48 +0200</pubDate><guid>https://glyphack.com/blog/contributing-to-python-docs/</guid><description>&lt;p>I think I learned something about contributing to open source that, if I knew a couple of years back, I could have done much more open source contributions.&lt;/p>
+If you minimize the effort to use it then you are making it better for yourself.&lt;/p>
+&lt;p>Challenge lies in the keyboard&amp;rsquo;s limited keys, and hard to press combinations like &lt;code>ctrl + alt + any key&lt;/code>.&lt;/p>
+&lt;p>Most of us learn to use tools as they are.
+But most of the time the product is not tailored to your needs out of the box.&lt;/p></description></item><item><title>TIL Secret to Open Source Contribution &amp; Contributing to Python Docs</title><link>https://glyphack.com/blog/contributing-to-python-docs/</link><pubDate>Tue, 19 Sep 2023 22:23:48 +0200</pubDate><guid>https://glyphack.com/blog/contributing-to-python-docs/</guid><description>&lt;p>I think I learned something about contributing to open source that, if I knew a couple of years back, I could have done much more open source contributions.&lt;/p>
 &lt;p>A while back, I started creating a &lt;a href="https://github.com/Glyphack/enderpy">hand-written parser for Python&lt;/a>.
 I ended up also contributing some fixes to Python docs.
 This was particularly interesting to me because it did not require really advanced knowledge, and the stuff there that was incorrect or outdated had been there for years.
@@ -203,17 +205,17 @@ The project right now supports only 1 rate limiting algorithm(Token Bucket).&lt;
 &lt;/ul>
 &lt;p>We&amp;rsquo;ll see how each algorithm compares to another, and the trade offs.
 Also after implementing each one we&amp;rsquo;ll see how to abstractions we created
-previously helped minimizing the implementation for new algorithms.&lt;/p></description></item><item><title>Personalize Macos Environment for Your Productivity</title><link>https://glyphack.com/blog/personalize-macos-environment-for-your-productivity/</link><pubDate>Sun, 19 Feb 2023 20:58:33 +0100</pubDate><guid>https://glyphack.com/blog/personalize-macos-environment-for-your-productivity/</guid><description>&lt;p>MacOS is already a polished environment,&lt;/p>
-&lt;p>Investing the time to personalize your tools and environment is a smart move,
-especially if you plan to do your current profession for years to come.
-With a set of personalized methods and tools,
-you can make your routine tasks easier and more efficient.&lt;/p>
-&lt;p>In this guide, we&amp;rsquo;ll explore methods and tools that can help you personalize
-your environment to suit your needs as a developer.
-While not everything may be applicable to you,
-you&amp;rsquo;re sure to find some good ideas to steal or improve upon.
-We&amp;rsquo;ll go through a list of regular tasks that developers face and
-show you how customized tools can make your work easier and more enjoyable.&lt;/p></description></item><item><title>Rate Limiter From Scratch in Python Part 1</title><link>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-1/</link><pubDate>Tue, 14 Feb 2023 23:19:18 +0100</pubDate><guid>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-1/</guid><description>&lt;h2 class="heading" id="introduction">
+previously helped minimizing the implementation for new algorithms.&lt;/p></description></item><item><title>Personalize Macos Environment for Your Productivity</title><link>https://glyphack.com/blog/personalize-macos-environment-for-your-productivity/</link><pubDate>Sun, 19 Feb 2023 20:58:33 +0100</pubDate><guid>https://glyphack.com/blog/personalize-macos-environment-for-your-productivity/</guid><description>&lt;p>MacOS is already a polished environment and unlike some other OSes it works out of the box.
+Still, spending investing time to personalize your tools and environment is a smart move.&lt;/p>
+&lt;p>In the past years using MacOS I found simple tools that helps to make MacOS more ergonomic and fun.&lt;/p>
+&lt;p>Most of the content here is in &lt;a href="https://github.com/Glyphack/dotfiles">my dotfiles&lt;/a>.&lt;/p>
+&lt;h2 class="heading" id="why">
+ Why?
+ &lt;a class="anchor" href="#why">#&lt;/a>
+&lt;/h2>
+&lt;p>If you&amp;rsquo;re already sold to this idea go ahead and start,
+otherwise keep reading so I can convince you why you might want to start
+configuring your tools.&lt;/p></description></item><item><title>Rate Limiter From Scratch in Python Part 1</title><link>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-1/</link><pubDate>Tue, 14 Feb 2023 23:19:18 +0100</pubDate><guid>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-1/</guid><description>&lt;h2 class="heading" id="introduction">
  Introduction
  &lt;a class="anchor" href="#introduction">#&lt;/a>
 &lt;/h2>

@@ -1,16 +1,18 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Tools on Glyphack</title><link>https://glyphack.com/tags/tools/</link><description>Recent content in Tools on Glyphack</description><generator>Hugo</generator><language>en</language><lastBuildDate>Sat, 30 Dec 2023 10:54:35 +0100</lastBuildDate><atom:link href="https://glyphack.com/tags/tools/index.xml" rel="self" type="application/rss+xml"/><item><title>A Better Keyboard</title><link>https://glyphack.com/blog/a-better-keyboard/</link><pubDate>Sat, 30 Dec 2023 10:54:35 +0100</pubDate><guid>https://glyphack.com/blog/a-better-keyboard/</guid><description>&lt;p>When it comes to boosting productivity, there’s a common tool present in every OS that often goes unnoticed - your keyboard.&lt;/p>
-&lt;p>Imagine you want to make a better keyboard.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Tools on Glyphack</title><link>https://glyphack.com/tags/tools/</link><description>Recent content in Tools on Glyphack</description><generator>Hugo</generator><language>en</language><lastBuildDate>Sat, 30 Dec 2023 10:54:35 +0100</lastBuildDate><atom:link href="https://glyphack.com/tags/tools/index.xml" rel="self" type="application/rss+xml"/><item><title>A Better Keyboard</title><link>https://glyphack.com/blog/a-better-keyboard/</link><pubDate>Sat, 30 Dec 2023 10:54:35 +0100</pubDate><guid>https://glyphack.com/blog/a-better-keyboard/</guid><description>&lt;p>Imagine you want to make a better keyboard.
 Seems like a hard challenge for every company.
 What if &amp;lsquo;better&amp;rsquo; meant compressing multiple key presses into one? Or have shortcut for your frequent actions.
-If you minimize the effort to use it then you are making it better for yourself.&lt;/p></description></item><item><title>Personalize Macos Environment for Your Productivity</title><link>https://glyphack.com/blog/personalize-macos-environment-for-your-productivity/</link><pubDate>Sun, 19 Feb 2023 20:58:33 +0100</pubDate><guid>https://glyphack.com/blog/personalize-macos-environment-for-your-productivity/</guid><description>&lt;p>MacOS is already a polished environment,&lt;/p>
-&lt;p>Investing the time to personalize your tools and environment is a smart move,
-especially if you plan to do your current profession for years to come.
-With a set of personalized methods and tools,
-you can make your routine tasks easier and more efficient.&lt;/p>
-&lt;p>In this guide, we&amp;rsquo;ll explore methods and tools that can help you personalize
-your environment to suit your needs as a developer.
-While not everything may be applicable to you,
-you&amp;rsquo;re sure to find some good ideas to steal or improve upon.
-We&amp;rsquo;ll go through a list of regular tasks that developers face and
-show you how customized tools can make your work easier and more enjoyable.&lt;/p></description></item><item><title>How to Setup 2 Factor Authentication Code Generator on PC</title><link>https://glyphack.com/blog/setup-2fa-on-pc/</link><pubDate>Thu, 17 Mar 2022 23:19:14 +0330</pubDate><guid>https://glyphack.com/blog/setup-2fa-on-pc/</guid><description>&lt;p>I use 2 factor authentication with almost all of my accounts, the only downside of this is that when I need to access something frequently or automate some task I have to manually enter this code from my phone.&lt;/p>
+If you minimize the effort to use it then you are making it better for yourself.&lt;/p>
+&lt;p>Challenge lies in the keyboard&amp;rsquo;s limited keys, and hard to press combinations like &lt;code>ctrl + alt + any key&lt;/code>.&lt;/p>
+&lt;p>Most of us learn to use tools as they are.
+But most of the time the product is not tailored to your needs out of the box.&lt;/p></description></item><item><title>Personalize Macos Environment for Your Productivity</title><link>https://glyphack.com/blog/personalize-macos-environment-for-your-productivity/</link><pubDate>Sun, 19 Feb 2023 20:58:33 +0100</pubDate><guid>https://glyphack.com/blog/personalize-macos-environment-for-your-productivity/</guid><description>&lt;p>MacOS is already a polished environment and unlike some other OSes it works out of the box.
+Still, spending investing time to personalize your tools and environment is a smart move.&lt;/p>
+&lt;p>In the past years using MacOS I found simple tools that helps to make MacOS more ergonomic and fun.&lt;/p>
+&lt;p>Most of the content here is in &lt;a href="https://github.com/Glyphack/dotfiles">my dotfiles&lt;/a>.&lt;/p>
+&lt;h2 class="heading" id="why">
+ Why?
+ &lt;a class="anchor" href="#why">#&lt;/a>
+&lt;/h2>
+&lt;p>If you&amp;rsquo;re already sold to this idea go ahead and start,
+otherwise keep reading so I can convince you why you might want to start
+configuring your tools.&lt;/p></description></item><item><title>How to Setup 2 Factor Authentication Code Generator on PC</title><link>https://glyphack.com/blog/setup-2fa-on-pc/</link><pubDate>Thu, 17 Mar 2022 23:19:14 +0330</pubDate><guid>https://glyphack.com/blog/setup-2fa-on-pc/</guid><description>&lt;p>I use 2 factor authentication with almost all of my accounts, the only downside of this is that when I need to access something frequently or automate some task I have to manually enter this code from my phone.&lt;/p>
 &lt;p>So I searched a bit and found these tools to make this process easier, I imported 2fa keys to my laptop and can generate keys with a command so I can copy the code and also the command can be used in automated tasks. Note that in this way anyone with access to your laptop has access to 2fa codes too.&lt;/p></description></item></channel></rss>

@@ -993,15 +993,13 @@ IntelliJ and the compiler won&amp;rsquo;t complain about this as well.&lt;/p>
 &lt;p>There are some Ktor features that fail during the runtime because it cannot find some plugin that is needed to work properly. Why must this be a runtime problem?&lt;/p>
 &lt;p>&lt;strong>Why Kotlin Won and Not Scala?&lt;/strong>&lt;/p>
 &lt;p>This question annoys my mind a lot. I also worked with Scala and I think it&amp;rsquo;s certainly a better language. Maybe that&amp;rsquo;s for another post.&lt;/p>
-&lt;p>But I also stopped doing Scala for one reason, the functional programming community took over the language and every library tried to add functional paradigm and type safety to everything (talking to you, ZIO). Again, just expose a goddamn function.&lt;/p></description></item><item><title>A Better Keyboard</title><link>https://glyphack.com/blog/a-better-keyboard/</link><pubDate>Sat, 30 Dec 2023 10:54:35 +0100</pubDate><guid>https://glyphack.com/blog/a-better-keyboard/</guid><description>&lt;p>When it comes to boosting productivity, there’s a common tool present in every OS that often goes unnoticed - your keyboard.&lt;/p>
-&lt;p>Imagine you want to make a better keyboard.
+&lt;p>But I also stopped doing Scala for one reason, the functional programming community took over the language and every library tried to add functional paradigm and type safety to everything (talking to you, ZIO). Again, just expose a goddamn function.&lt;/p></description></item><item><title>A Better Keyboard</title><link>https://glyphack.com/blog/a-better-keyboard/</link><pubDate>Sat, 30 Dec 2023 10:54:35 +0100</pubDate><guid>https://glyphack.com/blog/a-better-keyboard/</guid><description>&lt;p>Imagine you want to make a better keyboard.
 Seems like a hard challenge for every company.
 What if &amp;lsquo;better&amp;rsquo; meant compressing multiple key presses into one? Or have shortcut for your frequent actions.
 If you minimize the effort to use it then you are making it better for yourself.&lt;/p>
-&lt;p>The challenge lies in the keyboard&amp;rsquo;s limited keys, and hard to press combinations like &lt;code>ctrl + alt + any key&lt;/code>.&lt;/p>
-&lt;p>Most of us learn to use tools as they are, a commendable first step.
-But why stop there? By settling for the status quo, we miss out on potential improvements.
-After all, no product is tailored to your specific needs.&lt;/p>
+&lt;p>Challenge lies in the keyboard&amp;rsquo;s limited keys, and hard to press combinations like &lt;code>ctrl + alt + any key&lt;/code>.&lt;/p>
+&lt;p>Most of us learn to use tools as they are.
+But most of the time the product is not tailored to your needs out of the box.&lt;/p>
 &lt;p>None of the products produced are going to be designed based on your specific needs.
 One of the advantages of trying to use keyboard to make repetitive tasks easier is to reduce the attention needed for them.
 When these tasks will be easy enough that doing them &lt;a href="https://www.scattered-thoughts.net/writing/moving-faster/">won&amp;rsquo;t require attention&lt;/a>.
@@ -1012,7 +1010,6 @@ Some of these suggestions might be useful and others might be not.
 Take away the ideas with yourself and adjust it accordingly.&lt;/p>
 &lt;p>I implemented the improvements using the following tools:&lt;/p>
 &lt;ul>
-&lt;li>&lt;a href="https://www.raycast.com/">Raycast&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://www.hammerspoon.org/">Hammerspoon&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://karabiner-elements.pqrs.org/">Karabiner&lt;/a>&lt;/li>
 &lt;/ul>
@@ -1021,48 +1018,48 @@ Take away the ideas with yourself and adjust it accordingly.&lt;/p>
 &lt;li>&lt;a href="https://www.scriptkit.com/">Script Kit&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://www.autohotkey.com/">Auto Hotkey&lt;/a>&lt;/li>
 &lt;/ul>
-&lt;p>&lt;strong>Remapping Keys&lt;/strong>&lt;/p>
+&lt;h2 class="heading" id="remapping-keys">
+Remapping Keys
+&lt;a class="anchor" href="#remapping-keys">#&lt;/a>
+&lt;/h2>
 &lt;p>Our keyboards are not designed for heavy usage of shortcuts.
 So you can start making shortcuts for stuff by setting them to &lt;code>ctrl + T&lt;/code>,&lt;/p>
 &lt;p>This method presents two significant challenges:&lt;/p>
 &lt;ul>
-&lt;li>The easily accessible keys are already assigned, such as CMD + T.&lt;/li>
-&lt;li>Complex combinations become cumbersome: try pressing CMD + ALT + ctrl + T, and you’ll likely find it inconvenient.&amp;quot;&lt;/li>
+&lt;li>The easily accessible keys are already assigned, such as &lt;code>CMD + T&lt;/code>.&lt;/li>
+&lt;li>Complex combinations become cumbersome: try pressing &lt;code>CMD + ALT + ctrl + T&lt;/code>.&lt;/li>
 &lt;/ul>
 &lt;p>The idea is that some keys can be used to do more than one thing.
 What keys can be used like this? Let&amp;rsquo;s take a look at different keys.&lt;/p>
 &lt;ul>
 &lt;li>Keys you hold down to change how &lt;em>other&lt;/em> keys behave, but that (usually) don&amp;rsquo;t do anything if you use them on their own (like Shift and Control).
 &lt;ul>
-&lt;li>Shift&lt;/li>
-&lt;li>Control&lt;/li>
-&lt;li>Alt&lt;/li>
-&lt;li>Caps lock&lt;/li>
-&lt;li>Command&lt;/li>
-&lt;li>Fn&lt;/li>
+&lt;li>&lt;code>Shift&lt;/code>&lt;/li>
+&lt;li>&lt;code>Control&lt;/code>&lt;/li>
+&lt;li>&lt;code>Alt&lt;/code>&lt;/li>
+&lt;li>&lt;code>Command&lt;/code>&lt;/li>
+&lt;li>&lt;code>Fn&lt;/code>&lt;/li>
 &lt;/ul>
 &lt;/li>
 &lt;li>Keys that you press and release but don&amp;rsquo;t want to &amp;ldquo;repeat&amp;rdquo; as you hold them (like Escape or Insert).
 &lt;ul>
-&lt;li>Escape&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>Keys that you sometimes press and release, but sometimes want to repeat (like holding Space to insert a bunch of spaces, or Backspace to kill a bunch of characters).
-&lt;ul>
-&lt;li>Space&lt;/li>
-&lt;li>Backspace&lt;/li>
+&lt;li>&lt;code>Escape&lt;/code>&lt;/li>
+&lt;li>&lt;code>Caps lock&lt;/code>&lt;/li>
 &lt;/ul>
 &lt;/li>
 &lt;/ul>
-&lt;p>You can use the keys that are designed to only be held to do a new thing if they are pressed.&lt;/p>
-&lt;p>I have set the following setting for Caps lock keys:&lt;/p>
+&lt;p>You can use the keys that are designed to only be held to do a new thing if they are pressed. Or use the keys that are designed to be pressed to do another thing if they are held.&lt;/p>
+&lt;p>For example, I have set the following setting for Caps lock keys:&lt;/p>
 &lt;ul>
-&lt;li>On hold: hyper key(CMD + ctrl + SHIFT + ALT)&lt;/li>
+&lt;li>On hold: hyper key &lt;code>ctrl + SHIFT + ALT&lt;/code>&lt;/li>
 &lt;li>On press: escape&lt;/li>
 &lt;/ul>
 &lt;p>Why hyper?
 Because this new key press cannot conflict with any other shortcuts
 This allows you to create shortcuts like: hyper + H/J/K/L which is pretty comfortable to press.&lt;/p>
+&lt;p>I used to have CAPS lock set to &lt;code>CMD + ctrl + SHIFT + ALT&lt;/code>.
+But I noticed that there is a MacOS specific key binding for taking a system snapshot with &lt;code>CMD + ctrl + shift + alt + ,&lt;/code> which cannot be disabled and my system froze when I accidentally pressed this key.
+So I stopped using it and switched to the above combination instead.&lt;/p>
 &lt;p>You can do this using a &lt;a href="https://karabiner-elements.pqrs.org/docs/manual/configuration/configure-complex-modifications/#create-your-own-rules">complex modification&lt;/a> in Karabiner:&lt;/p>
 &lt;pre tabindex="0">&lt;code>{
 &amp;#34;description&amp;#34;: &amp;#34;Capslock to Hyper&amp;#34;,
@@ -1081,7 +1078,6 @@ This allows you to create shortcuts like: hyper + H/J/K/L which is pretty comfor
 {
 &amp;#34;key_code&amp;#34;: &amp;#34;right_shift&amp;#34;,
 &amp;#34;modifiers&amp;#34;: [
-&amp;#34;right_command&amp;#34;,
 &amp;#34;right_control&amp;#34;,
 &amp;#34;right_option&amp;#34;
 ]
@@ -1098,7 +1094,7 @@ This allows you to create shortcuts like: hyper + H/J/K/L which is pretty comfor
 }
 &lt;/code>&lt;/pre>&lt;p>This key now can be used as your new shortcut key.
 &lt;code>hyper + t&lt;/code> can be mapped to an action globally and does not conflict with anything.
-So any key on the keyboard can now be used for shortcuts, allowing numerous customizations.&lt;/p>
+So any key on the keyboard can now be used for shortcuts, allowing numerous customization.&lt;/p>
 &lt;p>If there are keys on your keyboard that you don&amp;rsquo;t use you can map them to frequently used keys.
 For example for vim users, the right command key on macs can be remapped to control.
 This makes pressing vim shortcuts like &lt;code>ctrl + A&lt;/code> easier.&lt;/p>
@@ -1110,8 +1106,11 @@ This makes pressing vim shortcuts like &lt;code>ctrl + A&lt;/code> easier.&lt;/p
 &lt;/div>
 &lt;/figure>
 &lt;/p>
-&lt;p>Take away is that make shortcuts easier to press.&lt;/p>
-&lt;p>&lt;strong>Better Hotkeys&lt;/strong>&lt;/p>
+&lt;p>I changed a lot of keys since then but the ideas are useful. Just find the keys that works best for you.&lt;/p>
+&lt;h2 class="heading" id="window-switching">
+Window Switching
+&lt;a class="anchor" href="#window-switching">#&lt;/a>
+&lt;/h2>
 &lt;p>There are some default hotkeys on every system like &lt;code>alt+tab&lt;/code>.
 This gives you a bit more advantage over switching windows with a mouse, &lt;a href="https://www.youtube.com/watch?app=desktop&amp;amp;v=Px0_8J0Wb-s">but there is room for improvements&lt;/a>.
 These shortcuts are designed for general problems.
@@ -1126,18 +1125,70 @@ Wouldn&amp;rsquo;t it be good if you could do 80% of these window switches with 
 It depends, I switch between Browser, terminal and note app multiple times most of the time.
 You can assign a hotkey for these and only use alt tab for when you need to switch infrequently used windows.&lt;/li>
 &lt;/ul>
-&lt;p>If your editor is not in your terminal you wanna also add editor to this list.&lt;/p>
-&lt;p>&lt;a href="https://rakhesh.com/coding/using-hammerspoon-to-switch-apps/">This&lt;/a>
-Hammerspoon configuration allows launching and switching between application windows.&lt;/p>
-&lt;p>&lt;a href="https://github.com/jasonrudolph/keyboard#hyper-key-for-quickly-launching-apps">This&lt;/a>
-is another one, again using Hammerspoon.&lt;/p>
-&lt;p>&lt;strong>Shortcut for frequent actions&lt;/strong>&lt;/p>
+&lt;p>Here&amp;rsquo;s the solution I use based on &lt;a href="https://rakhesh.com/coding/using-hammerspoon-to-switch-apps/">this post&lt;/a>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-lua" data-lang="lua">&lt;span class="line">&lt;span class="cl">&lt;span class="n">WINDOW_MANAGEMENT_KEY&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="s2">&amp;#34;alt&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;command&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;ctrl&amp;#34;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">WINDOWS_SHORTCUTS&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span> &lt;span class="s2">&amp;#34;J&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;Brave Browser&amp;#34;&lt;/span> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span> &lt;span class="s2">&amp;#34;K&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;WezTerm&amp;#34;&lt;/span> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kd">local&lt;/span> &lt;span class="kr">function&lt;/span> &lt;span class="nf">launchOrFocusOrRotate&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">app&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">local&lt;/span> &lt;span class="n">focusedWindow&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">hs.window&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">focusedWindow&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">if&lt;/span> &lt;span class="n">focusedWindow&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="kc">nil&lt;/span> &lt;span class="kr">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">hs.application&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">launchOrFocus&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">app&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">return&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">local&lt;/span> &lt;span class="n">focusedWindowApp&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">focusedWindow&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">application&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">local&lt;/span> &lt;span class="n">focusedWindowAppName&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">focusedWindowApp&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">name&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">local&lt;/span> &lt;span class="n">focusedWindowPath&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">focusedWindowApp&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">path&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">local&lt;/span> &lt;span class="n">appNameOnDisk&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">string.gsub&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">focusedWindowPath&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;/Applications/&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">local&lt;/span> &lt;span class="n">appNameOnDisk&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">string.gsub&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">appNameOnDisk&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;.app&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">local&lt;/span> &lt;span class="n">appNameOnDisk&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">string.gsub&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">appNameOnDisk&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;/System/Library/CoreServices/&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">if&lt;/span> &lt;span class="n">focusedWindow&lt;/span> &lt;span class="ow">and&lt;/span> &lt;span class="n">appNameOnDisk&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">app&lt;/span> &lt;span class="kr">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">local&lt;/span> &lt;span class="n">currentApp&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">hs.application&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">focusedWindowAppName&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">local&lt;/span> &lt;span class="n">appWindows&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">currentApp&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">allWindows&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">-- https://www.hammerspoon.org/docs/hs.application.html#allWindows&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">-- A table of zero or more hs.window objects owned by the application. From the current space.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">if&lt;/span> &lt;span class="o">#&lt;/span>&lt;span class="n">appWindows&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="mi">1&lt;/span> &lt;span class="kr">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">currentApp&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">hide&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">return&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">if&lt;/span> &lt;span class="o">#&lt;/span>&lt;span class="n">appWindows&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="mi">0&lt;/span> &lt;span class="kr">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">-- It seems that this list order changes after one window get focused,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">-- Let&amp;#39;s directly bring the last one to focus every time&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">-- https://www.hammerspoon.org/docs/hs.window.html#focus&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">if&lt;/span> &lt;span class="n">app&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="s2">&amp;#34;Finder&amp;#34;&lt;/span> &lt;span class="kr">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">-- If the app is Finder the window count returned is one more than the actual count, so I subtract&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">appWindows&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="o">#&lt;/span>&lt;span class="n">appWindows&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">]:&lt;/span>&lt;span class="n">focus&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">appWindows&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="o">#&lt;/span>&lt;span class="n">appWindows&lt;/span>&lt;span class="p">]:&lt;/span>&lt;span class="n">focus&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">hs.application&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">launchOrFocus&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">app&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">hs.application&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">launchOrFocus&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">app&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">for&lt;/span> &lt;span class="n">_&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">shortcut&lt;/span> &lt;span class="kr">in&lt;/span> &lt;span class="n">ipairs&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">WINDOWS_SHORTCUTS&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="kr">do&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">hs.hotkey&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">bind&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">WINDOW_MANAGEMENT_KEY&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">shortcut&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">],&lt;/span> &lt;span class="kr">function&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">launchOrFocusOrRotate&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">shortcut&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">end&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The lua table can be easily expanded to open more applications.&lt;/p>
+&lt;h2 class="heading" id="shortcut-for-frequent-actions">
+Shortcut for frequent actions
+&lt;a class="anchor" href="#shortcut-for-frequent-actions">#&lt;/a>
+&lt;/h2>
 &lt;p>Other than switching apps there are some useful tools that is nice to have at hand.&lt;/p>
 &lt;p>Some suggestions are:&lt;/p>
 &lt;ul>
-&lt;li>&lt;a href="https://www.raycast.com/extensions/calendar">Viewing schedule and join meetings&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.raycast.com/extensions/calendar">Viewing calendar and reminders&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://www.raycast.com/extensions/clipboard-history">Clipboard history&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://www.raycast.com/raycast/browser-bookmarks">Opening frequent web pages&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.raycast.com/raycast/browser-bookmarks">Fuzzy find and open browser bookmarks&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://www.hammerspoon.org/docs/hs.grid.html#:~:text=To%20resize%2Fmove%20the%20window,upper%2Dleft%20of%20the%20window.">Splitting, resizing &amp;amp; moving windows&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://www.raycast.com/changelog/1-19-0">Fuzzy find open windows&lt;/a>&lt;/li>
 &lt;/ul>
@@ -1152,21 +1203,23 @@ hyper + L clipboard history
 hyper + ; browser bookmarks
 hyper + M search open windows
 &lt;/code>&lt;/pre>&lt;p>The following Hammerspoon config allows moving windows with shortcuts:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-lua" data-lang="lua">&lt;span class="line">&lt;span class="cl">&lt;span class="n">WINDOW_MANAGEMENT_KEY&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="s2">&amp;#34;alt&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;command&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;ctrl&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;shift&amp;#34;&lt;/span> &lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-lua" data-lang="lua">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">-- left&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">hs.hotkey&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">bind&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">WINDOW_MANAGEMENT_KEY&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;a&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kr">function&lt;/span>&lt;span class="p">()&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">hs.window&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">focusedWindow&lt;/span>&lt;span class="p">():&lt;/span>&lt;span class="n">moveToUnit&lt;/span>&lt;span class="p">({&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mf">0.5&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">1&lt;/span> &lt;span class="p">})&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">-- right&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">hs.hotkey&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">bind&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">WINDOW_MANAGEMENT_KEY&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;d&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kr">function&lt;/span>&lt;span class="p">()&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">hs.window&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">focusedWindow&lt;/span>&lt;span class="p">():&lt;/span>&lt;span class="n">moveToUnit&lt;/span>&lt;span class="p">({&lt;/span> &lt;span class="mf">0.5&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mf">0.5&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">1&lt;/span> &lt;span class="p">})&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">-- up&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">hs.hotkey&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">bind&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">WINDOW_MANAGEMENT_KEY&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;w&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kr">function&lt;/span>&lt;span class="p">()&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">hs.window&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">focusedWindow&lt;/span>&lt;span class="p">():&lt;/span>&lt;span class="n">moveToUnit&lt;/span>&lt;span class="p">({&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mf">0.5&lt;/span> &lt;span class="p">})&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">-- down&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">hs.hotkey&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">bind&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">WINDOW_MANAGEMENT_KEY&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;s&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kr">function&lt;/span>&lt;span class="p">()&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">hs.window&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">focusedWindow&lt;/span>&lt;span class="p">():&lt;/span>&lt;span class="n">moveToUnit&lt;/span>&lt;span class="p">({&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mf">0.5&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mf">0.5&lt;/span> &lt;span class="p">})&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">-- center screewindow_management_key&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">-- center&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">hs.hotkey&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">bind&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">WINDOW_MANAGEMENT_KEY&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;c&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kr">function&lt;/span>&lt;span class="p">()&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">hs.window&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">focusedWindow&lt;/span>&lt;span class="p">():&lt;/span>&lt;span class="n">centerOnScreen&lt;/span>&lt;span class="p">()&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>&lt;span class="p">)&lt;/span>
@@ -1176,7 +1229,10 @@ hyper + M search open windows
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>&lt;span class="p">)&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>You can also use a layout mode for moving windows:
 &lt;a href="https://github.com/jasonrudolph/keyboard#window-layout-mode">https://github.com/jasonrudolph/keyboard#window-layout-mode&lt;/a>&lt;/p>
-&lt;p>&lt;strong>Symbol Layers&lt;/strong>&lt;/p>
+&lt;h2 class="heading" id="symbol-layers">
+Symbol Layers
+&lt;a class="anchor" href="#symbol-layers">#&lt;/a>
+&lt;/h2>
 &lt;p>If you code a lot this will be your favorite section.
 Have you noticed how hard it is to type &lt;code>_&lt;/code>?
 You need to take fingers off the home row, hold shift and press a key.
@@ -1276,11 +1332,12 @@ You can also view my config and take inspirations from this &lt;a href="https://
 }
 }
 }
-&lt;/code>&lt;/pre>&lt;p>&lt;strong>Not Only Speed but ergonomics&lt;/strong>&lt;/p>
-&lt;p>These customizations help with removing uncomfortable keys you need to press.
-The benefits are immediate - less strain on your fingers and wrists due to reduced movement, and a mind unburdened from managing mundane tasks like locating the Terminal window.&lt;/p>
-&lt;p>Thank you for taking the time to read this post.
-I hope it has inspired you to explore the potential of your tools and consider making your tools.&lt;/p></description></item><item><title>TIL Secret to Open Source Contribution &amp; Contributing to Python Docs</title><link>https://glyphack.com/blog/contributing-to-python-docs/</link><pubDate>Tue, 19 Sep 2023 22:23:48 +0200</pubDate><guid>https://glyphack.com/blog/contributing-to-python-docs/</guid><description>&lt;p>I think I learned something about contributing to open source that, if I knew a couple of years back, I could have done much more open source contributions.&lt;/p>
+&lt;/code>&lt;/pre>&lt;h2 class="heading" id="not-only-speed-but-ergonomics">
+Not Only Speed but ergonomics
+&lt;a class="anchor" href="#not-only-speed-but-ergonomics">#&lt;/a>
+&lt;/h2>
+&lt;p>These customization help with removing uncomfortable keys you need to press.
+The benefits are immediate - less strain on your fingers and wrists due to reduced movement, and a mind unburdened from managing mundane tasks like locating the Terminal window.&lt;/p></description></item><item><title>TIL Secret to Open Source Contribution &amp; Contributing to Python Docs</title><link>https://glyphack.com/blog/contributing-to-python-docs/</link><pubDate>Tue, 19 Sep 2023 22:23:48 +0200</pubDate><guid>https://glyphack.com/blog/contributing-to-python-docs/</guid><description>&lt;p>I think I learned something about contributing to open source that, if I knew a couple of years back, I could have done much more open source contributions.&lt;/p>
 &lt;p>A while back, I started creating a &lt;a href="https://github.com/Glyphack/enderpy">hand-written parser for Python&lt;/a>.
 I ended up also contributing some fixes to Python docs.
 This was particularly interesting to me because it did not require really advanced knowledge, and the stuff there that was incorrect or outdated had been there for years.
@@ -2670,17 +2727,10 @@ write for each limiter, we can test them all with universal test cases,
 the rate limiter service can use them without knowing what the underlying strategy
 is.&lt;/p>
 &lt;p>In the next part we can see how to implement another storage backend such as redis,
-without having to change any code in rate limiting algorithms.&lt;/p></description></item><item><title>Personalize Macos Environment for Your Productivity</title><link>https://glyphack.com/blog/personalize-macos-environment-for-your-productivity/</link><pubDate>Sun, 19 Feb 2023 20:58:33 +0100</pubDate><guid>https://glyphack.com/blog/personalize-macos-environment-for-your-productivity/</guid><description>&lt;p>MacOS is already a polished environment,&lt;/p>
-&lt;p>Investing the time to personalize your tools and environment is a smart move,
-especially if you plan to do your current profession for years to come.
-With a set of personalized methods and tools,
-you can make your routine tasks easier and more efficient.&lt;/p>
-&lt;p>In this guide, we&amp;rsquo;ll explore methods and tools that can help you personalize
-your environment to suit your needs as a developer.
-While not everything may be applicable to you,
-you&amp;rsquo;re sure to find some good ideas to steal or improve upon.
-We&amp;rsquo;ll go through a list of regular tasks that developers face and
-show you how customized tools can make your work easier and more enjoyable.&lt;/p>
+without having to change any code in rate limiting algorithms.&lt;/p></description></item><item><title>Personalize Macos Environment for Your Productivity</title><link>https://glyphack.com/blog/personalize-macos-environment-for-your-productivity/</link><pubDate>Sun, 19 Feb 2023 20:58:33 +0100</pubDate><guid>https://glyphack.com/blog/personalize-macos-environment-for-your-productivity/</guid><description>&lt;p>MacOS is already a polished environment and unlike some other OSes it works out of the box.
+Still, spending investing time to personalize your tools and environment is a smart move.&lt;/p>
+&lt;p>In the past years using MacOS I found simple tools that helps to make MacOS more ergonomic and fun.&lt;/p>
+&lt;p>Most of the content here is in &lt;a href="https://github.com/Glyphack/dotfiles">my dotfiles&lt;/a>.&lt;/p>
 &lt;h2 class="heading" id="why">
 Why?
 &lt;a class="anchor" href="#why">#&lt;/a>
@@ -2690,190 +2740,104 @@ otherwise keep reading so I can convince you why you might want to start
 configuring your tools.&lt;/p>
 &lt;p>I first heard the term
 &lt;a href="https://www.youtube.com/watch?v=QMVIJhC9Veg">Personalized Development Environment&lt;/a>
-in the video tj talks about why configuring Neovim editor for yourself is
-useful and good investment.&lt;/p>
+in this video about configuring text editors to your liking and the idea stuck with me since then.&lt;/p>
 &lt;p>I think this approach works well with other tools too.
-If you are going to spend 20 years in this profession,
-you need your customized tools and environment to work with.
-That&amp;rsquo;s exactly why you learn touch typing.
+That&amp;rsquo;s exactly people learn touch typing.
 Being able to use keyboard with the least amount of effort is important.&lt;/p>
 &lt;p>You can go ahead with default configurations that come out of the box but those
-are not built for you, they are for everyone.
-Apple does not know you are going to a lot of meetings everyday and need ready
-tools to attend them.
-They don&amp;rsquo;t know your job involves constantly switching between two windows.&lt;/p>
-&lt;p>All of these actions have cognitive overhead to do with default settings.
-This automations are not primarily here to save your time,
-they are here so you can complete your stuff more easily.
-If you need to constantly search some documentation while coding,
-it&amp;rsquo;s a lot if you have to altTab to your browser find the browser tab and
-write in the search box, what if you could get a floating window that give you
-what you need inside the text editor so you don&amp;rsquo;t loose the focus?
-or even worse opening the browser and end up scrolling reddit.&lt;/p>
-&lt;h2 class="heading" id="how-to-start">
-How to Start
-&lt;a class="anchor" href="#how-to-start">#&lt;/a>
+are not built for you, they are for everyone.&lt;/p>
+&lt;p>I don&amp;rsquo;t think automation is not primarily here to save your time only.
+Automation is here to make it easier. Let me give you an example.
+Imagine you have to constantly switch between editor and web browser constantly for some task.
+Doing this with the default tools is annoying, requires a lot of keys. But it can be simpler.
+Default tool for this is to either use the mouse, or ALT+Tab every time to move between windows.
+Specialized tools can make this simpler by setting a shortcut for each of the windows. Making the toggle just one keybinding.&lt;/p>
+&lt;h2 class="heading" id="remapping-keys">
+Remapping Keys
+&lt;a class="anchor" href="#remapping-keys">#&lt;/a>
 &lt;/h2>
-&lt;p>Since this is all about your own workflow,
-I can&amp;rsquo;t give you instructions on what to configure.&lt;/p>
-&lt;p>But I give you ideas about what can be done,
-and next time you wish something was easier to do take a look and see
-which tool can help you with it.&lt;/p>
-&lt;h3 class="heading" id="keyboard">
-Keyboard
-&lt;a class="anchor" href="#keyboard">#&lt;/a>
-&lt;/h3>
-&lt;p>Keyboard is the main input to do your work,
-there&amp;rsquo;s not much to customize about the mouse but keyboard has a lot of possibilities.&lt;/p>
-&lt;p>note that using the following tools without knowing touch typing is not possible.&lt;/p>
-&lt;h3 class="heading" id="remapping">
-Remapping
-&lt;a class="anchor" href="#remapping">#&lt;/a>
-&lt;/h3>
+&lt;p>&lt;a href="https://karabiner-elements.pqrs.org/">Karabiner&lt;/a> can be used to remap keyboard.&lt;/p>
 &lt;p>Try remapping the keys that you don&amp;rsquo;t use often to things that you miss on the
 keyboard, some examples are:&lt;/p>
 &lt;ul>
-&lt;li>Caps lock: key can be remapped to Esc, especially if you use vim&lt;/li>
-&lt;li>Fn keys: I added media control to stop/play and move between songs&lt;/li>
+&lt;li>Caps lock: key can be remapped to &lt;code>Esc&lt;/code> key when pressed and Hyper Key when held&lt;/li>
 &lt;li>&lt;code>§&lt;/code>: which I don&amp;rsquo;t know why is it here in the first place can be mapped to &amp;ldquo;`&amp;rdquo;&lt;/li>
 &lt;/ul>
-&lt;p>&lt;a href="https://karabiner-elements.pqrs.org/">Karabiner&lt;/a> can be used for this purpose.&lt;/p>
-&lt;p>it supports more &lt;a href="https://ke-complex-modifications.pqrs.org/">complex modifications&lt;/a>
-which include things like adding a shortcut for sleep.&lt;/p>
-&lt;h3 class="heading" id="expanding">
-Expanding
-&lt;a class="anchor" href="#expanding">#&lt;/a>
-&lt;/h3>
+&lt;p>There are more advanced keybindings that can be done I have &lt;a href="https://glyphack.com/blog/a-better-keyboard/">created keybindings&lt;/a> to write symbols like &lt;code>*&lt;/code>, &lt;code>-&lt;/code>, etc. without reaching for shift key and a number.
+This helped a lot with keeping my hands near the home row and reducing the work my pinky finger has to do.&lt;/p>
+&lt;h2 class="heading" id="text-expanding">
+Text Expanding
+&lt;a class="anchor" href="#text-expanding">#&lt;/a>
+&lt;/h2>
 &lt;p>Text expanding is writing a small text and then it expands to a bigger text.&lt;/p>
-&lt;p>For example instead of typing your work mail every time you,
-can only write &lt;code>,wm&lt;/code> and it expands to your work mail.&lt;/p>
-&lt;p>&lt;a href="https://textexpander.com/">TexExpander&lt;/a> is the tool I use for this.&lt;/p>
+&lt;p>For example instead of typing your mail every time you,
+can only write &lt;code>:em&lt;/code> and it expands to your email address.&lt;/p>
+&lt;p>&lt;a href="https://espanso.org/">Espanso&lt;/a> is the tool I use for this.&lt;/p>
 &lt;p>Some examples I have are:&lt;/p>
 &lt;ul>
-&lt;li>&lt;code>,date&lt;/code> to current date like 19/02/2023&lt;/li>
-&lt;li>multiple shortcuts to write my email addresses&lt;/li>
+&lt;li>&lt;code>:date&lt;/code> to current date like 19/02/2023&lt;/li>
 &lt;/ul>
-&lt;p>You can also have macros for run javascript code to format something,
-for example this snippet and format json in my clipboard for when I need
-to share something with others:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-js" data-lang="js">&lt;span class="line">&lt;span class="cl">&lt;span class="nx">JSON&lt;/span>&lt;span class="err">﻿&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="err">﻿&lt;/span>&lt;span class="nx">stringify&lt;/span>&lt;span class="err">﻿&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="err">﻿&lt;/span>&lt;span class="o">%&lt;/span>&lt;span class="nx">clipboard&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="err">﻿&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">2&lt;/span>&lt;span class="err">﻿&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="err">﻿&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This is so powerful for me,
-I deal with a lot of json outputs everyday and being able to format it without
-opening a website and paste the json in and format it to look at what it I can
-continue my work in my environment.&lt;/p>
-&lt;h3 class="heading" id="raycast">
+&lt;h2 class="heading" id="raycast">
 Raycast
 &lt;a class="anchor" href="#raycast">#&lt;/a>
-&lt;/h3>
-&lt;p>While other suggestions have multiple implementations that you can use,
-I don&amp;rsquo;t think there&amp;rsquo;s a better launcher than &lt;a href="https://www.raycast.com">Raycast&lt;/a>.&lt;/p>
+&lt;/h2>
+&lt;p>&lt;a href="https://www.raycast.com">Raycast&lt;/a> is the single best application I have in this list.&lt;/p>
 &lt;p>What does it do?&lt;/p>
 &lt;p>It gives a launch bar(like Spotlight) that can open applications,
 find files and perform actions. I suggest reading through their
 &lt;a href="https://manual.raycast.com/">manual&lt;/a> to understand all it can do.
 With Raycast you can integrate the stuff you need while reading/coding to quickly
 pull them off without leaving your current work.&lt;/p>
-&lt;h4 class="heading" id="extensions">
-Extensions
-&lt;a class="anchor" href="#extensions">#&lt;/a>
-&lt;/h4>
 &lt;p>Raycast is easy to extend yourself, every time you find yourself doing something
 over an over or need to open something regularly, take a look at it&amp;rsquo;s
 &lt;a href="https://www.raycast.com/store">store&lt;/a>
 to check if there&amp;rsquo;s a solution.&lt;/p>
-&lt;p>After installing the extensions you can configure them or set shortcuts by
-searching &amp;ldquo;extensions&amp;rdquo; in Raycast search bar.&lt;/p>
-&lt;p>For example these are some of the things I&amp;rsquo;m using
+&lt;p>For example these are some of the things I&amp;rsquo;m using:
 &lt;figure class="">
 &lt;div>
 &lt;img loading="lazy" alt="My Raycast" src="https://glyphack.com/my-raycast.png" >
 &lt;/div>
 &lt;/figure>
 &lt;/p>
-&lt;p>Notice that you can &lt;a href="https://raycastapp.notion.site/Command-Aliases-and-Hotkeys-43cba38c19dd4000bc75404c11eb0f80">set hotkeys&lt;/a>
-for most used commands to activate them immediately.&lt;/p>
 &lt;p>&lt;a href="https://www.raycast.com/raycast/browser-bookmarks">Search bookmarks&lt;/a>
-Start bookmarking any page you need to visit frequently, for example your
-team Jira board, AWS account, Homepages for your projects, or university portal.
-Then use this extension to search the page you want to open from bookmarks and
-open it with.&lt;/p>
+Start bookmarking any page you need to visit frequently, for example
+homepages for your projects.&lt;/p>
 &lt;p>The reason this is handy is that, first you don&amp;rsquo;t need to open browser to search
 and through the history to open frequently visited pages also you don&amp;rsquo;t have to
 navigate through the pages to get to where you want.
-Imagine navigating through Confluence to update some page you have to do everyday.&lt;/p>
+Imagine navigating through Confluence to update some page you have to do everyday.
+These days I just bookmark things I want to visit again and don&amp;rsquo;t bother with organizing them.&lt;/p>
 &lt;p>Clipboard history &amp;amp; edit for traveling trough clipboard and change the content.&lt;/p>
-&lt;p>&lt;a href="https://raycastapp.notion.site/Calendar-b4bdcf402a024c37940e46e8dcf2da91">Calendar&lt;/a>
-to check the events and join them.&lt;/p>
-&lt;p>&lt;a href="https://github.com/raycast/extensions/blob/4d68ff23122d5505ab1be6dc595427f8f95fa7ea/extensions/amazon-aws/README.md">AWS&lt;/a>
-extension to browse resources, everyone knows AWS console sucks and is slow.
-Fun note: I previously tried to implement the same for
-&lt;a href="https://github.com/Glyphack/aws-slapdash/">slapdash&lt;/a>
-after writing a plugin for them realized their APIs are not developer friendly.
-And this is a risk because the usefulness of these products are tied to developers.&lt;/p>
 &lt;p>&lt;a href="https://www.raycast.com/raycast/github">Github&lt;/a>
-Can be useful if you happen to do open source, it can search repos,
-and PRs:
+extension is also useful to check notifications.
 &lt;figure class="">
 &lt;div>
 &lt;img loading="lazy" alt="Raycast Github" src="https://glyphack.com/raycast-github-pr.png" >
 &lt;/div>
 &lt;/figure>
 &lt;/p>
-&lt;h4 class="heading" id="apps">
-Apps
-&lt;a class="anchor" href="#apps">#&lt;/a>
-&lt;/h4>
-&lt;p>Another feature is to manage some application windows with hotkeys.
-This is useful 1,2 applications where you switch them all the time.
-For example for me it&amp;rsquo;s terminal and browser:
-&lt;figure class="">
-&lt;div>
-&lt;img loading="lazy" alt="Raycast Apps" src="https://glyphack.com/raycast-apps.png" >
-&lt;/div>
-&lt;/figure>
-&lt;/p>
-&lt;p>With this setting not only you can launch the app but you can focus the window
-anywhere with hotkey.&lt;/p>
-&lt;h4 class="heading" id="quicklinks">
-QuickLinks
-&lt;a class="anchor" href="#quicklinks">#&lt;/a>
-&lt;/h4>
-&lt;p>Last feature to setup is QuickLinks,
-with this you can predefine sites to open with some parameters,
-this can be used to search google, or translate a word.
-&lt;figure class="">
-&lt;div>
-&lt;img loading="lazy" alt="Raycast QuickLinks" src="https://glyphack.com/raycast-quicklinks.png" >
-&lt;/div>
-&lt;/figure>
-&lt;/p>
-&lt;h2 class="heading" id="automation-tools">
-Automation tools
-&lt;a class="anchor" href="#automation-tools">#&lt;/a>
-&lt;/h2>
-&lt;h3 class="heading" id="hammerspoon">
+&lt;h2 class="heading" id="hammerspoon">
 Hammerspoon
 &lt;a class="anchor" href="#hammerspoon">#&lt;/a>
-&lt;/h3>
+&lt;/h2>
 &lt;p>This one&amp;rsquo;s the most powerful tool, it&amp;rsquo;s a bridge between MacOS and Lua. You can
 &lt;a href="https://www.hammerspoon.org/docs/index.html">customize anything&lt;/a>
 with it&amp;rsquo;s builtin libraries called spoons.&lt;/p>
 &lt;p>You can take a look at
 &lt;a href="https://github.com/Glyphack/dotfiles/blob/master/hammerspoon/init.lua">my config&lt;/a>
-for inspirations. The rest are explanations of my config.&lt;/p>
+for inspirations.&lt;/p>
 &lt;p>One useful feature if you do multiple meetings per day(which you probably do)
 is it have a global shortcut to mute/unmute your mic to don&amp;rsquo;t annoy others with
 noise in the meeting and quickly unmute. I&amp;rsquo;m doing this with &lt;a href="https://github.com/cmaahs/global-mute-spoon">global mute spoon&lt;/a>.&lt;/p>
 &lt;p>Here&amp;rsquo;s how the configuration looks like&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-lua" data-lang="lua">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">local&lt;/span> &lt;span class="n">GlobalMute&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">hs.loadSpoon&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;GlobalMute&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">GlobalMute&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">bindHotkeys&lt;/span>&lt;span class="p">({&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">unmute&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">lesshyper&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;u&amp;#34;&lt;/span> &lt;span class="p">},&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mute&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">lesshyper&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;m&amp;#34;&lt;/span> &lt;span class="p">},&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">toggle&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">hyper&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;t&amp;#34;&lt;/span> &lt;span class="p">}&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">})&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>I also use Hammerspoon to set my audio devices when different devices are connected.
-this one sets my output to speakers when my external mic &amp;amp; speaker is connected:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-lua" data-lang="lua">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">local&lt;/span> &lt;span class="kr">function&lt;/span> &lt;span class="nf">switchOutputAfterExternalMicConnected&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>For example I have a microphone that is both input and output device.
+When I connect this microphone I don&amp;rsquo;t want to set it as my output device but that&amp;rsquo;s what mac does by default.
+In Hammerspoon I can setup a callback to set my input/output device when the microphone is connected.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-lua" data-lang="lua">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">local&lt;/span> &lt;span class="kr">function&lt;/span> &lt;span class="nf">audiodeviceCallback&lt;/span>&lt;span class="p">()&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">current&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">hs.audiodevice&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">defaultInputDevice&lt;/span>&lt;span class="p">():&lt;/span>&lt;span class="n">name&lt;/span>&lt;span class="p">()&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Current device: &amp;#34;&lt;/span> &lt;span class="o">..&lt;/span> &lt;span class="n">current&lt;/span>&lt;span class="p">)&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">if&lt;/span> &lt;span class="n">current&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="s2">&amp;#34;External Microphone&amp;#34;&lt;/span> &lt;span class="kr">then&lt;/span>
@@ -2881,90 +2845,41 @@ this one sets my output to speakers when my external mic &amp;amp; speaker is co
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">hs.audiodevice&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">findOutputByName&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;MacBook Pro Speakers&amp;#34;&lt;/span>&lt;span class="p">):&lt;/span>&lt;span class="n">setDefaultOutputDevice&lt;/span>&lt;span class="p">()&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">end&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 class="heading" id="crontab">
-Crontab
-&lt;a class="anchor" href="#crontab">#&lt;/a>
-&lt;/h3>
-&lt;p>If you need to execute something regularly, create a crontab for it.
-MacOS has &lt;a href="https://alvinalexander.com/mac-os-x/mac-osx-startup-crontab-launchd-jobs/">crontab&lt;/a>
-which you can use for this.&lt;/p>
-&lt;p>Also can create push notifications using hammerspoon and
-calling an API to check for new notifications(for example Github).&lt;/p>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">hs.audiodevice&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">watcher.setCallback&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">audiodeviceCallback&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">hs.audiodevice&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">watcher.start&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 class="heading" id="switching-windows">
+Switching Windows
+&lt;a class="anchor" href="#switching-windows">#&lt;/a>
+&lt;/h2>
+&lt;p>Another Raycast feature is setting keybinding to open application windows.
+This is useful when you want to have one application on the screen.
+For example for me it&amp;rsquo;s terminal and browser.
+&lt;figure class="">
+&lt;div>
+&lt;img loading="lazy" alt="Raycast Apps" src="https://glyphack.com/raycast-apps.png" >
+&lt;/div>
+&lt;/figure>
+&lt;/p>
+&lt;p>These days I&amp;rsquo;m using &lt;a href="https://glyphack.com/blog/a-better-keyboard/">a new solution&lt;/a> based on Hammerspoon for this.&lt;/p>
 &lt;h2 class="heading" id="terminal">
 Terminal
 &lt;a class="anchor" href="#terminal">#&lt;/a>
 &lt;/h2>
-&lt;p>I assume you do use terminal a lot,
-otherwise you would not read this far cause developers who don&amp;rsquo;t use terminal
-effectively don&amp;rsquo;t care much about the previous stuff either.&lt;/p>
-&lt;p>Terminal is designed to be configured with functions for frequent commands.&lt;/p>
-&lt;p>I&amp;rsquo;m not gonna talk much about terminal but just make sure to:&lt;/p>
-&lt;ul>
-&lt;li>Use a &lt;a href="https://github.com/junegunn/fzf">fuzzy finder&lt;/a>
-for searching directories and history&lt;/li>
-&lt;li>Create a lot of functions for frequent used commands&lt;/li>
-&lt;/ul>
-&lt;h3 class="heading" id="create-functions">
-Create Functions
-&lt;a class="anchor" href="#create-functions">#&lt;/a>
-&lt;/h3>
-&lt;p>For example I used to record a lot videos for my team and share them,
-but had to compress them before so I created this function:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fish" data-lang="fish">&lt;span class="line">&lt;span class="cl">&lt;span class="k">function&lt;/span> &lt;span class="nf">compress_vid&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nf">ffmpeg&lt;/span> &lt;span class="na">-i&lt;/span> &lt;span class="nv">$argv&lt;/span> &lt;span class="na">-vcodec&lt;/span> h264 &lt;span class="na">-acodec&lt;/span> aac &lt;span class="na">-strict&lt;/span> -&lt;span class="m">2&lt;/span> output.mp4
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">end&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Or you might be doing a lot of
-&lt;a href="https://github.com/Glyphack/dotfiles/blob/master/fish/functions/start-dynamodb.fish">dynamoDB&lt;/a>
-and
-&lt;a href="https://github.com/Glyphack/dotfiles/blob/master/fish/functions/start-kafka.fish">Kafka&lt;/a>
-development so have commands to ready your environment for test.&lt;/p>
-&lt;p>I&amp;rsquo;m using fish but this can be applied to other shells as well.
-In case you regularly run particular commands like activating the python virtualenv,
-use a hook to auto activate it for you.
-I&amp;rsquo;m using &lt;a href="https://github.com/justinmayer/virtualfish">virtualFish&lt;/a> for this.&lt;/p>
-&lt;h3 class="heading" id="fuzzy-finder">
-Fuzzy Finder
-&lt;a class="anchor" href="#fuzzy-finder">#&lt;/a>
-&lt;/h3>
-&lt;p>After you installed fzf make sure to configure it for these shortcuts:&lt;/p>
-&lt;ul>
-&lt;li>&lt;a href="https://github.com/Glyphack/dotfiles/blob/master/fish/config.fish#L12">Alt+C&lt;/a>
-for searching and navigating to a directory&lt;/li>
-&lt;li>&lt;a href="https://github.com/Glyphack/dotfiles/blob/master/fish/config.fish#L11">Ctrl+T&lt;/a>
-to search the current dir and use the path&lt;/li>
-&lt;li>Ctrl+R to search the history&lt;/li>
-&lt;/ul>
-&lt;p>This Alt+C command is really handy for me to navigate and open projects,
-you can see that I set it to only search my development directory.&lt;/p>
-&lt;p>Also learn to configure the tools you use often,
-read their manuals to find out what features they have that might be useful for you.&lt;/p>
-&lt;h3 class="heading" id="configure-git">
+&lt;p>If you made it through here you might as well be a CLI user.
+This post is not about terminal as it&amp;rsquo;s not related to MacOS but here are a few tips.&lt;/p>
+&lt;p>Use a fuzzy finder like &lt;a href="https://github.com/junegunn/fzf">fzf&lt;/a> for searching directories and history.
+I have the following Fish keybinding to do a fuzzy search in my home directory and select a folder I want to &lt;code>cd&lt;/code> into.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fish" data-lang="fish">&lt;span class="line">&lt;span class="cl">&lt;span class="k">set&lt;/span> &lt;span class="na">-x&lt;/span> &lt;span class="nv">FZF_ALT_C_COMMAND&lt;/span> &lt;span class="s2">&amp;#34;fd -t d . &lt;/span>&lt;span class="nv">$PROGRAMMING_DIR&lt;/span>&lt;span class="s2"> -d 3&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 class="heading" id="configure-git">
 Configure Git
 &lt;a class="anchor" href="#configure-git">#&lt;/a>
 &lt;/h3>
 &lt;p>A good one to start can be git,
-you can setup &lt;a href="https://github.com/Glyphack/dotfiles/blob/master/gitconf/.gitignore_global">global ignore file&lt;/a>,
-&lt;a href="https://github.com/Glyphack/dotfiles/blob/master/gitconf/.gitconfig#L8">aliases&lt;/a>
-and optional configurations for some projects.
-For example I override some configs when I&amp;rsquo;m in my company projects folder.&lt;/p>
-&lt;p>Take advantage of TUI apps like &lt;a href="https://github.com/jesseduffield/lazygit">lazy-git&lt;/a>,
-to make your work easier.&lt;/p>
-&lt;p>IMO the only way to work with git should not be the git client in your text editor.
-Having to open the text editor for only git operations might take your focus.&lt;/p>
-&lt;h3 class="heading" id="starship">
-Starship
-&lt;a class="anchor" href="#starship">#&lt;/a>
-&lt;/h3>
-&lt;p>Use &lt;a href="https://starship.rs/">Starship&lt;/a>,
-it can give you information about the directory your in,
-like what git branch are you on or what AWS account is current being used.&lt;/p>
-&lt;p>I use &lt;a href="https://github.com/Glyphack/dotfiles/blob/cc7bd423da69321036d1eba8ece9316801f6bd85/starship/starship.toml#L3">this setting to&lt;/a>
-have the AWS account name and region&lt;/p>
-&lt;h3 class="heading" id="aws">
-AWS
-&lt;a class="anchor" href="#aws">#&lt;/a>
-&lt;/h3>
-&lt;p>Since I mentioned AWS, make sure to use one of &lt;a href="https://github.com/99designs/aws-vault">aws-vault&lt;/a> or &lt;a href="https://github.com/benkehoe/aws-sso-util">aws-sso-util&lt;/a> to switch AWS accounts. You should be able to switch quickly for your testing and development, and this does not have to involve going to console and copying credentials every time.&lt;/p>
+you can setup &lt;a href="https://github.com/Glyphack/dotfiles/blob/master/gitconf/.gitignore_global">global ignore file&lt;/a> to ignore files for your specific environment in every project. So you don&amp;rsquo;t need to add your &lt;code>.idea&lt;/code> folder to every project.
+&lt;a href="https://github.com/Glyphack/dotfiles/blob/master/gitconf/.gitconfig">Aliases&lt;/a> are useful for making shorter commands.&lt;/p>
+&lt;p>Git work trees are a perfect solution if you want to have access to multiple branches at the same time.
+For example having the master branch and a feature branch allows you to run benchmarks on both at the same time.&lt;/p>
 &lt;h3 class="heading" id="neovim">
 Neovim
 &lt;a class="anchor" href="#neovim">#&lt;/a>
@@ -2980,28 +2895,14 @@ Learn Your Code Editor
 &lt;a class="anchor" href="#learn-your-code-editor">#&lt;/a>
 &lt;/h3>
 &lt;p>Even if you don&amp;rsquo;t use something like Neovim,
-your editor supports a lot of customizations, and should be customized.
+your editor supports a lot of customization, and should be customized.
 When you find some action requires a lot of effort, try to customize it in your Editor.&lt;/p>
 &lt;p>For example, most of the time I stage part of the file I&amp;rsquo;m editing for commits.
 In VSCode you need to open the version control panel,
 scroll through the file and right click to select stage selected.
 This is super hard if you have to do it 20 times in a productive day.
 I have a config in my vim to directly stage hunks in my editor to commit,
-but I&amp;rsquo;m sure you can find a VSCode equivalent.&lt;/p>
-&lt;p>The moral of this part is,
-no matter what editor you use after you realized some set of
-actions are the ones you do more than others try to customize your editor to
-allow those actions to be done more easily,
-without taking you out of the zone.&lt;/p>
-&lt;h2 class="heading" id="conclusion">
-Conclusion
-&lt;a class="anchor" href="#conclusion">#&lt;/a>
-&lt;/h2>
-&lt;p>This was a long post, I wanted to go through my own configuration and
-update some stuff so decided to share it here as well.&lt;/p>
-&lt;p>Hope it&amp;rsquo;s useful for you and don&amp;rsquo;t forget the main point,
-customize your tools for your job to be able to get things done with less thinking.&lt;/p>
-&lt;p>If you use other tools customizations I&amp;rsquo;ll be happy to hear them.&lt;/p></description></item><item><title>Rate Limiter From Scratch in Python Part 1</title><link>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-1/</link><pubDate>Tue, 14 Feb 2023 23:19:18 +0100</pubDate><guid>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-1/</guid><description>&lt;h2 class="heading" id="introduction">
+but I&amp;rsquo;m sure you can find a VSCode equivalent.&lt;/p></description></item><item><title>Rate Limiter From Scratch in Python Part 1</title><link>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-1/</link><pubDate>Tue, 14 Feb 2023 23:19:18 +0100</pubDate><guid>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-1/</guid><description>&lt;h2 class="heading" id="introduction">
 Introduction
 &lt;a class="anchor" href="#introduction">#&lt;/a>
 &lt;/h2>
