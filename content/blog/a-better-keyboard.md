@@ -5,19 +5,15 @@ draft: false
 tags: [tools]
 ---
 
-When it comes to boosting productivity, there’s a common tool present in every OS that often goes unnoticed - your keyboard.
-
-
 Imagine you want to make a better keyboard.
 Seems like a hard challenge for every company.
 What if 'better' meant compressing multiple key presses into one? Or have shortcut for your frequent actions.
 If you minimize the effort to use it then you are making it better for yourself.
 
-The challenge lies in the keyboard's limited keys, and hard to press combinations like `ctrl + alt + any key`.
+Challenge lies in the keyboard's limited keys, and hard to press combinations like `ctrl + alt + any key`.
 
-Most of us learn to use tools as they are, a commendable first step.
-But why stop there? By settling for the status quo, we miss out on potential improvements.
-After all, no product is tailored to your specific needs.
+Most of us learn to use tools as they are.
+But most of the time the product is not tailored to your needs out of the box.
 
 None of the products produced are going to be designed based on your specific needs.
 One of the advantages of trying to use keyboard to make repetitive tasks easier is to reduce the attention needed for them.
@@ -31,49 +27,48 @@ Take away the ideas with yourself and adjust it accordingly.
 
 I implemented the improvements using the following tools:
 
-- [Raycast](https://www.raycast.com/)
 - [Hammerspoon](https://www.hammerspoon.org/)
 - [Karabiner](https://karabiner-elements.pqrs.org/)
 
-These tools are exclusively for Mac. There are other alternatives such as:
+These tools are exclusively for Mac. There are other alternatives for other platforms.
 
-- [Script Kit](https://www.scriptkit.com/)
-- [Auto Hotkey](https://www.autohotkey.com/)
-
-**Remapping Keys**
+## Remapping Keys
 
 Our keyboards are not designed for heavy usage of shortcuts.
 So you can start making shortcuts for stuff by setting them to `ctrl + T`,
 
 This method presents two significant challenges:
 
-- The easily accessible keys are already assigned, such as CMD + T.
-- Complex combinations become cumbersome: try pressing CMD + ALT + ctrl + T, and you’ll likely find it inconvenient."
+- The easily accessible keys are already assigned, such as `CMD + T`.
+- Complex combinations become cumbersome: try pressing `CMD + ALT + ctrl + T`.
 
 The idea is that some keys can be used to do more than one thing.
 What keys can be used like this? Let's take a look at different keys.
-- Keys you hold down to change how *other* keys behave, but that (usually) don't do anything if you use them on their own (like Shift and Control).
-	- Shift
-	- Control
-	- Alt
-	- Caps lock
-	- Command
-	- Fn
+
+- Keys you hold down to change how _other_ keys behave, but that (usually) don't do anything if you use them on their own (like Shift and Control).
+  - `Shift`
+  - `Control`
+  - `Alt`
+  - `Command`
+  - `Fn`
 - Keys that you press and release but don't want to "repeat" as you hold them (like Escape or Insert).
-	- Escape
-- Keys that you sometimes press and release, but sometimes want to repeat (like holding Space to insert a bunch of spaces, or Backspace to kill a bunch of characters).
-	- Space
-	- Backspace
+  - `Escape`
+  - `Caps lock`
 
-You can use the keys that are designed to only be held to do a new thing if they are pressed.
+You can use the keys that are designed to only be held to do a new thing if they are pressed. Or use the keys that are designed to be pressed to do another thing if they are held.
 
-I have set the following setting for Caps lock keys:
-- On hold: hyper key(CMD + ctrl + SHIFT + ALT)
+For example, I have set the following setting for Caps lock keys:
+
+- On hold: hyper key `ctrl + SHIFT + ALT`
 - On press: escape
 
 Why hyper?
 Because this new key press cannot conflict with any other shortcuts
 This allows you to create shortcuts like: hyper + H/J/K/L which is pretty comfortable to press.
+
+I used to have CAPS lock set to `CMD + ctrl + SHIFT + ALT`.
+But I noticed that there is a MacOS specific key binding for taking a system snapshot with `CMD + ctrl + shift + alt + ,` which cannot be disabled and my system froze when I accidentally pressed this key.
+So I stopped using it and switched to the above combination instead.
 
 You can do this using a [complex modification](https://karabiner-elements.pqrs.org/docs/manual/configuration/configure-complex-modifications/#create-your-own-rules) in Karabiner:
 
@@ -95,7 +90,6 @@ You can do this using a [complex modification](https://karabiner-elements.pqrs.o
                 {
                     "key_code": "right_shift",
                     "modifiers": [
-                        "right_command",
                         "right_control",
                         "right_option"
                     ]
@@ -114,7 +108,7 @@ You can do this using a [complex modification](https://karabiner-elements.pqrs.o
 
 This key now can be used as your new shortcut key.
 `hyper + t` can be mapped to an action globally and does not conflict with anything.
-So any key on the keyboard can now be used for shortcuts, allowing numerous customizations.
+So any key on the keyboard can now be used for shortcuts, allowing numerous customization.
 
 If there are keys on your keyboard that you don't use you can map them to frequently used keys.
 For example for vim users, the right command key on macs can be remapped to control.
@@ -124,9 +118,9 @@ I have a split keyboard, so keys under my thumbs are easy to press, and I remapp
 
 ![](/split-keyboard-remapping.excalidraw.svg)
 
-Take away is that make shortcuts easier to press.
+I changed a lot of keys since then but the ideas are useful. Just find the keys that works best for you.
 
-**Better Hotkeys**
+## Window Switching
 
 There are some default hotkeys on every system like `alt+tab`.
 This gives you a bit more advantage over switching windows with a mouse, [but there is room for improvements](https://www.youtube.com/watch?app=desktop&v=Px0_8J0Wb-s).
@@ -135,30 +129,82 @@ You can improve it for your own workflow.
 
 First example is alt tabbing to switch windows.
 This simple thing that you probably do 100 times a day requires to:
+
 - Take hand off home row
 - Press them multiple times to find the window you want
 - And if you have multiple windows then press `ctrl+tab` or `command+~` to get there
-Wouldn't it be good if you could do 80% of these window switches with a single shortcut that is more ergonomic?
-It depends, I switch between Browser, terminal and note app multiple times most of the time.
-You can assign a hotkey for these and only use alt tab for when you need to switch infrequently used windows.
+  Wouldn't it be good if you could do 80% of these window switches with a single shortcut that is more ergonomic?
+  It depends, I switch between Browser, terminal and note app multiple times most of the time.
+  You can assign a hotkey for these and only use alt tab for when you need to switch infrequently used windows.
 
-If your editor is not in your terminal you wanna also add editor to this list.
+Here's the solution I use based on [this post](https://rakhesh.com/coding/using-hammerspoon-to-switch-apps/)
 
-[This](https://rakhesh.com/coding/using-hammerspoon-to-switch-apps/)
-Hammerspoon configuration allows launching and switching between application windows.
+```lua
+WINDOW_MANAGEMENT_KEY = { "alt", "command", "ctrl" }
+WINDOWS_SHORTCUTS = {
+	{ "J", "Brave Browser" },
+	{ "K", "WezTerm" },
+}
 
-[This](https://github.com/jasonrudolph/keyboard#hyper-key-for-quickly-launching-apps)
-is another one, again using Hammerspoon.
+local function launchOrFocusOrRotate(app)
+	local focusedWindow = hs.window.focusedWindow()
+	if focusedWindow == nil then
+		hs.application.launchOrFocus(app)
+		return
+	end
 
-**Shortcut for frequent actions**
+	local focusedWindowApp = focusedWindow:application()
+	local focusedWindowAppName = focusedWindowApp:name()
+	local focusedWindowPath = focusedWindowApp:path()
+	local appNameOnDisk = string.gsub(focusedWindowPath, "/Applications/", "")
+	local appNameOnDisk = string.gsub(appNameOnDisk, ".app", "")
+	local appNameOnDisk = string.gsub(appNameOnDisk, "/System/Library/CoreServices/", "")
+	if focusedWindow and appNameOnDisk == app then
+		local currentApp = hs.application.get(focusedWindowAppName)
+		local appWindows = currentApp:allWindows()
+		-- https://www.hammerspoon.org/docs/hs.application.html#allWindows
+		-- A table of zero or more hs.window objects owned by the application. From the current space.
+		if #appWindows == 1 then
+			currentApp:hide()
+			return
+		end
+
+		if #appWindows > 0 then
+			-- It seems that this list order changes after one window get focused,
+			-- Let's directly bring the last one to focus every time
+			-- https://www.hammerspoon.org/docs/hs.window.html#focus
+			if app == "Finder" then
+				-- If the app is Finder the window count returned is one more than the actual count, so I subtract
+				appWindows[#appWindows - 1]:focus()
+			else
+				appWindows[#appWindows]:focus()
+			end
+		else
+			hs.application.launchOrFocus(app)
+		end
+	else
+		hs.application.launchOrFocus(app)
+	end
+end
+
+for _, shortcut in ipairs(WINDOWS_SHORTCUTS) do
+	hs.hotkey.bind(WINDOW_MANAGEMENT_KEY, shortcut[1], function()
+		launchOrFocusOrRotate(shortcut[2])
+	end)
+end
+```
+
+The lua table can be easily expanded to open more applications.
+
+## Shortcut for frequent actions
 
 Other than switching apps there are some useful tools that is nice to have at hand.
 
 Some suggestions are:
 
-- [Viewing schedule and join meetings](https://www.raycast.com/extensions/calendar)
+- [Viewing calendar and reminders](https://www.raycast.com/extensions/calendar)
 - [Clipboard history](https://www.raycast.com/extensions/clipboard-history)
-- [Opening frequent web pages](https://www.raycast.com/raycast/browser-bookmarks)
+- [Fuzzy find and open browser bookmarks](https://www.raycast.com/raycast/browser-bookmarks)
 - [Splitting, resizing & moving windows](https://www.hammerspoon.org/docs/hs.grid.html#:~:text=To%20resize%2Fmove%20the%20window,upper%2Dleft%20of%20the%20window.)
 - [Fuzzy find open windows](https://www.raycast.com/changelog/1-19-0)
 
@@ -166,6 +212,7 @@ Raycast is easier to use for things you need to browse and search.
 For actions that don't include search and selection Hammerspoon is good.
 
 These mappings can look like this:
+
 ```
 hyper + A move window to left half of the screen
 hyper + S move window to bottom half of the screen
@@ -179,21 +226,23 @@ hyper + M search open windows
 The following Hammerspoon config allows moving windows with shortcuts:
 
 ```lua
-WINDOW_MANAGEMENT_KEY = { "alt", "command", "ctrl", "shift" }
-
+-- left
 hs.hotkey.bind(WINDOW_MANAGEMENT_KEY, "a", function()
 	hs.window.focusedWindow():moveToUnit({ 0, 0, 0.5, 1 })
 end)
+-- right
 hs.hotkey.bind(WINDOW_MANAGEMENT_KEY, "d", function()
 	hs.window.focusedWindow():moveToUnit({ 0.5, 0, 0.5, 1 })
 end)
+-- up
 hs.hotkey.bind(WINDOW_MANAGEMENT_KEY, "w", function()
 	hs.window.focusedWindow():moveToUnit({ 0, 0, 1, 0.5 })
 end)
+-- down
 hs.hotkey.bind(WINDOW_MANAGEMENT_KEY, "s", function()
 	hs.window.focusedWindow():moveToUnit({ 0, 0.5, 1, 0.5 })
 end)
--- center screewindow_management_key
+-- center
 hs.hotkey.bind(WINDOW_MANAGEMENT_KEY, "c", function()
 	hs.window.focusedWindow():centerOnScreen()
 end)
@@ -206,7 +255,7 @@ end)
 You can also use a layout mode for moving windows:
 https://github.com/jasonrudolph/keyboard#window-layout-mode
 
-**Symbol Layers**
+## Symbol Layers
 
 If you code a lot this will be your favorite section.
 Have you noticed how hard it is to type `_`?
@@ -222,8 +271,8 @@ With Karabiner, you can modify s key to act like normal s but when pressed simul
 Concerned about accidentally typing `sk` or `-`? You can adjust the speed at which the shortcut triggers with the
 [hold down option](https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to/hold-down-milliseconds/).
 
-
 So imagine the following layout:
+
 ```
     y u i o
 a   h j k l
@@ -254,9 +303,11 @@ So just set these stuff for different combinations that are hard to press.
 I even have `a+u` for `tab` and `a+i` for `ctrl+tab`.
 
 For implementing this in Karabiner follow the guide above.
-You can also view my config and take inspirations from this [giant json](https://github.com/Glyphack/dotfiles/blob/20b97e675532db0bf8d73068fec1dd3050ad2fc5/karabiner/karabiner.json#L1).
+Since Karabiner uses json files for configuration writing all of this by hand is time consuming. You can use a tool like Goku (brew install yqrashawn/goku/goku) instead.
+Here is my [giant json](https://github.com/Glyphack/dotfiles/blob/20b97e675532db0bf8d73068fec1dd3050ad2fc5/karabiner/karabiner.json#L1) Karabiner configuration.
 
 For doing normal JSON you need the following Karabiner rules for :
+
 ```
 {
                 "from": {
@@ -330,10 +381,7 @@ For doing normal JSON you need the following Karabiner rules for :
               }
 ```
 
-**Not Only Speed but ergonomics**
+## Not Only Speed but ergonomics
 
-These customizations help with removing uncomfortable keys you need to press.
- The benefits are immediate - less strain on your fingers and wrists due to reduced movement, and a mind unburdened from managing mundane tasks like locating the Terminal window.
-
-Thank you for taking the time to read this post.
-I hope it has inspired you to explore the potential of your tools and consider making your tools.
+These customization help with removing uncomfortable keys you need to press.
+The benefits are immediate - less strain on your fingers and wrists due to reduced movement, and a mind unburdened from managing mundane tasks like locating the Terminal window.
