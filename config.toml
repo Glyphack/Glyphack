@@ -2,8 +2,6 @@ baseURL = "https://glyphack.com/"
 title = "Glyphack"
 theme = "typo"
 
-# Copyright notice. Note: You can use HTML tag here
-# copyright = "&copy; 2019 Yurizal Susanto"
 pluralizeListTitles = false
 
 defaultContentLanguage = "en"
@@ -58,6 +56,7 @@ theme = 'light'
 
 homeIntroTitle = ""
 homeIntroContent = "I'm Shaygan. Ik ben makelaar in code. I'm interested in compilers. You can checkout my Github for more details."
+description = "Shaygan Hooshyari Personal Website"
 
 homeCollectionTitle = 'Blog'
 homeCollection = 'blog'
