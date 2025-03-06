@@ -1,4 +1,36 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Home on Glyphack</title><link>https://glyphack.com/</link><description>Recent content in Home on Glyphack</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 15 Feb 2025 18:02:46 +0100</lastBuildDate><atom:link href="https://glyphack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Devlog 3: Coding a redis clone in C and things I learned</title><link>https://glyphack.com/blog/devlog-3/</link><pubDate>Sat, 15 Feb 2025 18:02:46 +0100</pubDate><guid>https://glyphack.com/blog/devlog-3/</guid><description>&lt;p>About two months ago I started the build your own Redis challenge from &lt;a href="codecrafters.io">codecrafters.io&lt;/a>.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Home on Glyphack</title><link>https://glyphack.com/</link><description>Recent content in Home on Glyphack</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 06 Mar 2025 08:41:39 +0100</lastBuildDate><atom:link href="https://glyphack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>After Interview</title><link>https://glyphack.com/blog/after-interview/</link><pubDate>Thu, 06 Mar 2025 08:41:39 +0100</pubDate><guid>https://glyphack.com/blog/after-interview/</guid><description>&lt;p>Biggest companies put candidates through lengthy interview process, yet still fire a lot of bad hires.
+What if the problem is not the interview, but what happens after?
+Smarter onboarding is the key to identify if a new hire is a great fit.&lt;/p>
+&lt;p>In my experience and what I&amp;rsquo;ve heard from others, the onboarding is slow.
+First few weeks filled with trivial work and going through a lot of documents.
+Sometimes even the laptop and required access is not ready.
+Basically the first few weeks(or months) the new hire barely touches the product.&lt;/p>
+&lt;p>You cannot distinguish between a motivated skilled person and a boring person with no passion without seeing the actual work.
+To identify a bad hire there is an evaluation process after a couple of months.
+This evaluation happens late because judging without seeing work is impossible.
+Difficult problems are the ones showing the strengths and weaknesses. If the person is suitable for this job and if they enjoy it.&lt;/p>
+&lt;p>My solution is to pair the new hire with a mentor and real work on the product.
+Help people experience real work from day one and observe how well they do it.
+Does it sound risky? That&amp;rsquo;s the point.
+There&amp;rsquo;s no guarantee that it will be a success and that&amp;rsquo;s okay.
+You can still learn about this person more in this situation.
+Everyone makes mistakes and there&amp;rsquo;s a way to move forward.
+The new hire can understand how well the company is at handling hard situations. And company sees how new hire acts.&lt;/p>
+&lt;blockquote>
+&lt;p>The kindest thing you can do to a new team member is to involve them in something real and challenging right away. Don&amp;rsquo;t squander weeks of new-job enthusiasm with baby rails and play tasks. Get them into the deep end right from the start.
+&lt;a href="https://world.hey.com/dhh/start-them-in-the-deep-end-8c9c77fe">https://world.hey.com/dhh/start-them-in-the-deep-end-8c9c77fe&lt;/a>&lt;/p>&lt;/blockquote>
+&lt;p>How does the new approach help with identifying good candidates?
+You can have a faster feedback cycle.
+It&amp;rsquo;s better for everyone to find out if they enjoy the ride or not.&lt;/p>
+&lt;p>It&amp;rsquo;s not about figuring out if the new hire makes mistakes or not, but to find strengths and weaknesses.&lt;/p>
+&lt;ul>
+&lt;li>Does he understand what he&amp;rsquo;s doing? Is he repeating something without understanding?&lt;/li>
+&lt;li>What happens when he make a mistake? Is he going to blame or fix?&lt;/li>
+&lt;li>How does he approach an unknown problem? Is he asking questions? Is he trying out solutions or waiting for someone else to solve it?&lt;/li>
+&lt;/ul>
+&lt;p>This approach is not only useful for the company but also for the new hire.
+Both parties know sooner if this a good match.
+If you hired someone new, welcome the person with real work with risk.&lt;/p></description></item><item><title>Devlog 3: Coding a redis clone in C and things I learned</title><link>https://glyphack.com/blog/devlog-3/</link><pubDate>Sat, 15 Feb 2025 18:02:46 +0100</pubDate><guid>https://glyphack.com/blog/devlog-3/</guid><description>&lt;p>About two months ago I started the build your own Redis challenge from &lt;a href="codecrafters.io">codecrafters.io&lt;/a>.
 I decided to do this in C. Initially I was just curious to do it in C. Doing it in C thought me a lot of stuff that otherwise I would have not learned. Another bonus point was that I could tweak the performance to be on par with Redis server.&lt;/p>
 &lt;p>C always seemed like an impossible language to me. Working so much in garbage collected languages with rich standard libraries made me think C is hard.
 Now I think C is not hard. Whatever you write gets executed the way you wrote it. Little abstractions make it a great language to implement what you want and have control over your program.
