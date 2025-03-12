@@ -2,7 +2,7 @@
 
 - 📫 How to reach me: hey@glyphack.com
 - 📖 My blog: https://glyphack.com
-- 🎥 Where to see me: https://www.twitch.tv/glyphack & https://www.youtube.com/@glyphack
+- 🎥 Where to see me: https://www.youtube.com/@glyphack & https://www.twitch.tv/glyphack
 
 
 I'm mostly busy with ~~Building [a type checker for Python](https://github.com/Glyphack/enderpy)~~ Contributing to [Ruff](https://github.com/astral-sh/ruff).
