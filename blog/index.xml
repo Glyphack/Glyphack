@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Blog on Glyphack</title><link>https://glyphack.com/blog/</link><description>Recent content in Blog on Glyphack</description><generator>Hugo</generator><language>en</language><lastBuildDate>Thu, 06 Mar 2025 08:41:39 +0100</lastBuildDate><atom:link href="https://glyphack.com/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>After Interview</title><link>https://glyphack.com/blog/after-interview/</link><pubDate>Thu, 06 Mar 2025 08:41:39 +0100</pubDate><guid>https://glyphack.com/blog/after-interview/</guid><description>&lt;p>Biggest companies put candidates through lengthy interview process, yet still fire a lot of bad hires.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Blogs on</title><link>https://glyphack.com/blog/</link><description>Recent content in Blogs on</description><generator>Hugo</generator><language>en</language><lastBuildDate>Thu, 06 Mar 2025 08:41:39 +0100</lastBuildDate><atom:link href="https://glyphack.com/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>After Interview</title><link>https://glyphack.com/blog/after-interview/</link><pubDate>Thu, 06 Mar 2025 08:41:39 +0100</pubDate><guid>https://glyphack.com/blog/after-interview/</guid><description>&lt;p>Biggest companies put candidates through lengthy interview process, yet still fire a lot of bad hires.
 What if the problem is not the interview, but what happens after?
 Smarter onboarding is the key to identify if a new hire is a great fit.&lt;/p>
 &lt;p>In my experience and what I&amp;rsquo;ve heard from others, the onboarding is slow.
@@ -124,10 +124,7 @@ I ended up also contributing some fixes to Python docs.
 This was particularly interesting to me because it did not require really advanced knowledge, and the stuff there that was incorrect or outdated had been there for years.
 So why didn&amp;rsquo;t I do this earlier?&lt;/p></description></item><item><title>Compilers Resources</title><link>https://glyphack.com/blog/compiler-resources/</link><pubDate>Fri, 15 Sep 2023 19:50:19 +0200</pubDate><guid>https://glyphack.com/blog/compiler-resources/</guid><description>&lt;p>This post is a compilation of great resources I found while building a type checker for Python.
 These resources are free and highly focused on specific topics, making them ideal for learning by doing rather than going through extensive materials.&lt;/p>
-&lt;h2 class="heading" id="parser">
- Parser
- &lt;a class="anchor" href="#parser">#&lt;/a>
-&lt;/h2>
+&lt;h2 id="parser">Parser&lt;/h2>
 &lt;p>There are different ways to approach parsing. You can either write one by hand or use a parser generator.
 For compilers or interpreters, you can use a parser generator.
 However, if you&amp;rsquo;re working on tools like formatters or language servers, your parser needs to handle broken code gracefully. This can be either done with a tool like treesitter that can handle broken code to some extent and also by writing your own. Of course writing your own is more fun.&lt;/p></description></item><item><title>Trying Out Learning In Public</title><link>https://glyphack.com/blog/my-learn-in-public-workflow/</link><pubDate>Thu, 18 May 2023 14:07:58 +0200</pubDate><guid>https://glyphack.com/blog/my-learn-in-public-workflow/</guid><description>&lt;p>A while back I read about &lt;a href="https://www.swyx.io/learn-in-public">learning in public&lt;/a>
@@ -168,12 +165,12 @@ and so on.&lt;/p></description></item><item><title>Building a Web Crawler in Gol
 &lt;/li>
 &lt;li>&lt;a href="#conclusion">Conclusion&lt;/a>&lt;/li>
 &lt;/ul>
-&lt;h2 class="heading" id="introduction">
- Introduction
- &lt;a class="anchor" href="#introduction">#&lt;/a>
-&lt;/h2>
+&lt;h2 id="introduction">Introduction&lt;/h2>
 &lt;p>Web crawler is a program that explores the Internet,
-by going to different websites and following any link it finds.&lt;/p></description></item><item><title>Rate Limiter From Scratch in Python Part 2</title><link>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-2/</link><pubDate>Tue, 21 Feb 2023 21:34:49 +0100</pubDate><guid>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-2/</guid><description>&lt;ul>
+by going to different websites and following any link it finds.&lt;/p>
+&lt;p>Crawlers are interesting because they provide a way to gather data
+from the internet.
+This is especially useful for data mining purposes.&lt;/p></description></item><item><title>Rate Limiter From Scratch in Python Part 2</title><link>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-2/</link><pubDate>Tue, 21 Feb 2023 21:34:49 +0100</pubDate><guid>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-2/</guid><description>&lt;ul>
 &lt;li>&lt;a href="#introduction">Introduction&lt;/a>&lt;/li>
 &lt;li>&lt;a href="#new-rate-limiting-algorithms">New Rate Limiting Algorithms&lt;/a>
 &lt;ul>
@@ -196,10 +193,7 @@ by going to different websites and following any link it finds.&lt;/p></descript
 &lt;/li>
 &lt;li>&lt;a href="#conclusion">Conclusion&lt;/a>&lt;/li>
 &lt;/ul>
-&lt;h2 class="heading" id="introduction">
- Introduction
- &lt;a class="anchor" href="#introduction">#&lt;/a>
-&lt;/h2>
+&lt;h2 id="introduction">Introduction&lt;/h2>
 &lt;p>In the last &lt;a href="./rate-limiter-from-scratch-in-python-1">post&lt;/a>
 I started writing a rate limiter.
 The project right now supports only 1 rate limiting algorithm(Token Bucket).&lt;/p>
@@ -215,16 +209,10 @@ previously helped minimizing the implementation for new algorithms.&lt;/p></desc
 Still, spending investing time to personalize your tools and environment is a smart move.&lt;/p>
 &lt;p>In the past years using MacOS I found simple tools that helps to make MacOS more ergonomic and fun.&lt;/p>
 &lt;p>Most of the content here is in &lt;a href="https://github.com/Glyphack/dotfiles">my dotfiles&lt;/a>.&lt;/p>
-&lt;h2 class="heading" id="why">
- Why?
- &lt;a class="anchor" href="#why">#&lt;/a>
-&lt;/h2>
+&lt;h2 id="why">Why?&lt;/h2>
 &lt;p>If you&amp;rsquo;re already sold to this idea go ahead and start,
 otherwise keep reading so I can convince you why you might want to start
-configuring your tools.&lt;/p></description></item><item><title>Rate Limiter From Scratch in Python Part 1</title><link>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-1/</link><pubDate>Tue, 14 Feb 2023 23:19:18 +0100</pubDate><guid>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-1/</guid><description>&lt;h2 class="heading" id="introduction">
- Introduction
- &lt;a class="anchor" href="#introduction">#&lt;/a>
-&lt;/h2>
+configuring your tools.&lt;/p></description></item><item><title>Rate Limiter From Scratch in Python Part 1</title><link>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-1/</link><pubDate>Tue, 14 Feb 2023 23:19:18 +0100</pubDate><guid>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-1/</guid><description>&lt;h2 id="introduction">Introduction&lt;/h2>
 &lt;p>After reading &lt;a href="https://bytebytego.com/">ByteByteGo course&lt;/a>
 motivated me to write a rate limiter.
 So I decided to do it in &lt;a href="https://aosabook.org/en/500L/introduction.html">500lines&lt;/a>
@@ -232,10 +220,7 @@ theme.&lt;/p>
 &lt;p>We will focus on how to create the interfaces and components,
 to allow extensibility in the predicted ways.&lt;/p>
 &lt;p>You can find the complete source code &lt;a href="https://github.com/Glyphack/hera-limit">here&lt;/a>.&lt;/p>
-&lt;h2 class="heading" id="what-is-a-rate-limiter">
- What is a Rate Limiter?
- &lt;a class="anchor" href="#what-is-a-rate-limiter">#&lt;/a>
-&lt;/h2>
+&lt;h2 id="what-is-a-rate-limiter">What is a Rate Limiter?&lt;/h2>
 &lt;p>Well, there are a lot of
 &lt;a href="https://www.cloudflare.com/en-gb/learning/bots/what-is-rate-limiting/">great explanations&lt;/a>
 on what is a rate limiter, but I&amp;rsquo;ll give a minimal introduction to it for this post.&lt;/p></description></item><item><title>Everything you need to know about splitting CDK stacks</title><link>https://glyphack.com/blog/everything-about-splitting-cdk-stacks/</link><pubDate>Sun, 13 Nov 2022 09:49:50 +0330</pubDate><guid>https://glyphack.com/blog/everything-about-splitting-cdk-stacks/</guid><description>&lt;p>AWS CDK is a tool that lets you define your cloud resources
