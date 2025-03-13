@@ -1,4 +1,5 @@
 baseURL = "https://glyphack.com/"
+
 title = "Glyphack"
 theme = "typo"
 
@@ -16,6 +17,9 @@ url = "/"
 [[params.menu]]
 name = "Blog"
 url = "/blog/"
+[[params.menu]]
+name = "Projects"
+url = "/projects/"
 [[params.menu]]
 name = "Now"
 url = "/now/"
