@@ -1,0 +1,117 @@
+{{ define "main" }}
+<style>
+  .book-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: "Literata", serif;
+    line-height: 1.6;
+    color: #333;
+  }
+
+  .book-header {
+    border-bottom: 2px solid #f0f0f0;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+  }
+
+  .book-title {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .book-metadata {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  }
+
+  .book-meta-item {
+    display: flex;
+    margin-bottom: 0.5rem;
+  }
+
+  .book-meta-label {
+    font-weight: 600;
+    width: 100px;
+    color: #555;
+  }
+
+  .book-rating {
+    display: inline-block;
+    background-color: #3498db;
+    color: white;
+    border-radius: 4px;
+    padding: 0.2rem 0.8rem;
+    font-weight: 600;
+  }
+
+  .book-notes h2 {
+    color: #2c3e50;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.5rem;
+    margin: 1.5rem 0 1rem 0;
+  }
+
+  .book-notes h3 {
+    color: #3498db;
+    margin: 1.2rem 0 0.8rem 0;
+  }
+
+  .book-notes blockquote {
+    border-left: 3px solid #3498db;
+    padding-left: 1rem;
+    margin-left: 0;
+    color: #555;
+    font-style: italic;
+  }
+
+  .book-notes ul,
+  .book-notes ol {
+    padding-left: 1.5rem;
+  }
+
+  .book-notes p {
+    margin-bottom: 1rem;
+  }
+
+  .book-created {
+    font-style: italic;
+    color: #777;
+  }
+</style>
+
+<article class="book-container">
+  <header class="book-header">
+    <h1 class="book-title">{{ .File.BaseFileName }}</h1>
+  </header>
+
+  <section class="book-metadata">
+    <div class="book-meta-item">
+      <span class="book-meta-label">Author:</span>
+      <span>{{ .Params.author }}</span>
+    </div>
+
+    <div class="book-meta-item">
+      <span class="book-meta-label">Date Added:</span>
+      <span class="book-created">{{ .Params.created }}</span>
+    </div>
+
+    {{ if .Params.rating }}
+    <div class="book-meta-item">
+      <span class="book-meta-label">Rating:</span>
+      <span class="book-rating">{{ .Params.rating }} / 5</span>
+    </div>
+    {{ end }} {{ if .Params.categories }}
+    <div class="book-meta-item">
+      <span class="book-meta-label">Categories:</span>
+      <span>{{ delimit .Params.categories ", " }}</span>
+    </div>
+    {{ end }}
+  </section>
+
+  <section class="book-notes">{{ .Content }}</section>
+</article>
+{{ end }}
