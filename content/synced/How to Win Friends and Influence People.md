@@ -1,13 +1,14 @@
 ---
-created: 2025-04-07
+created: 2025-04-08
 category:
   - "[Books](Books.md)"
 author: Dale Carnegie
 rating: "4"
 url: 
-tags:
-  - publish
+tags: 
 share: "true"
+layout: book
+title: How to Win Friends and Influence People
 ---
 I found this book in the street.
 I wish I could say it changed my life, sadly that would be an exaggeration.
