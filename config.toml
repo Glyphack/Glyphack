@@ -50,6 +50,11 @@ url = "https://glyphack.com/index.xml"
 [taxonomies]
 tag = "tags"
 
+[params.umami]
+enable = true
+websiteId = "e8710f0c-a6f2-4d2d-8b95-ef6b66e72226"
+jsLocation = "https://cloud.umami.is/script.js"
+
 [params]
 debugCSS = false
 customCSS = []
@@ -81,5 +86,4 @@ listDateFormat = '2 Jan 2006'
 head404 = "Sorry, I can't find what you want."
 sub404 = "Back to <a href='/'>Home</a>."
 
-faviconImg = "https://avatars.githubusercontent.com/u/20788334?v=4"
 dateFmt = "Jan 02, 2006"
