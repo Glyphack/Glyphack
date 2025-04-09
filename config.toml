@@ -29,9 +29,6 @@ url = "/reading-list/"
 name = "Resume"
 url = "https://docs.google.com/document/d/1XgC2Va8ZgJ2DrmRKpgd_7iVjv8aASnn8nzl6DgkR1mg/edit?usp=sharing"
 [[params.social]]
-name = "email"
-url = "sh.hooshyari@gmail.com"
-[[params.social]]
 name = "github"
 url = "https://github.com/glyphack"
 [[params.social]]
