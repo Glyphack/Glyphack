@@ -8,8 +8,7 @@ author: "[[Derek Sivers]]"
 rating: "5"
 url: 
 tags: 
-status:
-  - Waiting
+status: []
 share: "true"
 ---
 ## Review  
