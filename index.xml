@@ -1,4 +1,19 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Home on Glyphack</title><link>https://glyphack.com/</link><description>Recent content in Home on Glyphack</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 09 Apr 2025 21:25:18 +0200</lastBuildDate><atom:link href="https://glyphack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Blogging with Obsidian</title><link>https://glyphack.com/blog/ob/</link><pubDate>Wed, 09 Apr 2025 21:25:18 +0200</pubDate><guid>https://glyphack.com/blog/ob/</guid><description>&lt;p>My blog is a bunch of files that are given to a program that converts them to HTML and CSS files, which is what you see here.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Home on Glyphack</title><link>https://glyphack.com/</link><description>Recent content in Home on Glyphack</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 12 Apr 2025 11:49:07 +0200</lastBuildDate><atom:link href="https://glyphack.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Devlog 4: I made a chrome extension</title><link>https://glyphack.com/blog/dv-4/</link><pubDate>Sat, 12 Apr 2025 11:49:07 +0200</pubDate><guid>https://glyphack.com/blog/dv-4/</guid><description>&lt;p>I&amp;rsquo;m not sure if some time comes that I finally can say I know vim. But I don&amp;rsquo;t think that would happen before I &lt;a href="https://www.youtube.com/watch?v=rT-fbLFOCy0">read the whole manual&lt;/a>.&lt;/p>
+&lt;p>This week I learned these new commands:&lt;/p>
+&lt;p>I&amp;rsquo;ve always used &lt;code>ctrl-o&lt;/code> to move to last place I was editing in vim. Turns out there&amp;rsquo;s a keybinding to move to the previous file that was open it&amp;rsquo;s &lt;strong>&lt;code>Ctrl-^&lt;/code> (or &lt;code>Ctrl-6&lt;/code>)&lt;/strong>.
+This command switches to the last visited file.
+It provides quick toggling between two files if you do it repeatedly.&lt;/p>
+&lt;p>&lt;a href="https://vim.fandom.com/wiki/Power_of_g">&lt;code>:g&lt;/code>&lt;/a> is powerful. To move/delete things that have a pattern.
+You are probably familiar with &lt;code>gj&lt;/code> and &lt;code>gk&lt;/code> but there&amp;rsquo;s also &lt;code>gq&lt;/code> (or &lt;code>gw&lt;/code> if the other did not work.) &lt;code>gw&lt;/code> helps to split a long line into smaller lines.&lt;/p>
+&lt;p>Other things:&lt;/p>
+&lt;ul>
+&lt;li>I made a chrome extension, &lt;a href="https://chromewebstore.google.com/detail/readwise-reader-importer/biaidjfcmkeeiidenndhkdaldkljaipi?authuser=1&amp;amp;hl=en">Readwise Reader Importer&lt;/a> to import links into Readwise. I wanted this tool myself for importing youtube playlists to Readwise. This time I decided to build it as an extension so I can share with others. It got 10 users! I did most of the work using Claude code. It costed around 10 euros, but I&amp;rsquo;m happy with the resulting look.&lt;/li>
+&lt;li>I moved &lt;a href="https://glyphack.com/reading-list/">my reading list&lt;/a> off Notion and to my blog. I was tired of me entering books I read and notes about them in Obsidian and the Notion was rarely updated. So I found a &lt;a href="https://glyphack.com/blog/ob/">solution&lt;/a> to update my blog with Obsidian, and then show the book notes just as any other page on my blog. The bonus is that I can make it more beautiful in the future.&lt;/li>
+&lt;li>I&amp;rsquo;ve heard about this language called ungrammar that is used in Rust to generate CSTs. I did not know anything about it. Thanks to this &lt;a href="https://github.com/astral-sh/ruff/issues/15655">issue in Ruff&lt;/a> , I did some work related to generating AST. There&amp;rsquo;s &lt;a href="https://www.youtube.com/watch?v=EIXb9mX_o9s">this nice&lt;/a> video that explains how it&amp;rsquo;s used in the Rust Analyzer code.&lt;/li>
+&lt;li>I implemented &lt;a href="https://redis.io/docs/latest/develop/data-types/streams/">Redis streams&lt;/a> in toy &lt;a href="https://github.com/Glyphack/redis-clone">clone of Redis&lt;/a>. I took some time doing this, I wanted to use an array instead of a linked list. This would make a good candidate for a blog post so I won&amp;rsquo;t go into details. Redis uses &lt;a href="https://en.wikipedia.org/wiki/Radix_tree#:~:text=In%20computer%20science%2C%20a%20radix,is%20merged%20with%20its%20parent.">radix tree&lt;/a> to implement streams(according to AI)&lt;/li>
+&lt;li>I read &lt;a href="https://sive.rs/su">https://sive.rs/su&lt;/a> and decided to keep my own URLs shorter too.&lt;/li>
+&lt;/ul>
+&lt;p>That&amp;rsquo;s it for this week.&lt;/p></description></item><item><title>Blogging with Obsidian</title><link>https://glyphack.com/blog/ob/</link><pubDate>Wed, 09 Apr 2025 21:25:18 +0200</pubDate><guid>https://glyphack.com/blog/ob/</guid><description>&lt;p>My blog is a bunch of files that are given to a program that converts them to HTML and CSS files, which is what you see here.&lt;/p>
 &lt;p>Also, Obsidian uses files to store my notes. This means it gives the most freedom than any other tool out there.&lt;/p>
 &lt;p>Since I&amp;rsquo;ve been writing both on my blog and in Obsidian there were times that I wanted to share stuff outside my Obsidian and link it in my website.
 One way to do this is using Obsidian Publish, but after reading the &lt;a href="https://www.reddit.com/r/ObsidianMD/comments/16e5jek/comment/jzv38ja/?utm_source=share&amp;amp;utm_medium=web3x&amp;amp;utm_name=web3xcss&amp;amp;utm_term=1&amp;amp;utm_content=share_button">creator of Obsidian himself suggesting alternatives to it&lt;/a> I searched for ways to publish my notes on my blog.&lt;/p>
@@ -92,7 +107,7 @@ It&amp;rsquo;s better for everyone to find out if they enjoy the ride or not.&lt
 &lt;/ul>
 &lt;p>This approach is not only useful for the company but also for the new hire.
 Both parties know sooner if this a good match.
-If you hired someone new, welcome the person with real work with risk.&lt;/p></description></item><item><title>Devlog 3: Coding a redis clone in C and things I learned</title><link>https://glyphack.com/blog/devlog-3/</link><pubDate>Sat, 15 Feb 2025 18:02:46 +0100</pubDate><guid>https://glyphack.com/blog/devlog-3/</guid><description>&lt;p>About two months ago I started the build your own Redis challenge from &lt;a href="codecrafters.io">codecrafters.io&lt;/a>.
+If you hired someone new, welcome the person with real work with risk.&lt;/p></description></item><item><title>Devlog 3: Coding a redis clone in C and things I learned</title><link>https://glyphack.com/blog/dv-3/</link><pubDate>Sat, 15 Feb 2025 18:02:46 +0100</pubDate><guid>https://glyphack.com/blog/dv-3/</guid><description>&lt;p>About two months ago I started the build your own Redis challenge from &lt;a href="codecrafters.io">codecrafters.io&lt;/a>.
 I decided to do this in C. Initially I was just curious to do it in C. Doing it in C thought me a lot of stuff that otherwise I would have not learned. Another bonus point was that I could tweak the performance to be on par with Redis server.&lt;/p>
 &lt;p>C always seemed like an impossible language to me. Working so much in garbage collected languages with rich standard libraries made me think C is hard.
 Now I think C is not hard. Whatever you write gets executed the way you wrote it. Little abstractions make it a great language to implement what you want and have control over your program.
@@ -307,7 +322,7 @@ Maybe just write the documentation and update it instead of writing proposals ab
 &lt;p>I&amp;rsquo;m sad that I haven&amp;rsquo;t worked at a place that matches what Brad said about Google. But it&amp;rsquo;s probably about google at that time and things might be different now.
 The bright side is that open source is much better these days. I experienced this in open source projects. Good tools, fast builds, and great developer setup guides.
 People care about good experience there.&lt;/p>
-&lt;p>P.S. If you&amp;rsquo;re reading this from Google circa 2009, please send help. And your build system and your developer tools.&lt;/p></description></item><item><title>Devlog 2</title><link>https://glyphack.com/blog/devlog-2/</link><pubDate>Sat, 02 Nov 2024 11:11:05 +0100</pubDate><guid>https://glyphack.com/blog/devlog-2/</guid><description>&lt;p>Random notes from past month.&lt;/p>
+&lt;p>P.S. If you&amp;rsquo;re reading this from Google circa 2009, please send help. And your build system and your developer tools.&lt;/p></description></item><item><title>Devlog 2</title><link>https://glyphack.com/blog/dv-2/</link><pubDate>Sat, 02 Nov 2024 11:11:05 +0100</pubDate><guid>https://glyphack.com/blog/dv-2/</guid><description>&lt;p>Random notes from past month.&lt;/p>
 &lt;p>&lt;strong>New Projects&lt;/strong>&lt;/p>
 &lt;p>I spent about a year building &lt;a href="https://github.com/Glyphack/enderpy">my own tool-chain&lt;/a> for building a python type checker. It inspired by what ruff was doing for Python linting and wanted to do the same for type checker.
 A few months ago I found out that astral team are building a type checker. So I decided to redirect my energy toward that.
@@ -535,7 +550,7 @@ The fact that outcome is not determined is the strength because each person has 
 &lt;p>&lt;a href="https://www.norvig.com/21-days.html">https://www.norvig.com/21-days.html&lt;/a> is a good starting point for someone to learn about programming.&amp;#160;&lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
 &lt;/li>
 &lt;/ol>
-&lt;/div></description></item><item><title>A better go test</title><link>https://glyphack.com/blog/better-go-test/</link><pubDate>Sat, 24 Aug 2024 15:15:06 +0200</pubDate><guid>https://glyphack.com/blog/better-go-test/</guid><description>&lt;p>My job now involves doing some Golang work and this post is about how &lt;code>go test&lt;/code> command can be improved.&lt;/p>
+&lt;/div></description></item><item><title>A better go test</title><link>https://glyphack.com/blog/better-gotest/</link><pubDate>Sat, 24 Aug 2024 15:15:06 +0200</pubDate><guid>https://glyphack.com/blog/better-gotest/</guid><description>&lt;p>My job now involves doing some Golang work and this post is about how &lt;code>go test&lt;/code> command can be improved.&lt;/p>
 &lt;p>Until now, I never actually thought about improving the test command for a language.
 But with Golang I have serious problems with reporting test results on command line.
 Test output is not readable, The usual test flags you expect are not there.&lt;/p>
@@ -600,7 +615,7 @@ We can&amp;rsquo;t even get basic CRUD apps to work these days.&lt;/p>
 &lt;p>I&amp;rsquo;m glad that I had followed Florian, and saw the announcement in my GitHub feed. Another good reason to find good people and follow them on GitHub.&lt;/p>
 &lt;p>Oh lastly, I started using &lt;a href="https://qutebrowser.org/doc/quickstart.html">qutebrowser&lt;/a> during this sprint. I&amp;rsquo;m very happy with my decision. It&amp;rsquo;s an efficient and fast, just like vim. It works with everything except for crappy websites. For example google sometimes does not let you log in to an account from this browser (how much more they have to work to convince you that they are taking control of the web and browsers?).
 But I&amp;rsquo;m using it as my development browser now. It works perfect for websites showing information. Let&amp;rsquo;s see if I will start creating scripts to have fun and automate some more stuff in the browser.&lt;/p>
-&lt;p>Follow people you like on GitHub. On LinkedIn, you find show offs and announcements by sales and PR on GitHub you find real things.&lt;/p></description></item><item><title>Camping at Vresselse Bos</title><link>https://glyphack.com/blog/may-camping/</link><pubDate>Wed, 29 May 2024 22:55:24 +0200</pubDate><guid>https://glyphack.com/blog/may-camping/</guid><description>&lt;p>I had some time in between switching jobs and decided to go for a camping trip.
+&lt;p>Follow people you like on GitHub. On LinkedIn, you find show offs and announcements by sales and PR on GitHub you find real things.&lt;/p></description></item><item><title>Camping at Vresselse Bos</title><link>https://glyphack.com/blog/vresselse-camping/</link><pubDate>Wed, 29 May 2024 22:55:24 +0200</pubDate><guid>https://glyphack.com/blog/vresselse-camping/</guid><description>&lt;p>I had some time in between switching jobs and decided to go for a camping trip.
 My first time in the Netherlands.&lt;/p>
 &lt;p>After looking up some places I chose to go to &lt;a href="https://nl.wikipedia.org/wiki/Vresselse_Bos">Vresselse Bos&lt;/a>
 I rented a tent from Airbnb.
@@ -846,7 +861,7 @@ When failure happens it&amp;rsquo;s like as if their certifications were not val
 Outsiders have nothing to lose.
 They either have skill and it&amp;rsquo;s in the result or don&amp;rsquo;t.
 If they realize they are not skilled enough is not a bad thing, they practice more.
-What are you going to do about certifications? Get another one?&lt;/p></description></item><item><title>Best Place to Work at as a Programmer</title><link>https://glyphack.com/blog/best-place-to-work-at-as-a-programmer/</link><pubDate>Fri, 12 Apr 2024 20:39:20 +0200</pubDate><guid>https://glyphack.com/blog/best-place-to-work-at-as-a-programmer/</guid><description>&lt;p>Despite the title this isn&amp;rsquo;t meant to name a specific company.
+What are you going to do about certifications? Get another one?&lt;/p></description></item><item><title>Best Place to Work at as a Programmer</title><link>https://glyphack.com/blog/best-job/</link><pubDate>Fri, 12 Apr 2024 20:39:20 +0200</pubDate><guid>https://glyphack.com/blog/best-job/</guid><description>&lt;p>Despite the title this isn&amp;rsquo;t meant to name a specific company.
 I&amp;rsquo;m trying to figure out for people like myself who enjoy programming what the best place to work would be like.&lt;/p>
 &lt;p>I think there&amp;rsquo;s fundamental problem at most companies right now.
 Everything is fake. Of course, we have goals, but they are artificial.
@@ -897,7 +912,7 @@ You won&amp;rsquo;t starve. You get to do valuable work, and enjoy it.&lt;/p>
 &lt;p>What makes open source more sustainable than a low paying job is that you can work on valuable things.
 Jobs are structured in a way that pay is not directly related to the value.
 Without garbage collectors, the world would be a mess, but they are not paid well.
-Same phenomenon described &lt;a href="https://strikemag.org/bullshit-jobs/">Bullshit Jobs&lt;/a>.&lt;/p></description></item><item><title>Devlog 0002 Enderpy Generics Type Inference</title><link>https://glyphack.com/blog/devlog-0002-enderpy-generics-type-inference/</link><pubDate>Mon, 25 Mar 2024 16:46:15 +0100</pubDate><guid>https://glyphack.com/blog/devlog-0002-enderpy-generics-type-inference/</guid><description>&lt;p>I implemented Generic classes and functions this week in Enderpy. I&amp;rsquo;m happy that now my code can now read and infer types of &lt;a href="https://github.com/python/typing/blob/main/conformance/tests/generics_basic.py#L114">this conformance test&lt;/a>.&lt;/p>
+Same phenomenon described &lt;a href="https://strikemag.org/bullshit-jobs/">Bullshit Jobs&lt;/a>.&lt;/p></description></item><item><title>How to infer type for Generic types in Python?</title><link>https://glyphack.com/blog/python-generics-type-inference/</link><pubDate>Mon, 25 Mar 2024 16:46:15 +0100</pubDate><guid>https://glyphack.com/blog/python-generics-type-inference/</guid><description>&lt;p>I implemented Generic classes and functions this week in Enderpy. I&amp;rsquo;m happy that now my code can now read and infer types of &lt;a href="https://github.com/python/typing/blob/main/conformance/tests/generics_basic.py#L114">this conformance test&lt;/a>.&lt;/p>
 &lt;p>I chose to skip implementing generics with syntax &lt;code>def f[T](): T&lt;/code> because of the &lt;a href="https://peps.python.org/pep-0695/#scoping-behavior">scoping behavior&lt;/a>.
 They are also tested extensively in this &lt;a href="https://github.com/python/typing/blob/main/conformance/tests/generics_syntax_scoping.py">test case&lt;/a>.&lt;/p>
 &lt;p>Another strange thing I found in the &lt;code>typeshed&lt;/code> repo is that in the &lt;code>sys/__init__.py&lt;/code> file there is a &lt;code>import sys&lt;/code> in the beginning.
@@ -978,7 +993,7 @@ Looking for Something New
 &lt;a class="anchor" href="#looking-for-something-new">#&lt;/a>
 &lt;/h2>
 &lt;p>I&amp;rsquo;m looking for a problem to solve something that occupies my mind and give me energy every day I wake up.
-I&amp;rsquo;m solving codecrafters.io challenges right now. It might inspire me to do something different.&lt;/p></description></item><item><title>Devlog 0001: Contributing to Ruff, Profiling, Python Types Conformance Tests</title><link>https://glyphack.com/blog/devlog-0001-contributing-to-ruff/</link><pubDate>Sat, 03 Feb 2024 10:56:48 +0100</pubDate><guid>https://glyphack.com/blog/devlog-0001-contributing-to-ruff/</guid><description>&lt;p>Last week I wanted to start contributing to rust.
+I&amp;rsquo;m solving codecrafters.io challenges right now. It might inspire me to do something different.&lt;/p></description></item><item><title>Devlog 0001: Contributing to Ruff, Profiling, Python Types Conformance Tests</title><link>https://glyphack.com/blog/dv-1/</link><pubDate>Sat, 03 Feb 2024 10:56:48 +0100</pubDate><guid>https://glyphack.com/blog/dv-1/</guid><description>&lt;p>Last week I wanted to start contributing to rust.
 I was working on Adding &lt;a href="https://github.com/astral-sh/ruff/pull/9513">uninitialized attribute access check&lt;/a> to Ruff.&lt;/p>
 &lt;p>I did it and learned a lot about how to track attributes in Python code.
 A gist of it would be, you need to go over the class, in each function when something is assigned to a name you need to check if that name is self or cls.
@@ -1087,7 +1102,7 @@ IntelliJ and the compiler won&amp;rsquo;t complain about this as well.&lt;/p>
 &lt;p>There are some Ktor features that fail during the runtime because it cannot find some plugin that is needed to work properly. Why must this be a runtime problem?&lt;/p>
 &lt;p>&lt;strong>Why Kotlin Won and Not Scala?&lt;/strong>&lt;/p>
 &lt;p>This question annoys my mind a lot. I also worked with Scala and I think it&amp;rsquo;s certainly a better language. Maybe that&amp;rsquo;s for another post.&lt;/p>
-&lt;p>But I also stopped doing Scala for one reason, the functional programming community took over the language and every library tried to add functional paradigm and type safety to everything (talking to you, ZIO). Again, just expose a goddamn function.&lt;/p></description></item><item><title>A Better Keyboard</title><link>https://glyphack.com/blog/a-better-keyboard/</link><pubDate>Sat, 30 Dec 2023 10:54:35 +0100</pubDate><guid>https://glyphack.com/blog/a-better-keyboard/</guid><description>&lt;p>Imagine you want to make a better keyboard.
+&lt;p>But I also stopped doing Scala for one reason, the functional programming community took over the language and every library tried to add functional paradigm and type safety to everything (talking to you, ZIO). Again, just expose a goddamn function.&lt;/p></description></item><item><title>A Better Keyboard</title><link>https://glyphack.com/blog/better-keyboard/</link><pubDate>Sat, 30 Dec 2023 10:54:35 +0100</pubDate><guid>https://glyphack.com/blog/better-keyboard/</guid><description>&lt;p>Imagine you want to make a better keyboard.
 Seems like a hard challenge for every company.
 What if &amp;lsquo;better&amp;rsquo; meant compressing multiple key presses into one? Or have shortcut for your frequent actions.
 If you minimize the effort to use it then you are making it better for yourself.&lt;/p>
@@ -2312,7 +2327,7 @@ And writing about this was a good practice to question my design and
 the way I wrote the code.&lt;/p>
 &lt;p>I could not explain the problems I faced in this post because I wrote it
 long after I finished the code itself. But you know enough to not make
-those mistakes as I did.&lt;/p></description></item><item><title>Rate Limiter From Scratch in Python Part 2</title><link>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-2/</link><pubDate>Tue, 21 Feb 2023 21:34:49 +0100</pubDate><guid>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-2/</guid><description>&lt;ul>
+those mistakes as I did.&lt;/p></description></item><item><title>Rate Limiter From Scratch in Python Part 2</title><link>https://glyphack.com/blog/rate-limiter-python-2/</link><pubDate>Tue, 21 Feb 2023 21:34:49 +0100</pubDate><guid>https://glyphack.com/blog/rate-limiter-python-2/</guid><description>&lt;ul>
 &lt;li>&lt;a href="#introduction">Introduction&lt;/a>&lt;/li>
 &lt;li>&lt;a href="#new-rate-limiting-algorithms">New Rate Limiting Algorithms&lt;/a>
 &lt;ul>
@@ -2818,7 +2833,7 @@ write for each limiter, we can test them all with universal test cases,
 the rate limiter service can use them without knowing what the underlying strategy
 is.&lt;/p>
 &lt;p>In the next part we can see how to implement another storage backend such as redis,
-without having to change any code in rate limiting algorithms.&lt;/p></description></item><item><title>Personalize Macos Environment for Your Productivity</title><link>https://glyphack.com/blog/personalize-macos-environment-for-your-productivity/</link><pubDate>Sun, 19 Feb 2023 20:58:33 +0100</pubDate><guid>https://glyphack.com/blog/personalize-macos-environment-for-your-productivity/</guid><description>&lt;p>MacOS is already a polished environment and unlike some other OSes it works out of the box.
+without having to change any code in rate limiting algorithms.&lt;/p></description></item><item><title>Personalize Macos Environment for Your Productivity</title><link>https://glyphack.com/blog/macos-productivity/</link><pubDate>Sun, 19 Feb 2023 20:58:33 +0100</pubDate><guid>https://glyphack.com/blog/macos-productivity/</guid><description>&lt;p>MacOS is already a polished environment and unlike some other OSes it works out of the box.
 Still, spending investing time to personalize your tools and environment is a smart move.&lt;/p>
 &lt;p>In the past years using MacOS I found simple tools that helps to make MacOS more ergonomic and fun.&lt;/p>
 &lt;p>Most of the content here is in &lt;a href="https://github.com/Glyphack/dotfiles">my dotfiles&lt;/a>.&lt;/p>
@@ -2993,7 +3008,7 @@ In VSCode you need to open the version control panel,
 scroll through the file and right click to select stage selected.
 This is super hard if you have to do it 20 times in a productive day.
 I have a config in my vim to directly stage hunks in my editor to commit,
-but I&amp;rsquo;m sure you can find a VSCode equivalent.&lt;/p></description></item><item><title>Rate Limiter From Scratch in Python Part 1</title><link>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-1/</link><pubDate>Tue, 14 Feb 2023 23:19:18 +0100</pubDate><guid>https://glyphack.com/blog/rate-limiter-from-scratch-in-python-1/</guid><description>&lt;h2 class="heading" id="introduction">
+but I&amp;rsquo;m sure you can find a VSCode equivalent.&lt;/p></description></item><item><title>Rate Limiter From Scratch in Python Part 1</title><link>https://glyphack.com/blog/rate-limiter-python-1/</link><pubDate>Tue, 14 Feb 2023 23:19:18 +0100</pubDate><guid>https://glyphack.com/blog/rate-limiter-python-1/</guid><description>&lt;h2 class="heading" id="introduction">
 Introduction
 &lt;a class="anchor" href="#introduction">#&lt;/a>
 &lt;/h2>
@@ -3288,7 +3303,7 @@ I think this would be enough for one read,
 In the next post we will add more rate limiting algorithms and see
 how the current structure of the program can be extended.&lt;/p>
 &lt;p>You can find the &lt;a href="https://github.com/Glyphack/hera-limit">complete source code&lt;/a>
-on my Github.&lt;/p></description></item><item><title>Everything you need to know about splitting CDK stacks</title><link>https://glyphack.com/blog/everything-about-splitting-cdk-stacks/</link><pubDate>Sun, 13 Nov 2022 09:49:50 +0330</pubDate><guid>https://glyphack.com/blog/everything-about-splitting-cdk-stacks/</guid><description>&lt;p>AWS CDK is a tool that lets you define your cloud resources
+on my Github.&lt;/p></description></item><item><title>Everything you need to know about splitting CDK stacks</title><link>https://glyphack.com/blog/splitting-cdk-stacks/</link><pubDate>Sun, 13 Nov 2022 09:49:50 +0330</pubDate><guid>https://glyphack.com/blog/splitting-cdk-stacks/</guid><description>&lt;p>AWS CDK is a tool that lets you define your cloud resources
 in a languages such as python.
 And like any other project as the codebase grows, it needs to be split into components.&lt;/p>
 &lt;p>CDK projects can be split into multiple stacks.
@@ -3946,7 +3961,7 @@ But for the &lt;code>payment_info&lt;/code> record we can insert the &lt;code>us
 This allows us to reuse the GSI field for multiple purpose so we don&amp;rsquo;t hit the 20 GSI limit unless we have a table with 20 different joins.
 Also we now can get back all pull requests for a user with a single query, this will enable us to perform multiple joins without loosing performance.&lt;/p>
 &lt;p>To manage the GSI fields and what they are used for in each record we need another storage to save this information.
-We can have a small PostgreSQL instance that knows for example in User records the GSI_1 field is used to join with Pull Request entity.&lt;/p></description></item><item><title>How to Setup 2 Factor Authentication Code Generator on PC</title><link>https://glyphack.com/blog/setup-2fa-on-pc/</link><pubDate>Thu, 17 Mar 2022 23:19:14 +0330</pubDate><guid>https://glyphack.com/blog/setup-2fa-on-pc/</guid><description>&lt;p>I use 2 factor authentication with almost all of my accounts, the only downside of this is that when I need to access something frequently or automate some task I have to manually enter this code from my phone.&lt;/p>
+We can have a small PostgreSQL instance that knows for example in User records the GSI_1 field is used to join with Pull Request entity.&lt;/p></description></item><item><title>How to Setup 2 Factor Authentication Code Generator on PC</title><link>https://glyphack.com/blog/2fa-pc/</link><pubDate>Thu, 17 Mar 2022 23:19:14 +0330</pubDate><guid>https://glyphack.com/blog/2fa-pc/</guid><description>&lt;p>I use 2 factor authentication with almost all of my accounts, the only downside of this is that when I need to access something frequently or automate some task I have to manually enter this code from my phone.&lt;/p>
 &lt;p>So I searched a bit and found these tools to make this process easier, I imported 2fa keys to my laptop and can generate keys with a command so I can copy the code and also the command can be used in automated tasks. Note that in this way anyone with access to your laptop has access to 2fa codes too.&lt;/p>
 &lt;h2 class="heading" id="setup-2fa-code-on-your-machine">
 Setup 2FA code on your machine
