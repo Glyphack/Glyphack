@@ -1,5 +1,5 @@
 ---
-title: "Devlog 0002 Enderpy Generics Type Inference"
+title: "How to infer type for Generic types in Python?"
 date: 2024-03-25T16:46:15+01:00
 draft: false
 tags: []

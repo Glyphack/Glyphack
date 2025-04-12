@@ -107,15 +107,16 @@ I'm sad that my link collector requires internet to work, time to question choic
 I read a bunch of blogs and books there all worthy to read.
 
 The blogs read there:
-- https://www.unqualified-reservations.org
-- http://www.catb.org/~esr/
-- https://ranprieur.com
-- https://datagenerics.com my favorite math puzzle blog
-- https://starslatecodex.com
-- https://geohot.github.io/blog/
-- https://lukesmith.xyz
-- https://notrelated.xyz
-- https://paulgraham.com
+
+- <https://www.unqualified-reservations.org>
+- <http://www.catb.org/~esr/>
+- <https://ranprieur.com>
+- <https://datagenerics.com> my favorite math puzzle blog
+- <https://starslatecodex.com>
+- <https://geohot.github.io/blog/>
+- <https://lukesmith.xyz>
+- <https://notrelated.xyz>
+- <https://paulgraham.com>
 
 I also took two longer writings:
 
