@@ -1,5 +1,5 @@
 ---
-title: "Devlog 3: made an extension for readwise, updating my blog with obisidian, learning about ungrammar and code generation"
+title: "Devlog 4: I made a chrome extension"
 date: 2025-04-12T11:49:07+02:00
 draft: false
 tags: [devlog] 
@@ -22,5 +22,6 @@ Other things:
 - I moved [my reading list](https://glyphack.com/reading-list/) off Notion and to my blog. I was tired of me entering books I read and notes about them in Obsidian and the Notion was rarely updated. So I found a [solution](https://glyphack.com/blog/ob/) to update my blog with Obsidian, and then show the book notes just as any other page on my blog. The bonus is that I can make it more beautiful in the future.
 - I've heard about this language called ungrammar that is used in Rust to generate CSTs. I did not know anything about it. Thanks to this [issue in Ruff](https://github.com/astral-sh/ruff/issues/15655) , I did some work related to generating AST. There's [this nice](https://www.youtube.com/watch?v=EIXb9mX_o9s) video that explains how it's used in the Rust Analyzer code.
 - I implemented [Redis streams](https://redis.io/docs/latest/develop/data-types/streams/) in toy [clone of Redis](https://github.com/Glyphack/redis-clone). I took some time doing this, I wanted to use an array instead of a linked list. This would make a good candidate for a blog post so I won't go into details. Redis uses [radix tree](https://en.wikipedia.org/wiki/Radix_tree#:~:text=In%20computer%20science%2C%20a%20radix,is%20merged%20with%20its%20parent.) to implement streams(according to AI)
+- I read <https://sive.rs/su> and decided to keep my own URLs shorter too.
 
 That's it for this week.
