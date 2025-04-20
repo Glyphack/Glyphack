@@ -30,7 +30,7 @@ name = "Resume"
 url = "https://docs.google.com/document/d/1XgC2Va8ZgJ2DrmRKpgd_7iVjv8aASnn8nzl6DgkR1mg/edit?usp=sharing"
 [[params.menu]]
 name = "Reads This"
-url = "https://readsthis.pages.dev/s/76ead3b6-63cf-4104-8ab1-ff9af9a0ea2b"
+url = "https://r.glyphack.com/s/76ead3b6-63cf-4104-8ab1-ff9af9a0ea2b"
 [[params.social]]
 name = "github"
 url = "https://github.com/glyphack"

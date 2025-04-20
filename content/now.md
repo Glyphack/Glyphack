@@ -1,7 +1,6 @@
 ---
 title: "What I'm Doing Now"
 date: 2024-03-04T15:40:55+01:00
-layout: staticpage
 ---
 
 This is my now page, which lists what I'm thinking and working on right now.
@@ -11,7 +10,7 @@ Updated Jan 5th, 2025 from Amsterdam.
 
 ## Contributing to Red Knot Python Type Checker
 
-Initially I wanted to build my own type checker. 
+Initially I wanted to build my own type checker.
 After some time I found out about red knot that is another work in progress python type checker.
 Since developing a type checker for python is a lot of work I decided to dedicate my effort to contribute to this project.
 
