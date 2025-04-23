@@ -32,4 +32,4 @@ I got a gardening pot and going to fill that with soil on the balcony and grew l
 ## Looking for Something New
 
 I'm looking for a problem to solve something that occupies my mind and give me energy every day I wake up.
-I'm solving codecrafters.io challenges right now. It might inspire me to do something different.
+I'm solving <https://codecrafters.io> challenges right now. It might inspire me to do something different.

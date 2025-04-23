@@ -10,6 +10,10 @@ defaultContentLanguage = "en"
 pygmentsCodeFences = true
 pygmentsUseClasses = true
 
+[permalinks]
+blog = "/:filename/"
+synced = "s/:filename/"
+
 [[params.menu]]
 name = "Home"
 url = "/"
