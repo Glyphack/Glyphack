@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Blog on Glyphack</title><link>https://glyphack.com/blog/</link><description>Recent content in Blog on Glyphack</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 20 Apr 2025 13:20:54 +0200</lastBuildDate><atom:link href="https://glyphack.com/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>I Made ReadsThis to Share and Find Good Blogs</title><link>https://glyphack.com/blog/rt/</link><pubDate>Sun, 20 Apr 2025 13:20:54 +0200</pubDate><guid>https://glyphack.com/blog/rt/</guid><description>&lt;p>I created a site to share your favorite RSS Feeds in a page.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Blog on Glyphack</title><link>https://glyphack.com/blog/</link><description>Recent content in Blog on Glyphack</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 20 Apr 2025 13:20:54 +0200</lastBuildDate><atom:link href="https://glyphack.com/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>I Made ReadsThis to Share and Find Good Blogs</title><link>https://glyphack.com/rt/</link><pubDate>Sun, 20 Apr 2025 13:20:54 +0200</pubDate><guid>https://glyphack.com/rt/</guid><description>&lt;p>I created a site to share your favorite RSS Feeds in a page.
 The idea comes from one of my favorite sites &lt;a href="https://usesthis.com">usesthis.com&lt;/a>.&lt;/p>
 &lt;p>&lt;a href="https://r.glyphack.com">Try it out&lt;/a> and send me your links.
 I love to know interesting blogs around the internet. Here is &lt;a href="https://r.glyphack.com/s/s">mine&lt;/a>.&lt;/p>
@@ -11,7 +11,7 @@ I limited the number of posts I see and I can choose from to read. But the quali
 From time to time, I share these blogs with my friends. They share blogs with me too. And I love it.
 Now I have a collection that I really like. I might add more or less stuff to them but it&amp;rsquo;s almost enough for my entire life.&lt;/p>
 &lt;p>So I created this website where we can share and find interesting blogs.
-It&amp;rsquo;s essentially, a recommendation system created by people.&lt;/p></description></item><item><title>Devlog 4: I made a chrome extension</title><link>https://glyphack.com/blog/dv-4/</link><pubDate>Sat, 12 Apr 2025 11:49:07 +0200</pubDate><guid>https://glyphack.com/blog/dv-4/</guid><description>&lt;p>I&amp;rsquo;m not sure if some time comes that I finally can say I know vim. But I don&amp;rsquo;t think that would happen before I &lt;a href="https://www.youtube.com/watch?v=rT-fbLFOCy0">read the whole manual&lt;/a>.&lt;/p>
+It&amp;rsquo;s essentially, a recommendation system created by people.&lt;/p></description></item><item><title>Devlog 4: I made a chrome extension</title><link>https://glyphack.com/dv-4/</link><pubDate>Sat, 12 Apr 2025 11:49:07 +0200</pubDate><guid>https://glyphack.com/dv-4/</guid><description>&lt;p>I&amp;rsquo;m not sure if some time comes that I finally can say I know vim. But I don&amp;rsquo;t think that would happen before I &lt;a href="https://www.youtube.com/watch?v=rT-fbLFOCy0">read the whole manual&lt;/a>.&lt;/p>
 &lt;p>This week I learned these new commands:&lt;/p>
 &lt;p>I&amp;rsquo;ve always used &lt;code>ctrl-o&lt;/code> to move to last place I was editing in vim. Turns out there&amp;rsquo;s a keybinding to move to the previous file that was open it&amp;rsquo;s &lt;strong>&lt;code>Ctrl-^&lt;/code> (or &lt;code>Ctrl-6&lt;/code>)&lt;/strong>.
 This command switches to the last visited file.
@@ -26,7 +26,7 @@ You are probably familiar with &lt;code>gj&lt;/code> and &lt;code>gk&lt;/code> b
 &lt;li>I implemented &lt;a href="https://redis.io/docs/latest/develop/data-types/streams/">Redis streams&lt;/a> in toy &lt;a href="https://github.com/Glyphack/redis-clone">clone of Redis&lt;/a>. I took some time doing this, I wanted to use an array instead of a linked list. This would make a good candidate for a blog post so I won&amp;rsquo;t go into details. Redis uses &lt;a href="https://en.wikipedia.org/wiki/Radix_tree#:~:text=In%20computer%20science%2C%20a%20radix,is%20merged%20with%20its%20parent.">radix tree&lt;/a> to implement streams(according to AI)&lt;/li>
 &lt;li>I read &lt;a href="https://sive.rs/su">https://sive.rs/su&lt;/a> and decided to keep my own URLs shorter too.&lt;/li>
 &lt;/ul>
-&lt;p>That&amp;rsquo;s it for this week.&lt;/p></description></item><item><title>Blogging with Obsidian</title><link>https://glyphack.com/blog/ob/</link><pubDate>Wed, 09 Apr 2025 21:25:18 +0200</pubDate><guid>https://glyphack.com/blog/ob/</guid><description>&lt;p>My blog is a bunch of files that are given to a program that converts them to HTML and CSS files, which is what you see here.&lt;/p>
+&lt;p>That&amp;rsquo;s it for this week.&lt;/p></description></item><item><title>Blogging with Obsidian</title><link>https://glyphack.com/ob/</link><pubDate>Wed, 09 Apr 2025 21:25:18 +0200</pubDate><guid>https://glyphack.com/ob/</guid><description>&lt;p>My blog is a bunch of files that are given to a program that converts them to HTML and CSS files, which is what you see here.&lt;/p>
 &lt;p>Also, Obsidian uses files to store my notes. This means it gives the most freedom than any other tool out there.&lt;/p>
 &lt;p>Since I&amp;rsquo;ve been writing both on my blog and in Obsidian there were times that I wanted to share stuff outside my Obsidian and link it in my website.
 One way to do this is using Obsidian Publish, but after reading the &lt;a href="https://www.reddit.com/r/ObsidianMD/comments/16e5jek/comment/jzv38ja/?utm_source=share&amp;amp;utm_medium=web3x&amp;amp;utm_name=web3xcss&amp;amp;utm_term=1&amp;amp;utm_content=share_button">creator of Obsidian himself suggesting alternatives to it&lt;/a> I searched for ways to publish my notes on my blog.&lt;/p>
@@ -88,7 +88,7 @@ So I created this HTML page, that lists all the notes with &amp;ldquo;Books&amp;
 There are unlimited customizations that can be done. Like showing the books in a specific order or format. I left that out since it&amp;rsquo;s lengthy and does not fit in the scope of this post.
 Since I&amp;rsquo;m not using some dependency I am free to touch the HTML and change how my published notes look.&lt;/p>
 &lt;p>I like to see more people sharing their internal notes. If you do, share it with me. I like to read it.&lt;/p>
-&lt;p>Next I like to get create email subscriptions and comments for my blog.&lt;/p></description></item><item><title>After Interview</title><link>https://glyphack.com/blog/after-interview/</link><pubDate>Thu, 06 Mar 2025 08:41:39 +0100</pubDate><guid>https://glyphack.com/blog/after-interview/</guid><description>&lt;p>Biggest companies put candidates through lengthy interview process, yet still fire a lot of bad hires.
+&lt;p>Next I like to get create email subscriptions and comments for my blog.&lt;/p></description></item><item><title>After Interview</title><link>https://glyphack.com/after-interview/</link><pubDate>Thu, 06 Mar 2025 08:41:39 +0100</pubDate><guid>https://glyphack.com/after-interview/</guid><description>&lt;p>Biggest companies put candidates through lengthy interview process, yet still fire a lot of bad hires.
 What if the problem is not the interview, but what happens after?
 Smarter onboarding is the key to identify if a new hire is a great fit.&lt;/p>
 &lt;p>In my experience and what I&amp;rsquo;ve heard from others, the onboarding is slow.
@@ -120,7 +120,7 @@ It&amp;rsquo;s better for everyone to find out if they enjoy the ride or not.&lt
 &lt;/ul>
 &lt;p>This approach is not only useful for the company but also for the new hire.
 Both parties know sooner if this a good match.
-If you hired someone new, welcome the person with real work with risk.&lt;/p></description></item><item><title>Devlog 3: Coding a redis clone in C and things I learned</title><link>https://glyphack.com/blog/dv-3/</link><pubDate>Sat, 15 Feb 2025 18:02:46 +0100</pubDate><guid>https://glyphack.com/blog/dv-3/</guid><description>&lt;p>About two months ago I started the build your own Redis challenge from &lt;a href="codecrafters.io">codecrafters.io&lt;/a>.
+If you hired someone new, welcome the person with real work with risk.&lt;/p></description></item><item><title>Devlog 3: Coding a redis clone in C and things I learned</title><link>https://glyphack.com/dv-3/</link><pubDate>Sat, 15 Feb 2025 18:02:46 +0100</pubDate><guid>https://glyphack.com/dv-3/</guid><description>&lt;p>About two months ago I started the build your own Redis challenge from &lt;a href="codecrafters.io">https://codecrafters.io&lt;/a>.
 I decided to do this in C. Initially I was just curious to do it in C. Doing it in C thought me a lot of stuff that otherwise I would have not learned. Another bonus point was that I could tweak the performance to be on par with Redis server.&lt;/p>
 &lt;p>C always seemed like an impossible language to me. Working so much in garbage collected languages with rich standard libraries made me think C is hard.
 Now I think C is not hard. Whatever you write gets executed the way you wrote it. Little abstractions make it a great language to implement what you want and have control over your program.
@@ -190,7 +190,7 @@ So what we really need is, a way to tell which clients are ready to read, which 
 I recommend following &lt;a href="https://build-your-own.org/redis/05_event_loop_intro">this guide&lt;/a>. I ended up switching to &lt;code>kqueue&lt;/code> from &lt;code>poll&lt;/code> to achieve better performance on MacOS.&lt;/p>
 &lt;hr>
 &lt;p>I think this database can be a good base program to expand to any kind of future databases I want to write.
-I can reuse the existing protocol to exchange messages and add my custom logic or &lt;a href="https://eli.thegreenplace.net/2020/implementing-raft-part-0-introduction/">implement Raft&lt;/a>.&lt;/p></description></item><item><title>Can Data Fool You?</title><link>https://glyphack.com/blog/fooled-by-data/</link><pubDate>Wed, 29 Jan 2025 22:32:33 +0100</pubDate><guid>https://glyphack.com/blog/fooled-by-data/</guid><description>&lt;p>Recently, A personal experience showed me how something widely accepted might be wrong.
+I can reuse the existing protocol to exchange messages and add my custom logic or &lt;a href="https://eli.thegreenplace.net/2020/implementing-raft-part-0-introduction/">implement Raft&lt;/a>.&lt;/p></description></item><item><title>Can Data Fool You?</title><link>https://glyphack.com/fooled-by-data/</link><pubDate>Wed, 29 Jan 2025 22:32:33 +0100</pubDate><guid>https://glyphack.com/fooled-by-data/</guid><description>&lt;p>Recently, A personal experience showed me how something widely accepted might be wrong.
 I didn&amp;rsquo;t want to lose this opportunity to write about it.&lt;/p>
 &lt;p>If you haven&amp;rsquo;t been living under a cave, you know data-driven decision making is a must these days.
 So, if you cannot make a decision just run both under some experiment and decide based on the result.
@@ -226,7 +226,7 @@ That would be absurd. Yet somehow, that&amp;rsquo;s exactly what we&amp;rsquo;re
 &lt;p>Here&amp;rsquo;s the thing about understanding versus just observing: if you see something work and think you know why, you should be able to do it again.
 That&amp;rsquo;s the difference between actual understanding and just having a good story about what happened.
 Let me put it this way: if you run an A/B test and conclude &amp;ldquo;Oh, users love blue buttons!&amp;rdquo; then you should be able to predict when blue buttons will work again.&lt;/p>
-&lt;p>So, data is good, but why not combine it with some thinking?&lt;/p></description></item><item><title>On Tracking Time</title><link>https://glyphack.com/blog/tracking-time/</link><pubDate>Tue, 31 Dec 2024 18:00:17 +0100</pubDate><guid>https://glyphack.com/blog/tracking-time/</guid><description>&lt;p>One week I suddenly realized I did so much during the week but there&amp;rsquo;s nothing to show for it.
+&lt;p>So, data is good, but why not combine it with some thinking?&lt;/p></description></item><item><title>On Tracking Time</title><link>https://glyphack.com/tracking-time/</link><pubDate>Tue, 31 Dec 2024 18:00:17 +0100</pubDate><guid>https://glyphack.com/tracking-time/</guid><description>&lt;p>One week I suddenly realized I did so much during the week but there&amp;rsquo;s nothing to show for it.
 You know that feeling that you don&amp;rsquo;t have anything to tell your friend that you did that week.&lt;/p>
 &lt;p>I gave time tracking a shot to see what will I find.
 Rescue time looked like a simple tool that gets the job done. I used Activity Watch before and the main lacking feature was syncing and the mobile app (at the time they now have a new mobile app.)&lt;/p>
@@ -261,7 +261,7 @@ Free time plus boredom is all needed to do what you want to do. Unless you don&a
 &lt;p>I don&amp;rsquo;t know if time tracking is necessary or not.
 Maybe after a while these habits are shaped, so it&amp;rsquo;s not needed any more.
 I think if there&amp;rsquo;s something that grabs your attention, and you want to do it, you will do it. No focus or do not disturb mode needed for true captivation.
-But all the other times it&amp;rsquo;s easy to get distracted and not find the intriguing.&lt;/p></description></item><item><title>Dev Tools at Work</title><link>https://glyphack.com/blog/dev-tools-at-work/</link><pubDate>Sun, 29 Dec 2024 19:32:07 +0100</pubDate><guid>https://glyphack.com/blog/dev-tools-at-work/</guid><description>&lt;p>I was reading this old post from Brad Fitzpatrick, talking about why he thought open source contributors suddenly disappear after joining Google:&lt;/p>
+But all the other times it&amp;rsquo;s easy to get distracted and not find the intriguing.&lt;/p></description></item><item><title>Dev Tools at Work</title><link>https://glyphack.com/dev-tools-at-work/</link><pubDate>Sun, 29 Dec 2024 19:32:07 +0100</pubDate><guid>https://glyphack.com/dev-tools-at-work/</guid><description>&lt;p>I was reading this old post from Brad Fitzpatrick, talking about why he thought open source contributors suddenly disappear after joining Google:&lt;/p>
 &lt;blockquote>
 &lt;ul>
 &lt;li>They&amp;rsquo;re busy. Google seems to suck everybody&amp;rsquo;s free time, and then some. It&amp;rsquo;s not that Google is forcing them to work all the time, but they are anyway because there are so many cool things that can be done. I often joke that I have seven 20% projects.&lt;/li>
@@ -335,7 +335,7 @@ Maybe just write the documentation and update it instead of writing proposals ab
 &lt;p>I&amp;rsquo;m sad that I haven&amp;rsquo;t worked at a place that matches what Brad said about Google. But it&amp;rsquo;s probably about google at that time and things might be different now.
 The bright side is that open source is much better these days. I experienced this in open source projects. Good tools, fast builds, and great developer setup guides.
 People care about good experience there.&lt;/p>
-&lt;p>P.S. If you&amp;rsquo;re reading this from Google circa 2009, please send help. And your build system and your developer tools.&lt;/p></description></item><item><title>Devlog 2</title><link>https://glyphack.com/blog/dv-2/</link><pubDate>Sat, 02 Nov 2024 11:11:05 +0100</pubDate><guid>https://glyphack.com/blog/dv-2/</guid><description>&lt;p>Random notes from past month.&lt;/p>
+&lt;p>P.S. If you&amp;rsquo;re reading this from Google circa 2009, please send help. And your build system and your developer tools.&lt;/p></description></item><item><title>Devlog 2</title><link>https://glyphack.com/dv-2/</link><pubDate>Sat, 02 Nov 2024 11:11:05 +0100</pubDate><guid>https://glyphack.com/dv-2/</guid><description>&lt;p>Random notes from past month.&lt;/p>
 &lt;p>&lt;strong>New Projects&lt;/strong>&lt;/p>
 &lt;p>I spent about a year building &lt;a href="https://github.com/Glyphack/enderpy">my own tool-chain&lt;/a> for building a python type checker. It inspired by what ruff was doing for Python linting and wanted to do the same for type checker.
 A few months ago I found out that astral team are building a type checker. So I decided to redirect my energy toward that.
@@ -437,7 +437,7 @@ I could not find a way to resolve this so I wrote this hammerspoon script to res
 &lt;li>I knew about PyPy, but I didn&amp;rsquo;t know they have a full tool chain for creating interpreters. Until I watched this &lt;a href="https://www.youtube.com/watch?v=p8fCq16XTH4">Tsoding video&lt;/a>&lt;/li>
 &lt;li>Kay Lack&amp;rsquo;s YouTube channel is one of the best things I found last month. High quality videos about computers and programming.
 This one is about &lt;a href="https://youtube.com/watch?v=DiXMoBMWMmA&amp;amp;si=yqldVom-i92x7iSA">regex&lt;/a> and &lt;a href="https://www.youtube.com/watch?v=GU8MnZI0snA">this one&lt;/a> assembly.&lt;/li>
-&lt;/ul></description></item><item><title>Writing a DNS server From Scratch</title><link>https://glyphack.com/blog/dns-from-scratch/</link><pubDate>Sat, 12 Oct 2024 13:09:53 +0200</pubDate><guid>https://glyphack.com/blog/dns-from-scratch/</guid><description>&lt;p>I decided to build another system from scratch just to explore a new topic and learn things.
+&lt;/ul></description></item><item><title>Writing a DNS server From Scratch</title><link>https://glyphack.com/dns-from-scratch/</link><pubDate>Sat, 12 Oct 2024 13:09:53 +0200</pubDate><guid>https://glyphack.com/dns-from-scratch/</guid><description>&lt;p>I decided to build another system from scratch just to explore a new topic and learn things.
 This time I chose the &lt;a href="https://app.codecrafters.io/courses/DNS-server">Code Crafters&amp;rsquo;s DNS challenge&lt;/a>&lt;/p>
 &lt;p>This is not a tutorial on how to do it but some notes to motivate you to do it.
 There&amp;rsquo;s already &lt;a href="https://app.codecrafters.io/courses/DNS-server">excellent material&lt;/a> on how to do it with code examples here.
@@ -471,7 +471,7 @@ The compression does not work like normal compressions, and instead it relies on
 &lt;p>In the last stage of the challenge you implement a DNS server that takes in the requests and resolves them using another DNS resolver. The other resolver is provided by codecrafters.
 I tried to use my resolver with &lt;code>8.8.8.8:53&lt;/code> and it was not working.
 I found the reason is that my DNS parser does not still support all the information that &lt;code>dig&lt;/code> command sends by default. And also I haven&amp;rsquo;t implemented compression for encoding DNS request to bytes.
-I haven&amp;rsquo;t checked how the codecrafters software works but maybe I would try to contribute this later.&lt;/p></description></item><item><title>How to Discover Interests</title><link>https://glyphack.com/blog/explore/</link><pubDate>Sun, 29 Sep 2024 21:31:32 +0200</pubDate><guid>https://glyphack.com/blog/explore/</guid><description>&lt;p>I was talking with my girlfriend recently about how to find something you are passionate about.&lt;/p>
+I haven&amp;rsquo;t checked how the codecrafters software works but maybe I would try to contribute this later.&lt;/p></description></item><item><title>How to Discover Interests</title><link>https://glyphack.com/explore/</link><pubDate>Sun, 29 Sep 2024 21:31:32 +0200</pubDate><guid>https://glyphack.com/explore/</guid><description>&lt;p>I was talking with my girlfriend recently about how to find something you are passionate about.&lt;/p>
 &lt;p>Having something you’re truly passionate about gives you a reason to get up in the morning and makes life more enjoyable.
 It’s more than just a hobby, it’s &lt;a href="https://paulgraham.com/genius.html">one of the key ingredients&lt;/a> to doing great work.&lt;/p>
 &lt;p>But how can you find it?
@@ -563,7 +563,7 @@ The fact that outcome is not determined is the strength because each person has 
 &lt;p>&lt;a href="https://www.norvig.com/21-days.html">https://www.norvig.com/21-days.html&lt;/a> is a good starting point for someone to learn about programming.&amp;#160;&lt;a href="#fnref:1" class="footnote-backref" role="doc-backlink">&amp;#x21a9;&amp;#xfe0e;&lt;/a>&lt;/p>
 &lt;/li>
 &lt;/ol>
-&lt;/div></description></item><item><title>A better go test</title><link>https://glyphack.com/blog/better-gotest/</link><pubDate>Sat, 24 Aug 2024 15:15:06 +0200</pubDate><guid>https://glyphack.com/blog/better-gotest/</guid><description>&lt;p>My job now involves doing some Golang work and this post is about how &lt;code>go test&lt;/code> command can be improved.&lt;/p>
+&lt;/div></description></item><item><title>A better go test</title><link>https://glyphack.com/better-gotest/</link><pubDate>Sat, 24 Aug 2024 15:15:06 +0200</pubDate><guid>https://glyphack.com/better-gotest/</guid><description>&lt;p>My job now involves doing some Golang work and this post is about how &lt;code>go test&lt;/code> command can be improved.&lt;/p>
 &lt;p>Until now, I never actually thought about improving the test command for a language.
 But with Golang I have serious problems with reporting test results on command line.
 Test output is not readable, The usual test flags you expect are not there.&lt;/p>
@@ -582,7 +582,7 @@ You have other tools to watch and run commands.&lt;/p>
 It&amp;rsquo;s a very simple tool. It takes in the output of &lt;code>go test&lt;/code> command and organizes output to a human friendly output. I&amp;rsquo;m planning to add more commands and see how far can I improve the testing on CLI. You don&amp;rsquo;t have to install an IDE just for running tests easily, it&amp;rsquo;s not Java.&lt;/p>
 &lt;p>&lt;strong>Why not contributing to Golang?&lt;/strong>&lt;/p>
 &lt;p>I think some of these features could be added in the &lt;code>go test&lt;/code>, and I&amp;rsquo;m going to use this project as an experiment to see how they turn out to be.&lt;/p>
-&lt;p>If you are interested let me know.&lt;/p></description></item><item><title>Pytest Dev Sprint 2024</title><link>https://glyphack.com/blog/pytest-dev-sprint-2024/</link><pubDate>Tue, 20 Aug 2024 19:35:10 +0200</pubDate><guid>https://glyphack.com/blog/pytest-dev-sprint-2024/</guid><description>&lt;p>It was about 3 Months ago that a interesting message showed upon my GitHub feed.
+&lt;p>If you are interested let me know.&lt;/p></description></item><item><title>Pytest Dev Sprint 2024</title><link>https://glyphack.com/pytest-dev-sprint-2024/</link><pubDate>Tue, 20 Aug 2024 19:35:10 +0200</pubDate><guid>https://glyphack.com/pytest-dev-sprint-2024/</guid><description>&lt;p>It was about 3 Months ago that a interesting message showed upon my GitHub feed.
 It was from &lt;a href="https://github.com/The-Compiler">The-Compiler&lt;/a> arranging a 5 day &lt;a href="https://github.com/pytest-dev/sprint/">Pytest development sprint&lt;/a> in Austria.
 I was following him for his open source work.
 I finally got access to something interesting from following people whom work I like.&lt;/p>
@@ -628,7 +628,7 @@ We can&amp;rsquo;t even get basic CRUD apps to work these days.&lt;/p>
 &lt;p>I&amp;rsquo;m glad that I had followed Florian, and saw the announcement in my GitHub feed. Another good reason to find good people and follow them on GitHub.&lt;/p>
 &lt;p>Oh lastly, I started using &lt;a href="https://qutebrowser.org/doc/quickstart.html">qutebrowser&lt;/a> during this sprint. I&amp;rsquo;m very happy with my decision. It&amp;rsquo;s an efficient and fast, just like vim. It works with everything except for crappy websites. For example google sometimes does not let you log in to an account from this browser (how much more they have to work to convince you that they are taking control of the web and browsers?).
 But I&amp;rsquo;m using it as my development browser now. It works perfect for websites showing information. Let&amp;rsquo;s see if I will start creating scripts to have fun and automate some more stuff in the browser.&lt;/p>
-&lt;p>Follow people you like on GitHub. On LinkedIn, you find show offs and announcements by sales and PR on GitHub you find real things.&lt;/p></description></item><item><title>Camping at Vresselse Bos</title><link>https://glyphack.com/blog/vresselse-camping/</link><pubDate>Wed, 29 May 2024 22:55:24 +0200</pubDate><guid>https://glyphack.com/blog/vresselse-camping/</guid><description>&lt;p>I had some time in between switching jobs and decided to go for a camping trip.
+&lt;p>Follow people you like on GitHub. On LinkedIn, you find show offs and announcements by sales and PR on GitHub you find real things.&lt;/p></description></item><item><title>Camping at Vresselse Bos</title><link>https://glyphack.com/vresselse-camping/</link><pubDate>Wed, 29 May 2024 22:55:24 +0200</pubDate><guid>https://glyphack.com/vresselse-camping/</guid><description>&lt;p>I had some time in between switching jobs and decided to go for a camping trip.
 My first time in the Netherlands.&lt;/p>
 &lt;p>After looking up some places I chose to go to &lt;a href="https://nl.wikipedia.org/wiki/Vresselse_Bos">Vresselse Bos&lt;/a>
 I rented a tent from Airbnb.
@@ -727,7 +727,7 @@ I&amp;rsquo;m sad that my link collector requires internet to work, time to ques
 &lt;p>Now that I&amp;rsquo;m back I try to make my life more like that.
 Remove the stress and distractions.
 Do more physical activities specially to provide my basic needs.
-Worry less about stuff, and use the thinking to think about what I like.&lt;/p></description></item><item><title>Why Is It Hard to Do Real Work</title><link>https://glyphack.com/blog/doing-real-work/</link><pubDate>Fri, 26 Apr 2024 21:48:35 +0200</pubDate><guid>https://glyphack.com/blog/doing-real-work/</guid><description>&lt;p>When I first read &lt;a href="https://www.paulgraham.com/procrastination.html">good and bad procrastination&lt;/a> by Paul Graham, I was amazed how much my perspective changed about working.&lt;/p>
+Worry less about stuff, and use the thinking to think about what I like.&lt;/p></description></item><item><title>Why Is It Hard to Do Real Work</title><link>https://glyphack.com/doing-real-work/</link><pubDate>Fri, 26 Apr 2024 21:48:35 +0200</pubDate><guid>https://glyphack.com/doing-real-work/</guid><description>&lt;p>When I first read &lt;a href="https://www.paulgraham.com/procrastination.html">good and bad procrastination&lt;/a> by Paul Graham, I was amazed how much my perspective changed about working.&lt;/p>
 &lt;blockquote>
 &lt;p>There are three variants of procrastination, depending on what you do instead of working on something: you could work on (a) nothing, (b) something less important, or (c) something more important. That last type, I&amp;rsquo;d argue, is good procrastination.&lt;/p>
 &lt;p>The most dangerous form of procrastination is unacknowledged type-B procrastination, because it doesn&amp;rsquo;t feel like procrastination. You&amp;rsquo;re &amp;ldquo;getting things done.&amp;rdquo; Just the wrong things.
@@ -787,7 +787,7 @@ If you decide to do the errand in that hour you don&amp;rsquo;t get anything don
 Which alerts the brain more.
 It&amp;rsquo;s better to waste time in obvious ways than with fake work.
 Because fake work requires more effort to notice.&lt;/p>
-&lt;p>The worst kind of effort is the one that produces nothing and fighting that is the first step to get to boredom. After staring at the blank page for a while, writing will follow.&lt;/p></description></item><item><title>Expertise Beyond Validation</title><link>https://glyphack.com/blog/expertise-beyond-validation/</link><pubDate>Tue, 16 Apr 2024 21:48:35 +0200</pubDate><guid>https://glyphack.com/blog/expertise-beyond-validation/</guid><description>&lt;p>I was walking in Rome a few weeks ago.
+&lt;p>The worst kind of effort is the one that produces nothing and fighting that is the first step to get to boredom. After staring at the blank page for a while, writing will follow.&lt;/p></description></item><item><title>Expertise Beyond Validation</title><link>https://glyphack.com/expertise-beyond-validation/</link><pubDate>Tue, 16 Apr 2024 21:48:35 +0200</pubDate><guid>https://glyphack.com/expertise-beyond-validation/</guid><description>&lt;p>I was walking in Rome a few weeks ago.
 This idea that less educated people with less resources and money built such beautiful buildings was so fascinating to me.
 Even the most ordinary-looking buildings are constructed with care.
 They have fantastic arches, curved ceilings.
@@ -874,7 +874,7 @@ When failure happens it&amp;rsquo;s like as if their certifications were not val
 Outsiders have nothing to lose.
 They either have skill and it&amp;rsquo;s in the result or don&amp;rsquo;t.
 If they realize they are not skilled enough is not a bad thing, they practice more.
-What are you going to do about certifications? Get another one?&lt;/p></description></item><item><title>Best Place to Work at as a Programmer</title><link>https://glyphack.com/blog/best-job/</link><pubDate>Fri, 12 Apr 2024 20:39:20 +0200</pubDate><guid>https://glyphack.com/blog/best-job/</guid><description>&lt;p>Despite the title this isn&amp;rsquo;t meant to name a specific company.
+What are you going to do about certifications? Get another one?&lt;/p></description></item><item><title>Best Place to Work at as a Programmer</title><link>https://glyphack.com/best-job/</link><pubDate>Fri, 12 Apr 2024 20:39:20 +0200</pubDate><guid>https://glyphack.com/best-job/</guid><description>&lt;p>Despite the title this isn&amp;rsquo;t meant to name a specific company.
 I&amp;rsquo;m trying to figure out for people like myself who enjoy programming what the best place to work would be like.&lt;/p>
 &lt;p>I think there&amp;rsquo;s fundamental problem at most companies right now.
 Everything is fake. Of course, we have goals, but they are artificial.
@@ -925,7 +925,7 @@ You won&amp;rsquo;t starve. You get to do valuable work, and enjoy it.&lt;/p>
 &lt;p>What makes open source more sustainable than a low paying job is that you can work on valuable things.
 Jobs are structured in a way that pay is not directly related to the value.
 Without garbage collectors, the world would be a mess, but they are not paid well.
-Same phenomenon described &lt;a href="https://strikemag.org/bullshit-jobs/">Bullshit Jobs&lt;/a>.&lt;/p></description></item><item><title>How to infer type for Generic types in Python?</title><link>https://glyphack.com/blog/python-generics-type-inference/</link><pubDate>Mon, 25 Mar 2024 16:46:15 +0100</pubDate><guid>https://glyphack.com/blog/python-generics-type-inference/</guid><description>&lt;p>I implemented Generic classes and functions this week in Enderpy. I&amp;rsquo;m happy that now my code can now read and infer types of &lt;a href="https://github.com/python/typing/blob/main/conformance/tests/generics_basic.py#L114">this conformance test&lt;/a>.&lt;/p>
+Same phenomenon described &lt;a href="https://strikemag.org/bullshit-jobs/">Bullshit Jobs&lt;/a>.&lt;/p></description></item><item><title>How to infer type for Generic types in Python?</title><link>https://glyphack.com/python-generics-type-inference/</link><pubDate>Mon, 25 Mar 2024 16:46:15 +0100</pubDate><guid>https://glyphack.com/python-generics-type-inference/</guid><description>&lt;p>I implemented Generic classes and functions this week in Enderpy. I&amp;rsquo;m happy that now my code can now read and infer types of &lt;a href="https://github.com/python/typing/blob/main/conformance/tests/generics_basic.py#L114">this conformance test&lt;/a>.&lt;/p>
 &lt;p>I chose to skip implementing generics with syntax &lt;code>def f[T](): T&lt;/code> because of the &lt;a href="https://peps.python.org/pep-0695/#scoping-behavior">scoping behavior&lt;/a>.
 They are also tested extensively in this &lt;a href="https://github.com/python/typing/blob/main/conformance/tests/generics_syntax_scoping.py">test case&lt;/a>.&lt;/p>
 &lt;p>Another strange thing I found in the &lt;code>typeshed&lt;/code> repo is that in the &lt;code>sys/__init__.py&lt;/code> file there is a &lt;code>import sys&lt;/code> in the beginning.
@@ -939,7 +939,7 @@ I&amp;rsquo;m planning to add the functionality to infer the type of the generic
 &lt;li>When the type evaluator resolves a type annotation that is referring to typing. TypeVar it considers that a type parameter type.&lt;/li>
 &lt;li>When the classes have a base class of &lt;code>typing.Generic[T]&lt;/code> the type evaluator tries to find the type parameter, and adds the type parameter to the inferred class type.&lt;/li>
 &lt;/ol>
-&lt;p>The next step is to continue the generics test cases and implement the type inference for the generic types.&lt;/p></description></item><item><title>Don't be afraid to Rewrite</title><link>https://glyphack.com/blog/rewrite/</link><pubDate>Tue, 12 Mar 2024 16:24:34 +0100</pubDate><guid>https://glyphack.com/blog/rewrite/</guid><description>&lt;p>I recently started to notice this pattern that some teams create products and move on. Maybe some maintenance until no one sends more bug reports.
+&lt;p>The next step is to continue the generics test cases and implement the type inference for the generic types.&lt;/p></description></item><item><title>Don't be afraid to Rewrite</title><link>https://glyphack.com/rewrite/</link><pubDate>Tue, 12 Mar 2024 16:24:34 +0100</pubDate><guid>https://glyphack.com/rewrite/</guid><description>&lt;p>I recently started to notice this pattern that some teams create products and move on. Maybe some maintenance until no one sends more bug reports.
 They just literally move on from that product, to the next one.&lt;/p>
 &lt;p>Now this is not new, when I was a consultant this was exactly what companies expect. Work on something and make it to the finish line and leave.
 It makes sense, you don&amp;rsquo;t want to keep them around because it&amp;rsquo;s costly.
@@ -976,7 +976,7 @@ It&amp;rsquo;s just that the product is live but, we want to make it better.&lt;
 &lt;p>That&amp;rsquo;s all I had to say. I saw this pattern in consultancy and said okay.
 But I also saw it in product companies, and I&amp;rsquo;m shocked. I don&amp;rsquo;t want to see it in my own work.&lt;/p>
 &lt;p>So don&amp;rsquo;t be afraid to realized you made a mistake, that&amp;rsquo;s part of the journey.
-Use it and rewrite your software to be better.&lt;/p></description></item><item><title>Devlog 0001: Contributing to Ruff, Profiling, Python Types Conformance Tests</title><link>https://glyphack.com/blog/dv-1/</link><pubDate>Sat, 03 Feb 2024 10:56:48 +0100</pubDate><guid>https://glyphack.com/blog/dv-1/</guid><description>&lt;p>Last week I wanted to start contributing to rust.
+Use it and rewrite your software to be better.&lt;/p></description></item><item><title>Devlog 0001: Contributing to Ruff, Profiling, Python Types Conformance Tests</title><link>https://glyphack.com/dv-1/</link><pubDate>Sat, 03 Feb 2024 10:56:48 +0100</pubDate><guid>https://glyphack.com/dv-1/</guid><description>&lt;p>Last week I wanted to start contributing to rust.
 I was working on Adding &lt;a href="https://github.com/astral-sh/ruff/pull/9513">uninitialized attribute access check&lt;/a> to Ruff.&lt;/p>
 &lt;p>I did it and learned a lot about how to track attributes in Python code.
 A gist of it would be, you need to go over the class, in each function when something is assigned to a name you need to check if that name is self or cls.
@@ -1015,7 +1015,7 @@ linter/default-rules/unicode/pypinyin.py 1.00 31.7±0.29µs 132.6 MB/sec 1.03 32
 &lt;a href="https://codspeed.io/astral-sh/ruff/branches/Glyphack:linter-pylint-E0203">Example&lt;/a>, next time I use this.&lt;/p>
 &lt;p>For enderpy I was looking for a test suite that I can develop against until my type checker is complete.
 Luckily it exists! You can view it &lt;a href="https://github.com/python/typing/tree/main/conformance">here&lt;/a>.
-It does not have a basic test case were you only have functions and variables but that one is easy to come up with myself.&lt;/p></description></item><item><title>Five Thousands Lines of Kotlin</title><link>https://glyphack.com/blog/five-thousands-lines-of-kotlin/</link><pubDate>Sun, 21 Jan 2024 14:43:03 +0100</pubDate><guid>https://glyphack.com/blog/five-thousands-lines-of-kotlin/</guid><description>&lt;p>This post is about my impression of Kotlin as a language after, well you guessed it, writing about five thousand lines of it. I will go through what I don&amp;rsquo;t like about it and whether I would use this language on my own(spoiler: I won&amp;rsquo;t unless I have to.) I started using Kotlin only because of the new job. In my job I worked on server applications only, with the added spice of enterprise software practices.&lt;/p>
+It does not have a basic test case were you only have functions and variables but that one is easy to come up with myself.&lt;/p></description></item><item><title>Five Thousands Lines of Kotlin</title><link>https://glyphack.com/five-thousands-lines-of-kotlin/</link><pubDate>Sun, 21 Jan 2024 14:43:03 +0100</pubDate><guid>https://glyphack.com/five-thousands-lines-of-kotlin/</guid><description>&lt;p>This post is about my impression of Kotlin as a language after, well you guessed it, writing about five thousand lines of it. I will go through what I don&amp;rsquo;t like about it and whether I would use this language on my own(spoiler: I won&amp;rsquo;t unless I have to.) I started using Kotlin only because of the new job. In my job I worked on server applications only, with the added spice of enterprise software practices.&lt;/p>
 &lt;p>You&amp;rsquo;ve probably heard that Kotlin is much better compared to Java. That is true, it&amp;rsquo;s like a unicorn compared to a horse, but in the end it&amp;rsquo;s just Java with extra features. Kotlin has more features for dealing with nulls, the best feature is the &lt;a href="https://kotlinlang.org/docs/null-safety.html#safe-calls">&lt;code>.?&lt;/code> operator&lt;/a>. This allows you to eliminate the &lt;code>if (x == null)&lt;/code> from code. I wish they had the same for exceptions.&lt;/p>
 &lt;p>&lt;strong>Exception Handling&lt;/strong>&lt;/p>
 &lt;p>Continuing with the language features, I think Kotlin lacks tools for &lt;a href="https://kotlinlang.org/docs/exceptions.html#checked-exceptions">specifying exception types&lt;/a> thrown by a function, at least in Java you can annotate what exceptions a function can raise, but Kotlin does not support that.
@@ -1085,7 +1085,7 @@ IntelliJ and the compiler won&amp;rsquo;t complain about this as well.&lt;/p>
 &lt;p>There are some Ktor features that fail during the runtime because it cannot find some plugin that is needed to work properly. Why must this be a runtime problem?&lt;/p>
 &lt;p>&lt;strong>Why Kotlin Won and Not Scala?&lt;/strong>&lt;/p>
 &lt;p>This question annoys my mind a lot. I also worked with Scala and I think it&amp;rsquo;s certainly a better language. Maybe that&amp;rsquo;s for another post.&lt;/p>
-&lt;p>But I also stopped doing Scala for one reason, the functional programming community took over the language and every library tried to add functional paradigm and type safety to everything (talking to you, ZIO). Again, just expose a goddamn function.&lt;/p></description></item><item><title>A Better Keyboard</title><link>https://glyphack.com/blog/better-keyboard/</link><pubDate>Sat, 30 Dec 2023 10:54:35 +0100</pubDate><guid>https://glyphack.com/blog/better-keyboard/</guid><description>&lt;p>Imagine you want to make a better keyboard.
+&lt;p>But I also stopped doing Scala for one reason, the functional programming community took over the language and every library tried to add functional paradigm and type safety to everything (talking to you, ZIO). Again, just expose a goddamn function.&lt;/p></description></item><item><title>A Better Keyboard</title><link>https://glyphack.com/better-keyboard/</link><pubDate>Sat, 30 Dec 2023 10:54:35 +0100</pubDate><guid>https://glyphack.com/better-keyboard/</guid><description>&lt;p>Imagine you want to make a better keyboard.
 Seems like a hard challenge for every company.
 What if &amp;lsquo;better&amp;rsquo; meant compressing multiple key presses into one? Or have shortcut for your frequent actions.
 If you minimize the effort to use it then you are making it better for yourself.&lt;/p>
@@ -1426,7 +1426,7 @@ Not Only Speed but ergonomics
 &lt;a class="anchor" href="#not-only-speed-but-ergonomics">#&lt;/a>
 &lt;/h2>
 &lt;p>These customization help with removing uncomfortable keys you need to press.
-The benefits are immediate - less strain on your fingers and wrists due to reduced movement, and a mind unburdened from managing mundane tasks like locating the Terminal window.&lt;/p></description></item><item><title>TIL Secret to Open Source Contribution &amp; Contributing to Python Docs</title><link>https://glyphack.com/blog/contributing-to-python-docs/</link><pubDate>Tue, 19 Sep 2023 22:23:48 +0200</pubDate><guid>https://glyphack.com/blog/contributing-to-python-docs/</guid><description>&lt;p>I think I learned something about contributing to open source that, if I knew a couple of years back, I could have done much more open source contributions.&lt;/p>
+The benefits are immediate - less strain on your fingers and wrists due to reduced movement, and a mind unburdened from managing mundane tasks like locating the Terminal window.&lt;/p></description></item><item><title>TIL Secret to Open Source Contribution &amp; Contributing to Python Docs</title><link>https://glyphack.com/contributing-to-python-docs/</link><pubDate>Tue, 19 Sep 2023 22:23:48 +0200</pubDate><guid>https://glyphack.com/contributing-to-python-docs/</guid><description>&lt;p>I think I learned something about contributing to open source that, if I knew a couple of years back, I could have done much more open source contributions.&lt;/p>
 &lt;p>A while back, I started creating a &lt;a href="https://github.com/Glyphack/enderpy">hand-written parser for Python&lt;/a>.
 I ended up also contributing some fixes to Python docs.
 This was particularly interesting to me because it did not require really advanced knowledge, and the stuff there that was incorrect or outdated had been there for years.
@@ -1439,7 +1439,7 @@ Then suddenly ( I found )[https://github.com/quora/pyanalyze/issues/707] a rule 
 which was not possible to implement with Python ast structure.
 I haven&amp;rsquo;t started an issue for this one yet because it requires more effort but it&amp;rsquo;s another opportunity.&lt;/p>
 &lt;p>I think that when we start programming journey, it&amp;rsquo;s best to be exposed to these opportunities of reading the actual framework/tool documentation.
-Or just, in general, look more into the source/docs rather than reaching for tutorials.&lt;/p></description></item><item><title>Compilers Resources</title><link>https://glyphack.com/blog/compiler-resources/</link><pubDate>Fri, 15 Sep 2023 19:50:19 +0200</pubDate><guid>https://glyphack.com/blog/compiler-resources/</guid><description>&lt;p>This post is a compilation of great resources I found while building a type checker for Python.
+Or just, in general, look more into the source/docs rather than reaching for tutorials.&lt;/p></description></item><item><title>Compilers Resources</title><link>https://glyphack.com/compiler-resources/</link><pubDate>Fri, 15 Sep 2023 19:50:19 +0200</pubDate><guid>https://glyphack.com/compiler-resources/</guid><description>&lt;p>This post is a compilation of great resources I found while building a type checker for Python.
 These resources are free and highly focused on specific topics, making them ideal for learning by doing rather than going through extensive materials.&lt;/p>
 &lt;h2 class="heading" id="parser">
 Parser
@@ -1514,7 +1514,7 @@ Specially linters have a lot in common with compilers and interpreters because t
 Final Words
 &lt;a class="anchor" href="#final-words">#&lt;/a>
 &lt;/h2>
-&lt;p>Compilers are super fun. If you have more resources please send them to me.&lt;/p></description></item><item><title>Trying Out Learning In Public</title><link>https://glyphack.com/blog/my-learn-in-public-workflow/</link><pubDate>Thu, 18 May 2023 14:07:58 +0200</pubDate><guid>https://glyphack.com/blog/my-learn-in-public-workflow/</guid><description>&lt;p>A while back I read about &lt;a href="https://www.swyx.io/learn-in-public">learning in public&lt;/a>
+&lt;p>Compilers are super fun. If you have more resources please send them to me.&lt;/p></description></item><item><title>Trying Out Learning In Public</title><link>https://glyphack.com/my-learn-in-public-workflow/</link><pubDate>Thu, 18 May 2023 14:07:58 +0200</pubDate><guid>https://glyphack.com/my-learn-in-public-workflow/</guid><description>&lt;p>A while back I read about &lt;a href="https://www.swyx.io/learn-in-public">learning in public&lt;/a>
 from swyx:&lt;/p>
 &lt;blockquote>
 &lt;p>At some point people will start asking you for help because of all the stuff you put out.&lt;/p>
@@ -1577,7 +1577,7 @@ contributing to Python.&lt;/p>
 &lt;p>The takeaway is to share updates when you are building in public.
 Not only when you finish building something but also along the way.&lt;/p>
 &lt;p>So this is all about starting small and being consistent,
-and having fun along the way.&lt;/p></description></item><item><title>Building a Web Crawler in Golang</title><link>https://glyphack.com/blog/build-a-crawler-in-golang/</link><pubDate>Mon, 20 Mar 2023 18:17:24 +0100</pubDate><guid>https://glyphack.com/blog/build-a-crawler-in-golang/</guid><description>&lt;ul>
+and having fun along the way.&lt;/p></description></item><item><title>Building a Web Crawler in Golang</title><link>https://glyphack.com/build-a-crawler-in-golang/</link><pubDate>Mon, 20 Mar 2023 18:17:24 +0100</pubDate><guid>https://glyphack.com/build-a-crawler-in-golang/</guid><description>&lt;ul>
 &lt;li>&lt;a href="#introduction">Introduction&lt;/a>&lt;/li>
 &lt;li>&lt;a href="#but-why-building-another-crawler">But Why Building Another Crawler?&lt;/a>&lt;/li>
 &lt;li>&lt;a href="#high-level-design">High Level Design&lt;/a>
@@ -2310,7 +2310,7 @@ And writing about this was a good practice to question my design and
 the way I wrote the code.&lt;/p>
 &lt;p>I could not explain the problems I faced in this post because I wrote it
 long after I finished the code itself. But you know enough to not make
-those mistakes as I did.&lt;/p></description></item><item><title>Rate Limiter From Scratch in Python Part 2</title><link>https://glyphack.com/blog/rate-limiter-python-2/</link><pubDate>Tue, 21 Feb 2023 21:34:49 +0100</pubDate><guid>https://glyphack.com/blog/rate-limiter-python-2/</guid><description>&lt;ul>
+those mistakes as I did.&lt;/p></description></item><item><title>Rate Limiter From Scratch in Python Part 2</title><link>https://glyphack.com/rate-limiter-python-2/</link><pubDate>Tue, 21 Feb 2023 21:34:49 +0100</pubDate><guid>https://glyphack.com/rate-limiter-python-2/</guid><description>&lt;ul>
 &lt;li>&lt;a href="#introduction">Introduction&lt;/a>&lt;/li>
 &lt;li>&lt;a href="#new-rate-limiting-algorithms">New Rate Limiting Algorithms&lt;/a>
 &lt;ul>
@@ -2816,7 +2816,7 @@ write for each limiter, we can test them all with universal test cases,
 the rate limiter service can use them without knowing what the underlying strategy
 is.&lt;/p>
 &lt;p>In the next part we can see how to implement another storage backend such as redis,
-without having to change any code in rate limiting algorithms.&lt;/p></description></item><item><title>Personalize Macos Environment for Your Productivity</title><link>https://glyphack.com/blog/macos-productivity/</link><pubDate>Sun, 19 Feb 2023 20:58:33 +0100</pubDate><guid>https://glyphack.com/blog/macos-productivity/</guid><description>&lt;p>MacOS is already a polished environment and unlike some other OSes it works out of the box.
+without having to change any code in rate limiting algorithms.&lt;/p></description></item><item><title>Personalize Macos Environment for Your Productivity</title><link>https://glyphack.com/macos-productivity/</link><pubDate>Sun, 19 Feb 2023 20:58:33 +0100</pubDate><guid>https://glyphack.com/macos-productivity/</guid><description>&lt;p>MacOS is already a polished environment and unlike some other OSes it works out of the box.
 Still, spending investing time to personalize your tools and environment is a smart move.&lt;/p>
 &lt;p>In the past years using MacOS I found simple tools that helps to make MacOS more ergonomic and fun.&lt;/p>
 &lt;p>Most of the content here is in &lt;a href="https://github.com/Glyphack/dotfiles">my dotfiles&lt;/a>.&lt;/p>
@@ -2991,7 +2991,7 @@ In VSCode you need to open the version control panel,
 scroll through the file and right click to select stage selected.
 This is super hard if you have to do it 20 times in a productive day.
 I have a config in my vim to directly stage hunks in my editor to commit,
-but I&amp;rsquo;m sure you can find a VSCode equivalent.&lt;/p></description></item><item><title>Rate Limiter From Scratch in Python Part 1</title><link>https://glyphack.com/blog/rate-limiter-python-1/</link><pubDate>Tue, 14 Feb 2023 23:19:18 +0100</pubDate><guid>https://glyphack.com/blog/rate-limiter-python-1/</guid><description>&lt;h2 class="heading" id="introduction">
+but I&amp;rsquo;m sure you can find a VSCode equivalent.&lt;/p></description></item><item><title>Rate Limiter From Scratch in Python Part 1</title><link>https://glyphack.com/rate-limiter-python-1/</link><pubDate>Tue, 14 Feb 2023 23:19:18 +0100</pubDate><guid>https://glyphack.com/rate-limiter-python-1/</guid><description>&lt;h2 class="heading" id="introduction">
 Introduction
 &lt;a class="anchor" href="#introduction">#&lt;/a>
 &lt;/h2>
@@ -3286,7 +3286,7 @@ I think this would be enough for one read,
 In the next post we will add more rate limiting algorithms and see
 how the current structure of the program can be extended.&lt;/p>
 &lt;p>You can find the &lt;a href="https://github.com/Glyphack/hera-limit">complete source code&lt;/a>
-on my Github.&lt;/p></description></item><item><title>Everything you need to know about splitting CDK stacks</title><link>https://glyphack.com/blog/splitting-cdk-stacks/</link><pubDate>Sun, 13 Nov 2022 09:49:50 +0330</pubDate><guid>https://glyphack.com/blog/splitting-cdk-stacks/</guid><description>&lt;p>AWS CDK is a tool that lets you define your cloud resources
+on my Github.&lt;/p></description></item><item><title>Everything you need to know about splitting CDK stacks</title><link>https://glyphack.com/splitting-cdk-stacks/</link><pubDate>Sun, 13 Nov 2022 09:49:50 +0330</pubDate><guid>https://glyphack.com/splitting-cdk-stacks/</guid><description>&lt;p>AWS CDK is a tool that lets you define your cloud resources
 in a languages such as python.
 And like any other project as the codebase grows, it needs to be split into components.&lt;/p>
 &lt;p>CDK projects can be split into multiple stacks.
@@ -3448,7 +3448,7 @@ Conclusion
 When I first started to do it before knowing these topics, I ran into
 issues I did not except and it helped me see the problem from a different aspect.
 It&amp;rsquo;s not only about separating code but it&amp;rsquo;s about which resources should be grouped.&lt;/p>
-&lt;p>I hope knowing this will help you avoiding this common pitfall.&lt;/p></description></item><item><title>Planning My Day</title><link>https://glyphack.com/blog/planning-my-day/</link><pubDate>Wed, 07 Sep 2022 23:22:58 +0430</pubDate><guid>https://glyphack.com/blog/planning-my-day/</guid><description>&lt;p>A while back I started planning my day before starting my day. I did this because I wanted to have a morning routine for myself,
+&lt;p>I hope knowing this will help you avoiding this common pitfall.&lt;/p></description></item><item><title>Planning My Day</title><link>https://glyphack.com/planning-my-day/</link><pubDate>Wed, 07 Sep 2022 23:22:58 +0430</pubDate><guid>https://glyphack.com/planning-my-day/</guid><description>&lt;p>A while back I started planning my day before starting my day. I did this because I wanted to have a morning routine for myself,
 but most of the time I found myself starting to pickup something to read or already replying to emails or slack. So by setting this
 rule for myself to write down everything I want to do for the day first, helped to overcome this habit.&lt;/p>
 &lt;p>Since then I found some improvements that can be done along with writing down the plan for the day. I&amp;rsquo;ll list my observation here, and my
@@ -3588,7 +3588,7 @@ my goals. To summarize the full list into steps for planning the day:&lt;/p>
 &lt;li>After some tasks checking my reward lists and pick up one to enjoy&lt;/li>
 &lt;li>If anything is left from the work which I know have to pick up tomorrow I write it down in a note.&lt;/li>
 &lt;/ol>
-&lt;p>I&amp;rsquo;ll try to update the list if I find more useful tricks but for now this is it. Hope you enjoyed it.&lt;/p></description></item><item><title>Stateful Stream Processing</title><link>https://glyphack.com/blog/stateful-stream-processing/</link><pubDate>Mon, 15 Aug 2022 08:53:57 +0430</pubDate><guid>https://glyphack.com/blog/stateful-stream-processing/</guid><description>&lt;p>A pattern that I have recently seen in a project is data replication through
+&lt;p>I&amp;rsquo;ll try to update the list if I find more useful tricks but for now this is it. Hope you enjoyed it.&lt;/p></description></item><item><title>Stateful Stream Processing</title><link>https://glyphack.com/stateful-stream-processing/</link><pubDate>Mon, 15 Aug 2022 08:53:57 +0430</pubDate><guid>https://glyphack.com/stateful-stream-processing/</guid><description>&lt;p>A pattern that I have recently seen in a project is data replication through
 real-time stream processing. This pattern happens when a company has all of
 it&amp;rsquo;s data stored on centralized databases and applications access this data,
 this means that two example services like &amp;ldquo;search&amp;rdquo; and &amp;ldquo;product catalog&amp;rdquo; are
@@ -3944,7 +3944,7 @@ But for the &lt;code>payment_info&lt;/code> record we can insert the &lt;code>us
 This allows us to reuse the GSI field for multiple purpose so we don&amp;rsquo;t hit the 20 GSI limit unless we have a table with 20 different joins.
 Also we now can get back all pull requests for a user with a single query, this will enable us to perform multiple joins without loosing performance.&lt;/p>
 &lt;p>To manage the GSI fields and what they are used for in each record we need another storage to save this information.
-We can have a small PostgreSQL instance that knows for example in User records the GSI_1 field is used to join with Pull Request entity.&lt;/p></description></item><item><title>How to Setup 2 Factor Authentication Code Generator on PC</title><link>https://glyphack.com/blog/2fa-pc/</link><pubDate>Thu, 17 Mar 2022 23:19:14 +0330</pubDate><guid>https://glyphack.com/blog/2fa-pc/</guid><description>&lt;p>I use 2 factor authentication with almost all of my accounts, the only downside of this is that when I need to access something frequently or automate some task I have to manually enter this code from my phone.&lt;/p>
+We can have a small PostgreSQL instance that knows for example in User records the GSI_1 field is used to join with Pull Request entity.&lt;/p></description></item><item><title>How to Setup 2 Factor Authentication Code Generator on PC</title><link>https://glyphack.com/2fa-pc/</link><pubDate>Thu, 17 Mar 2022 23:19:14 +0330</pubDate><guid>https://glyphack.com/2fa-pc/</guid><description>&lt;p>I use 2 factor authentication with almost all of my accounts, the only downside of this is that when I need to access something frequently or automate some task I have to manually enter this code from my phone.&lt;/p>
 &lt;p>So I searched a bit and found these tools to make this process easier, I imported 2fa keys to my laptop and can generate keys with a command so I can copy the code and also the command can be used in automated tasks. Note that in this way anyone with access to your laptop has access to 2fa codes too.&lt;/p>
 &lt;h2 class="heading" id="setup-2fa-code-on-your-machine">
 Setup 2FA code on your machine
@@ -3972,7 +3972,7 @@ Setup 2FA code on your machine
 &lt;p>I used the &lt;a href="https://github.com/rsc/2fa">2fa&lt;/a> app to import accounts in terminal.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">go install rsc.io/2fa@latest
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">2fa -add account_name
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now that you have this you can use the command &lt;code>2fa&lt;/code> to get all of your accounts 2FA codes or &lt;code>2fa account_name&lt;/code> to get the 2FA code for a specific account, the latter is useful when writing scripts.&lt;/p></description></item><item><title>Fixing One Bug Leads to Another</title><link>https://glyphack.com/blog/fixing-one-bug-leads-to-another/</link><pubDate>Sat, 05 Feb 2022 09:49:50 +0330</pubDate><guid>https://glyphack.com/blog/fixing-one-bug-leads-to-another/</guid><description>&lt;p>One thing that frequently frustrates me when I&amp;rsquo;m working is sloppy work. I&amp;rsquo;m using the word &amp;ldquo;work&amp;rdquo; here because it can refer to anything, but here I&amp;rsquo;ll talk about sloppy code.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now that you have this you can use the command &lt;code>2fa&lt;/code> to get all of your accounts 2FA codes or &lt;code>2fa account_name&lt;/code> to get the 2FA code for a specific account, the latter is useful when writing scripts.&lt;/p></description></item><item><title>Fixing One Bug Leads to Another</title><link>https://glyphack.com/fixing-one-bug-leads-to-another/</link><pubDate>Sat, 05 Feb 2022 09:49:50 +0330</pubDate><guid>https://glyphack.com/fixing-one-bug-leads-to-another/</guid><description>&lt;p>One thing that frequently frustrates me when I&amp;rsquo;m working is sloppy work. I&amp;rsquo;m using the word &amp;ldquo;work&amp;rdquo; here because it can refer to anything, but here I&amp;rsquo;ll talk about sloppy code.&lt;/p>
 &lt;p>Recently, someone from my previous team asked me to help them fix an issue on a system while the maintainer was not available. At first, I discussed this with my team lead and didn&amp;rsquo;t get involved in the issue, but after a week, the problem was still there, and they asked me for my help again. So I finally decided to give it a try.&lt;/p>
 &lt;h2 class="heading" id="the-story">
 The story
@@ -4028,7 +4028,7 @@ I&amp;rsquo;m not saying all the bug fixes should be like this; if you worked wi
 As said in pragmatic programmer&lt;/p>
 &lt;blockquote>
 &lt;p>Is the problem being reported a direct result of the underlying bug, or merely a symptom?&lt;/p>&lt;/blockquote>
-&lt;p>It&amp;rsquo;s tempting to help others with something you are sure you can. But the bottom line is if someone asks for help, they expect the issue to be resolved, and this kind of help is not helpful anyway.&lt;/p></description></item><item><title>How Write and Organize Software Documentation</title><link>https://glyphack.com/blog/write-software-documentation/</link><pubDate>Sun, 23 Jan 2022 17:30:40 +0330</pubDate><guid>https://glyphack.com/blog/write-software-documentation/</guid><description>&lt;p>Software documents play an important role in software development, everyone pays attention to writing documentation but just like writing code, writing the text is not enough but it has to be readable and understandable for other people, after all the purpose of documenting is to communicate. Recently I was reading documentation of a system and noticed that there&amp;rsquo;s something strange about it. although all the components are documented, but still it&amp;rsquo;s not easy to find information on something.&lt;/p>
+&lt;p>It&amp;rsquo;s tempting to help others with something you are sure you can. But the bottom line is if someone asks for help, they expect the issue to be resolved, and this kind of help is not helpful anyway.&lt;/p></description></item><item><title>How Write and Organize Software Documentation</title><link>https://glyphack.com/write-software-documentation/</link><pubDate>Sun, 23 Jan 2022 17:30:40 +0330</pubDate><guid>https://glyphack.com/write-software-documentation/</guid><description>&lt;p>Software documents play an important role in software development, everyone pays attention to writing documentation but just like writing code, writing the text is not enough but it has to be readable and understandable for other people, after all the purpose of documenting is to communicate. Recently I was reading documentation of a system and noticed that there&amp;rsquo;s something strange about it. although all the components are documented, but still it&amp;rsquo;s not easy to find information on something.&lt;/p>
 &lt;p>Let&amp;rsquo;s review the documentation role in these two situations, onboarding a new person with the system and improving collaboration between a team. This comes down to these two questions:&lt;/p>
 &lt;ol>
 &lt;li>Can I hand over my technical docs to someone and expect them to have all information they need to make their first commit?&lt;/li>
@@ -4120,7 +4120,7 @@ Other resources
 &lt;li>
 &lt;p>&lt;a href="https://blog.prototypr.io/software-documentation-types-and-best-practices-1726ca595c7f">Type of documentations&lt;/a>&lt;/p>
 &lt;/li>
-&lt;/ul></description></item><item><title>How I Stay Focused and Manage Time</title><link>https://glyphack.com/blog/how-i-stay-focused-and-manage-time/</link><pubDate>Mon, 03 Jan 2022 19:10:52 +0330</pubDate><guid>https://glyphack.com/blog/how-i-stay-focused-and-manage-time/</guid><description>&lt;p>A few weeks ago, I experienced one of these busy weeks with lots of meetings, Slack messages, working on different tasks. Although I did many things, I didn&amp;rsquo;t feel like getting anything done. So I decided to see how can I improve this.&lt;/p>
+&lt;/ul></description></item><item><title>How I Stay Focused and Manage Time</title><link>https://glyphack.com/how-i-stay-focused-and-manage-time/</link><pubDate>Mon, 03 Jan 2022 19:10:52 +0330</pubDate><guid>https://glyphack.com/how-i-stay-focused-and-manage-time/</guid><description>&lt;p>A few weeks ago, I experienced one of these busy weeks with lots of meetings, Slack messages, working on different tasks. Although I did many things, I didn&amp;rsquo;t feel like getting anything done. So I decided to see how can I improve this.&lt;/p>
 &lt;p>First of all, the cost of getting interrupted while developing is high. You need time to get back on what you were doing, and if this happens a lot, you can&amp;rsquo;t manage to get many things done.
 The second thing I noticed was that I have to do better with planning for my day. I have a mix of personal stuff, university, and work. Some days, I&amp;rsquo;m constantly switching between tasks with different contexts, and I get myself out of the zone.&lt;/p>
 &lt;h1 class="heading" id="my-setup">

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Coding on Glyphack</title><link>https://glyphack.com/tags/coding/</link><description>Recent content in Coding on Glyphack</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 15 Feb 2025 18:02:46 +0100</lastBuildDate><atom:link href="https://glyphack.com/tags/coding/index.xml" rel="self" type="application/rss+xml"/><item><title>Devlog 3: Coding a redis clone in C and things I learned</title><link>https://glyphack.com/blog/dv-3/</link><pubDate>Sat, 15 Feb 2025 18:02:46 +0100</pubDate><guid>https://glyphack.com/blog/dv-3/</guid><description>&lt;p>About two months ago I started the build your own Redis challenge from &lt;a href="codecrafters.io">codecrafters.io&lt;/a>.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Coding on Glyphack</title><link>https://glyphack.com/tags/coding/</link><description>Recent content in Coding on Glyphack</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 15 Feb 2025 18:02:46 +0100</lastBuildDate><atom:link href="https://glyphack.com/tags/coding/index.xml" rel="self" type="application/rss+xml"/><item><title>Devlog 3: Coding a redis clone in C and things I learned</title><link>https://glyphack.com/dv-3/</link><pubDate>Sat, 15 Feb 2025 18:02:46 +0100</pubDate><guid>https://glyphack.com/dv-3/</guid><description>&lt;p>About two months ago I started the build your own Redis challenge from &lt;a href="codecrafters.io">https://codecrafters.io&lt;/a>.
 I decided to do this in C. Initially I was just curious to do it in C. Doing it in C thought me a lot of stuff that otherwise I would have not learned. Another bonus point was that I could tweak the performance to be on par with Redis server.&lt;/p>
 &lt;p>C always seemed like an impossible language to me. Working so much in garbage collected languages with rich standard libraries made me think C is hard.
 Now I think C is not hard. Whatever you write gets executed the way you wrote it. Little abstractions make it a great language to implement what you want and have control over your program.
@@ -68,7 +68,7 @@ So what we really need is, a way to tell which clients are ready to read, which 
 I recommend following &lt;a href="https://build-your-own.org/redis/05_event_loop_intro">this guide&lt;/a>. I ended up switching to &lt;code>kqueue&lt;/code> from &lt;code>poll&lt;/code> to achieve better performance on MacOS.&lt;/p>
 &lt;hr>
 &lt;p>I think this database can be a good base program to expand to any kind of future databases I want to write.
-I can reuse the existing protocol to exchange messages and add my custom logic or &lt;a href="https://eli.thegreenplace.net/2020/implementing-raft-part-0-introduction/">implement Raft&lt;/a>.&lt;/p></description></item><item><title>Building a Web Crawler in Golang</title><link>https://glyphack.com/blog/build-a-crawler-in-golang/</link><pubDate>Mon, 20 Mar 2023 18:17:24 +0100</pubDate><guid>https://glyphack.com/blog/build-a-crawler-in-golang/</guid><description>&lt;ul>
+I can reuse the existing protocol to exchange messages and add my custom logic or &lt;a href="https://eli.thegreenplace.net/2020/implementing-raft-part-0-introduction/">implement Raft&lt;/a>.&lt;/p></description></item><item><title>Building a Web Crawler in Golang</title><link>https://glyphack.com/build-a-crawler-in-golang/</link><pubDate>Mon, 20 Mar 2023 18:17:24 +0100</pubDate><guid>https://glyphack.com/build-a-crawler-in-golang/</guid><description>&lt;ul>
 &lt;li>&lt;a href="#introduction">Introduction&lt;/a>&lt;/li>
 &lt;li>&lt;a href="#but-why-building-another-crawler">But Why Building Another Crawler?&lt;/a>&lt;/li>
 &lt;li>&lt;a href="#high-level-design">High Level Design&lt;/a>
@@ -801,7 +801,7 @@ And writing about this was a good practice to question my design and
 the way I wrote the code.&lt;/p>
 &lt;p>I could not explain the problems I faced in this post because I wrote it
 long after I finished the code itself. But you know enough to not make
-those mistakes as I did.&lt;/p></description></item><item><title>Rate Limiter From Scratch in Python Part 2</title><link>https://glyphack.com/blog/rate-limiter-python-2/</link><pubDate>Tue, 21 Feb 2023 21:34:49 +0100</pubDate><guid>https://glyphack.com/blog/rate-limiter-python-2/</guid><description>&lt;ul>
+those mistakes as I did.&lt;/p></description></item><item><title>Rate Limiter From Scratch in Python Part 2</title><link>https://glyphack.com/rate-limiter-python-2/</link><pubDate>Tue, 21 Feb 2023 21:34:49 +0100</pubDate><guid>https://glyphack.com/rate-limiter-python-2/</guid><description>&lt;ul>
 &lt;li>&lt;a href="#introduction">Introduction&lt;/a>&lt;/li>
 &lt;li>&lt;a href="#new-rate-limiting-algorithms">New Rate Limiting Algorithms&lt;/a>
 &lt;ul>
@@ -1307,7 +1307,7 @@ write for each limiter, we can test them all with universal test cases,
 the rate limiter service can use them without knowing what the underlying strategy
 is.&lt;/p>
 &lt;p>In the next part we can see how to implement another storage backend such as redis,
-without having to change any code in rate limiting algorithms.&lt;/p></description></item><item><title>Rate Limiter From Scratch in Python Part 1</title><link>https://glyphack.com/blog/rate-limiter-python-1/</link><pubDate>Tue, 14 Feb 2023 23:19:18 +0100</pubDate><guid>https://glyphack.com/blog/rate-limiter-python-1/</guid><description>&lt;h2 class="heading" id="introduction">
+without having to change any code in rate limiting algorithms.&lt;/p></description></item><item><title>Rate Limiter From Scratch in Python Part 1</title><link>https://glyphack.com/rate-limiter-python-1/</link><pubDate>Tue, 14 Feb 2023 23:19:18 +0100</pubDate><guid>https://glyphack.com/rate-limiter-python-1/</guid><description>&lt;h2 class="heading" id="introduction">
 Introduction
 &lt;a class="anchor" href="#introduction">#&lt;/a>
 &lt;/h2>
