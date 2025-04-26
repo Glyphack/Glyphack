@@ -1,0 +1,121 @@
+{{ $formEndpoint := "https://newsletter.bombastic.workers.dev/subscribe" }}
+
+<div class="subscribe-container">
+  <form class="subscribe-form" id="newsletter-form">
+    <h3>Newsletter</h3>
+    <p class="form-disclaimer">Get new posts in your inbox. No Spam.</p>
+    <div class="form-group">
+      <input
+        type="email"
+        id="email-input"
+        placeholder="Your email address"
+        required
+      />
+      <button type="submit">Subscribe</button>
+    </div>
+    <p id="form-message" class="form-message"></p>
+  </form>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("newsletter-form");
+    const message = document.getElementById("form-message");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const email = document.getElementById("email-input").value;
+      message.textContent = "Submitting...";
+
+      fetch("{{ $formEndpoint }}", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: email }),
+      })
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+          throw new Error("Network response was not ok");
+        })
+        .then((data) => {
+          message.textContent = "Success! You are now subscribed.";
+          message.className = "form-message success";
+          form.reset();
+        })
+        .catch((error) => {
+          message.textContent = "Something went wrong. Please try again.";
+          message.className = "form-message error";
+          console.error("Error:", error);
+        });
+    });
+  });
+</script>
+
+<style>
+  .subscribe-container {
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+  }
+
+  .subscribe-form h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+  }
+
+  .form-group {
+    display: flex;
+    gap: 10px;
+  }
+
+  .subscribe-form input[type="email"],
+  #email-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+
+  .subscribe-form button {
+    background-color: #000;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  .subscribe-form button:hover {
+    border-color: #000;
+  }
+
+  .form-disclaimer {
+    font-size: 0.8em;
+    color: #666;
+    margin-top: 10px;
+    margin-bottom: 0;
+  }
+
+  .form-message {
+    margin-top: 15px;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 14px;
+    text-align: center;
+  }
+
+  .form-message.success {
+    background-color: #e6f7e6;
+    color: #2e7d32;
+  }
+
+  .form-message.error {
+    background-color: #fce8e8;
+    color: #c62828;
+  }
+</style>
