@@ -9,6 +9,7 @@ tags:
   - Active
 share: "true"
 layout: book
+links: "false"
 ---
 Fantastic Book. This book shows the true meaning of a curios person.
 I love curios people. I also love nonchalant people. Feynman is both.
