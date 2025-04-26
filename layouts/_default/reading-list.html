@@ -20,16 +20,33 @@
     <div class="book-card-container">
       {{ range $activeBooks }}
       <a href="{{ .RelPermalink }}" class="book-card">
+        {{/* Book Cover Image */}} {{- $rawTitle := .Title -}} {{- $titleParam
+        := urlquery $rawTitle -}} {{- $rawAuthor := default "" .Params.author
+        -}} {{- $authorStr := replaceRE "\\[\\[|\\]\\]" "" $rawAuthor -}} {{-
+        $authorParam := urlquery $authorStr -}} {{- $isbn := default ""
+        .Params.isbn13 -}} {{- $coverApiUrl := cond (ne $isbn "") (printf
+        "https://bookcover.longitood.com/bookcover/%s" (urlquery $isbn)) (printf
+        "https://bookcover.longitood.com/bookcover?book_title=%s&author_name=%s"
+        $titleParam $authorParam) -}} {{- $jsonRes := resources.GetRemote
+        $coverApiUrl -}} {{- $coverData := $jsonRes | transform.Unmarshal -}}
+        {{- $coverUrl := default "/images/default-cover.jpg" (index $coverData
+        "url") -}}
+        <div class="book-cover-wrapper">
+          <img
+            src="{{ $coverUrl }}"
+            alt="Cover of {{ .Title }}"
+            class="book-cover"
+          />
+        </div>
         <div class="book-card-content">
           <h3 class="book-title">{{ .Title }}</h3>
           <div class="book-metadata">
             {{ if .Params.author }}
             <div class="book-author">
-              <span class="metadata-label">Author:</span> {{ .Params.author }}
+              <span class="metadata-label">By </span> {{ $authorStr }}
             </div>
             {{ end }} {{ if .Params.rating }}
             <div class="book-rating">
-              <span class="metadata-label">Rating:</span>
               <span class="stars">
                 {{ $rating := int .Params.rating }} {{ range $i := (seq 5) }} {{
                 if le $i $rating }}
@@ -51,16 +68,33 @@
     <div class="book-card-container">
       {{ if gt (len $otherBooks) 0 }} {{ range $otherBooks }}
       <a href="{{ .RelPermalink }}" class="book-card">
+        {{/* Book Cover Image */}} {{- $rawTitle := .Title -}} {{- $titleParam
+        := urlquery $rawTitle -}} {{- $rawAuthor := default "" .Params.author
+        -}} {{- $authorStr := replaceRE "\\[\\[|\\]\\]" "" $rawAuthor -}} {{-
+        $authorParam := urlquery $authorStr -}} {{- $isbn := default ""
+        .Params.isbn13 -}} {{- $coverApiUrl := cond (ne $isbn "") (printf
+        "https://bookcover.longitood.com/bookcover/%s" (urlquery $isbn)) (printf
+        "https://bookcover.longitood.com/bookcover?book_title=%s&author_name=%s"
+        $titleParam $authorParam) -}} {{- $jsonRes := resources.GetRemote
+        $coverApiUrl -}} {{- $coverData := $jsonRes | transform.Unmarshal -}}
+        {{- $coverUrl := default "/images/default-cover.jpg" (index $coverData
+        "url") -}}
+        <div class="book-cover-wrapper">
+          <img
+            src="{{ $coverUrl }}"
+            alt="Cover of {{ .Title }}"
+            class="book-cover"
+          />
+        </div>
         <div class="book-card-content">
           <h3 class="book-title">{{ .Title }}</h3>
           <div class="book-metadata">
             {{ if .Params.author }}
             <div class="book-author">
-              <span class="metadata-label">Author:</span> {{ .Params.author }}
+              <span class="metadata-label">By </span> {{ $authorStr }}
             </div>
             {{ end }} {{ if .Params.rating }}
             <div class="book-rating">
-              <span class="metadata-label">Rating:</span>
               <span class="stars">
                 {{ $rating := int .Params.rating }} {{ range $i := (seq 5) }} {{
                 if le $i $rating }}
@@ -93,6 +127,8 @@
   .book-card-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    /* ensure each card stretches to match the tallest in the row */
+    align-items: stretch;
     gap: 1.5rem;
     margin-top: 1.5rem;
     perspective: 1000px;
@@ -102,6 +138,7 @@
   /* Book Card */
   .book-card {
     /* White background with black border and depth */
+    padding: 2px 4px;
     background-color: #fff;
     border: 1px solid #000;
     color: #000;
@@ -125,9 +162,11 @@
   }
 
   .book-card-content {
-    padding: 1.25rem;
+    padding: 0.25rem;
     display: flex;
     flex-direction: column;
+    /* distribute title and metadata: metadata (author, rating) stays at bottom */
+    justify-content: space-between;
     height: 100%;
   }
 
@@ -138,7 +177,6 @@
 
   /* Book Metadata */
   .book-metadata {
-    flex-grow: 1;
     display: flex;
     flex-direction: column;
     gap: 0.7rem;
@@ -187,15 +225,16 @@
     color: #155724;
   }
 
-  /* Make entire card clickable */
   .book-card {
     text-decoration: none;
     cursor: pointer;
     /* Text color inside card */
     color: #000;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
   }
 
-  /* No Books Message */
   .no-books-message {
     padding: 1.5rem;
     background-color: #f8f9fa;
@@ -215,10 +254,32 @@
       grid-template-columns: 1fr;
     }
   }
-  /* Hover: make stars white for visibility */
-  .book-card:hover .star,
-  .book-card:hover .star.filled {
-    color: #fff;
+  /* Mobile: stack image above content */
+  @media (max-width: 480px) {
+    .book-card {
+      flex-direction: column;
+    }
+    .book-cover-wrapper {
+      flex: 0 0 auto;
+      width: 100%;
+      padding: 1.25rem;
+    }
+  }
+  .book-cover-wrapper {
+    flex: 0 0 150px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0;
+  }
+  .book-cover {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 4px;
   }
 </style>
 {{ end }}

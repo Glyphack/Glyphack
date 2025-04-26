@@ -52,15 +52,15 @@
 
 /* Links */
 
-a:not(.social-icons a):not(h1 a):not(h2 a):not(h3 a):not(h4 a):not(h5 a):not(h6 a) {
+a:not(.social-icons a):not(h1 a):not(h2 a):not(h3 a):not(h4 a):not(h5 a):not(h6 a):not(.book-card) {
 	transition: all 0.3s ease;
 }
 
 
-a:not(.social-icons a):not(h1 a):not(h2 a):not(h3 a):not(h4 a):not(h5 a):not(h6 a):hover {
+a:not(.social-icons a):not(h1 a):not(h2 a):not(h3 a):not(h4 a):not(h5 a):not(h6 a):not(.book-card):hover {
 	background-color: #000;
 	color: #fff;
-	padding: 4px 6px;
+	padding: 2px 4px;
 	text-decoration: none;
 	transform: scale(1.05);
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
