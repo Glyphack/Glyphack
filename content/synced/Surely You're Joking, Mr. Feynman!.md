@@ -1,7 +1,8 @@
 ---
-created: 2025-04-05
+created: 2025-04-26
 category:
   - "[[Books|Books]]"
+title: Surely You're Joking, Mr. Feynman!
 author: "[[Richard Feynman]]"
 rating: "5"
 link: https://en.wikipedia.org/wiki/Surely_You%27re_Joking,_Mr._Feynman!
@@ -10,6 +11,7 @@ tags:
 share: "true"
 layout: book
 links: "false"
+"": 
 ---
 Fantastic Book. This book shows the true meaning of a curios person.
 I love curios people. I also love nonchalant people. Feynman is both.
