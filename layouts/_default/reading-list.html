@@ -5,49 +5,84 @@
   </header>
   <div class="post-content">
     {{ .Content }}
+    <div></div>
+    {{ $syncPages := where .Site.RegularPages "Section" "synced" }}
+    <div></div>
+    {{ $activeBooks := slice }} {{ $otherBooks := slice }}
+    <div></div>
+    {{ range $syncPages }} {{ if eq .Params.layout "book" }} {{ if in
+    .Params.tags "Active" }} {{ $activeBooks = $activeBooks | append . }} {{
+    else }} {{ $otherBooks = $otherBooks | append . }} {{ end }} {{ end }} {{
+    end }}
+    <div></div>
+    {{ if gt (len $activeBooks) 0 }}
+    <h2>Currently Reading</h2>
+    <div class="book-card-container">
+      {{ range $activeBooks }}
+      <a href="{{ .RelPermalink }}" class="book-card">
+        <div class="book-card-content">
+          <h3 class="book-title">{{ .Title }}</h3>
+          <div class="book-metadata">
+            {{ if .Params.author }}
+            <div class="book-author">
+              <span class="metadata-label">Author:</span> {{ .Params.author }}
+            </div>
+            {{ end }} {{ if .Params.rating }}
+            <div class="book-rating">
+              <span class="metadata-label">Rating:</span>
+              <span class="stars">
+                {{ $rating := int .Params.rating }} {{ range $i := (seq 5) }} {{
+                if le $i $rating }}
+                <span class="star filled">★</span>
+                {{ else }}
+                <span class="star">☆</span>
+                {{ end }} {{ end }}
+              </span>
+            </div>
+            {{ end }}
+          </div>
+        </div>
+      </a>
+      {{ end }}
+    </div>
+    {{ end }}
+
     <h2>Books</h2>
     <div class="book-card-container">
-      {{ $syncPages := where .Site.RegularPages "Section" "synced" }}
-      {{ if $syncPages }}
-        {{ range $syncPages }}
-          {{ if eq .Params.layout "book" }}
-            <a href="{{ .RelPermalink }}" class="book-card">
-              <div class="book-card-content">
-                <h3 class="book-title">{{ .Title }}</h3>
-                <div class="book-metadata">
-                  {{ if .Params.author }}
-                    <div class="book-author">
-                      <span class="metadata-label">Author:</span> {{ .Params.author }}
-                    </div>
-                  {{ end }}
-                  {{ if .Params.rating }}
-                    <div class="book-rating">
-                      <span class="metadata-label">Rating:</span>
-                      <span class="stars">
-                        {{ $rating := int .Params.rating }}
-                        {{ range $i := (seq 5) }}
-                          {{ if le $i $rating }}
-                            <span class="star filled">★</span>
-                          {{ else }}
-                            <span class="star">☆</span>
-                          {{ end }}
-                        {{ end }}
-                      </span>
-                    </div>
-                  {{ end }}
-                  {{ if .Params.status }}
-                    <div class="book-status">
-                      <span class="metadata-label">Status:</span>
-                      <span class="status-tag {{ index .Params.status 0 | lower }}">{{ index .Params.status 0 }}</span>
-                    </div>
-                  {{ end }}
-                </div>
-              </div>
-            </a>
-          {{ end }}
-        {{ end }}
-      {{ else }}
-        <p class="no-books-message">No books found matching the criteria.</p>
+      {{ if gt (len $otherBooks) 0 }} {{ range $otherBooks }}
+      <a href="{{ .RelPermalink }}" class="book-card">
+        <div class="book-card-content">
+          <h3 class="book-title">{{ .Title }}</h3>
+          <div class="book-metadata">
+            {{ if .Params.author }}
+            <div class="book-author">
+              <span class="metadata-label">Author:</span> {{ .Params.author }}
+            </div>
+            {{ end }} {{ if .Params.rating }}
+            <div class="book-rating">
+              <span class="metadata-label">Rating:</span>
+              <span class="stars">
+                {{ $rating := int .Params.rating }} {{ range $i := (seq 5) }} {{
+                if le $i $rating }}
+                <span class="star filled">★</span>
+                {{ else }}
+                <span class="star">☆</span>
+                {{ end }} {{ end }}
+              </span>
+            </div>
+            {{ end }} {{ if .Params.status }}
+            <div class="book-status">
+              <span class="metadata-label">Status:</span>
+              <span class="status-tag {{ index .Params.status 0 | lower }}"
+                >{{ index .Params.status 0 }}</span
+              >
+            </div>
+            {{ end }}
+          </div>
+        </div>
+      </a>
+      {{ end }} {{ else }}
+      <p class="no-books-message">No books found matching the criteria.</p>
       {{ end }}
     </div>
   </div>
@@ -60,21 +95,33 @@
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 1.5rem;
     margin-top: 1.5rem;
+    perspective: 1000px;
+    perspective-origin: center;
   }
 
   /* Book Card */
   .book-card {
+    /* White background with black border and depth */
     background-color: #fff;
+    border: 1px solid #000;
+    color: #000;
     border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow:
+      0 8px 8px rgba(0, 0, 0, 0.2),
+      0 2px 4px rgba(0, 0, 0, 0.1);
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
     overflow: hidden;
     height: 100%;
+    transform-style: preserve-3d;
   }
 
   .book-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    transform: translateY(-5px);
+    box-shadow:
+      0 12px 20px rgba(0, 0, 0, 0.35),
+      0 4px 6px rgba(0, 0, 0, 0.2);
   }
 
   .book-card-content {
@@ -105,12 +152,14 @@
   /* Stars */
   .stars {
     display: inline-block;
-    color: #ffd700;
+    /* Monochrome stars: black for both filled and outline */
+    color: #000;
     letter-spacing: 2px;
   }
 
   .star.filled {
-    color: #ffd700;
+    /* Ensure filled star is also black */
+    color: #000;
   }
 
   /* Status Tag */
@@ -141,8 +190,9 @@
   /* Make entire card clickable */
   .book-card {
     text-decoration: none;
-    color: inherit;
     cursor: pointer;
+    /* Text color inside card */
+    color: #000;
   }
 
   /* No Books Message */
@@ -164,6 +214,11 @@
     .book-card-container {
       grid-template-columns: 1fr;
     }
+  }
+  /* Hover: make stars white for visibility */
+  .book-card:hover .star,
+  .book-card:hover .star.filled {
+    color: #fff;
   }
 </style>
 {{ end }}
