@@ -4,7 +4,7 @@ category:
   - "[[Books|Books]]"
 author: "[[Richard Feynman]]"
 rating: "5"
-url: https://en.wikipedia.org/wiki/Surely_You%27re_Joking,_Mr._Feynman!
+link: https://en.wikipedia.org/wiki/Surely_You%27re_Joking,_Mr._Feynman!
 tags:
   - Active
 share: "true"
