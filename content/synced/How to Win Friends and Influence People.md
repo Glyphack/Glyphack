@@ -21,7 +21,7 @@ I think the entire point of this book is to not forget about other people.
 Overall it did not provide new insights. I think I've heard all the tips about letting people talk about themselves and looking through lens of others. I also skipped some little parts as I found it repetitive.
 
 But if it's not full of new insights why bother reading it? Well there are a few reasons.
-The book was filled with stories it helps to feel more connection to the adivce.
+The book was filled with stories it helps to feel more connection to the advice.
 
 For example one advice from the book is to let others talk.
 This is hard to apply but the book shows why you should let others talk during conflicts. Why you should let someone talk to make friends.
