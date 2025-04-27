@@ -2,14 +2,14 @@
 created: 2025-04-27
 category:
   - "[[Books|Books]]"
+tags:
+  - Waiting
+  - Active
 title: The practice of Programming
 author: Brian Kernighan and Rob Pike
 isbn13: 978-0201615869
 link: 
 rating: 
-tags:
-  - Waiting
-  - Active
 layout: book
 share: "true"
 ---
