@@ -2,8 +2,7 @@
 created: 2025-04-27
 category:
   - "[[Books|Books]]"
-tags:
-  - Waiting
+tags: []
 title: System Design Interview
 author: "[[Alex Xu]]"
 isbn13: 979-8664653403

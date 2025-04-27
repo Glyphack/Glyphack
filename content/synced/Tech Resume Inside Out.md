@@ -1,7 +1,6 @@
 ---
 created: 2025-04-27
-tags:
-  - Archive
+tags: []
 category:
   - "[[Books|Books]]"
 title: Tech Resume Inside Out
