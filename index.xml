@@ -120,7 +120,7 @@ It&amp;rsquo;s better for everyone to find out if they enjoy the ride or not.&lt
 &lt;/ul>
 &lt;p>This approach is not only useful for the company but also for the new hire.
 Both parties know sooner if this a good match.
-If you hired someone new, welcome the person with real work with risk.&lt;/p></description></item><item><title>Devlog 3: Coding a redis clone in C and things I learned</title><link>https://glyphack.com/dv-3/</link><pubDate>Sat, 15 Feb 2025 18:02:46 +0100</pubDate><guid>https://glyphack.com/dv-3/</guid><description>&lt;p>About two months ago I started the build your own Redis challenge from &lt;a href="codecrafters.io">https://codecrafters.io&lt;/a>.
+If you hired someone new, welcome the person with real work with risk.&lt;/p></description></item><item><title>Devlog 3: Coding a redis clone in C and things I learned</title><link>https://glyphack.com/dv-3/</link><pubDate>Sat, 15 Feb 2025 18:02:46 +0100</pubDate><guid>https://glyphack.com/dv-3/</guid><description>&lt;p>About two months ago I started the build your own Redis challenge from &lt;a href="https://codecrafters.io">https://codecrafters.io&lt;/a>.
 I decided to do this in C. Initially I was just curious to do it in C. Doing it in C thought me a lot of stuff that otherwise I would have not learned. Another bonus point was that I could tweak the performance to be on par with Redis server.&lt;/p>
 &lt;p>C always seemed like an impossible language to me. Working so much in garbage collected languages with rich standard libraries made me think C is hard.
 Now I think C is not hard. Whatever you write gets executed the way you wrote it. Little abstractions make it a great language to implement what you want and have control over your program.
@@ -2367,7 +2367,7 @@ those mistakes as I did.&lt;/p></description></item><item><title>Rate Limiter Fr
 Introduction
 &lt;a class="anchor" href="#introduction">#&lt;/a>
 &lt;/h2>
-&lt;p>In the last &lt;a href="./rate-limiter-from-scratch-in-python-1">post&lt;/a>
+&lt;p>In the last &lt;a href="https://glyphack.com/blog/rate-limiter-python-1">post&lt;/a>
 I started writing a rate limiter.
 The project right now supports only 1 rate limiting algorithm(Token Bucket).&lt;/p>
 &lt;p>In this part we&amp;rsquo;re going to implement the following algorithms:&lt;/p>
