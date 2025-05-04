@@ -5,7 +5,7 @@ draft: false
 tags: [coding, devlog]
 ---
 
-About two months ago I started the build your own Redis challenge from [https://codecrafters.io](codecrafters.io).
+About two months ago I started the build your own Redis challenge from <https://codecrafters.io>.
 I decided to do this in C. Initially I was just curious to do it in C. Doing it in C thought me a lot of stuff that otherwise I would have not learned. Another bonus point was that I could tweak the performance to be on par with Redis server.
 
 C always seemed like an impossible language to me. Working so much in garbage collected languages with rich standard libraries made me think C is hard.
