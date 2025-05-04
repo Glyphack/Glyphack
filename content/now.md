@@ -1,5 +1,5 @@
 ---
-title: "What I'm Doing Now"
+title: "Now"
 date: 2024-03-04T15:40:55+01:00
 ---
 
