@@ -33,7 +33,7 @@ I can guess that this happens because developers can be far from the business do
 The issue was that Kafka has a &lt;a href="https://docs.confluent.io/platform/current/installation/configuration/consumer-configs.html#consumerconfigs_max.poll.interval.ms">max poll interval&lt;/a> configuration which determines how long it takes for the consumer to poll a message(read a new message from the topic). If a consumer reaches this time limit before polling a message, it will be considered unhealthy and replaced with a new consumer. Meanwhile, the consumer has a timeout to commit all the pending messages to offset, and if it cannot, then those messages are not considered as done and will be consumed again.&lt;/p>
 &lt;p>The point here is that the second bug was buried under the first issue, and I brought it up by fixing the first one. Kind of a rabbit hole, and who knows, I would not face &lt;a href="https://en.wikipedia.org/wiki/Lernaean_Hydra">Hydra&lt;/a> if I continued fixing the problem?
 &lt;figure class="">
-&lt;div>
+&lt;div class="img-container" >
 &lt;img loading="lazy" alt="Hydra, a see monster that that as soon as one head was cut off, two more heads would emerge from the fresh wound" src="https://glyphack.com/Hydra.png" >
 &lt;/div>
 &lt;/figure>

@@ -73,7 +73,7 @@ So it&amp;rsquo;s better to deploy it separately, once.&lt;/li>
 &lt;/ol>
 &lt;p>
 &lt;figure class="">
-&lt;div>
+&lt;div class="img-container" >
 &lt;img loading="lazy" alt="example-cdk-stack" src="https://glyphack.com/example-cdk-stack-deps.excalidraw.png" >
 &lt;/div>
 &lt;/figure>

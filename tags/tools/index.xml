@@ -102,7 +102,7 @@ This makes pressing vim shortcuts like &lt;code>ctrl + A&lt;/code> easier.&lt;/p
 &lt;p>I have a split keyboard, so keys under my thumbs are easy to press, and I remapped them to do more stuff than usual.&lt;/p>
 &lt;p>
 &lt;figure class="">
-&lt;div>
+&lt;div class="img-container" >
 &lt;img loading="lazy" alt="" src="https://glyphack.com/split-keyboard-remapping.excalidraw.svg" >
 &lt;/div>
 &lt;/figure>
@@ -406,7 +406,7 @@ over an over or need to open something regularly, take a look at it&amp;rsquo;s
 to check if there&amp;rsquo;s a solution.&lt;/p>
 &lt;p>For example these are some of the things I&amp;rsquo;m using:
 &lt;figure class="">
-&lt;div>
+&lt;div class="img-container" >
 &lt;img loading="lazy" alt="My Raycast" src="https://glyphack.com/my-raycast.png" >
 &lt;/div>
 &lt;/figure>
@@ -423,7 +423,7 @@ These days I just bookmark things I want to visit again and don&amp;rsquo;t both
 &lt;p>&lt;a href="https://www.raycast.com/raycast/github">Github&lt;/a>
 extension is also useful to check notifications.
 &lt;figure class="">
-&lt;div>
+&lt;div class="img-container" >
 &lt;img loading="lazy" alt="Raycast Github" src="https://glyphack.com/raycast-github-pr.png" >
 &lt;/div>
 &lt;/figure>
@@ -468,7 +468,7 @@ Switching Windows
 This is useful when you want to have one application on the screen.
 For example for me it&amp;rsquo;s terminal and browser.
 &lt;figure class="">
-&lt;div>
+&lt;div class="img-container" >
 &lt;img loading="lazy" alt="Raycast Apps" src="https://glyphack.com/raycast-apps.png" >
 &lt;/div>
 &lt;/figure>

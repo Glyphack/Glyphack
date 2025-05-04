@@ -1189,7 +1189,7 @@ This makes pressing vim shortcuts like &lt;code>ctrl + A&lt;/code> easier.&lt;/p
 &lt;p>I have a split keyboard, so keys under my thumbs are easy to press, and I remapped them to do more stuff than usual.&lt;/p>
 &lt;p>
 &lt;figure class="">
-&lt;div>
+&lt;div class="img-container" >
 &lt;img loading="lazy" alt="" src="https://glyphack.com/split-keyboard-remapping.excalidraw.svg" >
 &lt;/div>
 &lt;/figure>
@@ -1640,7 +1640,7 @@ to structure our code.&lt;/p>
 responsibilities of components:&lt;/p>
 &lt;p>
 &lt;figure class="">
-&lt;div>
+&lt;div class="img-container" >
 &lt;img loading="lazy" alt="crawler-diagram" src="https://glyphack.com/crawler-diagram.excalidraw.svg" >
 &lt;/div>
 &lt;/figure>
@@ -2883,7 +2883,7 @@ over an over or need to open something regularly, take a look at it&amp;rsquo;s
 to check if there&amp;rsquo;s a solution.&lt;/p>
 &lt;p>For example these are some of the things I&amp;rsquo;m using:
 &lt;figure class="">
-&lt;div>
+&lt;div class="img-container" >
 &lt;img loading="lazy" alt="My Raycast" src="https://glyphack.com/my-raycast.png" >
 &lt;/div>
 &lt;/figure>
@@ -2900,7 +2900,7 @@ These days I just bookmark things I want to visit again and don&amp;rsquo;t both
 &lt;p>&lt;a href="https://www.raycast.com/raycast/github">Github&lt;/a>
 extension is also useful to check notifications.
 &lt;figure class="">
-&lt;div>
+&lt;div class="img-container" >
 &lt;img loading="lazy" alt="Raycast Github" src="https://glyphack.com/raycast-github-pr.png" >
 &lt;/div>
 &lt;/figure>
@@ -2945,7 +2945,7 @@ Switching Windows
 This is useful when you want to have one application on the screen.
 For example for me it&amp;rsquo;s terminal and browser.
 &lt;figure class="">
-&lt;div>
+&lt;div class="img-container" >
 &lt;img loading="lazy" alt="Raycast Apps" src="https://glyphack.com/raycast-apps.png" >
 &lt;/div>
 &lt;/figure>
@@ -3042,7 +3042,7 @@ decides if the request can go through or not based on the current statistics.&lt
 &lt;p>What are the components of our system?&lt;/p>
 &lt;p>
 &lt;figure class="">
-&lt;div>
+&lt;div class="img-container" >
 &lt;img loading="lazy" alt="System Components" src="https://glyphack.com/rate-limiter-components.png" >
 &lt;/div>
 &lt;/figure>
@@ -3361,7 +3361,7 @@ So it&amp;rsquo;s better to deploy it separately, once.&lt;/li>
 &lt;/ol>
 &lt;p>
 &lt;figure class="">
-&lt;div>
+&lt;div class="img-container" >
 &lt;img loading="lazy" alt="example-cdk-stack" src="https://glyphack.com/example-cdk-stack-deps.excalidraw.png" >
 &lt;/div>
 &lt;/figure>
@@ -3609,7 +3609,7 @@ Streaming Changes from Database
 &lt;p>We can start by implementing a change data capture system with a tool like
 Debizium and Apache Kafka. An example architecture is the following picture:
 &lt;figure class="">
-&lt;div>
+&lt;div class="img-container" >
 &lt;img loading="lazy" alt="streaming-database-changes" src="https://glyphack.com/streaming-database-changes.excalidraw.png" >
 &lt;/div>
 &lt;/figure>
@@ -3631,7 +3631,7 @@ published in multiple topics with different keys.
 This approach will result in the following diagram&lt;/p>
 &lt;p>
 &lt;figure class="">
-&lt;div>
+&lt;div class="img-container" >
 &lt;img loading="lazy" alt="reparition-data-join" src="https://glyphack.com/repartion-data-to-join.excalidraw.png" >
 &lt;/div>
 &lt;/figure>
@@ -3653,7 +3653,7 @@ it&amp;rsquo;s interactions with the platform into an easy to use data structure
 &lt;code>UserProfile&lt;/code>.&lt;/p>
 &lt;p>Let&amp;rsquo;s start by giving a very simple example data model:
 &lt;figure class="">
-&lt;div>
+&lt;div class="img-container" >
 &lt;img loading="lazy" alt="github-example-data-model" src="https://glyphack.com/github-example-data-model.excalidraw.png" >
 &lt;/div>
 &lt;/figure>
@@ -3763,7 +3763,7 @@ Solution 1: Using RDBMS
 After all the SQL language has nice features to do these transformations.&lt;/p>
 &lt;p>
 &lt;figure class="">
-&lt;div>
+&lt;div class="img-container" >
 &lt;img loading="lazy" alt="rdbms-solution" src="https://glyphack.com/running-transformations-on-db.excalidraw.png" >
 &lt;/div>
 &lt;/figure>
@@ -3820,7 +3820,7 @@ To get a better understand of how the state store works, Imagine the scenario:&l
 &lt;p>We can leverage this state store to join events as they are consumed by creating 3 tables: &lt;code>pull_request&lt;/code>, &lt;code>user&lt;/code>, &lt;code>user_info&lt;/code>.&lt;/p>
 &lt;p>
 &lt;figure class="">
-&lt;div>
+&lt;div class="img-container" >
 &lt;img loading="lazy" alt="join data in processor" src="https://glyphack.com/join-in-processor-rdbms.excalidraw.png" >
 &lt;/div>
 &lt;/figure>
@@ -4007,7 +4007,7 @@ I can guess that this happens because developers can be far from the business do
 The issue was that Kafka has a &lt;a href="https://docs.confluent.io/platform/current/installation/configuration/consumer-configs.html#consumerconfigs_max.poll.interval.ms">max poll interval&lt;/a> configuration which determines how long it takes for the consumer to poll a message(read a new message from the topic). If a consumer reaches this time limit before polling a message, it will be considered unhealthy and replaced with a new consumer. Meanwhile, the consumer has a timeout to commit all the pending messages to offset, and if it cannot, then those messages are not considered as done and will be consumed again.&lt;/p>
 &lt;p>The point here is that the second bug was buried under the first issue, and I brought it up by fixing the first one. Kind of a rabbit hole, and who knows, I would not face &lt;a href="https://en.wikipedia.org/wiki/Lernaean_Hydra">Hydra&lt;/a> if I continued fixing the problem?
 &lt;figure class="">
-&lt;div>
+&lt;div class="img-container" >
 &lt;img loading="lazy" alt="Hydra, a see monster that that as soon as one head was cut off, two more heads would emerge from the fresh wound" src="https://glyphack.com/Hydra.png" >
 &lt;/div>
 &lt;/figure>
@@ -4135,7 +4135,7 @@ Daily Planning
 &lt;p>I use &lt;a href="https://www.notion.so/">Notion&lt;/a> as my general notebook to organize projects, learn lists, and other random things that gather here, not to forget them.
 I also started to use it as my time management tool just by creating a table where each row is a date, and inside that, I write my day plan:
 &lt;figure class="">
-&lt;div>
+&lt;div class="img-container" >
 &lt;img loading="lazy" alt="Daily planning with Notion" src="https://glyphack.com/notion-day-plan.png" >
 &lt;/div>
 &lt;/figure>
@@ -4152,7 +4152,7 @@ Time Tracking
 &lt;p>I use &lt;a href="https://toggl.com/">Toggl&lt;/a> to track how much time I spend on a task and focus while working.
 Toggl has a concept of clients and tasks, I defined my clients as DataChef, University and Personal stuff and tasks are my current work, whenever I decide to work on something I start the timer choose the client and start working. The remarkable feature is that they have a Pomodoro timer too, and I use this technique to focus on my job.
 &lt;figure class="">
-&lt;div>
+&lt;div class="img-container" >
 &lt;img loading="lazy" alt="Toggl Timeline" src="https://glyphack.com/toggl-timeline.png" >
 &lt;/div>
 &lt;/figure>

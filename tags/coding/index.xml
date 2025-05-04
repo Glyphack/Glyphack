@@ -131,7 +131,7 @@ to structure our code.&lt;/p>
 responsibilities of components:&lt;/p>
 &lt;p>
 &lt;figure class="">
-&lt;div>
+&lt;div class="img-container" >
 &lt;img loading="lazy" alt="crawler-diagram" src="https://glyphack.com/crawler-diagram.excalidraw.svg" >
 &lt;/div>
 &lt;/figure>
@@ -1358,7 +1358,7 @@ decides if the request can go through or not based on the current statistics.&lt
 &lt;p>What are the components of our system?&lt;/p>
 &lt;p>
 &lt;figure class="">
-&lt;div>
+&lt;div class="img-container" >
 &lt;img loading="lazy" alt="System Components" src="https://glyphack.com/rate-limiter-components.png" >
 &lt;/div>
 &lt;/figure>
