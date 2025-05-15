@@ -30,11 +30,11 @@ url = "/now/"
 name = "Reading List"
 url = "/reading-list/"
 [[params.menu]]
-name = "Resume"
-url = "https://docs.google.com/document/d/1XgC2Va8ZgJ2DrmRKpgd_7iVjv8aASnn8nzl6DgkR1mg/edit?usp=sharing"
-[[params.menu]]
 name = "Reads This"
 url = "https://r.glyphack.com/s/s"
+[[params.menu]]
+name = "Resume"
+url = "https://docs.google.com/document/d/1XgC2Va8ZgJ2DrmRKpgd_7iVjv8aASnn8nzl6DgkR1mg/edit?usp=sharing"
 [[params.social]]
 name = "github"
 url = "https://github.com/glyphack"
