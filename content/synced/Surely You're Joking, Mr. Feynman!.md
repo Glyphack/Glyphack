@@ -29,10 +29,12 @@ And most of the learning materials on the internet in this category. They just t
 Maybe to learn something you have to, do it?
 
 Another story about people and understanding is when he's at the Nobel ceremony.
+
 > She turned to me and said, "Oh! You're one of the Nobel-Prize-winners.
 > In what field did you do your work?"
 > "In physics," I said.
 > "Oh. Well, nobody knows anything about that, so I guess we can't talk about it." 
+> 
 > "On the contrary," I answered."It's because somebody knows something about it that we can't talk about physics. It's the things that nobody knows anything about that we can discuss. We can talk about the weather; we can talk about social problems; we can talk about psychology; we can talk about international finance--gold transfers we can't talk about, because those are understood--so it's the subject that nobody knows anything about that we can all talk about!"
 
 In the first chapters from his childhood to university there are stories about how got interested in many subjects.
