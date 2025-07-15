@@ -1,7 +1,7 @@
 ---
-title: "Compete"
+title: "The best lasagna I've ever had"
 date: 2025-07-12T00:16:52+02:00
-draft: true
+draft: false
 tags: [] 
 ---
 
@@ -34,5 +34,7 @@ These days I have more respect for products and people who try to make something
 
 I don't think anyone who tries to impress by some score sells a bad product.
 But it is related. It increases the chances because it can distract you from the actual product and diverge the focus on other things.
+
+![](/borghiciana.jpg)
 
 [^gelato]: Also try out [Gelateria La Romana](https://maps.app.goo.gl/FKEbRmEcpfhv9NCd8) if you end up eating here.
