@@ -88,8 +88,8 @@ to point to the new endpoint.
 This dependencies between stack, can cause problems if not considered carefully.
 If you now try to update the API endpoint(which is part of API stack)
 when all the stacks are deployed you will get the following error:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-text" data-lang="text">&lt;span class="line">&lt;span class="cl">Export ApiStack:ExportsOutputFnGetAtt-******
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">cannot be deletedas it is in use by HostedZoneStack
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>Export ApiStack:ExportsOutputFnGetAtt-******
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cannot be deletedas it is in use by HostedZoneStack
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The issue is that the Hosted Zone stack is using the referenced endpoint
 from ApiStack and without deleting the hosted zone you cannot delete the reference.&lt;/p>
 &lt;p>You have two solutions to either destroy them both or &lt;a href="https://github.com/aws/aws-cdk/tree/main/packages/aws-cdk-lib#removing-automatic-cross-stack-references">do a 2 phase deployment&lt;/a>.
@@ -123,11 +123,11 @@ Remove Security Group dependencies
 &lt;p>A common dependency between stacks is the security group rules.
 For example we have a database with and we want our EC2 to access it.
 One solution could be:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-javascript" data-lang="javascript">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// DB Stack
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nx">dbInstance&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">...&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// App Stack
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nx">dbInstance&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">connections&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">allowFrom&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">ec2Instance&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nx">ec2&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Port&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">tcp&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">5432&lt;/span>&lt;span class="p">));&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// DB Stack
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">dbInstance&lt;/span> &lt;span style="color:#f92672">=&lt;/span> ...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// App Stack
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">dbInstance&lt;/span>.&lt;span style="color:#a6e22e">connections&lt;/span>.&lt;span style="color:#a6e22e">allowFrom&lt;/span>(&lt;span style="color:#a6e22e">ec2Instance&lt;/span>, &lt;span style="color:#a6e22e">ec2&lt;/span>.&lt;span style="color:#a6e22e">Port&lt;/span>.&lt;span style="color:#a6e22e">tcp&lt;/span>(&lt;span style="color:#ae81ff">5432&lt;/span>));
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>But in this code DB stacks depends on the EC2 instance which can change.
 Is there a way to make our database stack completely independent?&lt;/p>
 &lt;p>Surprisingly you can use the dependency inversion principle:&lt;/p>
@@ -135,13 +135,13 @@ Is there a way to make our database stack completely independent?&lt;/p>
 &lt;p>&lt;em>Low level policies should depend upon high level policies.&lt;/em>&lt;/p>&lt;/blockquote>
 &lt;p>How can we make the application dependent on database in this case?
 We can just flip the dependency.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-typescript" data-lang="typescript">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// DB stack
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nx">dbInstance&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">...&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// App stack
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Ec2&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="nx">ec2&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">Instance&lt;/span>&lt;span class="p">(...)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">Ec2&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">connections&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">allowTo&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">Db&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="p">...)&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// DB stack
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">dbInstance&lt;/span> &lt;span style="color:#f92672">=&lt;/span> ...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// App stack
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">Ec2&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> &lt;span style="color:#a6e22e">ec2&lt;/span>.&lt;span style="color:#a6e22e">Instance&lt;/span>(...)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">Ec2&lt;/span>.&lt;span style="color:#a6e22e">connections&lt;/span>.&lt;span style="color:#a6e22e">allowTo&lt;/span>(&lt;span style="color:#a6e22e">Db&lt;/span>, ...)
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>With this method your database is not aware of what resources are connected to it.
 You made it a high level policy and other services are now aware of how to connect.&lt;/p>
 &lt;h3 class="heading" id="remove-unnecessary-dependencies">

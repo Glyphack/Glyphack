@@ -127,58 +127,58 @@ It depends, I switch between Browser, terminal and note app multiple times most 
 You can assign a hotkey for these and only use alt tab for when you need to switch infrequently used windows.&lt;/li>
 &lt;/ul>
 &lt;p>Here&amp;rsquo;s the solution I use based on &lt;a href="https://rakhesh.com/coding/using-hammerspoon-to-switch-apps/">this post&lt;/a>&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-lua" data-lang="lua">&lt;span class="line">&lt;span class="cl">&lt;span class="n">WINDOW_MANAGEMENT_KEY&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="s2">&amp;#34;alt&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;command&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;ctrl&amp;#34;&lt;/span> &lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">WINDOWS_SHORTCUTS&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span> &lt;span class="s2">&amp;#34;J&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;Brave Browser&amp;#34;&lt;/span> &lt;span class="p">},&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span> &lt;span class="s2">&amp;#34;K&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;WezTerm&amp;#34;&lt;/span> &lt;span class="p">},&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kd">local&lt;/span> &lt;span class="kr">function&lt;/span> &lt;span class="nf">launchOrFocusOrRotate&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">app&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">local&lt;/span> &lt;span class="n">focusedWindow&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">hs.window&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">focusedWindow&lt;/span>&lt;span class="p">()&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">if&lt;/span> &lt;span class="n">focusedWindow&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="kc">nil&lt;/span> &lt;span class="kr">then&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">hs.application&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">launchOrFocus&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">app&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">return&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">end&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">local&lt;/span> &lt;span class="n">focusedWindowApp&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">focusedWindow&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">application&lt;/span>&lt;span class="p">()&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">local&lt;/span> &lt;span class="n">focusedWindowAppName&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">focusedWindowApp&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">name&lt;/span>&lt;span class="p">()&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">local&lt;/span> &lt;span class="n">focusedWindowPath&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">focusedWindowApp&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">path&lt;/span>&lt;span class="p">()&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">local&lt;/span> &lt;span class="n">appNameOnDisk&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">string.gsub&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">focusedWindowPath&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;/Applications/&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">local&lt;/span> &lt;span class="n">appNameOnDisk&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">string.gsub&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">appNameOnDisk&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;.app&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">local&lt;/span> &lt;span class="n">appNameOnDisk&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">string.gsub&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">appNameOnDisk&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;/System/Library/CoreServices/&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">if&lt;/span> &lt;span class="n">focusedWindow&lt;/span> &lt;span class="ow">and&lt;/span> &lt;span class="n">appNameOnDisk&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">app&lt;/span> &lt;span class="kr">then&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">local&lt;/span> &lt;span class="n">currentApp&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">hs.application&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">focusedWindowAppName&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">local&lt;/span> &lt;span class="n">appWindows&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">currentApp&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">allWindows&lt;/span>&lt;span class="p">()&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">-- https://www.hammerspoon.org/docs/hs.application.html#allWindows&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">-- A table of zero or more hs.window objects owned by the application. From the current space.&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">if&lt;/span> &lt;span class="o">#&lt;/span>&lt;span class="n">appWindows&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="mi">1&lt;/span> &lt;span class="kr">then&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">currentApp&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">hide&lt;/span>&lt;span class="p">()&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">return&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">end&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">if&lt;/span> &lt;span class="o">#&lt;/span>&lt;span class="n">appWindows&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="mi">0&lt;/span> &lt;span class="kr">then&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">-- It seems that this list order changes after one window get focused,&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">-- Let&amp;#39;s directly bring the last one to focus every time&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">-- https://www.hammerspoon.org/docs/hs.window.html#focus&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">if&lt;/span> &lt;span class="n">app&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="s2">&amp;#34;Finder&amp;#34;&lt;/span> &lt;span class="kr">then&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">-- If the app is Finder the window count returned is one more than the actual count, so I subtract&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">appWindows&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="o">#&lt;/span>&lt;span class="n">appWindows&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">]:&lt;/span>&lt;span class="n">focus&lt;/span>&lt;span class="p">()&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">else&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">appWindows&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="o">#&lt;/span>&lt;span class="n">appWindows&lt;/span>&lt;span class="p">]:&lt;/span>&lt;span class="n">focus&lt;/span>&lt;span class="p">()&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">end&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">else&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">hs.application&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">launchOrFocus&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">app&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">end&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">else&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">hs.application&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">launchOrFocus&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">app&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">end&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">for&lt;/span> &lt;span class="n">_&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">shortcut&lt;/span> &lt;span class="kr">in&lt;/span> &lt;span class="n">ipairs&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">WINDOWS_SHORTCUTS&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="kr">do&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">hs.hotkey&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">bind&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">WINDOW_MANAGEMENT_KEY&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">shortcut&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">],&lt;/span> &lt;span class="kr">function&lt;/span>&lt;span class="p">()&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">launchOrFocusOrRotate&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">shortcut&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="p">])&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">end&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-lua" data-lang="lua">&lt;span style="display:flex;">&lt;span>WINDOW_MANAGEMENT_KEY &lt;span style="color:#f92672">=&lt;/span> { &lt;span style="color:#e6db74">&amp;#34;alt&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;command&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;ctrl&amp;#34;&lt;/span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>WINDOWS_SHORTCUTS &lt;span style="color:#f92672">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> { &lt;span style="color:#e6db74">&amp;#34;J&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Brave Browser&amp;#34;&lt;/span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> { &lt;span style="color:#e6db74">&amp;#34;K&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;WezTerm&amp;#34;&lt;/span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">local&lt;/span> &lt;span style="color:#66d9ef">function&lt;/span> &lt;span style="color:#a6e22e">launchOrFocusOrRotate&lt;/span>(app)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">local&lt;/span> focusedWindow &lt;span style="color:#f92672">=&lt;/span> hs.window.focusedWindow()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> focusedWindow &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> &lt;span style="color:#66d9ef">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> hs.application.launchOrFocus(app)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">local&lt;/span> focusedWindowApp &lt;span style="color:#f92672">=&lt;/span> focusedWindow:application()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">local&lt;/span> focusedWindowAppName &lt;span style="color:#f92672">=&lt;/span> focusedWindowApp:name()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">local&lt;/span> focusedWindowPath &lt;span style="color:#f92672">=&lt;/span> focusedWindowApp:path()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">local&lt;/span> appNameOnDisk &lt;span style="color:#f92672">=&lt;/span> string.gsub(focusedWindowPath, &lt;span style="color:#e6db74">&amp;#34;/Applications/&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">local&lt;/span> appNameOnDisk &lt;span style="color:#f92672">=&lt;/span> string.gsub(appNameOnDisk, &lt;span style="color:#e6db74">&amp;#34;.app&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">local&lt;/span> appNameOnDisk &lt;span style="color:#f92672">=&lt;/span> string.gsub(appNameOnDisk, &lt;span style="color:#e6db74">&amp;#34;/System/Library/CoreServices/&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> focusedWindow &lt;span style="color:#f92672">and&lt;/span> appNameOnDisk &lt;span style="color:#f92672">==&lt;/span> app &lt;span style="color:#66d9ef">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">local&lt;/span> currentApp &lt;span style="color:#f92672">=&lt;/span> hs.application.get(focusedWindowAppName)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">local&lt;/span> appWindows &lt;span style="color:#f92672">=&lt;/span> currentApp:allWindows()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">-- https://www.hammerspoon.org/docs/hs.application.html#allWindows&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">-- A table of zero or more hs.window objects owned by the application. From the current space.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#f92672">#&lt;/span>appWindows &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span> &lt;span style="color:#66d9ef">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> currentApp:hide()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#f92672">#&lt;/span>appWindows &lt;span style="color:#f92672">&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span> &lt;span style="color:#66d9ef">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">-- It seems that this list order changes after one window get focused,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">-- Let&amp;#39;s directly bring the last one to focus every time&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">-- https://www.hammerspoon.org/docs/hs.window.html#focus&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> app &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#e6db74">&amp;#34;Finder&amp;#34;&lt;/span> &lt;span style="color:#66d9ef">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">-- If the app is Finder the window count returned is one more than the actual count, so I subtract&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> appWindows[&lt;span style="color:#f92672">#&lt;/span>appWindows &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>]:focus()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> appWindows[&lt;span style="color:#f92672">#&lt;/span>appWindows]:focus()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> hs.application.launchOrFocus(app)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> hs.application.launchOrFocus(app)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">for&lt;/span> _, shortcut &lt;span style="color:#66d9ef">in&lt;/span> ipairs(WINDOWS_SHORTCUTS) &lt;span style="color:#66d9ef">do&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> hs.hotkey.bind(WINDOW_MANAGEMENT_KEY, shortcut[&lt;span style="color:#ae81ff">1&lt;/span>], &lt;span style="color:#66d9ef">function&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> launchOrFocusOrRotate(shortcut[&lt;span style="color:#ae81ff">2&lt;/span>])
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">end&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">end&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The lua table can be easily expanded to open more applications.&lt;/p>
 &lt;h2 class="heading" id="shortcut-for-frequent-actions">
 Shortcut for frequent actions
@@ -204,30 +204,30 @@ hyper + L clipboard history
 hyper + ; browser bookmarks
 hyper + M search open windows
 &lt;/code>&lt;/pre>&lt;p>The following Hammerspoon config allows moving windows with shortcuts:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-lua" data-lang="lua">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">-- left&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">hs.hotkey&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">bind&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">WINDOW_MANAGEMENT_KEY&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;a&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kr">function&lt;/span>&lt;span class="p">()&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">hs.window&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">focusedWindow&lt;/span>&lt;span class="p">():&lt;/span>&lt;span class="n">moveToUnit&lt;/span>&lt;span class="p">({&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mf">0.5&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">1&lt;/span> &lt;span class="p">})&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">-- right&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">hs.hotkey&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">bind&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">WINDOW_MANAGEMENT_KEY&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;d&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kr">function&lt;/span>&lt;span class="p">()&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">hs.window&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">focusedWindow&lt;/span>&lt;span class="p">():&lt;/span>&lt;span class="n">moveToUnit&lt;/span>&lt;span class="p">({&lt;/span> &lt;span class="mf">0.5&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mf">0.5&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">1&lt;/span> &lt;span class="p">})&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">-- up&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">hs.hotkey&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">bind&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">WINDOW_MANAGEMENT_KEY&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;w&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kr">function&lt;/span>&lt;span class="p">()&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">hs.window&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">focusedWindow&lt;/span>&lt;span class="p">():&lt;/span>&lt;span class="n">moveToUnit&lt;/span>&lt;span class="p">({&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mf">0.5&lt;/span> &lt;span class="p">})&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">-- down&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">hs.hotkey&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">bind&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">WINDOW_MANAGEMENT_KEY&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;s&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kr">function&lt;/span>&lt;span class="p">()&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">hs.window&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">focusedWindow&lt;/span>&lt;span class="p">():&lt;/span>&lt;span class="n">moveToUnit&lt;/span>&lt;span class="p">({&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mf">0.5&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mf">0.5&lt;/span> &lt;span class="p">})&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">-- center&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">hs.hotkey&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">bind&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">WINDOW_MANAGEMENT_KEY&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;c&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kr">function&lt;/span>&lt;span class="p">()&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">hs.window&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">focusedWindow&lt;/span>&lt;span class="p">():&lt;/span>&lt;span class="n">centerOnScreen&lt;/span>&lt;span class="p">()&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">-- full screen&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">hs.hotkey&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">bind&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">WINDOW_MANAGEMENT_KEY&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;i&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kr">function&lt;/span>&lt;span class="p">()&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">hs.window&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">focusedWindow&lt;/span>&lt;span class="p">():&lt;/span>&lt;span class="n">moveToUnit&lt;/span>&lt;span class="p">({&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">1&lt;/span> &lt;span class="p">})&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-lua" data-lang="lua">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">-- left&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>hs.hotkey.bind(WINDOW_MANAGEMENT_KEY, &lt;span style="color:#e6db74">&amp;#34;a&amp;#34;&lt;/span>, &lt;span style="color:#66d9ef">function&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> hs.window.focusedWindow():moveToUnit({ &lt;span style="color:#ae81ff">0&lt;/span>, &lt;span style="color:#ae81ff">0&lt;/span>, &lt;span style="color:#ae81ff">0.5&lt;/span>, &lt;span style="color:#ae81ff">1&lt;/span> })
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">end&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">-- right&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>hs.hotkey.bind(WINDOW_MANAGEMENT_KEY, &lt;span style="color:#e6db74">&amp;#34;d&amp;#34;&lt;/span>, &lt;span style="color:#66d9ef">function&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> hs.window.focusedWindow():moveToUnit({ &lt;span style="color:#ae81ff">0.5&lt;/span>, &lt;span style="color:#ae81ff">0&lt;/span>, &lt;span style="color:#ae81ff">0.5&lt;/span>, &lt;span style="color:#ae81ff">1&lt;/span> })
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">end&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">-- up&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>hs.hotkey.bind(WINDOW_MANAGEMENT_KEY, &lt;span style="color:#e6db74">&amp;#34;w&amp;#34;&lt;/span>, &lt;span style="color:#66d9ef">function&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> hs.window.focusedWindow():moveToUnit({ &lt;span style="color:#ae81ff">0&lt;/span>, &lt;span style="color:#ae81ff">0&lt;/span>, &lt;span style="color:#ae81ff">1&lt;/span>, &lt;span style="color:#ae81ff">0.5&lt;/span> })
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">end&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">-- down&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>hs.hotkey.bind(WINDOW_MANAGEMENT_KEY, &lt;span style="color:#e6db74">&amp;#34;s&amp;#34;&lt;/span>, &lt;span style="color:#66d9ef">function&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> hs.window.focusedWindow():moveToUnit({ &lt;span style="color:#ae81ff">0&lt;/span>, &lt;span style="color:#ae81ff">0.5&lt;/span>, &lt;span style="color:#ae81ff">1&lt;/span>, &lt;span style="color:#ae81ff">0.5&lt;/span> })
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">end&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">-- center&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>hs.hotkey.bind(WINDOW_MANAGEMENT_KEY, &lt;span style="color:#e6db74">&amp;#34;c&amp;#34;&lt;/span>, &lt;span style="color:#66d9ef">function&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> hs.window.focusedWindow():centerOnScreen()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">end&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">-- full screen&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>hs.hotkey.bind(WINDOW_MANAGEMENT_KEY, &lt;span style="color:#e6db74">&amp;#34;i&amp;#34;&lt;/span>, &lt;span style="color:#66d9ef">function&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> hs.window.focusedWindow():moveToUnit({ &lt;span style="color:#ae81ff">0&lt;/span>, &lt;span style="color:#ae81ff">0&lt;/span>, &lt;span style="color:#ae81ff">1&lt;/span>, &lt;span style="color:#ae81ff">1&lt;/span> })
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">end&lt;/span>)
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>You can also use a layout mode for moving windows:
 &lt;a href="https://github.com/jasonrudolph/keyboard#window-layout-mode">https://github.com/jasonrudolph/keyboard#window-layout-mode&lt;/a>&lt;/p>
 &lt;h2 class="heading" id="symbol-layers">
@@ -442,24 +442,24 @@ for inspirations.&lt;/p>
 is it have a global shortcut to mute/unmute your mic to don&amp;rsquo;t annoy others with
 noise in the meeting and quickly unmute. I&amp;rsquo;m doing this with &lt;a href="https://github.com/cmaahs/global-mute-spoon">global mute spoon&lt;/a>.&lt;/p>
 &lt;p>Here&amp;rsquo;s how the configuration looks like&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-lua" data-lang="lua">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">local&lt;/span> &lt;span class="n">GlobalMute&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">hs.loadSpoon&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;GlobalMute&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">GlobalMute&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">bindHotkeys&lt;/span>&lt;span class="p">({&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">toggle&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">hyper&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;t&amp;#34;&lt;/span> &lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">})&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-lua" data-lang="lua">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">local&lt;/span> GlobalMute &lt;span style="color:#f92672">=&lt;/span> hs.loadSpoon(&lt;span style="color:#e6db74">&amp;#34;GlobalMute&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>GlobalMute:bindHotkeys({
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> toggle &lt;span style="color:#f92672">=&lt;/span> { hyper, &lt;span style="color:#e6db74">&amp;#34;t&amp;#34;&lt;/span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>})
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>For example I have a microphone that is both input and output device.
 When I connect this microphone I don&amp;rsquo;t want to set it as my output device but that&amp;rsquo;s what mac does by default.
 In Hammerspoon I can setup a callback to set my input/output device when the microphone is connected.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-lua" data-lang="lua">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">local&lt;/span> &lt;span class="kr">function&lt;/span> &lt;span class="nf">audiodeviceCallback&lt;/span>&lt;span class="p">()&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">current&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">hs.audiodevice&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">defaultInputDevice&lt;/span>&lt;span class="p">():&lt;/span>&lt;span class="n">name&lt;/span>&lt;span class="p">()&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Current device: &amp;#34;&lt;/span> &lt;span class="o">..&lt;/span> &lt;span class="n">current&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">if&lt;/span> &lt;span class="n">current&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="s2">&amp;#34;External Microphone&amp;#34;&lt;/span> &lt;span class="kr">then&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Forcing default output to Internal Speakers&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">hs.audiodevice&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">findOutputByName&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;MacBook Pro Speakers&amp;#34;&lt;/span>&lt;span class="p">):&lt;/span>&lt;span class="n">setDefaultOutputDevice&lt;/span>&lt;span class="p">()&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">end&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">hs.audiodevice&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">watcher.setCallback&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">audiodeviceCallback&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">hs.audiodevice&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">watcher.start&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-lua" data-lang="lua">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">local&lt;/span> &lt;span style="color:#66d9ef">function&lt;/span> &lt;span style="color:#a6e22e">audiodeviceCallback&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> current &lt;span style="color:#f92672">=&lt;/span> hs.audiodevice.defaultInputDevice():name()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print(&lt;span style="color:#e6db74">&amp;#34;Current device: &amp;#34;&lt;/span> &lt;span style="color:#f92672">..&lt;/span> current)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> current &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#e6db74">&amp;#34;External Microphone&amp;#34;&lt;/span> &lt;span style="color:#66d9ef">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print(&lt;span style="color:#e6db74">&amp;#34;Forcing default output to Internal Speakers&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> hs.audiodevice.findOutputByName(&lt;span style="color:#e6db74">&amp;#34;MacBook Pro Speakers&amp;#34;&lt;/span>):setDefaultOutputDevice()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>hs.audiodevice.watcher.setCallback(audiodeviceCallback)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>hs.audiodevice.watcher.start()
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 class="heading" id="switching-windows">
 Switching Windows
 &lt;a class="anchor" href="#switching-windows">#&lt;/a>
@@ -482,7 +482,7 @@ Terminal
 This post is not about terminal as it&amp;rsquo;s not related to MacOS but here are a few tips.&lt;/p>
 &lt;p>Use a fuzzy finder like &lt;a href="https://github.com/junegunn/fzf">fzf&lt;/a> for searching directories and history.
 I have the following Fish keybinding to do a fuzzy search in my home directory and select a folder I want to &lt;code>cd&lt;/code> into.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fish" data-lang="fish">&lt;span class="line">&lt;span class="cl">&lt;span class="k">set&lt;/span> &lt;span class="na">-x&lt;/span> &lt;span class="nv">FZF_ALT_C_COMMAND&lt;/span> &lt;span class="s2">&amp;#34;fd -t d . &lt;/span>&lt;span class="nv">$PROGRAMMING_DIR&lt;/span>&lt;span class="s2"> -d 3&amp;#34;&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-fish" data-lang="fish">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">set&lt;/span> &lt;span style="color:#a6e22e">-x&lt;/span> FZF_ALT_C_COMMAND &lt;span style="color:#e6db74">&amp;#34;fd -t d . &lt;/span>$PROGRAMMING_DIR&lt;span style="color:#e6db74"> -d 3&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 class="heading" id="configure-git">
 Configure Git
 &lt;a class="anchor" href="#configure-git">#&lt;/a>
@@ -526,20 +526,20 @@ Setup 2FA code on your machine
 &lt;a class="anchor" href="#1-export-2fa-accounts-from-google-authenticator">#&lt;/a>
 &lt;/h3>
 &lt;p>You probably have already setup your accounts with google authenticator. You can use the &lt;a href="https://support.google.com/accounts/thread/107807857/how-to-export-2fa-codes-from-google-authenticator?hl=en">export option&lt;/a> to export the accounts you need. Export will be a qr code so you need a way to convert it to text. On mac I did it with &lt;a href="https://apps.apple.com/us/app/qr-journal/id483820530?mt=12">qr journal&lt;/a> .&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">brew install --cask qr-journal
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>brew install --cask qr-journal
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 class="heading" id="2-extract-account-secret-key">
 2. Extract Account Secret Key
 &lt;a class="anchor" href="#2-extract-account-secret-key">#&lt;/a>
 &lt;/h3>
 &lt;p>Once you have the qr code as text you can use &lt;a href="https://github.com/scito/extract_otp_secret_keys">extract_otp_secret_keys&lt;/a> to read the text and get the secret strings. save exported qr code in a text file and read it with like this:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">gh repo clone scito/extract_otp_secret_keys
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">python extract_otp_secret_keys/extract_otp_secret_keys.py -p exported.txt
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>gh repo clone scito/extract_otp_secret_keys
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>python extract_otp_secret_keys/extract_otp_secret_keys.py -p exported.txt
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This will output the final secret key for accounts.&lt;/p>
 &lt;h3 class="heading" id="3-install-a-2fa-code-generator">
 3. Install a 2FA Code Generator
 &lt;a class="anchor" href="#3-install-a-2fa-code-generator">#&lt;/a>
 &lt;/h3>
 &lt;p>I used the &lt;a href="https://github.com/rsc/2fa">2fa&lt;/a> app to import accounts in terminal.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">go install rsc.io/2fa@latest
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">2fa -add account_name
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>go install rsc.io/2fa@latest
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>2fa -add account_name
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now that you have this you can use the command &lt;code>2fa&lt;/code> to get all of your accounts 2FA codes or &lt;code>2fa account_name&lt;/code> to get the 2FA code for a specific account, the latter is useful when writing scripts.&lt;/p></description></item></channel></rss>

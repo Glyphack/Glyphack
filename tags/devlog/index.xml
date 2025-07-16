@@ -111,15 +111,15 @@ This turns out to be easy to do but requires configuration for the terminal and 
 For Wezterm and Fish I did the following:&lt;/p>
 &lt;p>Set key bindings for &lt;a href="https://wezfurlong.org/wezterm/config/lua/keyassignment/ScrollToPrompt.html">ScrollToPrompt&lt;/a> action.
 Create a fish function to emit the characters that marks the output of the command before executing a command.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="cl">&lt;span class="k">function&lt;/span> pre_command --on-event fish_preexec
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">printf&lt;/span> &lt;span class="s1">&amp;#39;\033]133;A\033\\&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">end
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">function&lt;/span> pre_command --on-event fish_preexec
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> printf &lt;span style="color:#e6db74">&amp;#39;\033]133;A\033\\&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>end
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This feature to run specific functions on an event in fish is really powerful. You can build custom workflows around your work. For example, you can do some project specific setup when entering a folder with this snippet:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="cl">&lt;span class="k">function&lt;/span> some_setup --on-variable PWD
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="nb">test&lt;/span> &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="nv">$PWD&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="nv">$PROGRAMMING_DIR&lt;/span>&lt;span class="s2">/&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># do some stuff&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> end
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">end
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">function&lt;/span> some_setup --on-variable PWD
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> test &lt;span style="color:#e6db74">&amp;#34;&lt;/span>$PWD&lt;span style="color:#e6db74">&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;&lt;/span>$PROGRAMMING_DIR&lt;span style="color:#e6db74">/&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># do some stuff&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> end
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>end
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>Neovim&lt;/strong>&lt;/p>
 &lt;p>If you know how to fold all the functions by default please let me know.
 &lt;a href="https://old.reddit.com/r/neovim/comments/1g41rjy/can_neovim_do_this_already_with_treesitter/">https://old.reddit.com/r/neovim/comments/1g41rjy/can_neovim_do_this_already_with_treesitter/&lt;/a>&lt;/p>
@@ -164,22 +164,22 @@ end
 end, {})
 &lt;/code>&lt;/pre>&lt;p>I had a problem that when I connected my laptop to a new screen Flameshot would not capture the whole screen from the new screen in the screenshots.
 I could not find a way to resolve this so I wrote this hammerspoon script to restart the app when I connect it to a new monitor:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-lua" data-lang="lua">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">local&lt;/span> &lt;span class="kr">function&lt;/span> &lt;span class="nf">screenCallback&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">layout&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">if&lt;/span> &lt;span class="n">layout&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="kc">true&lt;/span> &lt;span class="kr">then&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Screen did not change&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">return&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">end&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">setPrimary&lt;/span>&lt;span class="p">()&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">local&lt;/span> &lt;span class="n">flameshot_bundle&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;/Applications/flameshot.app&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">local&lt;/span> &lt;span class="n">flameshot&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">hs.application&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">find&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">flameshot_bundle&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kc">false&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kc">false&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">if&lt;/span> &lt;span class="n">flameshot&lt;/span> &lt;span class="kr">then&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">flameshot&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">kill&lt;/span>&lt;span class="p">()&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kr">end&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">hs.application&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">open&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">flameshot_bundle&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">end&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">hs.screen&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">watcher.newWithActiveScreen&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">screenCallback&lt;/span>&lt;span class="p">):&lt;/span>&lt;span class="n">start&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-lua" data-lang="lua">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">local&lt;/span> &lt;span style="color:#66d9ef">function&lt;/span> &lt;span style="color:#a6e22e">screenCallback&lt;/span>(layout)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> layout &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#66d9ef">true&lt;/span> &lt;span style="color:#66d9ef">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print(&lt;span style="color:#e6db74">&amp;#34;Screen did not change&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> setPrimary()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">local&lt;/span> flameshot_bundle &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;/Applications/flameshot.app&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">local&lt;/span> flameshot &lt;span style="color:#f92672">=&lt;/span> hs.application.find(flameshot_bundle, &lt;span style="color:#66d9ef">false&lt;/span>, &lt;span style="color:#66d9ef">false&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> flameshot &lt;span style="color:#66d9ef">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> flameshot:kill()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> hs.application.open(flameshot_bundle)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>hs.screen.watcher.newWithActiveScreen(screenCallback):start()
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;hr>
 &lt;ul>
 &lt;li>I knew about PyPy, but I didn&amp;rsquo;t know they have a full tool chain for creating interpreters. Until I watched this &lt;a href="https://www.youtube.com/watch?v=p8fCq16XTH4">Tsoding video&lt;/a>&lt;/li>
