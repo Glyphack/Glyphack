@@ -1,7 +1,6 @@
 ---
 created: 2025-04-27
-tags:
-  - Waiting
+tags: []
 category:
   - "[[Books|Books]]"
 title: Masters of Doom
