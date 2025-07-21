@@ -1,0 +1,77 @@
+<!doctype html><html lang=en dir=ltr><head><meta charset=utf-8><meta name=viewport content="width=device-width"><link rel=icon type=image/ico href=https:/glyphack.com/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https:/glyphack.com/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https:/glyphack.com/favicon-32x32.png><link rel=icon type=image/png sizes=192x192 href=https:/glyphack.com/android-chrome-192x192.png><link rel=apple-touch-icon sizes=180x180 href=https:/glyphack.com/apple-touch-icon.png><meta name=description content><title>Everything you need to know about splitting CDK stacks | Glyphack</title><link rel=canonical href=https://glyphack.com/splitting-cdk-stacks/><meta property="og:url" content="https://glyphack.com/splitting-cdk-stacks/"><meta property="og:site_name" content="Glyphack"><meta property="og:title" content="Everything you need to know about splitting CDK stacks"><meta property="og:description" content="AWS CDK is a tool that lets you define your cloud resources in a languages such as python. And like any other project as the codebase grows, it needs to be split into components.
+CDK projects can be split into multiple stacks. Stack is a single deployable unit in CDK. when you deploy it all the resources inside it will get deployed.
+Knowing a few points in the beginning can help to create a good project structure, and avoiding common pitfalls like dependency issues."><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="blog"><meta property="article:published_time" content="2022-11-13T09:49:50+03:30"><meta property="article:modified_time" content="2022-11-13T09:49:50+03:30"><meta property="article:tag" content="Aws"><meta property="article:tag" content="Cdk"><link rel=stylesheet href=/assets/combined.min.455b53327434f234e64209735e8469bb37465ce15a3ebc45a1a586dd5e74c673.css media=all><script async defer data-website-id=e8710f0c-a6f2-4d2d-8b95-ef6b66e72226 src=https://cloud.umami.is/script.js></script></head><body class=light><div class=content><header><div class=header><h1 class=header-title><a href=https://glyphack.com/>Glyphack</a></h1><div class=flex><p class=small><a href=/>/Home</a></p><p class=small><a href=/blog/>/Blog</a></p><p class=small><a href=/projects/>/Projects</a></p><p class=small><a href=/now/>/Now</a></p><p class=small><a href=/reading-list/>/Reading List</a></p><p class=small><a href=https://r.glyphack.com/s/s>/Reads This</a></p><p class=small><a href="https://docs.google.com/document/d/1XgC2Va8ZgJ2DrmRKpgd_7iVjv8aASnn8nzl6DgkR1mg/edit?usp=sharing">/Resume</a></p></div></div></header><main class=main><div class=breadcrumbs><a href=/>Home</a><span class=breadcrumbs-separator>/</span><a href=/blog/>Blog</a><span class=breadcrumbs-separator>/</span>
+<a href=/splitting-cdk-stacks/>Everything you need to know about splitting CDK stacks</a></div><div><article><header class=single-intro-container><h1 class=single-title>Everything you need to know about splitting CDK stacks</h1><p class=single-readtime><time datetime=2022-11-13T09:49:50+03:30>November 13, 2022</time></p></header><div class=single-content><p>AWS CDK is a tool that lets you define your cloud resources
+in a languages such as python.
+And like any other project as the codebase grows, it needs to be split into components.</p><p>CDK projects can be split into multiple stacks.
+Stack is a single deployable unit in CDK.
+when you deploy it all the resources inside it will get deployed.</p><p>Knowing a few points in the beginning can help to create a good project structure,
+and avoiding common pitfalls like dependency issues.</p><p>The questions to ask when considering splitting a stack:</p><ul><li>Which components should be extracted?</li><li>Should this new code be a stack or a construct?</li><li>which components belong to this stack?</li><li>What cross-stack dependencies are created?</li></ul><p>I’m sharing the lessons I learned writing and refactoring multiple cdk projects.</p><h2 class=heading id=splitting-stacks>Splitting stacks
+<a class=anchor href=#splitting-stacks>#</a></h2><p>When components can be deployed separately, it&rsquo;s good to split the stacks.
+Smaller stacks are deployed faster and it&rsquo;s easier to maintain them.</p><p>You can extract some parts of a stack into another stack and add it as a dependency.
+Keep in mind that when <code>StackA</code> depends on <code>StackB</code> then:</p><ul><li>To Deploy <code>StackA</code> the <code>StackB</code> must be deployed.</li><li>When stacks are deployed <code>StackB</code> cannot be updated without updating <code>StackA</code> first.</li></ul><p>This two way relation can cause problems which we&rsquo;ll talk about it later.</p><h3 class=heading id=how-to-decide-the-number-of-stacks>How to Decide the Number of Stacks?
+<a class=anchor href=#how-to-decide-the-number-of-stacks>#</a></h3><p>A simple rule for separation is based on:</p><ol><li>Application domain</li><li>Resources life cycle</li></ol><p>Multiple stacks for apps in different domains is a separation based on domain.
+Separating based on life cycle can be done for rarely deployed resources like databases.</p><p>You can find a good reference on these examples and stacks in
+<a href=https://github.com/kevinslin/open-cdk#stacks>open-cdk guide</a>.</p><h2 class=heading id=creating-constructs>Creating constructs
+<a class=anchor href=#creating-constructs>#</a></h2><p>CDK has another solution for having smaller stacks
+which is creating a re-suable component called construct.
+To decide whether a code should be a stack or a construct we can check:</p><ol><li>Can be used in other places: a S3 Bucket with specific options.</li><li>A second stack would be always deployed deleted with current stack(highly coupled).</li></ol><p>Creating constructs is also easier;
+because you are not introducing any dependencies between stacks.
+If you delete an stack all constructs inside it are removed.</p><h2 class=heading id=separated-stacks-and-dependencies>Separated Stacks and Dependencies
+<a class=anchor href=#separated-stacks-and-dependencies>#</a></h2><p>Imagine we have an API with lambda and API gateway, and a route53 hosted zone.
+This infrastructure has two properties:</p><ul><li>Lambda can frequently be changed, but the API endpoint is same.</li><li>deploying a resource like a hosted zone takes a lot of time.
+So it&rsquo;s better to deploy it separately, once.</li><li>A hosted zone record must point to API endpoint.</li></ul><p>By splitting this stack into two:</p><ol><li>API stack</li><li>Hosted zone stack</li></ol><p><figure><div class=img-container><img loading=lazy alt=example-cdk-stack src=/example-cdk-stack-deps.excalidraw.png></div></figure></p><h3 class=heading id=dependency-problem-and-solution>Dependency problem and Solution
+<a class=anchor href=#dependency-problem-and-solution>#</a></h3><p>What dependencies did we create?
+If our API endpoint changes then the Hosted zone needs to be updated
+to point to the new endpoint.
+This dependencies between stack, can cause problems if not considered carefully.
+If you now try to update the API endpoint(which is part of API stack)
+when all the stacks are deployed you will get the following error:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>Export ApiStack:ExportsOutputFnGetAtt-******
+</span></span><span style=display:flex><span>cannot be deletedas it is in use by HostedZoneStack
+</span></span></code></pre></div><p>The issue is that the Hosted Zone stack is using the referenced endpoint
+from ApiStack and without deleting the hosted zone you cannot delete the reference.</p><p>You have two solutions to either destroy them both or <a href=https://github.com/aws/aws-cdk/tree/main/packages/aws-cdk-lib#removing-automatic-cross-stack-references>do a 2 phase deployment</a>.
+Although the 2 phase deployment always works it&rsquo;s manual work.
+It&rsquo;s fine for a database migration but this should not be something to do every week.</p><p><em>Solution to prevent the issue</em>:
+<strong>Document</strong> not changing parts in your CDK app.
+Our assumption is that our API endpoint is not going to change frequently,
+otherwise we are just deploying stacks together all the time.</p><p>Another solution is to use parameter store to reference these dependencies.
+In this method you can change anything since CDK does not know about your dependencies.
+The downside of this method is that you have to manage dependencies now,
+actually you are now the compiler :D.</p><p>I would not recommend this method Because you are loosing the type checks,
+like <code>any</code> in a typed language.</p><p>It&rsquo;s a solution where you want to share resources between multiple CDK apps where
+you can&rsquo;t pass the objects.
+For example if you are referencing DB name in applications as env vars,
+it&rsquo;s better to save the DB name in parameter store and retrieve in runtime.
+Because that resource can be deployed multiple times but your app does not need
+to be redeployed.</p><p>Now Let me give you a <strong>Bad</strong> splitting example:</p><p>Imagine we have a EC2 with an application load balancer.
+The EC2 id must be set in load balancer to route the traffic.</p><p>If we try to separate these into load balancer and app stacks,
+when ever we want to redeploy the EC2 the other stack must be destroyed and redeployed.</p><h3 class=heading id=remove-security-group-dependencies>Remove Security Group dependencies
+<a class=anchor href=#remove-security-group-dependencies>#</a></h3><p>A common dependency between stacks is the security group rules.
+For example we have a database with and we want our EC2 to access it.
+One solution could be:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-javascript data-lang=javascript><span style=display:flex><span><span style=color:#75715e>// DB Stack
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#a6e22e>dbInstance</span> <span style=color:#f92672>=</span> ...
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// App Stack
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#a6e22e>dbInstance</span>.<span style=color:#a6e22e>connections</span>.<span style=color:#a6e22e>allowFrom</span>(<span style=color:#a6e22e>ec2Instance</span>, <span style=color:#a6e22e>ec2</span>.<span style=color:#a6e22e>Port</span>.<span style=color:#a6e22e>tcp</span>(<span style=color:#ae81ff>5432</span>));
+</span></span></code></pre></div><p>But in this code DB stacks depends on the EC2 instance which can change.
+Is there a way to make our database stack completely independent?</p><p>Surprisingly you can use the dependency inversion principle:</p><blockquote><p><em>Low level policies should depend upon high level policies.</em></p></blockquote><p>How can we make the application dependent on database in this case?
+We can just flip the dependency.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=display:flex><span><span style=color:#75715e>// DB stack
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#a6e22e>dbInstance</span> <span style=color:#f92672>=</span> ...
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// App stack
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>Ec2</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> <span style=color:#a6e22e>ec2</span>.<span style=color:#a6e22e>Instance</span>(...)
+</span></span><span style=display:flex><span><span style=color:#a6e22e>Ec2</span>.<span style=color:#a6e22e>connections</span>.<span style=color:#a6e22e>allowTo</span>(<span style=color:#a6e22e>Db</span>, ...)
+</span></span></code></pre></div><p>With this method your database is not aware of what resources are connected to it.
+You made it a high level policy and other services are now aware of how to connect.</p><h3 class=heading id=remove-unnecessary-dependencies>Remove unnecessary dependencies
+<a class=anchor href=#remove-unnecessary-dependencies>#</a></h3><p>Removing redundant dependencies reduces the overhead of managing them between stacks.
+The security group was an example of how to do this.
+Important lesson here is to understand how each line of
+CDK is connecting your resources together.</p><h2 class=heading id=conclusion>Conclusion
+<a class=anchor href=#conclusion>#</a></h2><p>Knowing how to split stacks is an art of managing dependencies.
+When I first started to do it before knowing these topics, I ran into
+issues I did not except and it helped me see the problem from a different aspect.
+It&rsquo;s not only about separating code but it&rsquo;s about which resources should be grouped.</p><p>I hope knowing this will help you avoiding this common pitfall.</p></div></article><div class=single-pagination><hr><div class=flexnowrap><div class=single-pagination-prev><div class=single-pagination-container-prev><div class=single-pagination-text>←</div><div class=single-pagination-text><a href=/planning-my-day/>Planning My Day</a></div></div></div><div class=single-pagination-next><div class=single-pagination-container-next><div class=single-pagination-text><a href=/rate-limiter-python-1/>Rate Limiter From Scratch in Python Part 1</a></div><div class=single-pagination-text>→</div></div></div></div><hr></div><div class=back-to-top><a href=#top>back to top</a></div></div></main></div><footer><p>Powered by
+<a href=https://gohugo.io/>Hugo</a>
+and
+<a href=https://github.com/tomfran/typo>tomfran/typo</a></p></footer></body><script src=/js/theme-switch.js></script><script defer src=/js/copy-code.js></script></html>

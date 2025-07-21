@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>TIL on Glyphack</title><link>https://glyphack.com/tags/til/</link><description>Recent content in TIL on Glyphack</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 19 Sep 2023 22:23:48 +0200</lastBuildDate><atom:link href="https://glyphack.com/tags/til/index.xml" rel="self" type="application/rss+xml"/><item><title>TIL Secret to Open Source Contribution &amp; Contributing to Python Docs</title><link>https://glyphack.com/contributing-to-python-docs/</link><pubDate>Tue, 19 Sep 2023 22:23:48 +0200</pubDate><guid>https://glyphack.com/contributing-to-python-docs/</guid><description>&lt;p>I think I learned something about contributing to open source that, if I knew a couple of years back, I could have done much more open source contributions.&lt;/p>
+&lt;p>A while back, I started creating a &lt;a href="https://github.com/Glyphack/enderpy">hand-written parser for Python&lt;/a>.
+I ended up also contributing some fixes to Python docs.
+This was particularly interesting to me because it did not require really advanced knowledge, and the stuff there that was incorrect or outdated had been there for years.
+So why didn&amp;rsquo;t I do this earlier?&lt;/p>
+&lt;p>It was because I never exposed myself to the opportunity.
+I usually avoided reading docs from start to finish or diving into the code of the tool I was using.&lt;/p>
+&lt;p>The &lt;a href="https://github.com/python/cpython/pull/104986">first&lt;/a> &amp;amp; &lt;a href="https://github.com/python/cpython/pull/104986">second PR&lt;/a> were the result of reading the grammar and &lt;code>ast&lt;/code> package docs and finding inconsistencies.&lt;/p>
+&lt;p>Also after I was working on my type checker I started reading PEPs and playing around with other Python type checkers such as pyright.
+Then suddenly ( I found )[https://github.com/quora/pyanalyze/issues/707] a rule in PEP-586(&lt;a href="https://peps.python.org/pep-0586/#illegal-parameters-for-literal-at-type-check-time">https://peps.python.org/pep-0586/#illegal-parameters-for-literal-at-type-check-time&lt;/a>)
+which was not possible to implement with Python ast structure.
+I haven&amp;rsquo;t started an issue for this one yet because it requires more effort but it&amp;rsquo;s another opportunity.&lt;/p>
+&lt;p>I think that when we start programming journey, it&amp;rsquo;s best to be exposed to these opportunities of reading the actual framework/tool documentation.
+Or just, in general, look more into the source/docs rather than reaching for tutorials.&lt;/p></description></item></channel></rss>

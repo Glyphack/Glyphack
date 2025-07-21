@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Programming on Glyphack</title><link>https://glyphack.com/tags/programming/</link><description>Recent content in Programming on Glyphack</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 12 Oct 2024 13:09:53 +0200</lastBuildDate><atom:link href="https://glyphack.com/tags/programming/index.xml" rel="self" type="application/rss+xml"/><item><title>Writing a DNS server From Scratch</title><link>https://glyphack.com/dns-from-scratch/</link><pubDate>Sat, 12 Oct 2024 13:09:53 +0200</pubDate><guid>https://glyphack.com/dns-from-scratch/</guid><description>&lt;p>I decided to build another system from scratch just to explore a new topic and learn things.
+This time I chose the &lt;a href="https://app.codecrafters.io/courses/DNS-server">Code Crafters&amp;rsquo;s DNS challenge&lt;/a>&lt;/p>
+&lt;p>This is not a tutorial on how to do it but some notes to motivate you to do it.
+There&amp;rsquo;s already &lt;a href="https://app.codecrafters.io/courses/DNS-server">excellent material&lt;/a> on how to do it with code examples here.
+If you are already curious, then start building your own.&lt;/p>
+&lt;p>I really enjoyed the way challenge is organized.
+It&amp;rsquo;s very small steps in which you implement something from the spec.
+You don&amp;rsquo;t build fake things that later become real at a certain stage.
+It&amp;rsquo;s all working software from the beginning.
+For example, in the DNS challenge you can use what you build with the &lt;code>dig&lt;/code> command from the first step.
+It does not actually work, but it&amp;rsquo;s the first thing you need when building a DNS server.
+Something that just spits out correct bytes.&lt;/p>
+&lt;p>This encourages you to not plan for what components your app should have or how to represent the request and response.
+You build the thing that shows you a result as soon as possible.
+I was writing my code in the main function with no structs or anything. Because you really don&amp;rsquo;t need it.&lt;/p>
+&lt;p>This helps a lot to make progress and stay motivated.
+A lot of the time when you are learning something new you try to see what is the whole subject and how much you have to learn and what are the topics.
+But this also slows you down and makes it uninteresting.
+Primarily, because the joy of learning is destroyed.
+Also, because any complex topic is big enough to show you how much time you need to spend to become good that can push you away from learning it.
+This helps you to just focus on the given problem at the time.
+You can apply this in your own projects as well.
+Instead of listing every single thing you need to do to succeed focus on the next result you can see and learn to get there.&lt;/p>
+&lt;p>&lt;strong>Things I learned&lt;/strong>&lt;/p>
+&lt;p>This was my first time working with the bits and bytes in golang.
+I had only done it in assembly before and almost forgot how it&amp;rsquo;s done.
+And golang has a useful set of packages to do help with this.&lt;/p>
+&lt;p>Also, the &lt;a href="https://datatracker.ietf.org/doc/html/rfc1035#autoid-44">compression method&lt;/a> is interesting, you don&amp;rsquo;t need a general algorithm that compresses the data when you know patterns in your data.
+The compression does not work like normal compressions, and instead it relies on the fact that the DNS query has a lot of domain names with similar labels (each word between the &lt;code>.&lt;/code> in domain is a label) so it says a label once and refer to it later.&lt;/p>
+&lt;p>Start with the smallest thing that gives result.&lt;/p>
+&lt;p>&lt;strong>Improvements&lt;/strong>&lt;/p>
+&lt;p>In the last stage of the challenge you implement a DNS server that takes in the requests and resolves them using another DNS resolver. The other resolver is provided by codecrafters.
+I tried to use my resolver with &lt;code>8.8.8.8:53&lt;/code> and it was not working.
+I found the reason is that my DNS parser does not still support all the information that &lt;code>dig&lt;/code> command sends by default. And also I haven&amp;rsquo;t implemented compression for encoding DNS request to bytes.
+I haven&amp;rsquo;t checked how the codecrafters software works but maybe I would try to contribute this later.&lt;/p></description></item></channel></rss>

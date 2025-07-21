@@ -1,0 +1,403 @@
+<!doctype html><html lang=en dir=ltr><head><meta charset=utf-8><meta name=viewport content="width=device-width"><link rel=icon type=image/ico href=https:/glyphack.com/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https:/glyphack.com/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https:/glyphack.com/favicon-32x32.png><link rel=icon type=image/png sizes=192x192 href=https:/glyphack.com/android-chrome-192x192.png><link rel=apple-touch-icon sizes=180x180 href=https:/glyphack.com/apple-touch-icon.png><meta name=description content><title>Rate Limiter From Scratch in Python Part 2 | Glyphack</title><link rel=canonical href=https://glyphack.com/rate-limiter-python-2/><meta property="og:url" content="https://glyphack.com/rate-limiter-python-2/"><meta property="og:site_name" content="Glyphack"><meta property="og:title" content="Rate Limiter From Scratch in Python Part 2"><meta property="og:description" content="Introduction New Rate Limiting Algorithms Fixed Window Test Sliding Window Log Testing Sliding Window Count Tests Conclusion Introduction # In the last post I started writing a rate limiter. The project right now supports only 1 rate limiting algorithm(Token Bucket).
+In this part we’re going to implement the following algorithms:
+Fixed window Sliding window log Sliding window count We’ll see how each algorithm compares to another, and the trade offs. Also after implementing each one we’ll see how to abstractions we created previously helped minimizing the implementation for new algorithms."><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="blog"><meta property="article:published_time" content="2023-02-21T21:34:49+01:00"><meta property="article:modified_time" content="2023-02-21T21:34:49+01:00"><meta property="article:tag" content="Coding"><link rel=stylesheet href=/assets/combined.min.455b53327434f234e64209735e8469bb37465ce15a3ebc45a1a586dd5e74c673.css media=all><script async defer data-website-id=e8710f0c-a6f2-4d2d-8b95-ef6b66e72226 src=https://cloud.umami.is/script.js></script></head><body class=light><div class=content><header><div class=header><h1 class=header-title><a href=https://glyphack.com/>Glyphack</a></h1><div class=flex><p class=small><a href=/>/Home</a></p><p class=small><a href=/blog/>/Blog</a></p><p class=small><a href=/projects/>/Projects</a></p><p class=small><a href=/now/>/Now</a></p><p class=small><a href=/reading-list/>/Reading List</a></p><p class=small><a href=https://r.glyphack.com/s/s>/Reads This</a></p><p class=small><a href="https://docs.google.com/document/d/1XgC2Va8ZgJ2DrmRKpgd_7iVjv8aASnn8nzl6DgkR1mg/edit?usp=sharing">/Resume</a></p></div></div></header><main class=main><div class=breadcrumbs><a href=/>Home</a><span class=breadcrumbs-separator>/</span><a href=/blog/>Blog</a><span class=breadcrumbs-separator>/</span>
+<a href=/rate-limiter-python-2/>Rate Limiter From Scratch in Python Part 2</a></div><div><article><header class=single-intro-container><h1 class=single-title>Rate Limiter From Scratch in Python Part 2</h1><p class=single-readtime><time datetime=2023-02-21T21:34:49+01:00>February 21, 2023</time></p></header><div class=single-content><ul><li><a href=#introduction>Introduction</a></li><li><a href=#new-rate-limiting-algorithms>New Rate Limiting Algorithms</a><ul><li><a href=#fixed-window>Fixed Window</a><ul><li><a href=#test>Test</a></li></ul></li><li><a href=#sliding-window-log>Sliding Window Log</a><ul><li><a href=#testing>Testing</a></li></ul></li><li><a href=#sliding-window-count>Sliding Window Count</a><ul><li><a href=#tests>Tests</a></li></ul></li></ul></li><li><a href=#conclusion>Conclusion</a></li></ul><h2 class=heading id=introduction>Introduction
+<a class=anchor href=#introduction>#</a></h2><p>In the last <a href=/blog/rate-limiter-python-1>post</a>
+I started writing a rate limiter.
+The project right now supports only 1 rate limiting algorithm(Token Bucket).</p><p>In this part we&rsquo;re going to implement the following algorithms:</p><ul><li>Fixed window</li><li>Sliding window log</li><li>Sliding window count</li></ul><p>We&rsquo;ll see how each algorithm compares to another, and the trade offs.
+Also after implementing each one we&rsquo;ll see how to abstractions we created
+previously helped minimizing the implementation for new algorithms.</p><p>At the end of this post we&rsquo;ll add Redis as storage backend to our application.</p><h2 class=heading id=new-rate-limiting-algorithms>New Rate Limiting Algorithms
+<a class=anchor href=#new-rate-limiting-algorithms>#</a></h2><p>Before implementing the algorithm we can start by adding them to our rate limiter
+service.</p><p>First we need to update the LimiterStrategy enum:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>LimitStrategies</span>(str, Enum):
+</span></span><span style=display:flex><span>    TOKEN_BUCKET <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;token_bucket&#34;</span>
+</span></span><span style=display:flex><span>    FIXED_WINDOW <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;fixed_window&#34;</span>
+</span></span><span style=display:flex><span>    SLIDING_WINDOW_LOG <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;sliding_window_log&#34;</span>
+</span></span><span style=display:flex><span>    SLIDING_WINDOW_COUNTER <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;sliding_window_counter&#34;</span>
+</span></span></code></pre></div><p>The code that initialized the limiter strategy objects is in rate limiter service.
+You can use a empty class(with no implementation) and implement it as we go
+through them one by one.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>            <span style=color:#66d9ef>for</span> descriptor <span style=color:#f92672>in</span> rule<span style=color:#f92672>.</span>descriptors:
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> config<span style=color:#f92672>.</span>limit_strategy <span style=color:#f92672>==</span> LimitStrategies<span style=color:#f92672>.</span>TOKEN_BUCKET:
+</span></span><span style=display:flex><span>                    limits<span style=color:#f92672>.</span>append(
+</span></span><span style=display:flex><span>                        TokenBucket(
+</span></span><span style=display:flex><span>                            storage_backend<span style=color:#f92672>=</span>self<span style=color:#f92672>.</span>storage_engine,
+</span></span><span style=display:flex><span>                            rule_descriptor<span style=color:#f92672>=</span>descriptor,
+</span></span><span style=display:flex><span>                        )
+</span></span><span style=display:flex><span>                    )
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>elif</span> config<span style=color:#f92672>.</span>limit_strategy <span style=color:#f92672>==</span> LimitStrategies<span style=color:#f92672>.</span>FIXED_WINDOW:
+</span></span><span style=display:flex><span>                    limits<span style=color:#f92672>.</span>append(
+</span></span><span style=display:flex><span>                        TokenBucket(
+</span></span><span style=display:flex><span>                            storage_backend<span style=color:#f92672>=</span>self<span style=color:#f92672>.</span>storage_engine,
+</span></span><span style=display:flex><span>                            rule_descriptor<span style=color:#f92672>=</span>descriptor,
+</span></span><span style=display:flex><span>                        )
+</span></span><span style=display:flex><span>                    )
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>elif</span> config<span style=color:#f92672>.</span>limit_strategy <span style=color:#f92672>==</span> LimitStrategies<span style=color:#f92672>.</span>SLIDING_WINDOW_LOG: limits<span style=color:#f92672>.</span>append(
+</span></span><span style=display:flex><span>                        TokenBucket(
+</span></span><span style=display:flex><span>                            storage_backend<span style=color:#f92672>=</span>self<span style=color:#f92672>.</span>storage_engine,
+</span></span><span style=display:flex><span>                            rule_descriptor<span style=color:#f92672>=</span>descriptor,
+</span></span><span style=display:flex><span>                        )
+</span></span><span style=display:flex><span>                    )
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>elif</span> config<span style=color:#f92672>.</span>limit_strategy <span style=color:#f92672>==</span> LimitStrategies<span style=color:#f92672>.</span>SLIDING_WINDOW_COUNTER:
+</span></span><span style=display:flex><span>                    limits<span style=color:#f92672>.</span>append(
+</span></span><span style=display:flex><span>                        TokenBucket(
+</span></span><span style=display:flex><span>                            storage_backend<span style=color:#f92672>=</span>self<span style=color:#f92672>.</span>storage_engine,
+</span></span><span style=display:flex><span>                            rule_descriptor<span style=color:#f92672>=</span>descriptor,
+</span></span><span style=display:flex><span>                        )
+</span></span><span style=display:flex><span>                    )
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>else</span>:
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>raise</span> <span style=color:#a6e22e>ValueError</span>(
+</span></span><span style=display:flex><span>                        <span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Limit strategy </span><span style=color:#e6db74>{</span>config<span style=color:#f92672>.</span>limit_strategy<span style=color:#e6db74>}</span><span style=color:#e6db74> not supported&#34;</span>
+</span></span><span style=display:flex><span>                    )
+</span></span></code></pre></div><h3 class=heading id=fixed-window>Fixed Window
+<a class=anchor href=#fixed-window>#</a></h3><p>In the fixed window algorithm, we split the time into unit-size buckets.
+Each bucket has a specified capacity and can limit the requests once it&rsquo;s reached.</p><p>For example, if our unit is 1 minute, our buckets would be 10:00, 10:01, and 10:02.</p><p>Now how can we choose the hash key?
+A hash key like <code>path_1000_&lt;key>_&lt;value></code> is good because
+it puts all requests from a specific entity to a path into the correct bucket.
+So we can query this key and check the count to determine the request.</p><p>But choosing the hour & minute combination to add time to the key is not going to work,
+because there might be collisions when the day passes and we reach that time again.</p><p>To overcome this problem, we can use <a href=https://www.unixtimestamp.com/>timestmap</a>,
+since each time second has a unique timestamp, we resolve the collision.</p><p>Since the timestamp represents the seconds,
+we can&rsquo;t create a bucket for minute intervals if we use this value directly in the cache.
+When the limiting unit is a minute, we need to find the value which
+is the same for every moment in a given minute.</p><p>We can do this by dividing the timestamp by our unit:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>current_interval <span style=color:#f92672>=</span> str(int(datetime<span style=color:#f92672>.</span>now()<span style=color:#f92672>.</span>timestamp() <span style=color:#f92672>/</span> self<span style=color:#f92672>.</span>interval_len_sec))
+</span></span></code></pre></div><p>this value will be the same for all moments in the interval.</p><p>We can see that based on how this interval is calculated,
+our limiter limits the requests for the window 10:00:00 and 10:01:00.
+But it does not check the window 10:00:30 and 10:01:30.
+This is the problem that sliding window algorithm solves,
+by not making the window fixed.</p><p>Now that we figured out the hard part let&rsquo;s look at the code:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>FixedWindow</span>(AbstractStrategy):
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>__init__</span>(
+</span></span><span style=display:flex><span>        self,
+</span></span><span style=display:flex><span>        storage_backend: AbstractStorage,
+</span></span><span style=display:flex><span>        rule_descriptor: Descriptor,
+</span></span><span style=display:flex><span>    ):
+</span></span><span style=display:flex><span>        super(FixedWindow, self)<span style=color:#f92672>.</span><span style=color:#a6e22e>__init__</span>(storage_backend, rule_descriptor)
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>interval_len_sec <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>rule_descriptor<span style=color:#f92672>.</span>unit<span style=color:#f92672>.</span>to_seconds()
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>interval_max <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>rule_descriptor<span style=color:#f92672>.</span>requests_per_unit
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>do_limit</span>(self, request: Request):
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>request <span style=color:#f92672>=</span> request
+</span></span><span style=display:flex><span>        counter_key <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>_get_counter_key()
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> counter_key <span style=color:#f92672>is</span> <span style=color:#66d9ef>None</span>:
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>False</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> self<span style=color:#f92672>.</span>_window_max_reached(counter_key):
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>True</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>False</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>_get_counter_key</span>(self):
+</span></span><span style=display:flex><span>        current_interval <span style=color:#f92672>=</span> str(int(datetime<span style=color:#f92672>.</span>now()<span style=color:#f92672>.</span>timestamp() <span style=color:#f92672>/</span> self<span style=color:#f92672>.</span>interval_len_sec))
+</span></span><span style=display:flex><span>        descriptor <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>rule_descriptor
+</span></span><span style=display:flex><span>        path <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>request<span style=color:#f92672>.</span>path
+</span></span><span style=display:flex><span>        key <span style=color:#f92672>=</span> descriptor<span style=color:#f92672>.</span>key
+</span></span><span style=display:flex><span>        value <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>request<span style=color:#f92672>.</span>data[key]
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> descriptor<span style=color:#f92672>.</span>value <span style=color:#f92672>is</span> <span style=color:#f92672>not</span> <span style=color:#66d9ef>None</span> <span style=color:#f92672>and</span> value <span style=color:#f92672>!=</span> descriptor<span style=color:#f92672>.</span>value:
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>None</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>else</span>:
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> path <span style=color:#f92672>+</span> current_interval <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34;_&#34;</span> <span style=color:#f92672>+</span> key <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34;_&#34;</span> <span style=color:#f92672>+</span> value
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>_window_max_reached</span>(self, counter_key):
+</span></span><span style=display:flex><span>        counter <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>storage_backend<span style=color:#f92672>.</span>get(counter_key)
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> counter <span style=color:#f92672>is</span> <span style=color:#66d9ef>None</span>:
+</span></span><span style=display:flex><span>            self<span style=color:#f92672>.</span>storage_backend<span style=color:#f92672>.</span>set(counter_key, <span style=color:#ae81ff>1</span>, self<span style=color:#f92672>.</span>interval_len_sec)
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>False</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>elif</span> counter <span style=color:#f92672>&gt;=</span> self<span style=color:#f92672>.</span>interval_max:
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>True</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        counter <span style=color:#f92672>+=</span> <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>storage_backend<span style=color:#f92672>.</span>incr(counter_key)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>False</span>
+</span></span></code></pre></div><p>Notice that here we are using the <code>incr</code> method from the storage.
+We haven&rsquo;t implemented this functionality yet, but this is a good interface to add.</p><p>Since other storages such as redis has support for increment it&rsquo;s better to use it,
+rather than get, increment and set the value approach.</p><p>So we add new method to <code>AbstractStorage</code>:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#a6e22e>@abstractmethod</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>incr</span>(self, key):
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>raise</span> <span style=color:#a6e22e>NotImplementedError</span>
+</span></span></code></pre></div><p>And implement it in the memory:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>  <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>incr</span>(self, key: str):
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>if</span> key <span style=color:#f92672>in</span> self<span style=color:#f92672>.</span>data:
+</span></span><span style=display:flex><span>          self<span style=color:#f92672>.</span>data[key] <span style=color:#f92672>+=</span> <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>else</span>:
+</span></span><span style=display:flex><span>          self<span style=color:#f92672>.</span>data[key] <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span>
+</span></span></code></pre></div><h4 class=heading id=test>Test
+<a class=anchor href=#test>#</a></h4><p>Testing this new strategy is so easy,
+since all of our strategies have the same interface(input/output) we can
+use pytest to <a href=https://docs.pytest.org/en/6.2.x/parametrize.html>parameterize</a>
+the strategy that is being tested.</p><p>Let&rsquo;s go back to the test we wrote for token bucket and rewrite it in this way:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#a6e22e>@pytest.mark.parametrize</span>(
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;limit_strategy&#34;</span>,
+</span></span><span style=display:flex><span>    [
+</span></span><span style=display:flex><span>        TokenBucket,
+</span></span><span style=display:flex><span>        FixedWindow,
+</span></span><span style=display:flex><span>    ],
+</span></span><span style=display:flex><span>I)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>test_apply_limit_per_unit</span>(local_storage, limit_strategy):
+</span></span><span style=display:flex><span>    rule_descriptor <span style=color:#f92672>=</span> Descriptor(
+</span></span><span style=display:flex><span>        key<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;user_id&#34;</span>,
+</span></span><span style=display:flex><span>        requests_per_unit<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>,
+</span></span><span style=display:flex><span>        unit<span style=color:#f92672>=</span>Unit<span style=color:#f92672>.</span>SECOND,
+</span></span><span style=display:flex><span>    )
+</span></span><span style=display:flex><span>    token_bucket <span style=color:#f92672>=</span> limit_strategy(
+</span></span><span style=display:flex><span>        storage_backend<span style=color:#f92672>=</span>local_storage,
+</span></span><span style=display:flex><span>        rule_descriptor<span style=color:#f92672>=</span>rule_descriptor,
+</span></span><span style=display:flex><span>    )
+</span></span><span style=display:flex><span>    request <span style=color:#f92672>=</span> Request(path<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;dd&#34;</span>, data<span style=color:#f92672>=</span>{<span style=color:#e6db74>&#34;user_id&#34;</span>: <span style=color:#e6db74>&#34;1&#34;</span>})
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>assert</span> token_bucket<span style=color:#f92672>.</span>do_limit(request) <span style=color:#f92672>is</span> <span style=color:#66d9ef>False</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>assert</span> token_bucket<span style=color:#f92672>.</span>do_limit(request) <span style=color:#f92672>is</span> <span style=color:#66d9ef>True</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    test_now <span style=color:#f92672>=</span> datetime<span style=color:#f92672>.</span>datetime<span style=color:#f92672>.</span>now() <span style=color:#f92672>+</span> datetime<span style=color:#f92672>.</span>timedelta(seconds<span style=color:#f92672>=</span><span style=color:#ae81ff>3</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>with</span> freezegun<span style=color:#f92672>.</span>freeze_time(test_now):
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>assert</span> token_bucket<span style=color:#f92672>.</span>do_limit(request) <span style=color:#f92672>is</span> <span style=color:#66d9ef>False</span>
+</span></span></code></pre></div><p>the testing strategy is now passed to this test and it only tests the behavior.</p><p>Now we can rewrite the remaining tests as well:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#a6e22e>@pytest.mark.parametrize</span>(
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;limit_strategy&#34;</span>,
+</span></span><span style=display:flex><span>    [
+</span></span><span style=display:flex><span>        TokenBucket,
+</span></span><span style=display:flex><span>        FixedWindow,
+</span></span><span style=display:flex><span>    ],
+</span></span><span style=display:flex><span>I)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>test_apply_limit_per_value</span>(local_storage, limit_strategy):
+</span></span><span style=display:flex><span>    rule_descriptor <span style=color:#f92672>=</span> Descriptor(
+</span></span><span style=display:flex><span>        key<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;user_id&#34;</span>,
+</span></span><span style=display:flex><span>        requests_per_unit<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>,
+</span></span><span style=display:flex><span>        unit<span style=color:#f92672>=</span>Unit<span style=color:#f92672>.</span>SECOND,
+</span></span><span style=display:flex><span>    )
+</span></span><span style=display:flex><span>    token_bucket <span style=color:#f92672>=</span> limit_strategy(
+</span></span><span style=display:flex><span>        storage_backend<span style=color:#f92672>=</span>local_storage,
+</span></span><span style=display:flex><span>        rule_descriptor<span style=color:#f92672>=</span>rule_descriptor,
+</span></span><span style=display:flex><span>    )
+</span></span><span style=display:flex><span>    user_1_request <span style=color:#f92672>=</span> Request(path<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;dd&#34;</span>, data<span style=color:#f92672>=</span>{<span style=color:#e6db74>&#34;user_id&#34;</span>: <span style=color:#e6db74>&#34;1&#34;</span>})
+</span></span><span style=display:flex><span>    user_2_request <span style=color:#f92672>=</span> Request(path<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;dd&#34;</span>, data<span style=color:#f92672>=</span>{<span style=color:#e6db74>&#34;user_id&#34;</span>: <span style=color:#e6db74>&#34;2&#34;</span>})
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>assert</span> token_bucket<span style=color:#f92672>.</span>do_limit(user_1_request) <span style=color:#f92672>is</span> <span style=color:#66d9ef>False</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>assert</span> token_bucket<span style=color:#f92672>.</span>do_limit(user_2_request) <span style=color:#f92672>is</span> <span style=color:#66d9ef>False</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>assert</span> token_bucket<span style=color:#f92672>.</span>do_limit(user_1_request) <span style=color:#f92672>is</span> <span style=color:#66d9ef>True</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>assert</span> token_bucket<span style=color:#f92672>.</span>do_limit(user_2_request) <span style=color:#f92672>is</span> <span style=color:#66d9ef>True</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>@pytest.mark.parametrize</span>(
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;limit_strategy&#34;</span>,
+</span></span><span style=display:flex><span>    [
+</span></span><span style=display:flex><span>        TokenBucket,
+</span></span><span style=display:flex><span>        FixedWindow,
+</span></span><span style=display:flex><span>    ],
+</span></span><span style=display:flex><span>I)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>test_apply_limit_specific_value</span>(local_storage, limit_strategy):
+</span></span><span style=display:flex><span>    rule_descriptor <span style=color:#f92672>=</span> Descriptor(
+</span></span><span style=display:flex><span>        key<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;user_id&#34;</span>,
+</span></span><span style=display:flex><span>        value<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;1&#34;</span>,
+</span></span><span style=display:flex><span>        requests_per_unit<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>,
+</span></span><span style=display:flex><span>        unit<span style=color:#f92672>=</span>Unit<span style=color:#f92672>.</span>MINUTE,
+</span></span><span style=display:flex><span>    )
+</span></span><span style=display:flex><span>    token_bucket <span style=color:#f92672>=</span> limit_strategy(
+</span></span><span style=display:flex><span>        storage_backend<span style=color:#f92672>=</span>local_storage,
+</span></span><span style=display:flex><span>        rule_descriptor<span style=color:#f92672>=</span>rule_descriptor,
+</span></span><span style=display:flex><span>    )
+</span></span><span style=display:flex><span>    user_1_req <span style=color:#f92672>=</span> Request(path<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;dd&#34;</span>, data<span style=color:#f92672>=</span>{<span style=color:#e6db74>&#34;user_id&#34;</span>: <span style=color:#e6db74>&#34;1&#34;</span>})
+</span></span><span style=display:flex><span>    user_2_req <span style=color:#f92672>=</span> Request(path<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;dd&#34;</span>, data<span style=color:#f92672>=</span>{<span style=color:#e6db74>&#34;user_id&#34;</span>: <span style=color:#e6db74>&#34;2&#34;</span>})
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>assert</span> token_bucket<span style=color:#f92672>.</span>do_limit(user_1_req) <span style=color:#f92672>is</span> <span style=color:#66d9ef>False</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>assert</span> token_bucket<span style=color:#f92672>.</span>do_limit(user_2_req) <span style=color:#f92672>is</span> <span style=color:#66d9ef>False</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>assert</span> token_bucket<span style=color:#f92672>.</span>do_limit(user_1_req) <span style=color:#f92672>is</span> <span style=color:#66d9ef>True</span>
+</span></span></code></pre></div><h3 class=heading id=sliding-window-log>Sliding Window Log
+<a class=anchor href=#sliding-window-log>#</a></h3><p>As discussed earlier, the sliding window log does not take the time window fixed.
+Imagine a request comes in at 10:00:30, instead of looking at request count in
+the window 10:00 to 10:01
+we check the number of requests in the window of 09:59:30 till that request.</p><p>So the steps are:</p><ol><li>When a new request comes in save the timestamp into a list</li><li>Count all the requests within the time unit of the arrived request</li><li>If count more than allowed requests limit the request</li></ol><p>How this can be done?</p><p>We need to save the timestamp when each requests comes in.
+Then when the next request comes we need to query all requests in the previous minute.</p><p>Now the question is what data structure should be used here.
+We need a data structure which can search and return all the values within a range.</p><p>Redis provides <a href=https://redis.io/docs/data-types/sorted-sets/>sorted sets</a>
+which can provide an efficient way for finding a range of values in a list.</p><p>Although sorted sets are
+<a href=https://github.com/redis/redis/blob/unstable/src/t_zset.c>implemented</a>
+with hash map and <a href=https://brilliant.org/wiki/skip-lists>skip list</a>,
+we are going to use a naive approach for implementing them in local memory storage.
+This can be a good topic for another post.</p><p>Let&rsquo;s start implementing the algorithm.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>SlidingWindowLog</span>(AbstractStrategy):
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>__init__</span>(
+</span></span><span style=display:flex><span>        self,
+</span></span><span style=display:flex><span>        storage_backend: AbstractStorage,
+</span></span><span style=display:flex><span>        rule_descriptor: Descriptor,
+</span></span><span style=display:flex><span>    ):
+</span></span><span style=display:flex><span>        super(SlidingWindowLog, self)<span style=color:#f92672>.</span><span style=color:#a6e22e>__init__</span>(storage_backend, rule_descriptor)
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>interval_len_sec <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>rule_descriptor<span style=color:#f92672>.</span>unit<span style=color:#f92672>.</span>to_seconds()
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>interval_max <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>rule_descriptor<span style=color:#f92672>.</span>requests_per_unit
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>do_limit</span>(self, request: Request):
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>request <span style=color:#f92672>=</span> request
+</span></span><span style=display:flex><span>        request_logs_key <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>_get_request_logs_key()
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> request_logs_key <span style=color:#f92672>is</span> <span style=color:#66d9ef>None</span>:
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>False</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> self<span style=color:#f92672>.</span>_window_max_reached(request_logs_key):
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>True</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>False</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>_get_request_logs_key</span>(self):
+</span></span><span style=display:flex><span>        descriptor <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>rule_descriptor
+</span></span><span style=display:flex><span>        path <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>request<span style=color:#f92672>.</span>path
+</span></span><span style=display:flex><span>        key <span style=color:#f92672>=</span> descriptor<span style=color:#f92672>.</span>key
+</span></span><span style=display:flex><span>        value <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>request<span style=color:#f92672>.</span>data[key]
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> descriptor<span style=color:#f92672>.</span>value <span style=color:#f92672>is</span> <span style=color:#f92672>not</span> <span style=color:#66d9ef>None</span> <span style=color:#f92672>and</span> value <span style=color:#f92672>!=</span> descriptor<span style=color:#f92672>.</span>value:
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>None</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>else</span>:
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> path <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34;_&#34;</span> <span style=color:#f92672>+</span> key <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34;_&#34;</span> <span style=color:#f92672>+</span> value
+</span></span></code></pre></div><p>First we get key of the list holding request logs.
+Then we check if current windows max request count is reached or not.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>_window_max_reached</span>(self, window_key):
+</span></span><span style=display:flex><span>    self<span style=color:#f92672>.</span>storage_backend<span style=color:#f92672>.</span>sorted_set_remove(
+</span></span><span style=display:flex><span>        window_key,
+</span></span><span style=display:flex><span>        <span style=color:#ae81ff>0</span>,
+</span></span><span style=display:flex><span>        datetime<span style=color:#f92672>.</span>now()<span style=color:#f92672>.</span>timestamp() <span style=color:#f92672>-</span> self<span style=color:#f92672>.</span>interval_len_sec,
+</span></span><span style=display:flex><span>    )
+</span></span><span style=display:flex><span>    current_window_req_count <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>storage_backend<span style=color:#f92672>.</span>sorted_set_count(
+</span></span><span style=display:flex><span>        window_key,
+</span></span><span style=display:flex><span>        datetime<span style=color:#f92672>.</span>now()<span style=color:#f92672>.</span>timestamp() <span style=color:#f92672>-</span> self<span style=color:#f92672>.</span>interval_len_sec,
+</span></span><span style=display:flex><span>        datetime<span style=color:#f92672>.</span>now()<span style=color:#f92672>.</span>timestamp(),
+</span></span><span style=display:flex><span>    )
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> current_window_req_count <span style=color:#f92672>is</span> <span style=color:#66d9ef>None</span>:
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>storage_backend<span style=color:#f92672>.</span>sorted_set_add(window_key, datetime<span style=color:#f92672>.</span>now()<span style=color:#f92672>.</span>timestamp())
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>False</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>elif</span> current_window_req_count <span style=color:#f92672>&gt;=</span> self<span style=color:#f92672>.</span>interval_max:
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>True</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    self<span style=color:#f92672>.</span>storage_backend<span style=color:#f92672>.</span>sorted_set_add(window_key, datetime<span style=color:#f92672>.</span>now()<span style=color:#f92672>.</span>timestamp())
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>False</span>
+</span></span></code></pre></div><p>Before checking the request count,
+we need to remove all the request that are not in the current window.</p><p>Then we count the requests within the time unit and check if
+it&rsquo;s more than the allowed count for the interval.</p><h4 class=heading id=testing>Testing
+<a class=anchor href=#testing>#</a></h4><p>Same as how we tested the previous strategy we
+can add this new strategy to test parameters:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#a6e22e>@pytest.mark.parametrize</span>(
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;limit_strategy&#34;</span>,
+</span></span><span style=display:flex><span>    [
+</span></span><span style=display:flex><span>        TokenBucket,
+</span></span><span style=display:flex><span>        FixedWindow,
+</span></span><span style=display:flex><span>        SlidingWindowLog,
+</span></span><span style=display:flex><span>    ],
+</span></span><span style=display:flex><span>)
+</span></span></code></pre></div><p>we can add this strategy to previous tests,
+but there&rsquo;s also a new behavior we can test for this strategy.
+Since the sliding window algorithm does not allow over-limit requests
+at the edge of the time unit (like between 01:50 and 02:10) we can add test it.</p><p>So create a new test:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#a6e22e>@pytest.mark.parametrize</span>(
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;limit_strategy&#34;</span>,
+</span></span><span style=display:flex><span>    [
+</span></span><span style=display:flex><span>        SlidingWindowLog,
+</span></span><span style=display:flex><span>    ],
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>test_sliding_window_does_not_allow_requests_in_unit_edges</span>(
+</span></span><span style=display:flex><span>    local_storage, limit_strategy
+</span></span><span style=display:flex><span>):
+</span></span><span style=display:flex><span>    rule_descriptor <span style=color:#f92672>=</span> Descriptor(
+</span></span><span style=display:flex><span>        key<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;user_id&#34;</span>,
+</span></span><span style=display:flex><span>        requests_per_unit<span style=color:#f92672>=</span><span style=color:#ae81ff>2</span>,
+</span></span><span style=display:flex><span>        unit<span style=color:#f92672>=</span>Unit<span style=color:#f92672>.</span>MINUTE,
+</span></span><span style=display:flex><span>    )
+</span></span><span style=display:flex><span>    sliding_window <span style=color:#f92672>=</span> limit_strategy(
+</span></span><span style=display:flex><span>        storage_backend<span style=color:#f92672>=</span>local_storage,
+</span></span><span style=display:flex><span>        rule_descriptor<span style=color:#f92672>=</span>rule_descriptor,
+</span></span><span style=display:flex><span>    )
+</span></span><span style=display:flex><span>    user_1_req <span style=color:#f92672>=</span> Request(path<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;dd&#34;</span>, data<span style=color:#f92672>=</span>{<span style=color:#e6db74>&#34;user_id&#34;</span>: <span style=color:#e6db74>&#34;1&#34;</span>})
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    current_time <span style=color:#f92672>=</span> datetime<span style=color:#f92672>.</span>datetime<span style=color:#f92672>.</span>now()<span style=color:#f92672>.</span>replace(
+</span></span><span style=display:flex><span>        hour<span style=color:#f92672>=</span><span style=color:#ae81ff>0</span>, minute<span style=color:#f92672>=</span><span style=color:#ae81ff>0</span>, second<span style=color:#f92672>=</span><span style=color:#ae81ff>50</span>, microsecond<span style=color:#f92672>=</span><span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span>    )
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>with</span> freezegun<span style=color:#f92672>.</span>freeze_time(current_time):
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>assert</span> sliding_window<span style=color:#f92672>.</span>do_limit(user_1_req) <span style=color:#f92672>is</span> <span style=color:#66d9ef>False</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    test_now <span style=color:#f92672>=</span> current_time <span style=color:#f92672>+</span> datetime<span style=color:#f92672>.</span>timedelta(seconds<span style=color:#f92672>=</span><span style=color:#ae81ff>15</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>with</span> freezegun<span style=color:#f92672>.</span>freeze_time(test_now):
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>assert</span> sliding_window<span style=color:#f92672>.</span>do_limit(user_1_req) <span style=color:#f92672>is</span> <span style=color:#66d9ef>False</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>assert</span> sliding_window<span style=color:#f92672>.</span>do_limit(user_1_req) <span style=color:#f92672>is</span> <span style=color:#66d9ef>True</span>
+</span></span></code></pre></div><p>Notice in our test we set the initial time to a time near ending of a minute,
+then move the time forward to be in the next minute, previous algorithms wouldn&rsquo;t
+block this.
+But since the window is not fixed in this limiter it will block the third request,
+even if it&rsquo;s sent in the in the next minute. Nice improvement.</p><h3 class=heading id=sliding-window-count>Sliding Window Count
+<a class=anchor href=#sliding-window-count>#</a></h3><p>The sliding window log solves the problem of allowing over-limit
+requests at unit edges.</p><p>But this algorithm uses more storage since it&rsquo;s storing full timestmap.</p><p>To solve this problem, there is another approach to count requests in each window.
+When a request comes in calculate the current 1 minute window.
+This window spans the current minute and probably the previous minute.
+We can calculate what percentage of the rolling window is in previous window.
+Then we can use that percentage to assign a weight to previous window request count.</p><p>so it would be
+<code>total_requests = previous_window_weight * previous_window_count + current_window_count</code>.</p><p>For the implementation we use the previous way to create keys for each interval.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>SlidingWindowCount</span>(AbstractStrategy):
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>__init__</span>(
+</span></span><span style=display:flex><span>        self,
+</span></span><span style=display:flex><span>        storage_backend: AbstractStorage,
+</span></span><span style=display:flex><span>        rule_descriptor: Descriptor,
+</span></span><span style=display:flex><span>    ):
+</span></span><span style=display:flex><span>        super(SlidingWindowCount, self)<span style=color:#f92672>.</span><span style=color:#a6e22e>__init__</span>(storage_backend, rule_descriptor)
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>interval_len_sec <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>rule_descriptor<span style=color:#f92672>.</span>unit<span style=color:#f92672>.</span>to_seconds()
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>interval_max <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>rule_descriptor<span style=color:#f92672>.</span>requests_per_unit
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>do_limit</span>(self, request: Request):
+</span></span><span style=display:flex><span>        current_interval <span style=color:#f92672>=</span> str(int(datetime<span style=color:#f92672>.</span>now()<span style=color:#f92672>.</span>timestamp() <span style=color:#f92672>/</span> self<span style=color:#f92672>.</span>interval_len_sec))
+</span></span><span style=display:flex><span>        prev_interval <span style=color:#f92672>=</span> str(int(datetime<span style=color:#f92672>.</span>now()<span style=color:#f92672>.</span>timestamp() <span style=color:#f92672>/</span> self<span style=color:#f92672>.</span>interval_len_sec) <span style=color:#f92672>-</span> <span style=color:#ae81ff>1</span>)
+</span></span><span style=display:flex><span>        key <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>rule_descriptor<span style=color:#f92672>.</span>key
+</span></span><span style=display:flex><span>        path <span style=color:#f92672>=</span> request<span style=color:#f92672>.</span>path
+</span></span><span style=display:flex><span>        value <span style=color:#f92672>=</span> request<span style=color:#f92672>.</span>data[key]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        previous_interval_key <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>_get_counter_key(prev_interval, path, key, value)
+</span></span><span style=display:flex><span>        current_interval_key <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>_get_counter_key(current_interval, path, key, value)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> previous_interval_key <span style=color:#f92672>is</span> <span style=color:#66d9ef>None</span> <span style=color:#f92672>or</span> current_interval_key <span style=color:#f92672>is</span> <span style=color:#66d9ef>None</span>:
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>False</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>storage_backend<span style=color:#f92672>.</span>incr(current_interval_key)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        current_interval_counter <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>storage_backend<span style=color:#f92672>.</span>get(current_interval_key) <span style=color:#f92672>or</span> <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span>        previous_interval_counter <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>storage_backend<span style=color:#f92672>.</span>get(previous_interval_key) <span style=color:#f92672>or</span> <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        percent_of_previous_interval_overlap_current_window <span style=color:#f92672>=</span> (
+</span></span><span style=display:flex><span>            <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>            <span style=color:#f92672>-</span> (
+</span></span><span style=display:flex><span>                self<span style=color:#f92672>.</span>interval_len_sec
+</span></span><span style=display:flex><span>                <span style=color:#f92672>-</span> datetime<span style=color:#f92672>.</span>now()<span style=color:#f92672>.</span>timestamp() <span style=color:#f92672>%</span> self<span style=color:#f92672>.</span>interval_len_sec
+</span></span><span style=display:flex><span>            )
+</span></span><span style=display:flex><span>            <span style=color:#f92672>/</span> self<span style=color:#f92672>.</span>interval_len_sec
+</span></span><span style=display:flex><span>        )
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        total_requests <span style=color:#f92672>=</span> math<span style=color:#f92672>.</span>ceil(
+</span></span><span style=display:flex><span>            previous_interval_counter
+</span></span><span style=display:flex><span>            <span style=color:#f92672>*</span> percent_of_previous_interval_overlap_current_window
+</span></span><span style=display:flex><span>            <span style=color:#f92672>+</span> current_interval_counter
+</span></span><span style=display:flex><span>        )
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> total_requests <span style=color:#f92672>&gt;</span> self<span style=color:#f92672>.</span>interval_max:
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>True</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>False</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>_get_counter_key</span>(self, interval, path, key, value):
+</span></span><span style=display:flex><span>        descriptor <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>rule_descriptor
+</span></span><span style=display:flex><span>        key <span style=color:#f92672>=</span> descriptor<span style=color:#f92672>.</span>key
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> descriptor<span style=color:#f92672>.</span>value <span style=color:#f92672>is</span> <span style=color:#f92672>not</span> <span style=color:#66d9ef>None</span> <span style=color:#f92672>and</span> value <span style=color:#f92672>!=</span> descriptor<span style=color:#f92672>.</span>value:
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>None</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>else</span>:
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> path <span style=color:#f92672>+</span> interval <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34;_&#34;</span> <span style=color:#f92672>+</span> key <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34;_&#34;</span> <span style=color:#f92672>+</span> value
+</span></span></code></pre></div><p>Most of the code is similar to the sliding window log, except that we use
+both previous and current interval keys to count the requests.
+The mysterious formula <code>datetime.now().timestamp() % self.interval_len_sec</code>
+always outputs
+the number of seconds remaining until the end of interval and diving this by
+the interval
+length will give us the percentage of the current window passed. Subtracting
+this from 1
+will give how much of the sliding window is in the past interval to calculate
+the weight.</p><p>Also since our calculation can result in a floating point number we can round it
+up or down. Rounding up is chosen in this case.</p><h4 class=heading id=tests>Tests
+<a class=anchor href=#tests>#</a></h4><p>Since this is another implementation for the sliding window, we can add it as a parameter
+to all previous tests and the sliding window test.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#a6e22e>@pytest.mark.parametrize</span>(
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;limit_strategy&#34;</span>,
+</span></span><span style=display:flex><span>    [
+</span></span><span style=display:flex><span>        SlidingWindowLog,
+</span></span><span style=display:flex><span>        SlidingWindowCount,
+</span></span><span style=display:flex><span>    ],
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>test_sliding_window_does_not_allow_requests_in_unit_edges</span>
+</span></span></code></pre></div><p>And finally running all the tests, results in 18 tests for all of our strategies
+with very minimal test code.
+It&rsquo;s always good to write less code cause less code is better.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>tests<span style=color:#f92672>/</span>limit_strategy<span style=color:#f92672>/</span>test_limit_strategy<span style=color:#f92672>.</span>py <span style=color:#f92672>..............</span>                                                                         [ <span style=color:#ae81ff>77</span><span style=color:#f92672>%</span>]
+</span></span><span style=display:flex><span>tests<span style=color:#f92672>/</span>service<span style=color:#f92672>/</span>test_limiter<span style=color:#f92672>.</span>py <span style=color:#f92672>....</span>                                                                                                 [<span style=color:#ae81ff>100</span><span style=color:#f92672>%</span>]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>===========================================================</span> <span style=color:#ae81ff>18</span> passed <span style=color:#f92672>in</span> <span style=color:#ae81ff>0.20</span>s <span style=color:#f92672>===========================================================</span>
+</span></span></code></pre></div><h2 class=heading id=conclusion>Conclusion
+<a class=anchor href=#conclusion>#</a></h2><p>We now have implemented all different algorithms for our rate limiter.
+The true power of our abstractions are shown in the less code we have to
+write for each limiter, we can test them all with universal test cases,
+the rate limiter service can use them without knowing what the underlying strategy
+is.</p><p>In the next part we can see how to implement another storage backend such as redis,
+without having to change any code in rate limiting algorithms.</p></div></article><div class=single-pagination><hr><div class=flexnowrap><div class=single-pagination-prev><div class=single-pagination-container-prev><div class=single-pagination-text>←</div><div class=single-pagination-text><a href=/macos-productivity/>Personalize Macos Environment for Your Productivity</a></div></div></div><div class=single-pagination-next><div class=single-pagination-container-next><div class=single-pagination-text><a href=/build-a-crawler-in-golang/>Building a Web Crawler in Golang</a></div><div class=single-pagination-text>→</div></div></div></div><hr></div><div class=back-to-top><a href=#top>back to top</a></div></div></main></div><footer><p>Powered by
+<a href=https://gohugo.io/>Hugo</a>
+and
+<a href=https://github.com/tomfran/typo>tomfran/typo</a></p></footer></body><script src=/js/theme-switch.js></script><script defer src=/js/copy-code.js></script></html>

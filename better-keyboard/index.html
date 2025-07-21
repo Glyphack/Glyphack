@@ -1,0 +1,244 @@
+<!doctype html><html lang=en dir=ltr><head><meta charset=utf-8><meta name=viewport content="width=device-width"><link rel=icon type=image/ico href=https:/glyphack.com/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https:/glyphack.com/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https:/glyphack.com/favicon-32x32.png><link rel=icon type=image/png sizes=192x192 href=https:/glyphack.com/android-chrome-192x192.png><link rel=apple-touch-icon sizes=180x180 href=https:/glyphack.com/apple-touch-icon.png><meta name=description content><title>A Better Keyboard | Glyphack</title><link rel=canonical href=https://glyphack.com/better-keyboard/><meta property="og:url" content="https://glyphack.com/better-keyboard/"><meta property="og:site_name" content="Glyphack"><meta property="og:title" content="A Better Keyboard"><meta property="og:description" content="Imagine you want to make a better keyboard. Seems like a hard challenge for every company. What if ‘better’ meant compressing multiple key presses into one? Or have shortcut for your frequent actions. If you minimize the effort to use it then you are making it better for yourself.
+Challenge lies in the keyboard’s limited keys, and hard to press combinations like ctrl + alt + any key.
+Most of us learn to use tools as they are. But most of the time the product is not tailored to your needs out of the box."><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="blog"><meta property="article:published_time" content="2023-12-30T10:54:35+01:00"><meta property="article:modified_time" content="2023-12-30T10:54:35+01:00"><meta property="article:tag" content="Tools"><link rel=stylesheet href=/assets/combined.min.455b53327434f234e64209735e8469bb37465ce15a3ebc45a1a586dd5e74c673.css media=all><script async defer data-website-id=e8710f0c-a6f2-4d2d-8b95-ef6b66e72226 src=https://cloud.umami.is/script.js></script></head><body class=light><div class=content><header><div class=header><h1 class=header-title><a href=https://glyphack.com/>Glyphack</a></h1><div class=flex><p class=small><a href=/>/Home</a></p><p class=small><a href=/blog/>/Blog</a></p><p class=small><a href=/projects/>/Projects</a></p><p class=small><a href=/now/>/Now</a></p><p class=small><a href=/reading-list/>/Reading List</a></p><p class=small><a href=https://r.glyphack.com/s/s>/Reads This</a></p><p class=small><a href="https://docs.google.com/document/d/1XgC2Va8ZgJ2DrmRKpgd_7iVjv8aASnn8nzl6DgkR1mg/edit?usp=sharing">/Resume</a></p></div></div></header><main class=main><div class=breadcrumbs><a href=/>Home</a><span class=breadcrumbs-separator>/</span><a href=/blog/>Blog</a><span class=breadcrumbs-separator>/</span>
+<a href=/better-keyboard/>A Better Keyboard</a></div><div><article><header class=single-intro-container><h1 class=single-title>A Better Keyboard</h1><p class=single-readtime><time datetime=2023-12-30T10:54:35+01:00>December 30, 2023</time></p></header><div class=single-content><p>Imagine you want to make a better keyboard.
+Seems like a hard challenge for every company.
+What if &lsquo;better&rsquo; meant compressing multiple key presses into one? Or have shortcut for your frequent actions.
+If you minimize the effort to use it then you are making it better for yourself.</p><p>Challenge lies in the keyboard&rsquo;s limited keys, and hard to press combinations like <code>ctrl + alt + any key</code>.</p><p>Most of us learn to use tools as they are.
+But most of the time the product is not tailored to your needs out of the box.</p><p>None of the products produced are going to be designed based on your specific needs.
+One of the advantages of trying to use keyboard to make repetitive tasks easier is to reduce the attention needed for them.
+When these tasks will be easy enough that doing them <a href=https://www.scattered-thoughts.net/writing/moving-faster/>won&rsquo;t require attention</a>.
+Just like how when you learn touch typing, and suddenly you are just writing instead of looking at the keyboard, or frequently press the wrong key.
+You get faster.</p><p>Before going into details, keep in mind that the goal is to make your workflow easier.
+Some of these suggestions might be useful and others might be not.
+Take away the ideas with yourself and adjust it accordingly.</p><p>I implemented the improvements using the following tools:</p><ul><li><a href=https://www.hammerspoon.org/>Hammerspoon</a></li><li><a href=https://karabiner-elements.pqrs.org/>Karabiner</a></li></ul><p>These tools are exclusively for Mac. There are other alternatives for other platforms.</p><h2 class=heading id=remapping-keys>Remapping Keys
+<a class=anchor href=#remapping-keys>#</a></h2><p>Our keyboards are not designed for heavy usage of shortcuts.
+So you can start making shortcuts for stuff by setting them to <code>ctrl + T</code>,</p><p>This method presents two significant challenges:</p><ul><li>The easily accessible keys are already assigned, such as <code>CMD + T</code>.</li><li>Complex combinations become cumbersome: try pressing <code>CMD + ALT + ctrl + T</code>.</li></ul><p>The idea is that some keys can be used to do more than one thing.
+What keys can be used like this? Let&rsquo;s take a look at different keys.</p><ul><li>Keys you hold down to change how <em>other</em> keys behave, but that (usually) don&rsquo;t do anything if you use them on their own (like Shift and Control).<ul><li><code>Shift</code></li><li><code>Control</code></li><li><code>Alt</code></li><li><code>Command</code></li><li><code>Fn</code></li></ul></li><li>Keys that you press and release but don&rsquo;t want to &ldquo;repeat&rdquo; as you hold them (like Escape or Insert).<ul><li><code>Escape</code></li><li><code>Caps lock</code></li></ul></li></ul><p>You can use the keys that are designed to only be held to do a new thing if they are pressed. Or use the keys that are designed to be pressed to do another thing if they are held.</p><p>For example, I have set the following setting for Caps lock keys:</p><ul><li>On hold: hyper key <code>ctrl + SHIFT + ALT</code></li><li>On press: escape</li></ul><p>Why hyper?
+Because this new key press cannot conflict with any other shortcuts
+This allows you to create shortcuts like: hyper + H/J/K/L which is pretty comfortable to press.</p><p>I used to have CAPS lock set to <code>CMD + ctrl + SHIFT + ALT</code>.
+But I noticed that there is a MacOS specific key binding for taking a system snapshot with <code>CMD + ctrl + shift + alt + ,</code> which cannot be disabled and my system froze when I accidentally pressed this key.
+So I stopped using it and switched to the above combination instead.</p><p>You can do this using a <a href=https://karabiner-elements.pqrs.org/docs/manual/configuration/configure-complex-modifications/#create-your-own-rules>complex modification</a> in Karabiner:</p><pre tabindex=0><code>{
+    &#34;description&#34;: &#34;Capslock to Hyper&#34;,
+    &#34;manipulators&#34;: [
+        {
+            &#34;description&#34;: &#34;Click to Capslock, Hold to Hyper&#34;,
+            &#34;from&#34;: {
+                &#34;key_code&#34;: &#34;caps_lock&#34;,
+                &#34;modifiers&#34;: {
+                    &#34;optional&#34;: [
+                        &#34;any&#34;
+                    ]
+                }
+            },
+            &#34;to&#34;: [
+                {
+                    &#34;key_code&#34;: &#34;right_shift&#34;,
+                    &#34;modifiers&#34;: [
+                        &#34;right_control&#34;,
+                        &#34;right_option&#34;
+                    ]
+                }
+            ],
+            &#34;to_if_alone&#34;: [
+                {
+                    &#34;key_code&#34;: &#34;escape&#34;
+                }
+            ],
+            &#34;type&#34;: &#34;basic&#34;
+        }
+    ]
+}
+</code></pre><p>This key now can be used as your new shortcut key.
+<code>hyper + t</code> can be mapped to an action globally and does not conflict with anything.
+So any key on the keyboard can now be used for shortcuts, allowing numerous customization.</p><p>If there are keys on your keyboard that you don&rsquo;t use you can map them to frequently used keys.
+For example for vim users, the right command key on macs can be remapped to control.
+This makes pressing vim shortcuts like <code>ctrl + A</code> easier.</p><p>I have a split keyboard, so keys under my thumbs are easy to press, and I remapped them to do more stuff than usual.</p><p><figure><div class=img-container><img loading=lazy alt src=/split-keyboard-remapping.excalidraw.svg></div></figure></p><p>I changed a lot of keys since then but the ideas are useful. Just find the keys that works best for you.</p><h2 class=heading id=window-switching>Window Switching
+<a class=anchor href=#window-switching>#</a></h2><p>There are some default hotkeys on every system like <code>alt+tab</code>.
+This gives you a bit more advantage over switching windows with a mouse, <a href="https://www.youtube.com/watch?app=desktop&amp;v=Px0_8J0Wb-s">but there is room for improvements</a>.
+These shortcuts are designed for general problems.
+You can improve it for your own workflow.</p><p>First example is alt tabbing to switch windows.
+This simple thing that you probably do 100 times a day requires to:</p><ul><li>Take hand off home row</li><li>Press them multiple times to find the window you want</li><li>And if you have multiple windows then press <code>ctrl+tab</code> or <code>command+~</code> to get there
+Wouldn&rsquo;t it be good if you could do 80% of these window switches with a single shortcut that is more ergonomic?
+It depends, I switch between Browser, terminal and note app multiple times most of the time.
+You can assign a hotkey for these and only use alt tab for when you need to switch infrequently used windows.</li></ul><p>Here&rsquo;s the solution I use based on <a href=https://rakhesh.com/coding/using-hammerspoon-to-switch-apps/>this post</a></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-lua data-lang=lua><span style=display:flex><span>WINDOW_MANAGEMENT_KEY <span style=color:#f92672>=</span> { <span style=color:#e6db74>&#34;alt&#34;</span>, <span style=color:#e6db74>&#34;command&#34;</span>, <span style=color:#e6db74>&#34;ctrl&#34;</span> }
+</span></span><span style=display:flex><span>WINDOWS_SHORTCUTS <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>	{ <span style=color:#e6db74>&#34;J&#34;</span>, <span style=color:#e6db74>&#34;Brave Browser&#34;</span> },
+</span></span><span style=display:flex><span>	{ <span style=color:#e6db74>&#34;K&#34;</span>, <span style=color:#e6db74>&#34;WezTerm&#34;</span> },
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>local</span> <span style=color:#66d9ef>function</span> <span style=color:#a6e22e>launchOrFocusOrRotate</span>(app)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>local</span> focusedWindow <span style=color:#f92672>=</span> hs.window.focusedWindow()
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> focusedWindow <span style=color:#f92672>==</span> <span style=color:#66d9ef>nil</span> <span style=color:#66d9ef>then</span>
+</span></span><span style=display:flex><span>		hs.application.launchOrFocus(app)
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>end</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>local</span> focusedWindowApp <span style=color:#f92672>=</span> focusedWindow:application()
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>local</span> focusedWindowAppName <span style=color:#f92672>=</span> focusedWindowApp:name()
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>local</span> focusedWindowPath <span style=color:#f92672>=</span> focusedWindowApp:path()
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>local</span> appNameOnDisk <span style=color:#f92672>=</span> string.gsub(focusedWindowPath, <span style=color:#e6db74>&#34;/Applications/&#34;</span>, <span style=color:#e6db74>&#34;&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>local</span> appNameOnDisk <span style=color:#f92672>=</span> string.gsub(appNameOnDisk, <span style=color:#e6db74>&#34;.app&#34;</span>, <span style=color:#e6db74>&#34;&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>local</span> appNameOnDisk <span style=color:#f92672>=</span> string.gsub(appNameOnDisk, <span style=color:#e6db74>&#34;/System/Library/CoreServices/&#34;</span>, <span style=color:#e6db74>&#34;&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> focusedWindow <span style=color:#f92672>and</span> appNameOnDisk <span style=color:#f92672>==</span> app <span style=color:#66d9ef>then</span>
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>local</span> currentApp <span style=color:#f92672>=</span> hs.application.get(focusedWindowAppName)
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>local</span> appWindows <span style=color:#f92672>=</span> currentApp:allWindows()
+</span></span><span style=display:flex><span>		<span style=color:#75715e>-- https://www.hammerspoon.org/docs/hs.application.html#allWindows</span>
+</span></span><span style=display:flex><span>		<span style=color:#75715e>-- A table of zero or more hs.window objects owned by the application. From the current space.</span>
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#f92672>#</span>appWindows <span style=color:#f92672>==</span> <span style=color:#ae81ff>1</span> <span style=color:#66d9ef>then</span>
+</span></span><span style=display:flex><span>			currentApp:hide()
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>end</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#f92672>#</span>appWindows <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>0</span> <span style=color:#66d9ef>then</span>
+</span></span><span style=display:flex><span>			<span style=color:#75715e>-- It seems that this list order changes after one window get focused,</span>
+</span></span><span style=display:flex><span>			<span style=color:#75715e>-- Let&#39;s directly bring the last one to focus every time</span>
+</span></span><span style=display:flex><span>			<span style=color:#75715e>-- https://www.hammerspoon.org/docs/hs.window.html#focus</span>
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>if</span> app <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;Finder&#34;</span> <span style=color:#66d9ef>then</span>
+</span></span><span style=display:flex><span>				<span style=color:#75715e>-- If the app is Finder the window count returned is one more than the actual count, so I subtract</span>
+</span></span><span style=display:flex><span>				appWindows[<span style=color:#f92672>#</span>appWindows <span style=color:#f92672>-</span> <span style=color:#ae81ff>1</span>]:focus()
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>				appWindows[<span style=color:#f92672>#</span>appWindows]:focus()
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>end</span>
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>			hs.application.launchOrFocus(app)
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>end</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>		hs.application.launchOrFocus(app)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>end</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>end</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>for</span> _, shortcut <span style=color:#66d9ef>in</span> ipairs(WINDOWS_SHORTCUTS) <span style=color:#66d9ef>do</span>
+</span></span><span style=display:flex><span>	hs.hotkey.bind(WINDOW_MANAGEMENT_KEY, shortcut[<span style=color:#ae81ff>1</span>], <span style=color:#66d9ef>function</span>()
+</span></span><span style=display:flex><span>		launchOrFocusOrRotate(shortcut[<span style=color:#ae81ff>2</span>])
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>end</span>)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>end</span>
+</span></span></code></pre></div><p>The lua table can be easily expanded to open more applications.</p><h2 class=heading id=shortcut-for-frequent-actions>Shortcut for frequent actions
+<a class=anchor href=#shortcut-for-frequent-actions>#</a></h2><p>Other than switching apps there are some useful tools that is nice to have at hand.</p><p>Some suggestions are:</p><ul><li><a href=https://www.raycast.com/extensions/calendar>Viewing calendar and reminders</a></li><li><a href=https://www.raycast.com/extensions/clipboard-history>Clipboard history</a></li><li><a href=https://www.raycast.com/raycast/browser-bookmarks>Fuzzy find and open browser bookmarks</a></li><li><a href="https://www.hammerspoon.org/docs/hs.grid.html#:~:text=To%20resize%2Fmove%20the%20window,upper%2Dleft%20of%20the%20window.">Splitting, resizing & moving windows</a></li><li><a href=https://www.raycast.com/changelog/1-19-0>Fuzzy find open windows</a></li></ul><p>Raycast is easier to use for things you need to browse and search.
+For actions that don&rsquo;t include search and selection Hammerspoon is good.</p><p>These mappings can look like this:</p><pre tabindex=0><code>hyper + A move window to left half of the screen
+hyper + S move window to bottom half of the screen
+hyper + D move window to right half of the screen
+hyper + W move window to top half of the screen
+hyper + L clipboard history
+hyper + ; browser bookmarks
+hyper + M search open windows
+</code></pre><p>The following Hammerspoon config allows moving windows with shortcuts:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-lua data-lang=lua><span style=display:flex><span><span style=color:#75715e>-- left</span>
+</span></span><span style=display:flex><span>hs.hotkey.bind(WINDOW_MANAGEMENT_KEY, <span style=color:#e6db74>&#34;a&#34;</span>, <span style=color:#66d9ef>function</span>()
+</span></span><span style=display:flex><span>	hs.window.focusedWindow():moveToUnit({ <span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>0.5</span>, <span style=color:#ae81ff>1</span> })
+</span></span><span style=display:flex><span><span style=color:#66d9ef>end</span>)
+</span></span><span style=display:flex><span><span style=color:#75715e>-- right</span>
+</span></span><span style=display:flex><span>hs.hotkey.bind(WINDOW_MANAGEMENT_KEY, <span style=color:#e6db74>&#34;d&#34;</span>, <span style=color:#66d9ef>function</span>()
+</span></span><span style=display:flex><span>	hs.window.focusedWindow():moveToUnit({ <span style=color:#ae81ff>0.5</span>, <span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>0.5</span>, <span style=color:#ae81ff>1</span> })
+</span></span><span style=display:flex><span><span style=color:#66d9ef>end</span>)
+</span></span><span style=display:flex><span><span style=color:#75715e>-- up</span>
+</span></span><span style=display:flex><span>hs.hotkey.bind(WINDOW_MANAGEMENT_KEY, <span style=color:#e6db74>&#34;w&#34;</span>, <span style=color:#66d9ef>function</span>()
+</span></span><span style=display:flex><span>	hs.window.focusedWindow():moveToUnit({ <span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>0.5</span> })
+</span></span><span style=display:flex><span><span style=color:#66d9ef>end</span>)
+</span></span><span style=display:flex><span><span style=color:#75715e>-- down</span>
+</span></span><span style=display:flex><span>hs.hotkey.bind(WINDOW_MANAGEMENT_KEY, <span style=color:#e6db74>&#34;s&#34;</span>, <span style=color:#66d9ef>function</span>()
+</span></span><span style=display:flex><span>	hs.window.focusedWindow():moveToUnit({ <span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>0.5</span>, <span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>0.5</span> })
+</span></span><span style=display:flex><span><span style=color:#66d9ef>end</span>)
+</span></span><span style=display:flex><span><span style=color:#75715e>-- center</span>
+</span></span><span style=display:flex><span>hs.hotkey.bind(WINDOW_MANAGEMENT_KEY, <span style=color:#e6db74>&#34;c&#34;</span>, <span style=color:#66d9ef>function</span>()
+</span></span><span style=display:flex><span>	hs.window.focusedWindow():centerOnScreen()
+</span></span><span style=display:flex><span><span style=color:#66d9ef>end</span>)
+</span></span><span style=display:flex><span><span style=color:#75715e>-- full screen</span>
+</span></span><span style=display:flex><span>hs.hotkey.bind(WINDOW_MANAGEMENT_KEY, <span style=color:#e6db74>&#34;i&#34;</span>, <span style=color:#66d9ef>function</span>()
+</span></span><span style=display:flex><span>	hs.window.focusedWindow():moveToUnit({ <span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>1</span> })
+</span></span><span style=display:flex><span><span style=color:#66d9ef>end</span>)
+</span></span></code></pre></div><p>You can also use a layout mode for moving windows:
+<a href=https://github.com/jasonrudolph/keyboard#window-layout-mode>https://github.com/jasonrudolph/keyboard#window-layout-mode</a></p><h2 class=heading id=symbol-layers>Symbol Layers
+<a class=anchor href=#symbol-layers>#</a></h2><p>If you code a lot this will be your favorite section.
+Have you noticed how hard it is to type <code>_</code>?
+You need to take fingers off the home row, hold shift and press a key.
+Both keys are pressed with pinky fingers.</p><p>I find the idea <a href=https://gist.github.com/gsinclair/f4ab34da53034374eb6164698a0a8ace>here</a>,
+it suggests to map <code>(holding s)+k</code> to a symbol like <code>-</code>.</p><p>The idea is very similar to how we define different toggle and press behavior to keys.
+With Karabiner, you can modify s key to act like normal s but when pressed simultaneously with k become <code>-</code>.</p><p>Concerned about accidentally typing <code>sk</code> or <code>-</code>? You can adjust the speed at which the shortcut triggers with the
+<a href=https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to/hold-down-milliseconds/>hold down option</a>.</p><p>So imagine the following layout:</p><pre tabindex=0><code>    y u i o
+a   h j k l
+    n m , .
+</code></pre><p>When you hold a with left hand and any of the right keys it can be mapped to a symbol.</p><p>Here&rsquo;s my layout. I mention the key you need to hold on the left and what new keys are mapped to on the right.</p><p><code>s</code> for symbols:</p><pre tabindex=0><code>    y ` u # i $ o %
+s   h ~ j - k - l !
+    n   m + , + . @
+</code></pre><p><code>f</code> for delimiters:</p><pre tabindex=0><code>    y   u { i } o ^
+f   h &lt; j ( k ) l &amp;
+    n &gt; m [ , ] . *
+</code></pre><p>So just set these stuff for different combinations that are hard to press.
+I even have <code>a+u</code> for <code>tab</code> and <code>a+i</code> for <code>ctrl+tab</code>.</p><p>For implementing this in Karabiner follow the guide above.
+Since Karabiner uses json files for configuration writing all of this by hand is time consuming. You can use a tool like Goku (brew install yqrashawn/goku/goku) instead.
+Here is my <a href=https://github.com/Glyphack/dotfiles/blob/20b97e675532db0bf8d73068fec1dd3050ad2fc5/karabiner/karabiner.json#L1>giant json</a> Karabiner configuration.</p><p>For doing normal JSON you need the following Karabiner rules for :</p><pre tabindex=0><code>{
+                &#34;from&#34;: {
+                  &#34;key_code&#34;: &#34;u&#34;,
+                  &#34;modifiers&#34;: {
+                    &#34;optional&#34;: [
+                      &#34;any&#34;
+                    ]
+                  }
+                },
+                &#34;to&#34;: [
+                  {
+                    &#34;key_code&#34;: &#34;open_bracket&#34;,
+                    &#34;modifiers&#34;: [
+                      &#34;left_shift&#34;
+                    ]
+                  }
+                ],
+                &#34;conditions&#34;: [
+                  {
+                    &#34;name&#34;: &#34;f-mode&#34;,
+                    &#34;value&#34;: 1,
+                    &#34;type&#34;: &#34;variable_if&#34;
+                  }
+                ],
+                &#34;type&#34;: &#34;basic&#34;
+              },
+              {
+                &#34;type&#34;: &#34;basic&#34;,
+                &#34;parameters&#34;: {
+                  &#34;basic.simultaneous_threshold_milliseconds&#34;: 250
+                },
+                &#34;to&#34;: [
+                  {
+                    &#34;set_variable&#34;: {
+                      &#34;name&#34;: &#34;f-mode&#34;,
+                      &#34;value&#34;: 1
+                    }
+                  },
+                  {
+                    &#34;key_code&#34;: &#34;open_bracket&#34;,
+                    &#34;modifiers&#34;: [
+                      &#34;left_shift&#34;
+                    ]
+                  }
+                ],
+                &#34;from&#34;: {
+                  &#34;simultaneous&#34;: [
+                    {
+                      &#34;key_code&#34;: &#34;f&#34;
+                    },
+                    {
+                      &#34;key_code&#34;: &#34;u&#34;
+                    }
+                  ],
+                  &#34;simultaneous_options&#34;: {
+                    &#34;detect_key_down_uninterruptedly&#34;: true,
+                    &#34;key_down_order&#34;: &#34;strict&#34;,
+                    &#34;key_up_order&#34;: &#34;strict_inverse&#34;,
+                    &#34;key_up_when&#34;: &#34;any&#34;,
+                    &#34;to_after_key_up&#34;: [
+                      {
+                        &#34;set_variable&#34;: {
+                          &#34;name&#34;: &#34;f-mode&#34;,
+                          &#34;value&#34;: 0
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+</code></pre><h2 class=heading id=not-only-speed-but-ergonomics>Not Only Speed but ergonomics
+<a class=anchor href=#not-only-speed-but-ergonomics>#</a></h2><p>These customization help with removing uncomfortable keys you need to press.
+The benefits are immediate - less strain on your fingers and wrists due to reduced movement, and a mind unburdened from managing mundane tasks like locating the Terminal window.</p></div></article><div class=single-pagination><hr><div class=flexnowrap><div class=single-pagination-prev><div class=single-pagination-container-prev><div class=single-pagination-text>←</div><div class=single-pagination-text><a href=/contributing-to-python-docs/>TIL Secret to Open Source Contribution & Contributing to Python Docs</a></div></div></div><div class=single-pagination-next><div class=single-pagination-container-next><div class=single-pagination-text><a href=/five-thousands-lines-of-kotlin/>Five Thousands Lines of Kotlin</a></div><div class=single-pagination-text>→</div></div></div></div><hr></div><div class=back-to-top><a href=#top>back to top</a></div></div></main></div><footer><p>Powered by
+<a href=https://gohugo.io/>Hugo</a>
+and
+<a href=https://github.com/tomfran/typo>tomfran/typo</a></p></footer></body><script src=/js/theme-switch.js></script><script defer src=/js/copy-code.js></script></html>

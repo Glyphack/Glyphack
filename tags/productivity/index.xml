@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Productivity on Glyphack</title><link>https://glyphack.com/tags/productivity/</link><description>Recent content in Productivity on Glyphack</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 07 Sep 2022 23:22:58 +0430</lastBuildDate><atom:link href="https://glyphack.com/tags/productivity/index.xml" rel="self" type="application/rss+xml"/><item><title>Planning My Day</title><link>https://glyphack.com/planning-my-day/</link><pubDate>Wed, 07 Sep 2022 23:22:58 +0430</pubDate><guid>https://glyphack.com/planning-my-day/</guid><description>&lt;p>A while back I started planning my day before starting my day. I did this because I wanted to have a morning routine for myself,
+but most of the time I found myself starting to pickup something to read or already replying to emails or slack. So by setting this
+rule for myself to write down everything I want to do for the day first, helped to overcome this habit.&lt;/p>
+&lt;p>Since then I found some improvements that can be done along with writing down the plan for the day. I&amp;rsquo;ll list my observation here, and my
+goal is to implement these in the &lt;a href="https://github.com/Glyphack/koal">koal&lt;/a> app, as a default way of planning the day.&lt;/p>
+&lt;h2 class="heading" id="choosing-what-to-do">
+Choosing what to do
+&lt;a class="anchor" href="#choosing-what-to-do">#&lt;/a>
+&lt;/h2>
+&lt;p>I have a long list of things I want to try/learn/experiment; and the list continues to expand everyday when I come across new things.
+So in this situation my mind is full of different things to do, I cannot concentrate on one thing and finish it in a reasonable time.
+Sometimes I saw that It&amp;rsquo;s been months that I&amp;rsquo;m working on something without making much progress and that was because I did not spend
+time continuously to finish it.&lt;/p>
+&lt;p>One thing that I think is related to this is this quote from &lt;a href="https://jamesclear.com/atomic-habits">atomic habits book&lt;/a>&lt;/p>
+&lt;blockquote>
+&lt;p>Success is the product of daily habits—not once-in-a-lifetime transformations.&lt;/p>&lt;/blockquote>
+&lt;p>It tries to say that you don&amp;rsquo;t reach your goals in a single step, you create daily habits based on them.
+I borrowed this definition of success and tried to use it in my planning.&lt;/p>
+&lt;p>This is the first thing I realized I have to do:
+&lt;strong>If I want to do something I have to do it everyday, no matter how small is my progress is&lt;/strong>&lt;/p>
+&lt;p>This helps a lot on different aspects of reaching my goal.
+When I do my work continuously I&amp;rsquo;m always aware of where I left off,
+I could more easily get in the zone, and needed less time to get focused.
+This method can be very powerful even if you &lt;a href="https://medium.com/@alexallain/ten-minutes-a-day-e2fa1084f924">only spend 10 minutes a day on something&lt;/a>.&lt;/p>
+&lt;blockquote>
+&lt;p>How, exactly, did I manage to write a book in this short a time? I had one simple rule: I had to work on the book for just ten minutes, every day, no excuses. Ever.&lt;/p>
+&lt;p>The original reason I tracked my time, in fact, was that I wanted to motivate myself by having a streak of days, and I figured that instead of just tallying check marks, I’d write down exactly how long I spent. It worked — I never missed a day.&lt;/p>&lt;/blockquote>
+&lt;p>A challenge that comes with this approach is that I no longer can have so many ongoing work at once,
+I decided to re plan my goals so they are:&lt;/p>
+&lt;ul>
+&lt;li>more specific: instead of saying I want to learn a tool I said I want to use the tool do make something.&lt;/li>
+&lt;li>split into approachable goals: an example was that I wanted to get 1800 chess ELO, but this journey is not a single step, in each ELO range you need to focus on something and get better at it. So it split this into two parts of getting to 1400 and the getting to 1800&lt;/li>
+&lt;/ul>
+&lt;p>Then I picked only 5 or 6 goals at each point, I had to have enough time for all of them to make continuous progress on each.
+Each day I started by browsing my current work, thinking what is the next small step I can take today and write it down in Koal.&lt;/p>
+&lt;h2 class="heading" id="repetitive-tasks">
+Repetitive tasks
+&lt;a class="anchor" href="#repetitive-tasks">#&lt;/a>
+&lt;/h2>
+&lt;p>There are things I want to do everyday, like my morning routine.
+Having a prepared list of these kind of work saves a lot of time,
+because I don&amp;rsquo;t have to remember, and write them down everyday.
+Even some of my goals consists of repetitive tasks,
+like for chess I wanted to play a game everyday.&lt;/p>
+&lt;p>Writing down this list also helped me with creating a habit of doing these things, For example when I
+added meditation to this list, only by seeing this everyday I did not forgot about it.&lt;/p>
+&lt;p>For me this list is very simple, I just wrote down things I have to do. There are some things that I don&amp;rsquo;t
+do everyday but I still listed them only to not forget to do them.&lt;/p>
+&lt;h2 class="heading" id="being-focused-on-tasks">
+Being focused on tasks
+&lt;a class="anchor" href="#being-focused-on-tasks">#&lt;/a>
+&lt;/h2>
+&lt;p>I continued with my approach for some time and realized there are somethings I need to do to improve my focus.&lt;/p>
+&lt;p>Sometimes I tried to do multi tasking because I had number of small things to do, So when I was waiting for something to finish
+I started writing down an email, and if it was finished I got back to it and then I lost my focus.&lt;/p>
+&lt;p>Sometimes I was not even waiting for something but I just jumped to a different thing, because I was not focused.
+Some tasks require you to be focused for the whole time to finish it, like writing a blog post or writing code,
+In these cases I could not do something that steals my focus like browsing social media while I&amp;rsquo;m waiting.
+But there are things that do not steal the focus, like pouring a cup of tea or doing the dishes.&lt;/p>
+&lt;p>I slightly changed my habit to only do these kind of tasks that do not require a context switch,
+while I&amp;rsquo;m blocked on my current task.&lt;/p>
+&lt;p>How to change this habit?&lt;/p>
+&lt;ul>
+&lt;li>Try to have a list of things you can do while waiting.&lt;/li>
+&lt;li>Use a pomodoro or a time tracker, this helps to focus because it only requires a short amount of focused work.&lt;/li>
+&lt;li>Rewarding myself after the focus time, &lt;a href="https://www.frugalconfessions.com/save-me-money/reward-yourself/">this list&lt;/a> is a good one if you want to get started&lt;/li>
+&lt;/ul>
+&lt;h2 class="heading" id="having-an-uninterrupted-focus-time">
+Having an uninterrupted focus time
+&lt;a class="anchor" href="#having-an-uninterrupted-focus-time">#&lt;/a>
+&lt;/h2>
+&lt;p>Not all of the day I have the same productivity and energy, I found that I achieve the most when I&amp;rsquo;m working uninterrupted.
+To leverage this, I started to mark a time window of 2-3 hours for doing focused and uninterrupted work.
+This is really important to set right, in different days I have meetings at different hours and some days I have a busy morning,
+and some days I have a busy afternoon.
+I try to find a time window that I can block for myself to focus on important things I have to do.&lt;/p>
+&lt;p>In the planning I also write down when is this uninterrupted focus time, when the time comes I put my phone away and minimize
+the chance of loosing focus.&lt;/p>
+&lt;h2 class="heading" id="choosing-one-thing-to-complete-everyday">
+Choosing one thing to complete everyday
+&lt;a class="anchor" href="#choosing-one-thing-to-complete-everyday">#&lt;/a>
+&lt;/h2>
+&lt;p>While I have a list of things to do, I know what is the most important one for today to complete.
+This can be something from my work that I want to get done, or reaching a milestone in one of the goals.
+This task is very important because it brings me joy and motivation when I finish it.&lt;/p>
+&lt;p>I mark the important task of the day and try to start that one during my uninterrupted time. This helps me to make sure I can get it done.
+The other benefit is that every few days I reach an important milestone in my goals or work,
+Which means that I&amp;rsquo;m one step closer to finish it.
+This task does not have to be a serious deadline or anything, it&amp;rsquo;s just a thing I decide on.
+For example if I&amp;rsquo;m working on a new feature the important part is to sending it for review.
+When I know today is the day for it to be done I use my most productive time to finish it.&lt;/p>
+&lt;p>When I started to mark the important task to be done for a day,
+I made a lot more progress in my goals. Because I was finishing these important milestones when it was needed for progress.
+It&amp;rsquo;s like there are some parts of each goal which require a lot of effort to get it done.
+If I don&amp;rsquo;t put some serious time on my goals from time to time I cannot make significant progress.&lt;/p>
+&lt;h2 class="heading" id="writing-down-detailed-to-dos">
+Writing down detailed to-dos
+&lt;a class="anchor" href="#writing-down-detailed-to-dos">#&lt;/a>
+&lt;/h2>
+&lt;p>While to-do list should be short I found it useful to add what I need for the task to be done in the task.
+When I add an entry of reading the article about something I attach the link there.
+If I want to check the to-do search the google for the article and read it I might encounter
+things that can steal my focus along the way, like finding another interesting article in the search result.&lt;/p>
+&lt;h2 class="heading" id="leverage-boredom">
+Leverage Boredom
+&lt;a class="anchor" href="#leverage-boredom">#&lt;/a>
+&lt;/h2>
+&lt;p>People &lt;a href="https://www.science.org/content/article/people-would-rather-be-electrically-shocked-left-alone-their-thoughts">do anything&lt;/a> to escape boredom.&lt;/p>
+&lt;p>When I plan my day I try to plan as much as I can so I don&amp;rsquo;t do anything outside the planning, in this way I either have to do the stuff
+I planned for or do nothing. This helps to avoid procrastination.&lt;/p>
+&lt;p>This is very hard to get write, I sometimes forget some chore tasks or something unplanned happens, but the good part is most of the day
+I&amp;rsquo;m facing my plan and can&amp;rsquo;t do other things before complete the tasks.&lt;/p>
+&lt;h2 class="heading" id="rewarding">
+Rewarding
+&lt;a class="anchor" href="#rewarding">#&lt;/a>
+&lt;/h2>
+&lt;p>Most of my motivation to do something comes from either the joy of doing the thing or the joy of finishing it.
+For some goals(specially the ones that takes more time) it&amp;rsquo;s hard to have these two.
+For example if your goal is to study for something for 3-4 months it&amp;rsquo;s gonna be very hard to keep the motivation.
+I wish I would know sooner that I have to reward myself for doing my tasks, and this really works well with these kind of tasks.&lt;/p>
+&lt;p>I try to reward myself after doing a couple of tasks, this can be a video game or watching a YouTube video,
+but there are also other resources to &lt;a href="https://www.frugalconfessions.com/save-me-money/reward-yourself/">reward yourself without money&lt;/a>.
+One other effective method is to reward yourself with money after doing something. For example I can put aside 10$ each
+time I do X and use that money to buy something I like.
+When I started streaming my rule was that I won&amp;rsquo;t buy fancy mic/webcam stuff until I create videos for certain amount of time.&lt;/p>
+&lt;p>One way to apply this can be by having a list of rewards beside items planned for the day.&lt;/p>
+&lt;h2 class="heading" id="conclusion">
+Conclusion
+&lt;a class="anchor" href="#conclusion">#&lt;/a>
+&lt;/h2>
+&lt;p>Using this approach and planning the tasks in the beginning of the day, helped me a lot on being more organized, and following
+my goals. To summarize the full list into steps for planning the day:&lt;/p>
+&lt;ol>
+&lt;li>Going through list of current ongoing projects and see list what to do next for each&lt;/li>
+&lt;li>Going over repetitive tasks and add them to my current list&lt;/li>
+&lt;li>Setting my uninterrupted focus time for the day&lt;/li>
+&lt;li>Getting started on the tasks, setting pomodoro timer&lt;/li>
+&lt;li>After some tasks checking my reward lists and pick up one to enjoy&lt;/li>
+&lt;li>If anything is left from the work which I know have to pick up tomorrow I write it down in a note.&lt;/li>
+&lt;/ol>
+&lt;p>I&amp;rsquo;ll try to update the list if I find more useful tricks but for now this is it. Hope you enjoyed it.&lt;/p></description></item></channel></rss>

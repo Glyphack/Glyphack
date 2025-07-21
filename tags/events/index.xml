@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Events on Glyphack</title><link>https://glyphack.com/tags/events/</link><description>Recent content in Events on Glyphack</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 29 May 2024 22:55:24 +0200</lastBuildDate><atom:link href="https://glyphack.com/tags/events/index.xml" rel="self" type="application/rss+xml"/><item><title>Camping at Vresselse Bos</title><link>https://glyphack.com/vresselse-camping/</link><pubDate>Wed, 29 May 2024 22:55:24 +0200</pubDate><guid>https://glyphack.com/vresselse-camping/</guid><description>&lt;p>I had some time in between switching jobs and decided to go for a camping trip.
+My first time in the Netherlands.&lt;/p>
+&lt;p>After looking up some places I chose to go to &lt;a href="https://nl.wikipedia.org/wiki/Vresselse_Bos">Vresselse Bos&lt;/a>
+I rented a tent from Airbnb.
+The tent was close to a village called Nijnsel.
+The way to get there was train to Eindhoven and then a bus to Nijnsel, then a 40-minute walk from there.
+After about an hour walk to the east side after exiting the village there is a forest.
+The tent itself and the area surrounding it was quite big.
+After entering the fence gate, there was a long path surrounded with trees to the tent.
+Inside were wooden furniture that gave you the feeling of living in the woods and a warm blanket to survive.
+And most importantly, a large barrel of drinking water.&lt;/p>
+&lt;p>In front of the tent there was a &lt;a href="https://en.wikipedia.org/wiki/Dry_toilet">dry toilet&lt;/a> and shower.
+Shower was good, but I soon learned that water cannot stop a hungry mosquito.
+And on the right side there was a fire pit with tree trunks around it to sit.&lt;/p>
+&lt;p>The shirt 24 hours I was too tired to do anything after the long walk with my backpack.
+So I sat down under the trees and watched birds and sunset.&lt;/p>
+&lt;p>I started the second day with preparing breakfast.
+I brought food with myself for the whole trip.
+Apples and bananas, Lentils and red lentils(the best thing seriously), Potato eggplant Tomato, Eggs, Walnuts and Pistachios.
+These were easy to keep in a cold area and none of them got rotten.&lt;/p>
+&lt;p>My favorite meal lentil soup: Pour water over lentil and red lentils with olive oil pepper and salt, leave it for 45 minutes, and then you got a soup.
+Well actually the original recipe does not have red lentils, but I discovered this myself.
+The other dish I made there was &lt;a href="https://en.wikipedia.org/wiki/Mirza_ghassemi">Mirza Ghasemi&lt;/a>.
+It&amp;rsquo;s very good with grilled eggplant.&lt;/p>
+&lt;p>I brought some food back because I was nothing eating as much as normal days.
+It sounds contradictory I&amp;rsquo;m really curious about the reason. Maybe because I was not eating on schedule but just when I was hungry.&lt;/p>
+&lt;p>On second and third day of the trip, I was super excited and energized.
+I did not have internet, but it was not boring.&lt;/p>
+&lt;p>I went for hiking, the forest was massive.
+You could stand in the middle and look around and don&amp;rsquo;t see anything other than trees and plants in horizon.
+The nature is unpredictable and beautiful.
+No two footsteps were the same, the height is different or the moisture of the soil.
+I was giving full attention when walking there.
+Some branches falling down occasionally, so I had to keep an eye.
+There were a lot of canker worms crawling up to a tree.
+I hit a lot of them, and it&amp;rsquo;s hard to get them off, another reason to watch steps.
+Specially in the first few days I was not paying full attention to the surroundings.&lt;/p>
+&lt;p>I saw squirrels, cats but no wild big animal there.
+But there were a lot of insects and I got a lot of bites from them.
+The most interesting thing I found was an ant nest. There were a lot of them and when they walked I could hear the sound of them walking. I brought them sugar the other day, but they did not like it. They were more interesting in getting their food in the natural way.&lt;/p>
+&lt;p>It&amp;rsquo;s the complete opposite of daily life were every step and route is predictable.&lt;/p>
+&lt;p>I then ate lunch and did some reading, then another hike.
+It was like I can not finish the day.
+I did a lot but still was afternoon.
+There are a lot of hours in a day if there is no internet.&lt;/p>
+&lt;p>On forth day I started using my laptop to read blogs and programming.
+I downloaded a few blogs I liked before going there, so I had access to those.
+I had also downloaded Python and Rust docs.
+If you think it&amp;rsquo;s not possible to program without Google, it is.
+Some people might even say it&amp;rsquo;s not possible to program without ChatGPT, sad.
+It was a pleasant experience to do these activities in the jungle.
+No distractions, No time limit, and bird sounds.&lt;/p>
+&lt;p>In the last days I recorded some videos talking about different stuff, just thinking out loud.
+They are on my &lt;a href="https://www.youtube.com/@glyphack/videos">YouTube channel&lt;/a> and I liked it.
+It&amp;rsquo;s very similar writing.&lt;/p>
+&lt;hr>
+&lt;p>Overall the experience was wonderful.
+I got up with bird noises when the sun went up and slept with it went down.
+I was away form the daily life stress.
+What time is it? Who cares.
+I was more focused there, there was nothing to steal my attention other than nature.
+I felt different physically as well not sure how much of it was because I was not under stress.&lt;/p>
+&lt;p>Since I had to spend time on basic needs like food I was more physically active and enjoyed the meals more.
+I also eat less that I normally eat, 1 or 2 meals per day only soup some days.
+Although I was more active I was feeling full.
+The thing was that I was eating more slowly and enjoying the moment.&lt;/p>
+&lt;p>About the no internet part, well I wanted to turn it off to not have distractions and the micro stress shock that it gives me.
+Of course, I needed the information on it.&lt;/p>
+&lt;p>I mentioned that I downloaded a few pages before I go there.
+I used this &lt;code>wget&lt;/code> command to download any site:&lt;/p>
+&lt;pre tabindex="0">&lt;code>wget -m -k -p -E -np --limit-rate=200k
+&lt;/code>&lt;/pre>&lt;p>And as much as it&amp;rsquo;s hard to believe, it&amp;rsquo;s doable.
+I read and coded for a few hours each day.
+The only bummer is that you cannot open links inside posts, I just saved them for when I&amp;rsquo;m back.
+It is kind a good thing because you don&amp;rsquo;t get distracted while reading.
+I&amp;rsquo;m sad that my link collector requires internet to work, time to question choices.&lt;/p>
+&lt;p>I read a bunch of blogs and books there all worthy to read.&lt;/p>
+&lt;p>The blogs read there:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://www.unqualified-reservations.org">https://www.unqualified-reservations.org&lt;/a>&lt;/li>
+&lt;li>&lt;a href="http://www.catb.org/~esr/">http://www.catb.org/~esr/&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://ranprieur.com">https://ranprieur.com&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://datagenerics.com">https://datagenerics.com&lt;/a> my favorite math puzzle blog&lt;/li>
+&lt;li>&lt;a href="https://starslatecodex.com">https://starslatecodex.com&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://geohot.github.io/blog/">https://geohot.github.io/blog/&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://lukesmith.xyz">https://lukesmith.xyz&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://notrelated.xyz">https://notrelated.xyz&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://paulgraham.com">https://paulgraham.com&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>I also took two longer writings:&lt;/p>
+&lt;ul>
+&lt;li>Antifragile by Nassim Taleb&lt;/li>
+&lt;li>&lt;a href="https://www.washingtonpost.com/wp-srv/national/longterm/unabomber/manifesto.decsn.htm">Unabomber Manifesto&lt;/a> read the Washington post version and spend their bandwidth&lt;/li>
+&lt;li>&lt;a href="http://localroger.com/prime-intellect">The Metamorphosis of Prime Intellect&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>I also worked on my project &lt;a href="https://github.com/Glyphack/enderpy">Enderpy&lt;/a> there, I made great progress toward adding the LSP hover action to the editor.&lt;/p>
+&lt;p>Now that I&amp;rsquo;m back I try to make my life more like that.
+Remove the stress and distractions.
+Do more physical activities specially to provide my basic needs.
+Worry less about stuff, and use the thinking to think about what I like.&lt;/p></description></item></channel></rss>

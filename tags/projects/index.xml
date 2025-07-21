@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Projects on Glyphack</title><link>https://glyphack.com/tags/projects/</link><description>Recent content in Projects on Glyphack</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 24 Aug 2024 15:15:06 +0200</lastBuildDate><atom:link href="https://glyphack.com/tags/projects/index.xml" rel="self" type="application/rss+xml"/><item><title>A better go test</title><link>https://glyphack.com/better-gotest/</link><pubDate>Sat, 24 Aug 2024 15:15:06 +0200</pubDate><guid>https://glyphack.com/better-gotest/</guid><description>&lt;p>My job now involves doing some Golang work and this post is about how &lt;code>go test&lt;/code> command can be improved.&lt;/p>
+&lt;p>Until now, I never actually thought about improving the test command for a language.
+But with Golang I have serious problems with reporting test results on command line.
+Test output is not readable, The usual test flags you expect are not there.&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://github.com/golang/go/pull/62714">Fail fast option does not work&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://stackoverflow.com/questions/25380799/listing-of-pass-and-failed-test-cases-in-go">You cannot see the list of failed tests&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://docs.pytest.org/en/7.1.x/how-to/cache.html">Does not offer rerun options like pytest&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>I noticed the problem when I started working on a quite large golang project with a lot of tests.
+When I run the tests it starts printing a lot of information, most of it are not important.&lt;/p>
+&lt;p>I found &lt;a href="https://github.com/gotestyourself/gotestsum">gotestsum&lt;/a> package which seems to do what I want.
+I like it, but it seems to focus on other things that I don&amp;rsquo;t find problematic.
+For example, it has watch option, which is not really needed for the test runner.
+You have other tools to watch and run commands.&lt;/p>
+&lt;p>Happy that I found an opportunity I created &lt;a href="https://github.com/Glyphack/gotest">gotest&lt;/a>.
+It&amp;rsquo;s a very simple tool. It takes in the output of &lt;code>go test&lt;/code> command and organizes output to a human friendly output. I&amp;rsquo;m planning to add more commands and see how far can I improve the testing on CLI. You don&amp;rsquo;t have to install an IDE just for running tests easily, it&amp;rsquo;s not Java.&lt;/p>
+&lt;p>&lt;strong>Why not contributing to Golang?&lt;/strong>&lt;/p>
+&lt;p>I think some of these features could be added in the &lt;code>go test&lt;/code>, and I&amp;rsquo;m going to use this project as an experiment to see how they turn out to be.&lt;/p>
+&lt;p>If you are interested let me know.&lt;/p></description></item></channel></rss>

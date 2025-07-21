@@ -1,0 +1,528 @@
+<!doctype html><html lang=en dir=ltr><head><meta charset=utf-8><meta name=viewport content="width=device-width"><link rel=icon type=image/ico href=https:/glyphack.com/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https:/glyphack.com/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https:/glyphack.com/favicon-32x32.png><link rel=icon type=image/png sizes=192x192 href=https:/glyphack.com/android-chrome-192x192.png><link rel=apple-touch-icon sizes=180x180 href=https:/glyphack.com/apple-touch-icon.png><meta name=description content><title>Building a Web Crawler in Golang | Glyphack</title><link rel=canonical href=https://glyphack.com/build-a-crawler-in-golang/><meta property="og:url" content="https://glyphack.com/build-a-crawler-in-golang/"><meta property="og:site_name" content="Glyphack"><meta property="og:title" content="Building a Web Crawler in Golang"><meta property="og:description" content="Introduction But Why Building Another Crawler? High Level Design URL Frontier Selector Workers Fetcher Content Processor Link Extractor Implementation Let’s talk about channels Storage Parser Processor Distribute and Collect Result from Workers Worker Extracting Links Saving Content Running Processors Failed URLs HTML parser Putting it All Together Conclusion Introduction # Web crawler is a program that explores the Internet, by going to different websites and following any link it finds."><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="blog"><meta property="article:published_time" content="2023-03-20T18:17:24+01:00"><meta property="article:modified_time" content="2023-03-20T18:17:24+01:00"><meta property="article:tag" content="Coding"><link rel=stylesheet href=/assets/combined.min.455b53327434f234e64209735e8469bb37465ce15a3ebc45a1a586dd5e74c673.css media=all><script async defer data-website-id=e8710f0c-a6f2-4d2d-8b95-ef6b66e72226 src=https://cloud.umami.is/script.js></script></head><body class=light><div class=content><header><div class=header><h1 class=header-title><a href=https://glyphack.com/>Glyphack</a></h1><div class=flex><p class=small><a href=/>/Home</a></p><p class=small><a href=/blog/>/Blog</a></p><p class=small><a href=/projects/>/Projects</a></p><p class=small><a href=/now/>/Now</a></p><p class=small><a href=/reading-list/>/Reading List</a></p><p class=small><a href=https://r.glyphack.com/s/s>/Reads This</a></p><p class=small><a href="https://docs.google.com/document/d/1XgC2Va8ZgJ2DrmRKpgd_7iVjv8aASnn8nzl6DgkR1mg/edit?usp=sharing">/Resume</a></p></div></div></header><main class=main><div class=breadcrumbs><a href=/>Home</a><span class=breadcrumbs-separator>/</span><a href=/blog/>Blog</a><span class=breadcrumbs-separator>/</span>
+<a href=/build-a-crawler-in-golang/>Building a Web Crawler in Golang</a></div><div><article><header class=single-intro-container><h1 class=single-title>Building a Web Crawler in Golang</h1><p class=single-readtime><time datetime=2023-03-20T18:17:24+01:00>March 20, 2023</time></p></header><div class=single-content><ul><li><a href=#introduction>Introduction</a></li><li><a href=#but-why-building-another-crawler>But Why Building Another Crawler?</a></li><li><a href=#high-level-design>High Level Design</a><ul><li><a href=#url-frontier>URL Frontier</a></li><li><a href=#selector>Selector</a></li><li><a href=#workers>Workers</a></li><li><a href=#fetcher>Fetcher</a></li><li><a href=#content-processor>Content Processor</a></li><li><a href=#link-extractor>Link Extractor</a></li></ul></li><li><a href=#implementation>Implementation</a><ul><li><a href=#lets-talk-about-channels>Let&rsquo;s talk about channels</a></li><li><a href=#storage>Storage</a></li><li><a href=#parser>Parser</a></li><li><a href=#processor>Processor</a></li><li><a href=#distribute-and-collect-result-from-workers>Distribute and Collect Result from Workers</a></li><li><a href=#worker>Worker</a></li><li><a href=#extracting-links>Extracting Links</a></li><li><a href=#saving-content>Saving Content</a></li><li><a href=#running-processors>Running Processors</a></li><li><a href=#failed-urls>Failed URLs</a></li><li><a href=#html-parser>HTML parser</a></li><li><a href=#putting-it-all-together>Putting it All Together</a></li></ul></li><li><a href=#conclusion>Conclusion</a></li></ul><h2 class=heading id=introduction>Introduction
+<a class=anchor href=#introduction>#</a></h2><p>Web crawler is a program that explores the Internet,
+by going to different websites and following any link it finds.</p><p>Crawlers are interesting because they provide a way to gather data
+from the internet.
+This is especially useful for data mining purposes.</p><p>You can find the full implementation in the <a href=https://github.com/Glyphack/crawler>GitHub repository</a>.</p><p><a href=https://cacm.acm.org/blogs/blog-cacm/153780-data-mining-the-web-via-crawling/fulltext>This post</a>
+provides a good introduction to building a crawler.</p><h2 class=heading id=but-why-building-another-crawler>But Why Building Another Crawler?
+<a class=anchor href=#but-why-building-another-crawler>#</a></h2><p>I wrote down my reasons in the <a href=/rate-limiter-from-scratch-in-python-2>previous post</a>
+on why I&rsquo;m building this stuff from sctrach.
+The short answer is that it seems simple until you try it.</p><p>After reading through this project and implementing yourself,
+you will have a good understanding of how to write concurrent
+applications in Go.</p><h2 class=heading id=high-level-design>High Level Design
+<a class=anchor href=#high-level-design>#</a></h2><p>Let&rsquo;s look into what components a cralwer is made of, this helps
+to structure our code.</p><p>The following diagram shows the execution flow of our program and
+responsibilities of components:</p><p><figure><div class=img-container><img loading=lazy alt=crawler-diagram src=/crawler-diagram.excalidraw.svg></div></figure></p><p>Let&rsquo;s break it down:</p><h3 class=heading id=url-frontier>URL Frontier
+<a class=anchor href=#url-frontier>#</a></h3><p>URL Frontier is a collection of URLs that are going to be crawled.
+It supports adding & consuming new URLs as we discover links in fetched pages.</p><h3 class=heading id=selector>Selector
+<a class=anchor href=#selector>#</a></h3><p>To consume the URLs from frontier we can get them one by one.
+But this can cause problem if we want to distribute the URLs between multiple workers.</p><p>The technique used here is called fan-out.</p><p>For example if some URLs are more important to crawl first, and each worker gets
+the next URL to crawl then those special URLs can&rsquo;t be crawled first.
+Another usefulness of this component is distributing URLs from one host to one worker.
+So each worker can make sure to not send too many requests to a single Host.
+The best practice is to wait 2 seconds between requests for the same Host.</p><h3 class=heading id=workers>Workers
+<a class=anchor href=#workers>#</a></h3><p>Each worker consumes from queues that selector fills and fetches the URL.</p><p>The worker must handle failures and retry when it fails to fetch a URL.
+Each worker also keeps track of URLs fetched to be polite.</p><h3 class=heading id=fetcher>Fetcher
+<a class=anchor href=#fetcher>#</a></h3><p>This components is the reverse of selector component, it gathers
+results from different workers to a single collection.</p><p>This operation is called fan-in which is useful here because we
+can simplify the processor operations because it only needs to
+consume from a single result channel.</p><h3 class=heading id=content-processor>Content Processor
+<a class=anchor href=#content-processor>#</a></h3><p>After we get the result from each worker we ran different
+content processors on the result, this can be tasks like extracting
+new URLs or saving pages to the disk.</p><p>Also note that this component does not apply a single
+logic on all results. We can register different processors,
+like a plugin system to expand this component.</p><p>Later we discuss how we can use strategy design pattern to
+implement this in code.</p><h3 class=heading id=link-extractor>Link Extractor
+<a class=anchor href=#link-extractor>#</a></h3><p>The link extractor is a special processor we create
+that uses a parser to parse the page content and insert URLs
+back to frontier.</p><h2 class=heading id=implementation>Implementation
+<a class=anchor href=#implementation>#</a></h2><h3 class=heading id=lets-talk-about-channels>Let&rsquo;s talk about channels
+<a class=anchor href=#lets-talk-about-channels>#</a></h3><p>channels are going to be used heavily in the implementation.
+I suggest you to make sure you understand <a href=https://go.dev/tour/concurrency/1>fundamentals</a>
+of channels.
+before reading the rest of this post.</p><p>We can start with frontier since it&rsquo;s not dependent on any other component.</p><p>I&rsquo;ll create a new package frontier:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Frontier</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>urls</span>        <span style=color:#66d9ef>chan</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>URL</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>history</span>     <span style=color:#66d9ef>map</span>[<span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>URL</span>]<span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Time</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>exclude</span>     []<span style=color:#66d9ef>string</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>NewFrontier</span>(<span style=color:#a6e22e>initialUrls</span> []<span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>URL</span>, <span style=color:#a6e22e>exclude</span> []<span style=color:#66d9ef>string</span>) <span style=color:#f92672>*</span><span style=color:#a6e22e>Frontier</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>history</span> <span style=color:#f92672>:=</span> make(<span style=color:#66d9ef>map</span>[<span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>URL</span>]<span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Time</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>f</span> <span style=color:#f92672>:=</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>Frontier</span>{
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>urls</span>:    make(<span style=color:#66d9ef>chan</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>URL</span>, len(<span style=color:#a6e22e>initialUrls</span>)),
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>history</span>: <span style=color:#a6e22e>history</span>,
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>exclude</span>: <span style=color:#a6e22e>exclude</span>,
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>u</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>initialUrls</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>f</span>.<span style=color:#a6e22e>Add</span>(<span style=color:#f92672>&amp;</span><span style=color:#a6e22e>u</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>f</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>The frontier uses a channel of urls to keep the added URLs.
+Since the channel is consumed then we keep a <code>history</code> of visited URLs.
+History can be later used to check whether we seen a URL or not.</p><p>The <code>terminating</code> attribute is used so we can have a graceful termination.
+Since another goroutine is going to read from this channel, we might
+want to wait until all the URLs are consumed and meanwhile don&rsquo;t add any new URLs.</p><p>Next we need a method to add a new url.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>f</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Frontier</span>) <span style=color:#a6e22e>Add</span>(<span style=color:#a6e22e>url</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>URL</span>) <span style=color:#66d9ef>bool</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>f</span>.<span style=color:#a6e22e>terminating</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>false</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>f</span>.<span style=color:#a6e22e>Seen</span>(<span style=color:#a6e22e>url</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>WithFields</span>(<span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Fields</span>{
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#34;url&#34;</span>: <span style=color:#a6e22e>url</span>,
+</span></span><span style=display:flex><span>        }).<span style=color:#a6e22e>Info</span>(<span style=color:#e6db74>&#34;Already seen&#34;</span>)
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>false</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>pattern</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>f</span>.<span style=color:#a6e22e>exclude</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>pattern</span> <span style=color:#f92672>==</span> <span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>Host</span> {
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>WithFields</span>(<span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Fields</span>{
+</span></span><span style=display:flex><span>                <span style=color:#e6db74>&#34;url&#34;</span>: <span style=color:#a6e22e>url</span>,
+</span></span><span style=display:flex><span>            }).<span style=color:#a6e22e>Info</span>(<span style=color:#e6db74>&#34;Excluded&#34;</span>)
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>false</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>f</span>.<span style=color:#a6e22e>history</span>[<span style=color:#f92672>*</span><span style=color:#a6e22e>url</span>] = <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Now</span>()
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>f</span>.<span style=color:#a6e22e>urls</span> <span style=color:#f92672>&lt;-</span> <span style=color:#a6e22e>url</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>true</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>f</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Frontier</span>) <span style=color:#a6e22e>Seen</span>(<span style=color:#a6e22e>url</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>URL</span>) <span style=color:#66d9ef>bool</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>lastFetch</span>, <span style=color:#a6e22e>ok</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>f</span>.<span style=color:#a6e22e>history</span>[<span style=color:#f92672>*</span><span style=color:#a6e22e>url</span>]; <span style=color:#a6e22e>ok</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Since</span>(<span style=color:#a6e22e>lastFetch</span>) &lt; <span style=color:#ae81ff>2</span><span style=color:#f92672>*</span><span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Hour</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>false</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>f</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Frontier</span>) <span style=color:#a6e22e>Get</span>() <span style=color:#66d9ef>chan</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>URL</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>f</span>.<span style=color:#a6e22e>urls</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>This method simply checks if the url is seen or not and if it&rsquo;s not
+excluded adds it to the channel.</p><p>This function is blocking unless another gorutine is consuming from the urls channel.
+Why is this important?
+because if we run the Add in a blocking way without consuming the urls
+we will block the goroutine & it&rsquo;s a deadlock.</p><p>The <code>Get</code> function does not provide any abstraction here, but I like the idea that
+consumers don&rsquo;t have to know which channel they need to consume from.</p><p>In case you are wondering what log package I&rsquo;m using, it&rsquo;s <a href=https://github.com/sirupsen/logrus>logrus</a>.</p><p>The next step is to create the component and orchestrates the crawl process.</p><p>Let&rsquo;s first define the configuration that user can pass to the crawler.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Config</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>MaxRedirects</span>    <span style=color:#66d9ef>int</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>RevisitDelay</span>    <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Duration</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>WorkerCount</span>     <span style=color:#66d9ef>int</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>ExcludePatterns</span> []<span style=color:#66d9ef>string</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>crawler</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> (
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;net/url&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>log</span> <span style=color:#e6db74>&#34;github.com/sirupsen/logrus&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;github.com/glyphack/crawler/internal/frontier&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;github.com/glyphack/crawler/internal/parser&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;github.com/glyphack/crawler/internal/storage&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Crawler</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>config</span>         <span style=color:#f92672>*</span><span style=color:#a6e22e>Config</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>frontier</span>       <span style=color:#f92672>*</span><span style=color:#a6e22e>frontier</span>.<span style=color:#a6e22e>Frontier</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>storage</span>        <span style=color:#a6e22e>storage</span>.<span style=color:#a6e22e>Storage</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>contentParsers</span> []<span style=color:#a6e22e>parser</span>.<span style=color:#a6e22e>Parser</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>deadLetter</span>     <span style=color:#66d9ef>chan</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>URL</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>processors</span>     []<span style=color:#a6e22e>Processor</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>NewCrawler</span>(<span style=color:#a6e22e>initialUrls</span> []<span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>URL</span>, <span style=color:#a6e22e>contentStorage</span> <span style=color:#a6e22e>storage</span>.<span style=color:#a6e22e>Storage</span>, <span style=color:#a6e22e>config</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Config</span>) <span style=color:#f92672>*</span><span style=color:#a6e22e>Crawler</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>deadLetter</span> <span style=color:#f92672>:=</span> make(<span style=color:#66d9ef>chan</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>URL</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>contentParser</span> <span style=color:#f92672>:=</span> []<span style=color:#a6e22e>parser</span>.<span style=color:#a6e22e>Parser</span>{<span style=color:#f92672>&amp;</span><span style=color:#a6e22e>parser</span>.<span style=color:#a6e22e>HtmlParser</span>{}}
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>Crawler</span>{
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>frontier</span>:       <span style=color:#a6e22e>frontier</span>.<span style=color:#a6e22e>NewFrontier</span>(<span style=color:#a6e22e>initialUrls</span>, <span style=color:#a6e22e>config</span>.<span style=color:#a6e22e>ExcludePatterns</span>),
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>storage</span>:        <span style=color:#a6e22e>contentStorage</span>,
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>contentParsers</span>: <span style=color:#a6e22e>contentParser</span>,
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>deadLetter</span>:     <span style=color:#a6e22e>deadLetter</span>,
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>config</span>:         <span style=color:#a6e22e>config</span>,
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>c</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Crawler</span>) <span style=color:#a6e22e>AddContentParser</span>(<span style=color:#a6e22e>contentParser</span> <span style=color:#a6e22e>parser</span>.<span style=color:#a6e22e>Parser</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>a</span>.<span style=color:#a6e22e>contentParsers</span> = append(<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>contentParsers</span>, <span style=color:#a6e22e>contentParser</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>c</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Crawler</span>) <span style=color:#a6e22e>AddExcludePattern</span>(<span style=color:#a6e22e>pattern</span> <span style=color:#66d9ef>string</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>config</span>.<span style=color:#a6e22e>ExcludePatterns</span> = append(<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>config</span>.<span style=color:#a6e22e>ExcludePatterns</span>, <span style=color:#a6e22e>pattern</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>c</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Crawler</span>) <span style=color:#a6e22e>AddProcessor</span>(<span style=color:#a6e22e>processor</span> <span style=color:#a6e22e>Processor</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>processors</span> = append(<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>processors</span>, <span style=color:#a6e22e>processor</span>)
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Config comes from the user and by making it a separate struct we can easily modify
+it without changing the parameters we pass to create the crawler.
+We keep a deadLetter channel for the failed URLs to have a retry mechanism.</p><p>The crawler takes in other components let&rsquo;s break them down:</p><h3 class=heading id=storage>Storage
+<a class=anchor href=#storage>#</a></h3><p>Storage is an interface that exposes method to save data.
+This helps with extending the processor without changing it&rsquo;s code.</p><p>Whatever storage implementation we use we need to implement
+the following methods:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>storage</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Storage</span> <span style=color:#66d9ef>interface</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Get</span>(<span style=color:#a6e22e>path</span> <span style=color:#66d9ef>string</span>) (<span style=color:#66d9ef>string</span>, <span style=color:#66d9ef>error</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Set</span>(<span style=color:#a6e22e>path</span> <span style=color:#66d9ef>string</span>, <span style=color:#a6e22e>value</span> <span style=color:#66d9ef>string</span>) <span style=color:#66d9ef>error</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Delete</span>(<span style=color:#a6e22e>path</span> <span style=color:#66d9ef>string</span>) <span style=color:#66d9ef>error</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 class=heading id=parser>Parser
+<a class=anchor href=#parser>#</a></h3><p>Instead of parsing the content in the crawler we can provide an implementation
+for the filetypes we want to parse.
+We can have a single parser that handles all the file types but
+this way is much easier to extend.</p><p>But why do we need the parser?
+After we fetch the page we need to parse it to get
+the links from it and add it to our frontier.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>parser</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Token</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Name</span>  <span style=color:#66d9ef>string</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Value</span> <span style=color:#66d9ef>string</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Parser</span> <span style=color:#66d9ef>interface</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>IsSupportedExtension</span>(<span style=color:#a6e22e>extension</span> <span style=color:#66d9ef>string</span>) <span style=color:#66d9ef>bool</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Parse</span>(<span style=color:#a6e22e>content</span> <span style=color:#66d9ef>string</span>) ([]<span style=color:#a6e22e>Token</span>, <span style=color:#66d9ef>error</span>)
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Parser can check the file extension to see if it&rsquo;s supported,
+And parse the file into tokens.</p><p>The token is parsed information from the content.
+This is a nice way to extend the material we parse from the page later.
+Currently we only care about <code>a</code> tags which are links.</p><h3 class=heading id=processor>Processor
+<a class=anchor href=#processor>#</a></h3><p>Following the same idea with parsers, we can provide the crawler
+processes to apply on the web pages.</p><p>Some typical processes are:</p><ul><li>Saving the page</li><li>Extracting links from the page</li></ul><p>Let&rsquo;s define the interface based on the required actions.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Processor</span> <span style=color:#66d9ef>interface</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Process</span>(<span style=color:#a6e22e>CrawlResult</span>) <span style=color:#66d9ef>error</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>The process function takes in the crawl result which we&rsquo;ll define later.
+The function is only going to return an error.
+Since a lot of operations can be done in this function we are not returning any value.</p><h3 class=heading id=distribute-and-collect-result-from-workers>Distribute and Collect Result from Workers
+<a class=anchor href=#distribute-and-collect-result-from-workers>#</a></h3><p>In the earlier section we discussed how can we parallelize the crawling
+task by distrubting the urls into multiple queues and assign workers to each
+queue.</p><p>Let&rsquo;s implement this functionality, We can create a new function called <code>Start</code>
+for the crawler struct:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>c</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Crawler</span>) <span style=color:#a6e22e>Start</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>distributedInputs</span> <span style=color:#f92672>:=</span> make([]<span style=color:#66d9ef>chan</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>URL</span>, <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>config</span>.<span style=color:#a6e22e>WorkerCount</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>workersResults</span> <span style=color:#f92672>:=</span> make([]<span style=color:#66d9ef>chan</span> <span style=color:#a6e22e>CrawlResult</span>, <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>config</span>.<span style=color:#a6e22e>WorkerCount</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>done</span> <span style=color:#f92672>:=</span> make(<span style=color:#66d9ef>chan</span> <span style=color:#66d9ef>struct</span>{})
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>i</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>0</span>; <span style=color:#a6e22e>i</span> &lt; <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>config</span>.<span style=color:#a6e22e>WorkerCount</span>; <span style=color:#a6e22e>i</span><span style=color:#f92672>++</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>distributedInputs</span>[<span style=color:#a6e22e>i</span>] = make(<span style=color:#66d9ef>chan</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>URL</span>)
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>workersResults</span>[<span style=color:#a6e22e>i</span>] = make(<span style=color:#66d9ef>chan</span> <span style=color:#a6e22e>CrawlResult</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>go</span> <span style=color:#a6e22e>distributeUrls</span>(<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>frontier</span>, <span style=color:#a6e22e>distributedInputs</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>i</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>0</span>; <span style=color:#a6e22e>i</span> &lt; <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>config</span>.<span style=color:#a6e22e>WorkerCount</span>; <span style=color:#a6e22e>i</span><span style=color:#f92672>++</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>worker</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>NewWorker</span>(<span style=color:#a6e22e>distributedInputs</span>[<span style=color:#a6e22e>i</span>], <span style=color:#a6e22e>workersResults</span>[<span style=color:#a6e22e>i</span>], <span style=color:#a6e22e>done</span>, <span style=color:#a6e22e>i</span>, <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>deadLetter</span>)
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>go</span> <span style=color:#a6e22e>worker</span>.<span style=color:#a6e22e>Start</span>()
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>mergedResults</span> <span style=color:#f92672>:=</span> make(<span style=color:#66d9ef>chan</span> <span style=color:#a6e22e>CrawlResult</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>go</span> <span style=color:#a6e22e>mergeResults</span>(<span style=color:#a6e22e>workersResults</span>, <span style=color:#a6e22e>mergedResults</span>)
+</span></span></code></pre></div><p>Here we start by creating an input channel and an output channel for each worker.</p><p>There is a done channel here as well. It&rsquo;s a practice in go to use an empty
+channel to notify the goroutines that the process is done or cancelled.</p><p>Then a function will start ditributing URLs from frontier to worker channels.</p><p>Finally we have a another function that merges results from worker outputs.</p><p>Note that these two functions and worker start are executed in a separate goroutine.
+So they will continuously consume from frontier, add to worker input channel,
+and put merge the result into a single output channel.</p><p>How can we implement the distribute and merge mechanisms?
+<a href=https://go.dev/blog/pipelines>This post</a> fully explains the fan-in and fan-out.</p><p>Let&rsquo;s create a separate file and implement these two functions.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>distributeUrls</span>(<span style=color:#a6e22e>frontier</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>frontier</span>.<span style=color:#a6e22e>Frontier</span>, <span style=color:#a6e22e>distributedInputs</span> []<span style=color:#66d9ef>chan</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>URL</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>HostToWorker</span> <span style=color:#f92672>:=</span> make(<span style=color:#66d9ef>map</span>[<span style=color:#66d9ef>string</span>]<span style=color:#66d9ef>int</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>url</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>frontier</span>.<span style=color:#a6e22e>Get</span>() {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>index</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>rand</span>.<span style=color:#a6e22e>Intn</span>(len(<span style=color:#a6e22e>distributedInputs</span>))
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>prevIndex</span>, <span style=color:#a6e22e>ok</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>HostToWorker</span>[<span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>Host</span>]; <span style=color:#a6e22e>ok</span> {
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>index</span> = <span style=color:#a6e22e>prevIndex</span>
+</span></span><span style=display:flex><span>        } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>HostToWorker</span>[<span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>Host</span>] = <span style=color:#a6e22e>index</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>distributedInputs</span>[<span style=color:#a6e22e>index</span>] <span style=color:#f92672>&lt;-</span> <span style=color:#a6e22e>url</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Here we have a for loop over a channel.
+This means that our function never exits until the frontier closes the channel.
+For each url coming into the channel we take it and assign it to a worker input channel.</p><p>The assignment algorithm is very simple, we have a list of already assigned hosts.
+If a host is new we assign it randomly, otherwise we send it to the assigned host.</p><p>Now let&rsquo;s implement the merger:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>mergeResults</span>(<span style=color:#a6e22e>workersResults</span> []<span style=color:#66d9ef>chan</span> <span style=color:#a6e22e>CrawlResult</span>, <span style=color:#a6e22e>out</span> <span style=color:#66d9ef>chan</span> <span style=color:#a6e22e>CrawlResult</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>collect</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>in</span> <span style=color:#66d9ef>chan</span> <span style=color:#a6e22e>CrawlResult</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>result</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>in</span> {
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>out</span> <span style=color:#f92672>&lt;-</span> <span style=color:#a6e22e>result</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;Worker finished&#34;</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>i</span>, <span style=color:#a6e22e>result</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>workersResults</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;Start collecting results from worker %d&#34;</span>, <span style=color:#a6e22e>i</span>)
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>go</span> <span style=color:#a6e22e>collect</span>(<span style=color:#a6e22e>result</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>This function might be a bit more complex.
+First we created a function named collect that consumes from a single channel.
+Then we loop over the workers and call this function on all the output channels.</p><p>So this starts a goroutine per worker that listens to output channel.
+The result is put into the merged output channel.</p><p>Pretty simple yet powerful technique to parallelize a task.</p><h3 class=heading id=worker>Worker
+<a class=anchor href=#worker>#</a></h3><p>To implement the worker we first need to define the struct and crawl result.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>CrawlResult</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Url</span>         <span style=color:#f92672>*</span><span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>URL</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>ContentType</span> <span style=color:#66d9ef>string</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Body</span>        []<span style=color:#66d9ef>byte</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Worker</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>input</span>      <span style=color:#66d9ef>chan</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>URL</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>deadLetter</span> <span style=color:#66d9ef>chan</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>URL</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>result</span>     <span style=color:#66d9ef>chan</span> <span style=color:#a6e22e>CrawlResult</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>done</span>       <span style=color:#66d9ef>chan</span> <span style=color:#66d9ef>struct</span>{}
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>id</span>         <span style=color:#66d9ef>int</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>logger</span>     <span style=color:#f92672>*</span><span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Entry</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Only contains the host part of the URL</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>history</span> <span style=color:#66d9ef>map</span>[<span style=color:#66d9ef>string</span>]<span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Time</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>The crawl result represents a successsful page load with content and the type.</p><p>Let&rsquo;s breakdown what worker has:</p><ul><li>input: the channel that worker consumes from</li><li>deadLetter: another channel that worker puts in the failed URLs into</li><li>result: channel for sending successful crawls</li><li>done: the channel that notifies the worker if it has to stop</li><li>id: an id assigned to the worker this is useful for marking logs from each worker</li><li>logger: a logger with worker context so log messages are distinguishable from others.
+<code>logger := log.WithField("worker", id)</code></li></ul><p>The Start method of the worker is a for-select statement to consume
+any message that comes into the input channel, fetch and pass the result.</p><p>Before fetching the URL we check for politeness and sleep if needed.
+There is a downside to this if we have consecutive URLs from one host.
+Since we have to sleep and it slows down.</p><p>There are two improvements here I can think of:</p><ol><li>Discarding that URL to deadletter and continue until we get another host</li><li>Distribute the URLs in worker input channel to reduce the chance of blocking</li></ol><p>But here we just go with the simple approach</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>w</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Worker</span>) <span style=color:#a6e22e>Start</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>w</span>.<span style=color:#a6e22e>logger</span>.<span style=color:#a6e22e>Debugf</span>(<span style=color:#e6db74>&#34;Worker %d started&#34;</span>, <span style=color:#a6e22e>w</span>.<span style=color:#a6e22e>id</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>select</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>case</span> <span style=color:#a6e22e>url</span> <span style=color:#f92672>:=</span> <span style=color:#f92672>&lt;-</span><span style=color:#a6e22e>w</span>.<span style=color:#a6e22e>input</span>:
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>for</span> !<span style=color:#a6e22e>w</span>.<span style=color:#a6e22e>CheckPoliteness</span>(<span style=color:#a6e22e>url</span>) {
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Sleep</span>(<span style=color:#ae81ff>2</span> <span style=color:#f92672>*</span> <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Second</span>)
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>content</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>w</span>.<span style=color:#a6e22e>fetch</span>(<span style=color:#a6e22e>url</span>)
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Errorf</span>(<span style=color:#e6db74>&#34;Worker %d error fetching content: %s&#34;</span>, <span style=color:#a6e22e>w</span>.<span style=color:#a6e22e>id</span>, <span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>w</span>.<span style=color:#a6e22e>deadLetter</span> <span style=color:#f92672>&lt;-</span> <span style=color:#a6e22e>url</span>
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>continue</span>
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>w</span>.<span style=color:#a6e22e>history</span>[<span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>Host</span>] = <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Now</span>()
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>b</span>. <span style=color:#a6e22e>result</span> <span style=color:#f92672>&lt;-</span> <span style=color:#a6e22e>content</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>case</span> <span style=color:#f92672>&lt;-</span><span style=color:#a6e22e>w</span>.<span style=color:#a6e22e>done</span>:
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>The fetch function does a simple fetch and also determines the content type.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>w</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Worker</span>) <span style=color:#a6e22e>fetch</span>(<span style=color:#a6e22e>url</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>URL</span>) (<span style=color:#a6e22e>CrawlResult</span>, <span style=color:#66d9ef>error</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>w</span>.<span style=color:#a6e22e>logger</span>.<span style=color:#a6e22e>Debugf</span>(<span style=color:#e6db74>&#34;Worker %d fetching %s&#34;</span>, <span style=color:#a6e22e>w</span>.<span style=color:#a6e22e>id</span>, <span style=color:#a6e22e>url</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>defer</span> <span style=color:#a6e22e>w</span>.<span style=color:#a6e22e>logger</span>.<span style=color:#a6e22e>Debugf</span>(<span style=color:#e6db74>&#34;Worker %d done fetching %s&#34;</span>, <span style=color:#a6e22e>w</span>.<span style=color:#a6e22e>id</span>, <span style=color:#a6e22e>url</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>res</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Get</span>(<span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>String</span>())
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>CrawlResult</span>{}, <span style=color:#a6e22e>err</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>defer</span> <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>Body</span>.<span style=color:#a6e22e>Close</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>StatusCode</span> <span style=color:#f92672>!=</span> <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusOK</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>CrawlResult</span>{}, <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Errorf</span>(<span style=color:#e6db74>&#34;status code error: %d %s&#34;</span>, <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>StatusCode</span>, <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>Status</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>body</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>io</span>.<span style=color:#a6e22e>ReadAll</span>(<span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>Body</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>CrawlResult</span>{}, <span style=color:#a6e22e>err</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>inferredContentType</span> <span style=color:#66d9ef>string</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>contentType</span>, <span style=color:#a6e22e>ok</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>res</span>.<span style=color:#a6e22e>Header</span>[<span style=color:#e6db74>&#34;Content-Type&#34;</span>]
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>ok</span> <span style=color:#f92672>&amp;&amp;</span> len(<span style=color:#a6e22e>contentType</span>) &gt; <span style=color:#ae81ff>0</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>inferredContentType</span> = <span style=color:#a6e22e>contentType</span>[<span style=color:#ae81ff>0</span>]
+</span></span><span style=display:flex><span>    } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>inferredContentType</span> = <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>DetectContentType</span>(<span style=color:#a6e22e>body</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>CrawlResult</span>{
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>Url</span>:         <span style=color:#a6e22e>url</span>,
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>ContentType</span>: <span style=color:#a6e22e>inferredContentType</span>,
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>Body</span>:        <span style=color:#a6e22e>body</span>,
+</span></span><span style=display:flex><span>    }, <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>w</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Worker</span>) <span style=color:#a6e22e>CheckPoliteness</span>(<span style=color:#a6e22e>url</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>URL</span>) <span style=color:#66d9ef>bool</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>lastFetch</span>, <span style=color:#a6e22e>ok</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>w</span>.<span style=color:#a6e22e>history</span>[<span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>Host</span>]; <span style=color:#a6e22e>ok</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Since</span>(<span style=color:#a6e22e>lastFetch</span>) &gt; <span style=color:#ae81ff>2</span><span style=color:#f92672>*</span><span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Second</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>true</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 class=heading id=extracting-links>Extracting Links
+<a class=anchor href=#extracting-links>#</a></h3><p>To extract a link we implement the Processor interface we defined above.</p><p>This processor takes in parsers and crawl result then outputs links.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>LinkExtractor</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Parsers</span> []<span style=color:#a6e22e>parser</span>.<span style=color:#a6e22e>Parser</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>NewUrls</span> <span style=color:#66d9ef>chan</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>URL</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>e</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>LinkExtractor</span>) <span style=color:#a6e22e>Process</span>(<span style=color:#a6e22e>result</span> <span style=color:#a6e22e>CrawlResult</span>) <span style=color:#66d9ef>error</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>foundUrls</span> <span style=color:#f92672>:=</span> make([]<span style=color:#f92672>*</span><span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>URL</span>, <span style=color:#ae81ff>0</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>parser</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>e</span>.<span style=color:#a6e22e>Parsers</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> !<span style=color:#a6e22e>parser</span>.<span style=color:#a6e22e>IsSupportedExtension</span>(<span style=color:#a6e22e>result</span>.<span style=color:#a6e22e>ContentType</span>) {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>continue</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>parsedUrls</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>parser</span>.<span style=color:#a6e22e>Parse</span>(string(<span style=color:#a6e22e>result</span>.<span style=color:#a6e22e>Body</span>))
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Errorf</span>(<span style=color:#e6db74>&#34;Error parsing content: %s&#34;</span>, <span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Infof</span>(<span style=color:#e6db74>&#34;Extracted %d urls&#34;</span>, len(<span style=color:#a6e22e>parsedUrls</span>))
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>parsedUrl</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>parsedUrls</span> {
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>newUrl</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>Parse</span>(<span style=color:#a6e22e>parsedUrl</span>.<span style=color:#a6e22e>Value</span>)
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Debugf</span>(<span style=color:#e6db74>&#34;Error parsing url: %s&#34;</span>, <span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>continue</span>
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>params</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>newUrl</span>.<span style=color:#a6e22e>Query</span>()
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>param</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>params</span> {
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>newUrl</span> = <span style=color:#a6e22e>stripQueryParam</span>(<span style=color:#a6e22e>newUrl</span>, <span style=color:#a6e22e>param</span>)
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>newUrl</span>.<span style=color:#a6e22e>Scheme</span> <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;http&#34;</span> <span style=color:#f92672>||</span> <span style=color:#a6e22e>newUrl</span>.<span style=color:#a6e22e>Scheme</span> <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;https&#34;</span> {
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>foundUrls</span> = append(<span style=color:#a6e22e>foundUrls</span>, <span style=color:#a6e22e>newUrl</span>)
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>foundUrl</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>foundUrls</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>e</span>.<span style=color:#a6e22e>NewUrls</span> <span style=color:#f92672>&lt;-</span> <span style=color:#a6e22e>foundUrl</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>stripQueryParam</span>(<span style=color:#a6e22e>inputURL</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>URL</span>, <span style=color:#a6e22e>stripKey</span> <span style=color:#66d9ef>string</span>) <span style=color:#f92672>*</span><span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>URL</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>query</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>inputURL</span>.<span style=color:#a6e22e>Query</span>()
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>query</span>.<span style=color:#a6e22e>Del</span>(<span style=color:#a6e22e>stripKey</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>inputURL</span>.<span style=color:#a6e22e>RawQuery</span> = <span style=color:#a6e22e>query</span>.<span style=color:#a6e22e>Encode</span>()
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>inputURL</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>The this struct keeps a list of parsers and has a channel to output links.</p><p>The process function takes in a crawl result and matches the type with it&rsquo;s parsers.
+It&rsquo;s also important to make sure we strip the query params,
+strings like <code>?sort=foo</code>.
+There might be case that we care about them, but here to simply remove duplicates
+we do this.</p><p>A better approach here is to use the <code>rel=canonical</code> HTML attribute to identify if
+URL is identical to current page.</p><p>The result from this extractor are put in a new channel.</p><p>So in the crawler we can add this processor and get the URLs:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span>    <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>AddProcessor</span>(<span style=color:#f92672>&amp;</span><span style=color:#a6e22e>LinkExtractor</span>{<span style=color:#a6e22e>Parsers</span>: <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>contentParsers</span>, <span style=color:#a6e22e>NewUrls</span>: <span style=color:#a6e22e>newUrls</span>})
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>go</span> <span style=color:#66d9ef>func</span>() {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>newUrl</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>newUrls</span> {
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>_</span> = <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>frontier</span>.<span style=color:#a6e22e>Add</span>(<span style=color:#a6e22e>newUrl</span>)
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }()
+</span></span></code></pre></div><h3 class=heading id=saving-content>Saving Content
+<a class=anchor href=#saving-content>#</a></h3><p>To save the content we use another processor.
+This processor uses the storage backend provided to the crawler to store pages.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>SaveToFile</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>storageBackend</span> <span style=color:#a6e22e>storage</span>.<span style=color:#a6e22e>Storage</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>s</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>SaveToFile</span>) <span style=color:#a6e22e>Process</span>(<span style=color:#a6e22e>result</span> <span style=color:#a6e22e>CrawlResult</span>) <span style=color:#66d9ef>error</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>savePath</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>getSavePath</span>(<span style=color:#a6e22e>result</span>.<span style=color:#a6e22e>Url</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>switch</span> <span style=color:#a6e22e>result</span>.<span style=color:#a6e22e>ContentType</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>default</span>:
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>savePath</span> = <span style=color:#a6e22e>savePath</span> <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34;.html&#34;</span>
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>storageBackend</span>.<span style=color:#a6e22e>Set</span>(<span style=color:#a6e22e>savePath</span>, string(<span style=color:#a6e22e>result</span>.<span style=color:#a6e22e>Body</span>))
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>err</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>getSavePath</span>(<span style=color:#a6e22e>url</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>URL</span>) <span style=color:#66d9ef>string</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>fileName</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>Path</span> <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34;-page&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>savePath</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>path</span>.<span style=color:#a6e22e>Join</span>(<span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>Host</span>, <span style=color:#a6e22e>fileName</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>savePath</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>And again we add it easily to the crawler:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span>    <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>AddProcessor</span>(<span style=color:#f92672>&amp;</span><span style=color:#a6e22e>SaveToFile</span>{<span style=color:#a6e22e>storageBackend</span>: <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>storage</span>})
+</span></span></code></pre></div><h3 class=heading id=running-processors>Running Processors
+<a class=anchor href=#running-processors>#</a></h3><p>The final step in our start method is to run processors on results.</p><p>Since the list of processors can be extended and we must not block the
+goroutine, we execute each of them in a separate goroutine.</p><p>This is important because if we can&rsquo;t consume from the merged results fast enough
+then each worker might wait until the processors are ran so they can send to channel.
+Remember the send to channel blocks until the consumer is ready.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span>    <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>result</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>mergedResults</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>processor</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>processors</span> {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>go</span> <span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>processor</span> <span style=color:#a6e22e>Processor</span>, <span style=color:#a6e22e>result</span> <span style=color:#a6e22e>CrawlResult</span>) {
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>processErr</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>processor</span>.<span style=color:#a6e22e>Process</span>(<span style=color:#a6e22e>result</span>)
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>processErr</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>                    <span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Error</span>(<span style=color:#a6e22e>processErr</span>)
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            }(<span style=color:#a6e22e>processor</span>, <span style=color:#a6e22e>result</span>)
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span></code></pre></div><h3 class=heading id=failed-urls>Failed URLs
+<a class=anchor href=#failed-urls>#</a></h3><p>This part is open ended and you can try it as an exercise.
+We only consume the failed ones and log them to the console.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span>    <span style=color:#66d9ef>go</span> <span style=color:#66d9ef>func</span>() {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>deadUrl</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>deadLetter</span> {
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Debugf</span>(<span style=color:#e6db74>&#34;Dismissed %s&#34;</span>, <span style=color:#a6e22e>deadUrl</span>)
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }()
+</span></span></code></pre></div><h3 class=heading id=html-parser>HTML parser
+<a class=anchor href=#html-parser>#</a></h3><p>We need to implement at least 1 parser so our crawler can
+parse HTML pages.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>parser</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> (
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;errors&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;fmt&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;io&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;strings&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;golang.org/x/net/html&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>HtmlParser</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>p</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>HtmlParser</span>) <span style=color:#a6e22e>getSupportedExtensions</span>() []<span style=color:#66d9ef>string</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> []<span style=color:#66d9ef>string</span>{<span style=color:#e6db74>&#34;.html&#34;</span>, <span style=color:#e6db74>&#34;.htm&#34;</span>}
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>p</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>HtmlParser</span>) <span style=color:#a6e22e>IsSupportedExtension</span>(<span style=color:#a6e22e>extension</span> <span style=color:#66d9ef>string</span>) <span style=color:#66d9ef>bool</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>supportedExtension</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>p</span>.<span style=color:#a6e22e>getSupportedExtensions</span>() {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>extension</span> <span style=color:#f92672>==</span> <span style=color:#a6e22e>supportedExtension</span> {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>true</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>true</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>p</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>HtmlParser</span>) <span style=color:#a6e22e>Parse</span>(<span style=color:#a6e22e>content</span> <span style=color:#66d9ef>string</span>) ([]<span style=color:#a6e22e>Token</span>, <span style=color:#66d9ef>error</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>htmlParser</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>html</span>.<span style=color:#a6e22e>NewTokenizer</span>(<span style=color:#a6e22e>strings</span>.<span style=color:#a6e22e>NewReader</span>(<span style=color:#a6e22e>content</span>))
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>tokens</span> <span style=color:#f92672>:=</span> []<span style=color:#a6e22e>Token</span>{}
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>tokenType</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>htmlParser</span>.<span style=color:#a6e22e>Next</span>()
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>tokenType</span> <span style=color:#f92672>==</span> <span style=color:#a6e22e>html</span>.<span style=color:#a6e22e>ErrorToken</span> {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>break</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>token</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>htmlParser</span>.<span style=color:#a6e22e>Token</span>()
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>tokenType</span> <span style=color:#f92672>==</span> <span style=color:#a6e22e>html</span>.<span style=color:#a6e22e>StartTagToken</span> {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>switch</span> <span style=color:#a6e22e>token</span>.<span style=color:#a6e22e>Data</span> {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>case</span> <span style=color:#e6db74>&#34;a&#34;</span>:
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>attr</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>token</span>.<span style=color:#a6e22e>Attr</span> {
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>attr</span>.<span style=color:#a6e22e>Key</span> <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;href&#34;</span> {
+</span></span><span style=display:flex><span>                        <span style=color:#a6e22e>tokens</span> = append(<span style=color:#a6e22e>tokens</span>, <span style=color:#a6e22e>Token</span>{<span style=color:#a6e22e>Name</span>: <span style=color:#e6db74>&#34;link&#34;</span>, <span style=color:#a6e22e>Value</span>: <span style=color:#a6e22e>attr</span>.<span style=color:#a6e22e>Val</span>})
+</span></span><span style=display:flex><span>                    }
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>htmlParser</span>.<span style=color:#a6e22e>Err</span>() <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> !<span style=color:#a6e22e>errors</span>.<span style=color:#a6e22e>Is</span>(<span style=color:#a6e22e>htmlParser</span>.<span style=color:#a6e22e>Err</span>(), <span style=color:#a6e22e>io</span>.<span style=color:#a6e22e>EOF</span>) {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>tokens</span>, <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Errorf</span>(<span style=color:#e6db74>&#34;error scanning html: %s&#34;</span>, <span style=color:#a6e22e>htmlParser</span>.<span style=color:#a6e22e>Err</span>())
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>tokens</span>, <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>The parsing process is straight forward, we use a parser package and
+walk over the elements and extract the ones with <code>a</code> tag and <code>href</code> attribute.</p><h3 class=heading id=putting-it-all-together>Putting it All Together
+<a class=anchor href=#putting-it-all-together>#</a></h3><p>We finally have everything needed to crawl some pages.</p><p>The parser we created is not a program, it&rsquo;s a library.
+This can be imported and be started within another program.</p><p>You can create a CLI using this or use a main function.
+We&rsquo;ll create a main function to test it out:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>SetFormatter</span>(<span style=color:#f92672>&amp;</span><span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>TextFormatter</span>{<span style=color:#a6e22e>FullTimestamp</span>: <span style=color:#66d9ef>true</span>})
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>initialUrls</span> <span style=color:#f92672>:=</span> []<span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>URL</span>{}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>myUrl</span>, <span style=color:#a6e22e>_</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>Parse</span>(<span style=color:#e6db74>&#34;https://glyphack.com&#34;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>initialUrls</span> = append(<span style=color:#a6e22e>initialUrls</span>, <span style=color:#f92672>*</span><span style=color:#a6e22e>myUrl</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>contentStorage</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>storage</span>.<span style=color:#a6e22e>NewFileStorage</span>(<span style=color:#e6db74>&#34;./data&#34;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>        panic(<span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>contentParsers</span> <span style=color:#f92672>:=</span> []<span style=color:#a6e22e>parser</span>.<span style=color:#a6e22e>Parser</span>{}
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>contentParsers</span> = append(<span style=color:#a6e22e>contentParsers</span>, <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>JsonParser</span>{})
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>crawler</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>crawler</span>.<span style=color:#a6e22e>NewCrawler</span>(<span style=color:#a6e22e>initialUrls</span>, <span style=color:#a6e22e>contentStorage</span>, <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>crawler</span>.<span style=color:#a6e22e>Config</span>{
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>MaxRedirects</span>:    <span style=color:#ae81ff>5</span>,
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>RevisitDelay</span>:    <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Hour</span> <span style=color:#f92672>*</span> <span style=color:#ae81ff>2</span>,
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>WorkerCount</span>:     <span style=color:#ae81ff>100</span>,
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>ExcludePatterns</span>: []<span style=color:#66d9ef>string</span>{},
+</span></span><span style=display:flex><span>    })
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>crawler</span>.<span style=color:#a6e22e>Start</span>()
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h2 class=heading id=conclusion>Conclusion
+<a class=anchor href=#conclusion>#</a></h2><p>Going through building this crawler and facing many deadlocks taught me a lot
+about goalng.
+And writing about this was a good practice to question my design and
+the way I wrote the code.</p><p>I could not explain the problems I faced in this post because I wrote it
+long after I finished the code itself. But you know enough to not make
+those mistakes as I did.</p></div></article><div class=single-pagination><hr><div class=flexnowrap><div class=single-pagination-prev><div class=single-pagination-container-prev><div class=single-pagination-text>←</div><div class=single-pagination-text><a href=/rate-limiter-python-2/>Rate Limiter From Scratch in Python Part 2</a></div></div></div><div class=single-pagination-next><div class=single-pagination-container-next><div class=single-pagination-text><a href=/my-learn-in-public-workflow/>Trying Out Learning In Public</a></div><div class=single-pagination-text>→</div></div></div></div><hr></div><div class=back-to-top><a href=#top>back to top</a></div></div></main></div><footer><p>Powered by
+<a href=https://gohugo.io/>Hugo</a>
+and
+<a href=https://github.com/tomfran/typo>tomfran/typo</a></p></footer></body><script src=/js/theme-switch.js></script><script defer src=/js/copy-code.js></script></html>

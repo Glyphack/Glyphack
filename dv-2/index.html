@@ -1,0 +1,93 @@
+<!doctype html><html lang=en dir=ltr><head><meta charset=utf-8><meta name=viewport content="width=device-width"><link rel=icon type=image/ico href=https:/glyphack.com/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https:/glyphack.com/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https:/glyphack.com/favicon-32x32.png><link rel=icon type=image/png sizes=192x192 href=https:/glyphack.com/android-chrome-192x192.png><link rel=apple-touch-icon sizes=180x180 href=https:/glyphack.com/apple-touch-icon.png><meta name=description content><title>Devlog 2 | Glyphack</title><link rel=canonical href=https://glyphack.com/dv-2/><meta property="og:url" content="https://glyphack.com/dv-2/"><meta property="og:site_name" content="Glyphack"><meta property="og:title" content="Devlog 2"><meta property="og:description" content="Random notes from past month.
+New Projects
+I spent about a year building my own tool-chain for building a python type checker. It inspired by what ruff was doing for Python linting and wanted to do the same for type checker. A few months ago I found out that astral team are building a type checker. So I decided to redirect my energy toward that. Building a type checker for a language that is not designed for typing is hard. Sometimes you need to know what will be the exact behaviour of a type, and you see Pyright and Mypy have differences. So naturally this requires you to do more research and figure out the specs yourself."><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="blog"><meta property="article:published_time" content="2024-11-02T11:11:05+01:00"><meta property="article:modified_time" content="2024-11-02T11:11:05+01:00"><meta property="article:tag" content="Devlog"><link rel=stylesheet href=/assets/combined.min.455b53327434f234e64209735e8469bb37465ce15a3ebc45a1a586dd5e74c673.css media=all><script async defer data-website-id=e8710f0c-a6f2-4d2d-8b95-ef6b66e72226 src=https://cloud.umami.is/script.js></script></head><body class=light><div class=content><header><div class=header><h1 class=header-title><a href=https://glyphack.com/>Glyphack</a></h1><div class=flex><p class=small><a href=/>/Home</a></p><p class=small><a href=/blog/>/Blog</a></p><p class=small><a href=/projects/>/Projects</a></p><p class=small><a href=/now/>/Now</a></p><p class=small><a href=/reading-list/>/Reading List</a></p><p class=small><a href=https://r.glyphack.com/s/s>/Reads This</a></p><p class=small><a href="https://docs.google.com/document/d/1XgC2Va8ZgJ2DrmRKpgd_7iVjv8aASnn8nzl6DgkR1mg/edit?usp=sharing">/Resume</a></p></div></div></header><main class=main><div class=breadcrumbs><a href=/>Home</a><span class=breadcrumbs-separator>/</span><a href=/blog/>Blog</a><span class=breadcrumbs-separator>/</span>
+<a href=/dv-2/>Devlog 2</a></div><div><article><header class=single-intro-container><h1 class=single-title>Devlog 2</h1><p class=single-readtime><time datetime=2024-11-02T11:11:05+01:00>November 2, 2024</time></p></header><div class=single-content><p>Random notes from past month.</p><p><strong>New Projects</strong></p><p>I spent about a year building <a href=https://github.com/Glyphack/enderpy>my own tool-chain</a> for building a python type checker. It inspired by what ruff was doing for Python linting and wanted to do the same for type checker.
+A few months ago I found out that astral team are building a type checker. So I decided to redirect my energy toward that.
+Building a type checker for a language that is not designed for typing is hard.
+Sometimes you need to know what will be the exact behaviour of a type, and you see Pyright and Mypy have differences.
+So naturally this requires you to do more research and figure out the specs yourself.</p><p>I was getting a lot of my guidance from the astral team. Because I&rsquo;m not a python typing expert.
+So I think this would be a better approach to contribute to that project and achieve my goal.
+Also, Rust is a hard language and a lot of the time I felt like the language was stopping me from doing what I want.
+So I had to read a lot on how to use it.
+When contributing to another project, you have other people who will help with this kind of stuff.
+So this is even better I don&rsquo;t need to fight the language any more, I can read their code and learn and help with typing.</p><p>Aside from that,
+I&rsquo;m building a C compiler from scratch with my friend. The goal is for it to compile itself.
+<a href=https://github.com/keyvank/30cc>https://github.com/keyvank/30cc</a></p><p>For some time I&rsquo;m going to write my own projects in something other than Rust.
+It was hard for me to work with it and focus on the project.
+For learning projects I want to do it myself with minimal dependencies.
+Rust can be tricky, and you need a dependency to save yourself from writing unsafe code.
+Or the code becomes verbose and requires a lot of typing and organizing it.</p><p><strong>Terminal Workflow Improvements</strong></p><p>On of the things I&rsquo;ve been wanting for a long time was the ability to jump to start of a command output in terminal. Imagine when you run something, and it outputs a lot of things.
+When you want to see the beginning of the output or just read the logs from the beginning you need to scroll up.
+This turns out to be easy to do but requires configuration for the terminal and shell you are using.
+For Wezterm and Fish I did the following:</p><p>Set key bindings for <a href=https://wezfurlong.org/wezterm/config/lua/keyassignment/ScrollToPrompt.html>ScrollToPrompt</a> action.
+Create a fish function to emit the characters that marks the output of the command before executing a command.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span><span style=color:#66d9ef>function</span> pre_command --on-event fish_preexec
+</span></span><span style=display:flex><span>    printf <span style=color:#e6db74>&#39;\033]133;A\033\\&#39;</span>
+</span></span><span style=display:flex><span>end
+</span></span></code></pre></div><p>This feature to run specific functions on an event in fish is really powerful. You can build custom workflows around your work. For example, you can do some project specific setup when entering a folder with this snippet:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span><span style=color:#66d9ef>function</span> some_setup --on-variable PWD
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> test <span style=color:#e6db74>&#34;</span>$PWD<span style=color:#e6db74>&#34;</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;</span>$PROGRAMMING_DIR<span style=color:#e6db74>/&#34;</span>
+</span></span><span style=display:flex><span>		<span style=color:#75715e># do some stuff</span>
+</span></span><span style=display:flex><span>    end
+</span></span><span style=display:flex><span>end
+</span></span></code></pre></div><p><strong>Neovim</strong></p><p>If you know how to fold all the functions by default please let me know.
+<a href=https://old.reddit.com/r/neovim/comments/1g41rjy/can_neovim_do_this_already_with_treesitter/>https://old.reddit.com/r/neovim/comments/1g41rjy/can_neovim_do_this_already_with_treesitter/</a></p><p>I&rsquo;m proud of myself for writing these two simple commands:</p><ol><li>Key binding to insert a hyperlink in markdown file on visual selection</li><li>Command to go to the test file of the current go file I have open. Very useful at my job</li></ol><pre tabindex=0><code>vim.api.nvim_create_user_command(&#34;Link&#34;, function(opts)
+	local start_pos = vim.fn.getpos(&#34;&#39;&lt;&#34;)
+	local end_pos = vim.fn.getpos(&#34;&#39;&gt;&#34;)
+
+	local selected_text = vim.fn.getline(start_pos[2]):sub(start_pos[3], end_pos[3])
+
+	vim.api.nvim_command(&#34;normal! gv&#34;)
+	if selected_text:match(&#34;^http&#34;) then
+		vim.fn.setreg(&#39;&#34;&#39;, &#34;[](&#34; .. selected_text .. &#34;)&#34;)
+		vim.api.nvim_command(&#34;normal! P&#34;)
+		local new_pos = { start_pos[2], start_pos[3] - 1 }
+		vim.api.nvim_win_set_cursor(0, new_pos)
+	else
+		vim.fn.setreg(&#39;&#34;&#39;, &#34;[&#34; .. selected_text .. &#34;]()&#34;)
+		vim.api.nvim_command(&#34;normal! P&#34;)
+		local new_pos = { start_pos[2], start_pos[3] + #selected_text + 2 }
+		vim.api.nvim_win_set_cursor(0, new_pos)
+	end
+end, { range = true })
+
+vim.keymap.set(&#34;v&#34;, &#34;&lt;leader&gt;k&#34;, &#34;:Link&lt;CR&gt;&#34;, { noremap = true, silent = true })
+
+vim.api.nvim_create_user_command(&#34;GotoTest&#34;, function()
+	local current_file = vim.fn.expand(&#34;%:p&#34;)
+	local file_type = vim.bo.filetype
+	local test_file
+
+	if file_type == &#34;go&#34; then
+		test_file = vim.fn.fnamemodify(current_file, &#34;:r&#34;) .. &#34;_test.go&#34;
+	else
+		vim.api.nvim_err_writeln(&#34;Test file location not defined for filetype: &#34; .. file_type)
+		return
+	end
+
+	if vim.fn.filereadable(test_file) == 1 then
+		vim.cmd(&#34;edit &#34; .. test_file)
+	else
+		vim.api.nvim_err_writeln(&#34;Test file not found: &#34; .. test_file)
+	end
+end, {})
+</code></pre><p>I had a problem that when I connected my laptop to a new screen Flameshot would not capture the whole screen from the new screen in the screenshots.
+I could not find a way to resolve this so I wrote this hammerspoon script to restart the app when I connect it to a new monitor:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-lua data-lang=lua><span style=display:flex><span><span style=color:#66d9ef>local</span> <span style=color:#66d9ef>function</span> <span style=color:#a6e22e>screenCallback</span>(layout)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> layout <span style=color:#f92672>==</span> <span style=color:#66d9ef>true</span> <span style=color:#66d9ef>then</span>
+</span></span><span style=display:flex><span>		print(<span style=color:#e6db74>&#34;Screen did not change&#34;</span>)
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>end</span>
+</span></span><span style=display:flex><span>	setPrimary()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>local</span> flameshot_bundle <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;/Applications/flameshot.app&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>local</span> flameshot <span style=color:#f92672>=</span> hs.application.find(flameshot_bundle, <span style=color:#66d9ef>false</span>, <span style=color:#66d9ef>false</span>)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> flameshot <span style=color:#66d9ef>then</span>
+</span></span><span style=display:flex><span>		flameshot:kill()
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>end</span>
+</span></span><span style=display:flex><span>	hs.application.open(flameshot_bundle)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>end</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>hs.screen.watcher.newWithActiveScreen(screenCallback):start()
+</span></span></code></pre></div><hr><ul><li>I knew about PyPy, but I didn&rsquo;t know they have a full tool chain for creating interpreters. Until I watched this <a href="https://www.youtube.com/watch?v=p8fCq16XTH4">Tsoding video</a></li><li>Kay Lack&rsquo;s YouTube channel is one of the best things I found last month. High quality videos about computers and programming.
+This one is about <a href="https://youtube.com/watch?v=DiXMoBMWMmA&amp;si=yqldVom-i92x7iSA">regex</a> and <a href="https://www.youtube.com/watch?v=GU8MnZI0snA">this one</a> assembly.</li></ul></div></article><div class=single-pagination><hr><div class=flexnowrap><div class=single-pagination-prev><div class=single-pagination-container-prev><div class=single-pagination-text>←</div><div class=single-pagination-text><a href=/dns-from-scratch/>Writing a DNS server From Scratch</a></div></div></div><div class=single-pagination-next><div class=single-pagination-container-next><div class=single-pagination-text><a href=/dev-tools-at-work/>Dev Tools at Work</a></div><div class=single-pagination-text>→</div></div></div></div><hr></div><div class=back-to-top><a href=#top>back to top</a></div></div></main></div><footer><p>Powered by
+<a href=https://gohugo.io/>Hugo</a>
+and
+<a href=https://github.com/tomfran/typo>tomfran/typo</a></p></footer></body><script src=/js/theme-switch.js></script><script defer src=/js/copy-code.js></script></html>

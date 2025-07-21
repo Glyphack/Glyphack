@@ -1,0 +1,185 @@
+<!doctype html><html lang=en dir=ltr><head><meta charset=utf-8><meta name=viewport content="width=device-width"><link rel=icon type=image/ico href=https:/glyphack.com/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https:/glyphack.com/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https:/glyphack.com/favicon-32x32.png><link rel=icon type=image/png sizes=192x192 href=https:/glyphack.com/android-chrome-192x192.png><link rel=apple-touch-icon sizes=180x180 href=https:/glyphack.com/apple-touch-icon.png><meta name=description content><title>Rate Limiter From Scratch in Python Part 1 | Glyphack</title><link rel=canonical href=https://glyphack.com/rate-limiter-python-1/><meta property="og:url" content="https://glyphack.com/rate-limiter-python-1/"><meta property="og:site_name" content="Glyphack"><meta property="og:title" content="Rate Limiter From Scratch in Python Part 1"><meta property="og:description" content="Introduction # After reading ByteByteGo course motivated me to write a rate limiter. So I decided to do it in 500lines theme.
+We will focus on how to create the interfaces and components, to allow extensibility in the predicted ways.
+You can find the complete source code here.
+What is a Rate Limiter? # Well, there are a lot of great explanations on what is a rate limiter, but I’ll give a minimal introduction to it for this post."><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="blog"><meta property="article:published_time" content="2023-02-14T23:19:18+01:00"><meta property="article:modified_time" content="2023-02-14T23:19:18+01:00"><meta property="article:tag" content="Coding"><link rel=stylesheet href=/assets/combined.min.455b53327434f234e64209735e8469bb37465ce15a3ebc45a1a586dd5e74c673.css media=all><script async defer data-website-id=e8710f0c-a6f2-4d2d-8b95-ef6b66e72226 src=https://cloud.umami.is/script.js></script></head><body class=light><div class=content><header><div class=header><h1 class=header-title><a href=https://glyphack.com/>Glyphack</a></h1><div class=flex><p class=small><a href=/>/Home</a></p><p class=small><a href=/blog/>/Blog</a></p><p class=small><a href=/projects/>/Projects</a></p><p class=small><a href=/now/>/Now</a></p><p class=small><a href=/reading-list/>/Reading List</a></p><p class=small><a href=https://r.glyphack.com/s/s>/Reads This</a></p><p class=small><a href="https://docs.google.com/document/d/1XgC2Va8ZgJ2DrmRKpgd_7iVjv8aASnn8nzl6DgkR1mg/edit?usp=sharing">/Resume</a></p></div></div></header><main class=main><div class=breadcrumbs><a href=/>Home</a><span class=breadcrumbs-separator>/</span><a href=/blog/>Blog</a><span class=breadcrumbs-separator>/</span>
+<a href=/rate-limiter-python-1/>Rate Limiter From Scratch in Python Part 1</a></div><div><article><header class=single-intro-container><h1 class=single-title>Rate Limiter From Scratch in Python Part 1</h1><p class=single-readtime><time datetime=2023-02-14T23:19:18+01:00>February 14, 2023</time></p></header><div class=single-content><h2 class=heading id=introduction>Introduction
+<a class=anchor href=#introduction>#</a></h2><p>After reading <a href=https://bytebytego.com/>ByteByteGo course</a>
+motivated me to write a rate limiter.
+So I decided to do it in <a href=https://aosabook.org/en/500L/introduction.html>500lines</a>
+theme.</p><p>We will focus on how to create the interfaces and components,
+to allow extensibility in the predicted ways.</p><p>You can find the complete source code <a href=https://github.com/Glyphack/hera-limit>here</a>.</p><h2 class=heading id=what-is-a-rate-limiter>What is a Rate Limiter?
+<a class=anchor href=#what-is-a-rate-limiter>#</a></h2><p>Well, there are a lot of
+<a href=https://www.cloudflare.com/en-gb/learning/bots/what-is-rate-limiting/>great explanations</a>
+on what is a rate limiter, but I&rsquo;ll give a minimal introduction to it for this post.</p><p>A rate limiter is software that limits how many times
+someone can repeat an action in your software. Take Twitter as an example;
+they need to specify how often someone can send a tweet per minute; otherwise,
+one person can create 1 million tweets in a second and fill up all their server resources.</p><h2 class=heading id=high-level-design>High Level Design
+<a class=anchor href=#high-level-design>#</a></h2><p>First off, what should our rate limiter do?
+The rate limiter should be a function that takes in a request,
+decides if the request can go through or not based on the current statistics.</p><p>We are going to implement the following features:</p><ol><li>Rule-based rate limiting: let the user define rules<ul><li>with a simpler version (without nested rules) of <a href=https://github.com/envoyproxy/ratelimit#configuration>envoy rate limit config</a>.</li></ul></li><li>Support both local memory and Redis as storage backend</li><li>Support the following rate-limit algorithms:</li><li>Token bucket</li><li>Fixed window</li><li>Sliding window log</li><li>Sliding window counter</li><li>Distributed deployment model:<ul><li>deploying multiple instances with consistent and eventual consistency models.</li></ul></li></ol><p>What are the components of our system?</p><p><figure><div class=img-container><img loading=lazy alt="System Components" src=/rate-limiter-components.png></div></figure></p><p>Breaking down the components:</p><p><strong>Rules storage</strong>:
+it is responsible for loading rules and providing them to the rate limiter.</p><p>Separating this component allows the service independent of how the rules
+should be loaded into the service.
+We want to start the application with a set of rules saved on disk,
+but it&rsquo;s helpful to be able to add/remove rules from an API endpoint
+while the application is running.</p><p>Although we will not implement that part in this guide, separating this is good
+for easier testing and future extensibility.</p><p><strong>Storage</strong> :
+This component is responsible for holding data used by rate-limiting algorithms.</p><p>Creating an interface for storage is helpful because
+we can ignore the underlying storage implementation in rate limit algorithms.
+Allowing us to use multiple storage backends such as Redis or local memory
+without touching the rate limit algorithm code.
+We can implement operations <code>exists</code>, <code>get_value</code>, <code>set</code>, <code>incr</code> for the above algorithms.</p><p>Note that we assume that our data store for this software is a key/value store.
+We are not creating a general store that every application can use.
+This data store helps with writing a more straightforward interface
+and implementation for storage.
+For example, we don&rsquo;t require to support where/filtering clause.</p><p><a href="https://www.youtube.com/watch?v=tKbV6BpH-C8">This video</a>
+gives a nice explanation of why sometimes we must do this.</p><style>#callout{background:#f9f9f9;padding:1.5em 1.25em;border-radius:3px;display:flex;flex-direction:row;margin-bottom:20px}#callout-inner{margin-left:1em}@media(max-width:767px){#callout{padding:1.5em .75em 1.5em .6em}#callout-inner{margin-left:.5em}}</style><div id=callout><div>✅</div><div id=callout-inner>In the above abstraction, we are not creating a generic storage but only a key-value store. This abstraction limits the extensibility of the code but makes the work easier. Which makes it a good choice for rate limiter problem scope. Always be careful when creating a very generic abstraction.</div></div><p><strong>Limit Strategy</strong>:
+This component implements the rate limit algorithms without knowing the
+underlying storage or API implementation.</p><p>It should take in storage and a request and provide a result whether it&rsquo;s limited.</p><p>The request details are essential to decide whether to limit,
+but we only need the request data, IP, and path.
+So it&rsquo;s better only to take in these values and
+not depend on a particular request type.
+Then in the future, we can write adapters to convert a gRPC request to this
+function&rsquo;s input format.</p><p>Service: takes care of orchestrating all the components.
+Upon startup, it loads all the rules into memory and creates a list of limit strategies to check.
+The flow of handling requests:</p><ol><li>Run all the rules that apply to the request path</li><li>Rules answer whether to allow or deny the request.</li></ol><p><strong>API</strong>: This layer is an interface for other programs to call the rate limiter.</p><p>For example, this part can be exposed to the API gateway. We will not implement the API, but we will implement the logic to rate limit requests. Separating the API and rate limit service is helpful as we can expose different interfaces to integrate with other tools, for example:</p><ul><li>Importing the rate limiter directly into the app</li><li>Making it available as a <a href=https://docs.konghq.com/gateway/latest/plugin-development/>Kong plugin</a></li></ul><p>The rule structure is part of the application interface. Users can define them to rate limit the services,
+and just like an API, we don&rsquo;t change them much.</p><p>On the other hand, the LimitStrategy and Storage can be swapped and replaced with different implementations.
+So a rule can stay the same while the limiter enforcing the rule can be changed to relax the rule or make it more strict.</p><h2 class=heading id=implementation>Implementation
+<a class=anchor href=#implementation>#</a></h2><h3 class=heading id=defining-interfaces>Defining Interfaces
+<a class=anchor href=#defining-interfaces>#</a></h3><p>Based on the above rule structure we can use the following structure:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> dataclasses <span style=color:#f92672>import</span> dataclass
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> enum <span style=color:#f92672>import</span> Enum
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> typing <span style=color:#f92672>import</span> List, Optional
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Unit</span>(str, Enum):
+</span></span><span style=display:flex><span>    SECOND <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;second&#34;</span>
+</span></span><span style=display:flex><span>    MINUTE <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;minute&#34;</span>
+</span></span><span style=display:flex><span>    HOUR <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;hour&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>to_seconds</span>(self) <span style=color:#f92672>-&gt;</span> int:
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> self <span style=color:#f92672>==</span> Unit<span style=color:#f92672>.</span>SECOND:
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>elif</span> self <span style=color:#f92672>==</span> Unit<span style=color:#f92672>.</span>MINUTE:
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>60</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>elif</span> self <span style=color:#f92672>==</span> Unit<span style=color:#f92672>.</span>HOUR:
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>3600</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>else</span>:
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>raise</span> <span style=color:#a6e22e>ValueError</span>(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Unknown unit: </span><span style=color:#e6db74>{</span>self<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>@dataclass</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Descriptor</span>:
+</span></span><span style=display:flex><span>    key: str
+</span></span><span style=display:flex><span>    unit: Unit
+</span></span><span style=display:flex><span>    requests_per_unit: int
+</span></span><span style=display:flex><span>    value: Optional[str] <span style=color:#f92672>=</span> <span style=color:#66d9ef>None</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>@dataclass</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Rule</span>:
+</span></span><span style=display:flex><span>    path: str
+</span></span><span style=display:flex><span>    descriptors: List[Descriptor]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>match</span>(self, path: str) <span style=color:#f92672>-&gt;</span> bool:
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> self<span style=color:#f92672>.</span>path <span style=color:#f92672>==</span> path
+</span></span></code></pre></div><p><code>dataclass</code> is used here for easier initialization.</p><p>Now let&rsquo;s define the storage interface</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> abc <span style=color:#f92672>import</span> ABC, abstractmethod
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> enum <span style=color:#f92672>import</span> Enum
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>StorageEngines</span>(str, Enum):
+</span></span><span style=display:flex><span>    REDIS <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;redis&#34;</span>
+</span></span><span style=display:flex><span>    MEMORY <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;memory&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>AbstractStorage</span>(ABC):
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>@abstractmethod</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>get</span>(self, key):
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>raise</span> <span style=color:#a6e22e>NotImplementedError</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>@abstractmethod</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>set</span>(self, key, value, ttl_seconds: int):
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>raise</span> <span style=color:#a6e22e>NotImplementedError</span>
+</span></span></code></pre></div><p><code>get</code> and <code>set</code> are the required methods for implementing the above algorithms.
+other operations such as <a href=https://redis.io/commands/decr/>decr</a>
+are also available which can increase the performance of our code.</p><p>Limit strategies only depend on the storage & rule components.
+It should also have a request type for itself which can be used by
+other components calling it to pass in a request with a generic form.
+So it does not depend on a specific type of request, but only it&rsquo;s data and path.</p><p>The only public function is <code>do_limit</code>
+which takes in a request and determines if it&rsquo;s limited or not.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>LimitStrategies</span>(str, Enum):
+</span></span><span style=display:flex><span>    TOKEN_BUCKET <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;token_bucket&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>@dataclass</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Request</span>:
+</span></span><span style=display:flex><span>    path: str
+</span></span><span style=display:flex><span>    data: dict
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>AbstractStrategy</span>(abc<span style=color:#f92672>.</span>ABC, metaclass<span style=color:#f92672>=</span>abc<span style=color:#f92672>.</span>ABCMeta):
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>__init__</span>(
+</span></span><span style=display:flex><span>        self,
+</span></span><span style=display:flex><span>        storage_backend: AbstractStorage,
+</span></span><span style=display:flex><span>        rule_descriptor: Descriptor,
+</span></span><span style=display:flex><span>    ) <span style=color:#f92672>-&gt;</span> <span style=color:#66d9ef>None</span>:
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>storage_backend <span style=color:#f92672>=</span> storage_backend
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>rule_descriptor <span style=color:#f92672>=</span> rule_descriptor
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>@abc.abstractmethod</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>do_limit</span>(
+</span></span><span style=display:flex><span>        self,
+</span></span><span style=display:flex><span>        request: Request,
+</span></span><span style=display:flex><span>    ):
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>raise</span> <span style=color:#a6e22e>NotImplementedError</span>
+</span></span></code></pre></div><h3 class=heading id=token-bucket>Token Bucket
+<a class=anchor href=#token-bucket>#</a></h3><p>Now that the interfaces are clear we can start implementing the algorithm.</p><p>From the rule structure,
+we can use the <code>unit</code> to to refresh tokens in the bucket.
+and the <code>request_per_unit</code> to determine bucket capacity.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>TokenBucket</span>(AbstractStrategy):
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>__init__</span>(
+</span></span><span style=display:flex><span>        self,
+</span></span><span style=display:flex><span>        storage_backend: AbstractStorage,
+</span></span><span style=display:flex><span>        rule_descriptor: Descriptor,
+</span></span><span style=display:flex><span>    ):
+</span></span><span style=display:flex><span>        su
+</span></span></code></pre></div><h4 class=heading id=test-rate-limiter-service>Test Rate Limiter Service
+<a class=anchor href=#test-rate-limiter-service>#</a></h4><p>For rate limiter service we need to create two fixtures, config and local storage:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#a6e22e>@pytest.fixture</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>local_storage</span>():
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>yield</span> memory<span style=color:#f92672>.</span>Memory()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>@pytest.fixture</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>config</span>():
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> Config(
+</span></span><span style=display:flex><span>        limit_strategy<span style=color:#f92672>=</span>LimitStrategies<span style=color:#f92672>.</span>TOKEN_BUCKET,
+</span></span><span style=display:flex><span>    )
+</span></span></code></pre></div><p>Now what can be tested in the service?
+With the limit strategy we were testing if the rule descriptor is applied correctly.</p><p>Here we should check if the rule is applied correctly,
+this means we can still test the rule descriptor part,
+but it&rsquo;s not necessary since if a rule descriptor is not applied correctly
+then the limit strategy test must throw an error(otherwise we end up with an
+untested strategy which is a nightmare).</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>test_rate_limit_service_applies_the_rule</span>(local_storage: memory<span style=color:#f92672>.</span>Memory, config: Config):
+</span></span><span style=display:flex><span>    rule_descriptor <span style=color:#f92672>=</span> Descriptor(
+</span></span><span style=display:flex><span>        key<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;user_id&#34;</span>,
+</span></span><span style=display:flex><span>        requests_per_unit<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>,
+</span></span><span style=display:flex><span>        unit<span style=color:#f92672>=</span>Unit<span style=color:#f92672>.</span>SECOND,
+</span></span><span style=display:flex><span>    )
+</span></span><span style=display:flex><span>    rule <span style=color:#f92672>=</span> Rule(path<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;/limited-path&#34;</span>, descriptors<span style=color:#f92672>=</span>[rule_descriptor])
+</span></span><span style=display:flex><span>    rate_limit_service <span style=color:#f92672>=</span> RateLimitService(
+</span></span><span style=display:flex><span>        config<span style=color:#f92672>=</span>config, storage_engine<span style=color:#f92672>=</span>local_storage, rules<span style=color:#f92672>=</span>[rule]
+</span></span><span style=display:flex><span>    )
+</span></span><span style=display:flex><span>    request <span style=color:#f92672>=</span> Request(path<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;/limited-path&#34;</span>, data<span style=color:#f92672>=</span>{<span style=color:#e6db74>&#34;user_id&#34;</span>: <span style=color:#e6db74>&#34;1&#34;</span>})
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>assert</span> rate_limit_service<span style=color:#f92672>.</span>do_limit(request) <span style=color:#f92672>is</span> <span style=color:#66d9ef>False</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>assert</span> rate_limit_service<span style=color:#f92672>.</span>do_limit(request) <span style=color:#f92672>is</span> <span style=color:#66d9ef>True</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    time_now <span style=color:#f92672>=</span> datetime<span style=color:#f92672>.</span>datetime<span style=color:#f92672>.</span>now() <span style=color:#f92672>+</span> datetime<span style=color:#f92672>.</span>timedelta(seconds<span style=color:#f92672>=</span><span style=color:#ae81ff>3</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>with</span> freezegun<span style=color:#f92672>.</span>freeze_time(time_now):
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>assert</span> rate_limit_service<span style=color:#f92672>.</span>do_limit(request) <span style=color:#f92672>is</span> <span style=color:#66d9ef>False</span>
+</span></span></code></pre></div><h2 class=heading id=conclusion>Conclusion
+<a class=anchor href=#conclusion>#</a></h2><p>So far we have a working rate limiter with one implemented rule.
+I think this would be enough for one read,
+In the next post we will add more rate limiting algorithms and see
+how the current structure of the program can be extended.</p><p>You can find the <a href=https://github.com/Glyphack/hera-limit>complete source code</a>
+on my Github.</p></div></article><div class=single-pagination><hr><div class=flexnowrap><div class=single-pagination-prev><div class=single-pagination-container-prev><div class=single-pagination-text>←</div><div class=single-pagination-text><a href=/splitting-cdk-stacks/>Everything you need to know about splitting CDK stacks</a></div></div></div><div class=single-pagination-next><div class=single-pagination-container-next><div class=single-pagination-text><a href=/macos-productivity/>Personalize Macos Environment for Your Productivity</a></div><div class=single-pagination-text>→</div></div></div></div><hr></div><div class=back-to-top><a href=#top>back to top</a></div></div></main></div><footer><p>Powered by
+<a href=https://gohugo.io/>Hugo</a>
+and
+<a href=https://github.com/tomfran/typo>tomfran/typo</a></p></footer></body><script src=/js/theme-switch.js></script><script defer src=/js/copy-code.js></script></html>

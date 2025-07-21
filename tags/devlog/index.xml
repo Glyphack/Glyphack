@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Devlog on Glyphack</title><link>https://glyphack.com/tags/devlog/</link><description>Recent content in Devlog on Glyphack</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 12 Apr 2025 11:49:07 +0200</lastBuildDate><atom:link href="https://glyphack.com/tags/devlog/index.xml" rel="self" type="application/rss+xml"/><item><title>Devlog 4: I made a chrome extension</title><link>https://glyphack.com/dv-4/</link><pubDate>Sat, 12 Apr 2025 11:49:07 +0200</pubDate><guid>https://glyphack.com/dv-4/</guid><description>&lt;p>I&amp;rsquo;m not sure if some time comes that I finally can say I know vim. But I don&amp;rsquo;t think that would happen before I &lt;a href="https://www.youtube.com/watch?v=rT-fbLFOCy0">read the whole manual&lt;/a>.&lt;/p>
+&lt;p>This week I learned these new commands:&lt;/p>
+&lt;p>I&amp;rsquo;ve always used &lt;code>ctrl-o&lt;/code> to move to last place I was editing in vim. Turns out there&amp;rsquo;s a keybinding to move to the previous file that was open it&amp;rsquo;s &lt;strong>&lt;code>Ctrl-^&lt;/code> (or &lt;code>Ctrl-6&lt;/code>)&lt;/strong>.
+This command switches to the last visited file.
+It provides quick toggling between two files if you do it repeatedly.&lt;/p>
+&lt;p>&lt;a href="https://vim.fandom.com/wiki/Power_of_g">&lt;code>:g&lt;/code>&lt;/a> is powerful. To move/delete things that have a pattern.
+You are probably familiar with &lt;code>gj&lt;/code> and &lt;code>gk&lt;/code> but there&amp;rsquo;s also &lt;code>gq&lt;/code> (or &lt;code>gw&lt;/code> if the other did not work.) &lt;code>gw&lt;/code> helps to split a long line into smaller lines.&lt;/p>
+&lt;p>Other things:&lt;/p>
+&lt;ul>
+&lt;li>I made a chrome extension, &lt;a href="https://chromewebstore.google.com/detail/readwise-reader-importer/biaidjfcmkeeiidenndhkdaldkljaipi?authuser=1&amp;amp;hl=en">Readwise Reader Importer&lt;/a> to import links into Readwise. I wanted this tool myself for importing youtube playlists to Readwise. This time I decided to build it as an extension so I can share with others. It got 10 users! I did most of the work using Claude code. It costed around 10 euros, but I&amp;rsquo;m happy with the resulting look.&lt;/li>
+&lt;li>I moved &lt;a href="https://glyphack.com/reading-list/">my reading list&lt;/a> off Notion and to my blog. I was tired of me entering books I read and notes about them in Obsidian and the Notion was rarely updated. So I found a &lt;a href="https://glyphack.com/blog/ob/">solution&lt;/a> to update my blog with Obsidian, and then show the book notes just as any other page on my blog. The bonus is that I can make it more beautiful in the future.&lt;/li>
+&lt;li>I&amp;rsquo;ve heard about this language called ungrammar that is used in Rust to generate CSTs. I did not know anything about it. Thanks to this &lt;a href="https://github.com/astral-sh/ruff/issues/15655">issue in Ruff&lt;/a> , I did some work related to generating AST. There&amp;rsquo;s &lt;a href="https://www.youtube.com/watch?v=EIXb9mX_o9s">this nice&lt;/a> video that explains how it&amp;rsquo;s used in the Rust Analyzer code.&lt;/li>
+&lt;li>I implemented &lt;a href="https://redis.io/docs/latest/develop/data-types/streams/">Redis streams&lt;/a> in toy &lt;a href="https://github.com/Glyphack/redis-clone">clone of Redis&lt;/a>. I took some time doing this, I wanted to use an array instead of a linked list. This would make a good candidate for a blog post so I won&amp;rsquo;t go into details. Redis uses &lt;a href="https://en.wikipedia.org/wiki/Radix_tree#:~:text=In%20computer%20science%2C%20a%20radix,is%20merged%20with%20its%20parent.">radix tree&lt;/a> to implement streams(according to AI)&lt;/li>
+&lt;li>I read &lt;a href="https://sive.rs/su">https://sive.rs/su&lt;/a> and decided to keep my own URLs shorter too.&lt;/li>
+&lt;/ul>
+&lt;p>That&amp;rsquo;s it for this week.&lt;/p></description></item><item><title>Devlog 3: Coding a redis clone in C and things I learned</title><link>https://glyphack.com/dv-3/</link><pubDate>Sat, 15 Feb 2025 18:02:46 +0100</pubDate><guid>https://glyphack.com/dv-3/</guid><description>&lt;p>About two months ago I started the build your own Redis challenge from &lt;a href="https://codecrafters.io">https://codecrafters.io&lt;/a>.
+I decided to do this in C. Initially I was just curious to do it in C. Doing it in C thought me a lot of stuff that otherwise I would have not learned. Another bonus point was that I could tweak the performance to be on par with Redis server.&lt;/p>
+&lt;p>C always seemed like an impossible language to me. Working so much in garbage collected languages with rich standard libraries made me think C is hard.
+Now I think C is not hard. Whatever you write gets executed the way you wrote it. Little abstractions make it a great language to implement what you want and have control over your program.
+Topics like Async programming, managing memory are broad topics. I agree that it&amp;rsquo;s hard to achieve the same level of concurrency that you have in Python in C. But writing a small version that works for a specific use case is not impossible.
+It&amp;rsquo;s possible to implement hash map, Async, memory arena(for easier memory management), and your own string type with a few lines of C code, thanks to blogs like &lt;a href="https://nullprogram.com">null program&lt;/a>&lt;/p>
+&lt;p>I think I&amp;rsquo;ll use the below techniques I learned for any C program I create. I wish it was easier to package them so I can reuse it in different projects.&lt;/p>
+&lt;p>The source code is at &lt;a href="https://github.com/Glyphack/redis-clone">glyphack/redis-clone&lt;/a>.&lt;/p>
+&lt;p>The below are things I learned about C programming.&lt;/p>
+&lt;h2 class="heading" id="awesome-compiler-flags">
+Awesome Compiler Flags
+&lt;a class="anchor" href="#awesome-compiler-flags">#&lt;/a>
+&lt;/h2>
+&lt;p>I don&amp;rsquo;t know why nobody told me this. C can have stacktraces. It can detect race conditions. It can detect use after free. It can do a lot of stuff by just adding more compiler flags.&lt;/p>
+&lt;p>You can compile your program with flags:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>-fsanitize=undefined&lt;/code> to crash on undefined behavior scenarios&lt;/li>
+&lt;li>&lt;code>-fsanitize=thread&lt;/code> to crash when threads have race condition(this is actually what powers Golang race detector)&lt;/li>
+&lt;/ul>
+&lt;p>And if there is a race condition in your program you will see something like:&lt;/p>
+&lt;pre tabindex="0">&lt;code>==================
+WARNING: ThreadSanitizer: data race (pid=12345)
+Read of size 4 at 0x000000601040 by thread T2:
+#0 thread_func (source.c:7) in main
+#1 start_thread (pthread_create.c:XXX)
+Previous write of size 4 at 0x000000601040 by thread T1:
+#0 thread_func (source.c:7) in main
+#1 start_thread (pthread_create.c:XXX)
+Location is global &amp;#39;shared_var&amp;#39; defined in source.c:5
+==================
+&lt;/code>&lt;/pre>&lt;p>I built my program in debug mode with these flags and ran a tester that would insert and get values from the server. It detected a lot of bugs for me while pointing out the exact line the problem happened.&lt;/p>
+&lt;h2 class="heading" id="memory-arena">
+Memory Arena
+&lt;a class="anchor" href="#memory-arena">#&lt;/a>
+&lt;/h2>
+&lt;p>I used a &lt;a href="https://nullprogram.com/blog/2023/09/27/">memory arena&lt;/a> to minimize the number of &lt;code>malloc&lt;/code> and &lt;code>free&lt;/code> calls in the code.
+It makes code faster but in the end I realized how much simplified the code gets.
+It&amp;rsquo;s basically like having a garbage collector and you know when it happens.&lt;/p>
+&lt;h2 class="heading" id="custom-string-type">
+Custom String Type
+&lt;a class="anchor" href="#custom-string-type">#&lt;/a>
+&lt;/h2>
+&lt;p>One of the problems I faced soon after working with C was that, sometimes I wanted to keep a reference to middle of a giant string. Imagine you get a request and extract a field name from it. Now you have two options, either &lt;code>memcpy&lt;/code> that substring into a new string and add a &lt;code>\0&lt;/code> or make a pointer to the starting offset of the substring.
+When you keep the offset you cannot use it in most of other places because you don&amp;rsquo;t know the end of this string, and C strings end with &lt;code>\0&lt;/code>.
+I followed the advice in &lt;a href="https://nullprogram.com/blog/2023/10/08/">this post&lt;/a> and it made code a lot smaller(no extra string creation and &lt;code>malloc&lt;/code> calls) and simpler because working with a string when you know the length is just easier. Plus if you are worried you would lose the benefits of C string functions don&amp;rsquo;t worry there is not much functionality there. You can implement it yourself.&lt;/p>
+&lt;h2 class="heading" id="hash-map">
+Hash Map
+&lt;a class="anchor" href="#hash-map">#&lt;/a>
+&lt;/h2>
+&lt;p>I followed &lt;a href="https://nullprogram.com/blog/2023/09/30/">this post&lt;/a> to implement a hash map. Initially my program was using a thread per connection so I tried to extend the lock free version to work with my program.
+In the end I implemented Asynchronous code to handle multiple connections, removed the threads, and just used the hash map that is explain in the post.&lt;/p>
+&lt;h2 class="heading" id="redis-replication">
+Redis Replication
+&lt;a class="anchor" href="#redis-replication">#&lt;/a>
+&lt;/h2>
+&lt;p>The Redis replication is initially simple to implement I did not implement the full protocol.
+The basic functionality is to handshake with the master node and master node has to keep a list of replicas to forward write messages to.
+The way multiple nodes stay in sync is by using replication offset that master checks for periodically. I did not implement any recovery case for when a replica is out of sync.&lt;/p>
+&lt;h2 class="heading" id="asynchronous-programming">
+Asynchronous Programming
+&lt;a class="anchor" href="#asynchronous-programming">#&lt;/a>
+&lt;/h2>
+&lt;p>This is my favorite topic. I finally got a clue what actually happens in higher level languages. Before actually doing this I read and heard some words but it all felt like buzzwords to me.
+What does it mean each coroutine has a stack? Why can&amp;rsquo;t you run a blocking task inside an asynchronous function? I learned all after I implemented this.&lt;/p>
+&lt;p>The interesting part is, implementing basic asynchronous I/O is not hard, making it general and cross platform is. This is what other programming languages did.&lt;/p>
+&lt;p>To serve multiple clients concurrently we need a way to read from all of them without ever waiting for one client and &lt;strong>blocking&lt;/strong> others.
+So what we really need is, a way to tell which clients are ready to read, which are ready to write and instead of waiting for the ones that are not ready just skip and serve other clients.
+I recommend following &lt;a href="https://build-your-own.org/redis/05_event_loop_intro">this guide&lt;/a>. I ended up switching to &lt;code>kqueue&lt;/code> from &lt;code>poll&lt;/code> to achieve better performance on MacOS.&lt;/p>
+&lt;hr>
+&lt;p>I think this database can be a good base program to expand to any kind of future databases I want to write.
+I can reuse the existing protocol to exchange messages and add my custom logic or &lt;a href="https://eli.thegreenplace.net/2020/implementing-raft-part-0-introduction/">implement Raft&lt;/a>.&lt;/p></description></item><item><title>Devlog 2</title><link>https://glyphack.com/dv-2/</link><pubDate>Sat, 02 Nov 2024 11:11:05 +0100</pubDate><guid>https://glyphack.com/dv-2/</guid><description>&lt;p>Random notes from past month.&lt;/p>
+&lt;p>&lt;strong>New Projects&lt;/strong>&lt;/p>
+&lt;p>I spent about a year building &lt;a href="https://github.com/Glyphack/enderpy">my own tool-chain&lt;/a> for building a python type checker. It inspired by what ruff was doing for Python linting and wanted to do the same for type checker.
+A few months ago I found out that astral team are building a type checker. So I decided to redirect my energy toward that.
+Building a type checker for a language that is not designed for typing is hard.
+Sometimes you need to know what will be the exact behaviour of a type, and you see Pyright and Mypy have differences.
+So naturally this requires you to do more research and figure out the specs yourself.&lt;/p>
+&lt;p>I was getting a lot of my guidance from the astral team. Because I&amp;rsquo;m not a python typing expert.
+So I think this would be a better approach to contribute to that project and achieve my goal.
+Also, Rust is a hard language and a lot of the time I felt like the language was stopping me from doing what I want.
+So I had to read a lot on how to use it.
+When contributing to another project, you have other people who will help with this kind of stuff.
+So this is even better I don&amp;rsquo;t need to fight the language any more, I can read their code and learn and help with typing.&lt;/p>
+&lt;p>Aside from that,
+I&amp;rsquo;m building a C compiler from scratch with my friend. The goal is for it to compile itself.
+&lt;a href="https://github.com/keyvank/30cc">https://github.com/keyvank/30cc&lt;/a>&lt;/p>
+&lt;p>For some time I&amp;rsquo;m going to write my own projects in something other than Rust.
+It was hard for me to work with it and focus on the project.
+For learning projects I want to do it myself with minimal dependencies.
+Rust can be tricky, and you need a dependency to save yourself from writing unsafe code.
+Or the code becomes verbose and requires a lot of typing and organizing it.&lt;/p>
+&lt;p>&lt;strong>Terminal Workflow Improvements&lt;/strong>&lt;/p>
+&lt;p>On of the things I&amp;rsquo;ve been wanting for a long time was the ability to jump to start of a command output in terminal. Imagine when you run something, and it outputs a lot of things.
+When you want to see the beginning of the output or just read the logs from the beginning you need to scroll up.
+This turns out to be easy to do but requires configuration for the terminal and shell you are using.
+For Wezterm and Fish I did the following:&lt;/p>
+&lt;p>Set key bindings for &lt;a href="https://wezfurlong.org/wezterm/config/lua/keyassignment/ScrollToPrompt.html">ScrollToPrompt&lt;/a> action.
+Create a fish function to emit the characters that marks the output of the command before executing a command.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">function&lt;/span> pre_command --on-event fish_preexec
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> printf &lt;span style="color:#e6db74">&amp;#39;\033]133;A\033\\&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>end
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This feature to run specific functions on an event in fish is really powerful. You can build custom workflows around your work. For example, you can do some project specific setup when entering a folder with this snippet:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">function&lt;/span> some_setup --on-variable PWD
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> test &lt;span style="color:#e6db74">&amp;#34;&lt;/span>$PWD&lt;span style="color:#e6db74">&amp;#34;&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;&lt;/span>$PROGRAMMING_DIR&lt;span style="color:#e6db74">/&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># do some stuff&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> end
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>end
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>Neovim&lt;/strong>&lt;/p>
+&lt;p>If you know how to fold all the functions by default please let me know.
+&lt;a href="https://old.reddit.com/r/neovim/comments/1g41rjy/can_neovim_do_this_already_with_treesitter/">https://old.reddit.com/r/neovim/comments/1g41rjy/can_neovim_do_this_already_with_treesitter/&lt;/a>&lt;/p>
+&lt;p>I&amp;rsquo;m proud of myself for writing these two simple commands:&lt;/p>
+&lt;ol>
+&lt;li>Key binding to insert a hyperlink in markdown file on visual selection&lt;/li>
+&lt;li>Command to go to the test file of the current go file I have open. Very useful at my job&lt;/li>
+&lt;/ol>
+&lt;pre tabindex="0">&lt;code>vim.api.nvim_create_user_command(&amp;#34;Link&amp;#34;, function(opts)
+local start_pos = vim.fn.getpos(&amp;#34;&amp;#39;&amp;lt;&amp;#34;)
+local end_pos = vim.fn.getpos(&amp;#34;&amp;#39;&amp;gt;&amp;#34;)
+local selected_text = vim.fn.getline(start_pos[2]):sub(start_pos[3], end_pos[3])
+vim.api.nvim_command(&amp;#34;normal! gv&amp;#34;)
+if selected_text:match(&amp;#34;^http&amp;#34;) then
+vim.fn.setreg(&amp;#39;&amp;#34;&amp;#39;, &amp;#34;[](&amp;#34; .. selected_text .. &amp;#34;)&amp;#34;)
+vim.api.nvim_command(&amp;#34;normal! P&amp;#34;)
+local new_pos = { start_pos[2], start_pos[3] - 1 }
+vim.api.nvim_win_set_cursor(0, new_pos)
+else
+vim.fn.setreg(&amp;#39;&amp;#34;&amp;#39;, &amp;#34;[&amp;#34; .. selected_text .. &amp;#34;]()&amp;#34;)
+vim.api.nvim_command(&amp;#34;normal! P&amp;#34;)
+local new_pos = { start_pos[2], start_pos[3] + #selected_text + 2 }
+vim.api.nvim_win_set_cursor(0, new_pos)
+end
+end, { range = true })
+vim.keymap.set(&amp;#34;v&amp;#34;, &amp;#34;&amp;lt;leader&amp;gt;k&amp;#34;, &amp;#34;:Link&amp;lt;CR&amp;gt;&amp;#34;, { noremap = true, silent = true })
+vim.api.nvim_create_user_command(&amp;#34;GotoTest&amp;#34;, function()
+local current_file = vim.fn.expand(&amp;#34;%:p&amp;#34;)
+local file_type = vim.bo.filetype
+local test_file
+if file_type == &amp;#34;go&amp;#34; then
+test_file = vim.fn.fnamemodify(current_file, &amp;#34;:r&amp;#34;) .. &amp;#34;_test.go&amp;#34;
+else
+vim.api.nvim_err_writeln(&amp;#34;Test file location not defined for filetype: &amp;#34; .. file_type)
+return
+end
+if vim.fn.filereadable(test_file) == 1 then
+vim.cmd(&amp;#34;edit &amp;#34; .. test_file)
+else
+vim.api.nvim_err_writeln(&amp;#34;Test file not found: &amp;#34; .. test_file)
+end
+end, {})
+&lt;/code>&lt;/pre>&lt;p>I had a problem that when I connected my laptop to a new screen Flameshot would not capture the whole screen from the new screen in the screenshots.
+I could not find a way to resolve this so I wrote this hammerspoon script to restart the app when I connect it to a new monitor:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-lua" data-lang="lua">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">local&lt;/span> &lt;span style="color:#66d9ef">function&lt;/span> &lt;span style="color:#a6e22e">screenCallback&lt;/span>(layout)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> layout &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#66d9ef">true&lt;/span> &lt;span style="color:#66d9ef">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> print(&lt;span style="color:#e6db74">&amp;#34;Screen did not change&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> setPrimary()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">local&lt;/span> flameshot_bundle &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;/Applications/flameshot.app&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">local&lt;/span> flameshot &lt;span style="color:#f92672">=&lt;/span> hs.application.find(flameshot_bundle, &lt;span style="color:#66d9ef">false&lt;/span>, &lt;span style="color:#66d9ef">false&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> flameshot &lt;span style="color:#66d9ef">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> flameshot:kill()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> hs.application.open(flameshot_bundle)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>hs.screen.watcher.newWithActiveScreen(screenCallback):start()
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;hr>
+&lt;ul>
+&lt;li>I knew about PyPy, but I didn&amp;rsquo;t know they have a full tool chain for creating interpreters. Until I watched this &lt;a href="https://www.youtube.com/watch?v=p8fCq16XTH4">Tsoding video&lt;/a>&lt;/li>
+&lt;li>Kay Lack&amp;rsquo;s YouTube channel is one of the best things I found last month. High quality videos about computers and programming.
+This one is about &lt;a href="https://youtube.com/watch?v=DiXMoBMWMmA&amp;amp;si=yqldVom-i92x7iSA">regex&lt;/a> and &lt;a href="https://www.youtube.com/watch?v=GU8MnZI0snA">this one&lt;/a> assembly.&lt;/li>
+&lt;/ul></description></item><item><title>Devlog 0001: Contributing to Ruff, Profiling, Python Types Conformance Tests</title><link>https://glyphack.com/dv-1/</link><pubDate>Sat, 03 Feb 2024 10:56:48 +0100</pubDate><guid>https://glyphack.com/dv-1/</guid><description>&lt;p>Last week I wanted to start contributing to rust.
+I was working on Adding &lt;a href="https://github.com/astral-sh/ruff/pull/9513">uninitialized attribute access check&lt;/a> to Ruff.&lt;/p>
+&lt;p>I did it and learned a lot about how to track attributes in Python code.
+A gist of it would be, you need to go over the class, in each function when something is assigned to a name you need to check if that name is self or cls.
+And you do this by checking if it matches the first argument of that function.
+Then if the function is a class method it&amp;rsquo;s cls and otherwise self.&lt;/p>
+&lt;p>I also learned about profiling.
+After finishing the implementation I realized the benchmarks are failing.
+So I need see how did I mess up the performance. It is not because of the rule but because of the code I added to the visitor to keep track of attribute initialization and access.
+But first we need to profile.&lt;/p>
+&lt;p>I found two resources for doing it.
+Maybe I can do a separate note on Rust profiling.
+&lt;a href="https://nnethercote.github.io/perf-book/">Rust Performance Book&lt;/a> which has a profiling section.
+&lt;a href="https://docs.astral.sh/ruff/contributing/#profiling-projects">Amazing guide for Ruff Only&lt;/a>&lt;/p>
+&lt;p>The interesting part is that Macos is not good for profiling, or at least I could not easily learn to use the tools.
+I used cargo instruments, the output can be opened with instruments app. Instruments app is dog shit.
+I expected some kind of home page, documentation or something when I search for it like &lt;a href="https://jetbrains.com/help/idea/profiler-intro.html">this&lt;/a>.
+But nothing.&lt;/p>
+&lt;p>So I could not find traces for the functions I added(skill issue.) I gave up.&lt;/p>
+&lt;p>In the end I ended up using &lt;a href="https://github.com/mstange/samply">Samply&lt;/a> which was better.&lt;/p>
+&lt;p>I also used the cargo benchmark and &lt;a href="https://github.com/BurntSushi/critcmp">critcmp&lt;/a> to compare results between my commits and found the perf issue.&lt;/p>
+&lt;p>It was caused because I added a new vector to each scope to keep track of undefined attribute accesses.
+But I realized I can just have a global vector for the whole file and store the undefined attribute along with it&amp;rsquo;s scope.&lt;/p>
+&lt;p>With a vector on every scope and many allocations:&lt;/p>
+&lt;pre tabindex="0">&lt;code>linter/default-rules/large/dataset.py 1.00 455.7±6.28µs 89.3 MB/sec 1.14 519.6±19.69µs 78.3 MB/sec
+linter/default-rules/numpy/ctypeslib.py 1.00 86.9±1.62µs 191.5 MB/sec 1.14 99.3±6.53µs 167.8 MB/sec
+linter/default-rules/numpy/globals.py 1.00 12.5±0.19µs 236.4 MB/sec 1.05 13.1±0.10µs 225.1 MB/sec
+linter/default-rules/pydantic/types.py 1.00 194.5±4.85µs 131.2 MB/sec 1.16 226.3±42.70µs 112.7 MB/sec
+linter/default-rules/unicode/pypinyin.py 1.00 31.7±0.29µs 132.6 MB/sec 1.06 33.7±1.64µs 124.7 MB/sec
+&lt;/code>&lt;/pre>&lt;p>After using a global vector for the whole program:&lt;/p>
+&lt;pre tabindex="0">&lt;code>linter/default-rules/large/dataset.py 1.00 455.7±6.28µs 89.3 MB/sec 1.03 469.9±5.46µs 86.6 MB/sec
+linter/default-rules/numpy/ctypeslib.py 1.00 86.9±1.62µs 191.5 MB/sec 1.02 88.8±1.47µs 187.6 MB/sec
+linter/default-rules/numpy/globals.py 1.00 12.5±0.19µs 236.4 MB/sec 1.04 13.0±0.10µs 227.1 MB/sec
+linter/default-rules/pydantic/types.py 1.00 194.5±4.85µs 131.2 MB/sec 1.03 201.2±4.70µs 126.8 MB/sec
+linter/default-rules/unicode/pypinyin.py 1.00 31.7±0.29µs 132.6 MB/sec 1.03 32.7±0.28µs 128.7 MB/sec
+&lt;/code>&lt;/pre>&lt;p>I also learned that codespeed is a wonderful tool for exploring performance changes between my commits.
+&lt;a href="https://codspeed.io/astral-sh/ruff/branches/Glyphack:linter-pylint-E0203">Example&lt;/a>, next time I use this.&lt;/p>
+&lt;p>For enderpy I was looking for a test suite that I can develop against until my type checker is complete.
+Luckily it exists! You can view it &lt;a href="https://github.com/python/typing/tree/main/conformance">here&lt;/a>.
+It does not have a basic test case were you only have functions and variables but that one is easy to come up with myself.&lt;/p></description></item></channel></rss>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Documentation-Writing on Glyphack</title><link>https://glyphack.com/tags/documentation-writing/</link><description>Recent content in Documentation-Writing on Glyphack</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 23 Jan 2022 17:30:40 +0330</lastBuildDate><atom:link href="https://glyphack.com/tags/documentation-writing/index.xml" rel="self" type="application/rss+xml"/><item><title>How Write and Organize Software Documentation</title><link>https://glyphack.com/write-software-documentation/</link><pubDate>Sun, 23 Jan 2022 17:30:40 +0330</pubDate><guid>https://glyphack.com/write-software-documentation/</guid><description>&lt;p>Software documents play an important role in software development, everyone pays attention to writing documentation but just like writing code, writing the text is not enough but it has to be readable and understandable for other people, after all the purpose of documenting is to communicate. Recently I was reading documentation of a system and noticed that there&amp;rsquo;s something strange about it. although all the components are documented, but still it&amp;rsquo;s not easy to find information on something.&lt;/p>
+&lt;p>Let&amp;rsquo;s review the documentation role in these two situations, onboarding a new person with the system and improving collaboration between a team. This comes down to these two questions:&lt;/p>
+&lt;ol>
+&lt;li>Can I hand over my technical docs to someone and expect them to have all information they need to make their first commit?&lt;/li>
+&lt;li>If situation X happens, do my teammates have to call someone to know what is happening?
+So every day, when one of these happens, think about the answers and see how well your documentation is. For example, when you get similar questions from teammates about a system, think of it as a failure in the documentation system, not all questions can be answered inside docs, but the frequent ones must be answered.&lt;/li>
+&lt;/ol>
+&lt;h2 class="heading" id="avoid-common-problems-of-technical-software-documentation">
+Avoid Common Problems of Technical Software Documentation
+&lt;a class="anchor" href="#avoid-common-problems-of-technical-software-documentation">#&lt;/a>
+&lt;/h2>
+&lt;p>So what are the problems that can be in your technical notes?&lt;/p>
+&lt;h3 class="heading" id="non-existent-documents">
+Non existent documents
+&lt;a class="anchor" href="#non-existent-documents">#&lt;/a>
+&lt;/h3>
+&lt;h4 class="heading" id="no-entry-point-link-around-a-topic">
+No Entry Point Link Around a Topic
+&lt;a class="anchor" href="#no-entry-point-link-around-a-topic">#&lt;/a>
+&lt;/h4>
+&lt;p>There is no primary documentation around a topic; you have to pass multiple links when someone is on boarded or read a single document after cloning the repo.&lt;/p>
+&lt;h4 class="heading" id="cover-all-information-needed-for-a-project">
+Cover all information needed for a project
+&lt;a class="anchor" href="#cover-all-information-needed-for-a-project">#&lt;/a>
+&lt;/h4>
+&lt;p>If someone joins your team, they need information on how a system works. They also have to know how to set up their local and sandbox environment and use it.&lt;/p>
+&lt;h3 class="heading" id="hidden-documents">
+Hidden Documents
+&lt;a class="anchor" href="#hidden-documents">#&lt;/a>
+&lt;/h3>
+&lt;h4 class="heading" id="nesting-overuse">
+Nesting Overuse
+&lt;a class="anchor" href="#nesting-overuse">#&lt;/a>
+&lt;/h4>
+&lt;p>Having sub-pages inside sub-pages makes the text to be scattered in different documents. Suppose someone reads a note on compiling a project. They also have to find the testing guide and deployment guide next to that text. It can be another section within that doc or a document next to it. Just make sure you don&amp;rsquo;t need to browse again to find those.
+This pattern is similar to coupling the code that is related to each other like putting it inside a single module.&lt;/p>
+&lt;h4 class="heading" id="multiple-channels">
+Multiple channels
+&lt;a class="anchor" href="#multiple-channels">#&lt;/a>
+&lt;/h4>
+&lt;p>Some materials might be found on the slack channel, others on your documentation tool. Keep all of them in one place as much as possible.&lt;/p>
+&lt;h3 class="heading" id="inaccurate-documents">
+Inaccurate Documents
+&lt;a class="anchor" href="#inaccurate-documents">#&lt;/a>
+&lt;/h3>
+&lt;p>If the documents are not updated along with the code, they become inaccurate as you change the software. One possible solution is to link the code and document together(by using Readme file) so more people will see the document while writing code.
+Here you can see that why is it valuable to have a single document for a topic, for example here if you have 4 documents that has to change after changing system codes then it&amp;rsquo;s much harder to update the documents that a single document.&lt;/p>
+&lt;h3 class="heading" id="obsolete-documents">
+Obsolete Documents
+&lt;a class="anchor" href="#obsolete-documents">#&lt;/a>
+&lt;/h3>
+&lt;p>If a design is changed and older design decisions don&amp;rsquo;t apply anymore, archive them.&lt;/p>
+&lt;h3 class="heading" id="afterthought-documents">
+Afterthought Documents
+&lt;a class="anchor" href="#afterthought-documents">#&lt;/a>
+&lt;/h3>
+&lt;p>This is a problem because if you write your docs after delivering a project, you will end up:&lt;/p>
+&lt;ol>
+&lt;li>Forgetting to include important notes on the topic because you are in the &lt;a href="https://en.wikipedia.org/wiki/Curse_of_knowledge">curse of knowledge&lt;/a>.&lt;/li>
+&lt;li>Have to explain the project to someone personally if you need to hand it over in the middle.&lt;/li>
+&lt;/ol>
+&lt;h2 class="heading" id="how-to-make-technical-documentations-better">
+How to Make Technical Documentations Better
+&lt;a class="anchor" href="#how-to-make-technical-documentations-better">#&lt;/a>
+&lt;/h2>
+&lt;p>It&amp;rsquo;s essential to organize documents so that it&amp;rsquo;s visible to everyone.&lt;/p>
+&lt;p>&lt;strong>Be Careful with Nesting&lt;/strong>
+When newcomers open the documentation, they should locate all the required information they need to work on the project. This means in your top-level page you should have all the topics you want to explain visible there as links or sub-pages.
+As an example of a good technical documentation checkout &lt;a href="https://wiki.crdb.io/wiki/spaces/CRDB/overview">CockroachDB documents&lt;/a>, There are all the things from introduction to deploying the project listed on the first page with only 1 level nesting.
+My personal suggestion about this is choose a topic and write all the relevant information to that topic in the page. if a sub topic grows over time you can create a sub-page for it later.&lt;/p>
+&lt;p>&lt;strong>Make it like a story&lt;/strong>
+It should be easy to follow your documents from beginning to the end. Make sure the topics are in the right order. Keep similar topics in different contexts separate, e.g. keep end-user documents separate from system specification documents but link them because the developer needs to know about the user when writing docs.
+This means all the journey from finding the repo to clone to deploying a feature can be found inside technical docs.&lt;/p>
+&lt;p>&lt;strong>Make Documentation Writing an Ongoing process&lt;/strong>
+It&amp;rsquo;s hard to keep documents that no one reads updated, make sure your documents have users by sending people document links instead of answering questions in Slack.&lt;/p>
+&lt;p>&lt;strong>Writing Software Documentation is a Collaborative Process&lt;/strong>
+Write documents with the mindset of other people are going to use them. so you should considering:&lt;/p>
+&lt;ul>
+&lt;li>Ask your team to review the docs you write&lt;/li>
+&lt;li>Put new pages you create on draft&lt;/li>
+&lt;/ul>
+&lt;h2 class="heading" id="other-resources">
+Other resources
+&lt;a class="anchor" href="#other-resources">#&lt;/a>
+&lt;/h2>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;a href="https://microsoft.github.io/code-with-engineering-playbook/documentation/guidance/project-and-repositories/">Documenting code repositories&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a href="https://blog.prototypr.io/software-documentation-types-and-best-practices-1726ca595c7f">Type of documentations&lt;/a>&lt;/p>
+&lt;/li>
+&lt;/ul></description></item></channel></rss>
