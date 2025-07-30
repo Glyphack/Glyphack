@@ -18,7 +18,8 @@ You read about result of their work.
 But this book show the human side of Richard by showing his mistakes.
 I love this, it breaks the usual image of a genius doing excellent work one after another.
 
-**Early life**
+##  Early life
+
 
 This book starts with His life in high school and later how he met his first wife.
 Later the story is sad, but also beautiful.
@@ -68,7 +69,7 @@ What's the secret to wake up in the morning and not be sad about everything.
 > It’s hard to explain. If a Martian (who, we’ll imagine, never dies except by accident) came to Earth and saw this peculiar race of creatures—these humans who live about seventy or eighty years, knowing that death is going to come—it would look to him like a terrible problem of psychology to live under those circumstances, knowing that life is only temporary. Well, we humans somehow figure out how to live despite this problem: we laugh, we joke, we live.
 > The only difference for me and Arlene was; instead of fifty years, it was five years. It was only a quantitative difference—the psychological problem was just the same. The only way it would have become any different is if we had said to ourselves, “But those other people have it better, because they might live fifty years.” But that’s crazy. Why make yourself miserable saying things like, “Why do we have such bad luck? What has God done to us? What have we done to deserve this?”—all of which, if you understand reality and take it completely into your heart, are irrelevant and unsolvable. They are just things that nobody can know. Your situation is just an accident of life.
 
-**Enjoying Randomness**
+## Traveling to Random Places
 
 Do you have the same feeling that it's hard to plan how to visit a new a country?
 There's a constant feeling of what are the things that I must visit.
@@ -83,7 +84,8 @@ She says, “Yes.”
 So I say, “Yes, that’s right; we want to go to Iseokitsu.”
 Gweneth hadn’t talked to me about it, but I knew what she was thinking: we enjoy traveling to places in the middle of nowhere, places we’ve never heard of, places which have nothing.
 
-**Shuttle Story**
+## Shuttle Story
+
 
 The final story in the book is about his investigation of the NASA's shuttle that blew up in 1986.
 NASA calls him and other people to figure out why there was an accident and how to improve the shuttle.
@@ -156,7 +158,7 @@ He meets Mr. Lovinghood, manager of engineers working on the engine.
 >I showed Mr. Lovingood the other answers and said, “You’ll be interested to know that there is a difference between engineers and management here—a factor of more than 300.”
 
 
-**Epilogue**
+## Epilogue
 
 This book is full of interesting stories.
 It teaches a lot of things. And it's not the usual things you learn when you try to learn.
