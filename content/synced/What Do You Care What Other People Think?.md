@@ -19,6 +19,7 @@ But this book show the human side of Richard by showing his mistakes.
 I love this, it breaks the usual image of a genius doing excellent work one after another.
 
 **Early life**
+
 This book starts with His life in high school and later how he met his first wife.
 Later the story is sad, but also beautiful.
 
@@ -156,6 +157,7 @@ He meets Mr. Lovinghood, manager of engineers working on the engine.
 
 
 **Epilogue**
+
 This book is full of interesting stories.
 It teaches a lot of things. And it's not the usual things you learn when you try to learn.
 These are principles you learn from Richard by living parts of his life when reading the book.
