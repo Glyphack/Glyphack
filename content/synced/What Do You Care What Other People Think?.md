@@ -103,21 +103,21 @@ Which turns out to be a better solution than nagging about a situation.
 
 > I went over to Mr. Rogers and said, “We’re going to Florida next Thursday. That means we’ve got nothing to do for five days: what’ll I do for five days?”
 >
-“Well, what would you have done if you hadn’t been on the commission?”
+>“Well, what would you have done if you hadn’t been on the commission?”
 >
-“I was going to go to Boston to consult, but I canceled it in order to work 100 percent.”
+>“I was going to go to Boston to consult, but I canceled it in order to work 100 percent.”
 >
-“Well, why don’t you go to Boston for the five days?”
+>“Well, why don’t you go to Boston for the five days?”
 >
-I couldn’t take that. I thought, “I’m dead already! The goddamn thing isn’t working right.” I went back to my hotel, devastated.
+>I couldn’t take that. I thought, “I’m dead already! The goddamn thing isn’t working right.” I went back to my hotel, devastated.
 >
-Then I thought of Bill Graham, and called him up. “Listen, Bill,” I said. “You got me into this; now you’ve gotta save me: I’m completely depressed; I can’t stand it.”
+>Then I thought of Bill Graham, and called him up. “Listen, Bill,” I said. “You got me into this; now you’ve gotta save me: I’m completely depressed; I can’t stand it.”
 >
-He says, “What’s the matter?”
+>He says, “What’s the matter?”
 >
-“I want to do something! I want to go around and talk to some engineers!”
+>“I want to do something! I want to go around and talk to some engineers!”
 >
-He says, “Sure! Why not? I’ll arrange a trip for you. You can go wherever you want: ...
+>He says, “Sure! Why not? I’ll arrange a trip for you. You can go wherever you want: ...
 
 After number of interviews Richard develops a hypothesis about the root cause.
 He performs an experiment to ensure it's correct and in the meeting the day after he shows it to others.
@@ -133,27 +133,26 @@ He meets Mr. Lovinghood, manager of engineers working on the engine.
 
 > Mr. Lovingood says, “I don’t think so. As a matter of fact, although I’m now a manager, I was trained as an engineer.”
 > “All right,” I said. “Here’s a piece of paper each. Please write on your paper the answer to this question: what do you think is the probability that a flight would be uncompleted due to a failure in this engine?”
-> 
-They write down their answers and hand in their papers. One guy wrote “99-44/100% pure” (copying the Ivory soap slogan), meaning about 1 in 200. Another guy wrote something very technical and highly quantitative in the standard statistical way, carefully defining everything, that I had to translate—which also meant about 1 in 200. The third guy wrote, simply, “1 in 300.”
-Mr. Lovingood’s paper, however, said,
-Cannot quantify. Reliability is judged from:
+> They write down their answers and hand in their papers. One guy wrote “99-44/100% pure” (copying the Ivory soap slogan), meaning about 1 in 200. Another guy wrote something very technical and highly quantitative in the standard statistical way, carefully defining everything, that I had to translate—which also meant about 1 in 200. The third guy wrote, simply, “1 in 300.”
+> Mr. Lovingood’s paper, however, said,
+> Cannot quantify. Reliability is judged from:
 > - past experience
 > - quality control in manufacturing
 > - engineering judgment
 >
-“Well,” I said, “I’ve got four answers, and one of them weaseled.” I turned to Mr. Lovingood: “I think you weaseled.”
+>“Well,” I said, “I’ve got four answers, and one of them weaseled.” I turned to Mr. Lovingood: “I think you weaseled.”
 >
-“I don’t think I weaseled.”
+>“I don’t think I weaseled.”
 >
-“You didn’t tell me what your confidence was, sir; you told me how you determined it. What I want to know is: after you determined it, what was it?”
+>“You didn’t tell me what your confidence was, sir; you told me how you determined it. What I want to know is: after you determined it, what was it?”
 >
-He says, “100 percent”—the engineers’ jaws drop, my jaw drops; I look at him, everybody looks at him—“uh, uh, minus epsilon!”
+>He says, “100 percent”—the engineers’ jaws drop, my jaw drops; I look at him, everybody looks at him—“uh, uh, minus epsilon!”
 >
-So I say, “Well, yes; that’s fine. Now, the only problem is, WHAT IS EPSILON?”
+>So I say, “Well, yes; that’s fine. Now, the only problem is, WHAT IS EPSILON?”
 >
-He says, “10-5.” It was the same number that Mr. Ullian had told us about: 1 in 100,000.
+>He says, “10-5.” It was the same number that Mr. Ullian had told us about: 1 in 100,000.
 >
-I showed Mr. Lovingood the other answers and said, “You’ll be interested to know that there is a difference between engineers and management here—a factor of more than 300.”
+>I showed Mr. Lovingood the other answers and said, “You’ll be interested to know that there is a difference between engineers and management here—a factor of more than 300.”
 
 
 **Epilogue**
