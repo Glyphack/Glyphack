@@ -12,10 +12,10 @@ layout: book
 share: "true"
 ---
 I got interested in Richard Feynmann's writings after reading [[Surely You're Joking, Mr. Feynman!|Surely You're Joking, Mr. Feynman!]]
-The reason I got so much interested in these books from Feynmann was that it draws a different picture of him in my mind.
+The reason I got so much interested in these books from Richard Feynmann was that it draws a different picture of him in my mind.
 You see, famous scientists are known for achievements.
 You read about result of their work.
-But this book show the human side of Richard by showing his mistakes.
+But this book show the human side of Richard by showing his mistakes and the curiosity that led to success.
 I love this, it breaks the usual image of a genius doing excellent work one after another.
 
 ##  Early life
