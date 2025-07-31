@@ -198,10 +198,9 @@
         <span class="book-rating">
           {{ $rating := .Params.rating }}
           {{ $fullStars := int (math.Floor $rating) }}
-          {{ $starsShown := (cond (gt (add $fullStars 0) 5) 5 $fullStars) }}
-          {{ range seq 1 $starsShown }}<span class="star">&#9733;</span>{{ end }}
-          {{ $remaining := sub 5 $starsShown }}
-          {{ range seq 1 $remaining }}<span class="star empty">&#9733;</span>{{ end }}
+          {{ range $i := seq 1 5 }}
+            {{ if le $i $fullStars }}<span class="star">&#9733;</span>{{ else }}<span class="star empty">&#9733;</span>{{ end }}
+          {{ end }}
         </span>
       </div>
       {{ end }}
