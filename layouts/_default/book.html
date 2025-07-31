@@ -17,15 +17,74 @@
 
   .book-title {
     font-size: 2.5rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.2rem;
+  }
+  .book-date-subtitle {
+    font-size: 1.04rem;
+    color: #7b8892;
+    margin-bottom: 0.85rem;
+    margin-left: 1px;
+    font-style: italic;
+    letter-spacing: 0.01em;
   }
 
-  .book-metadata {
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    padding: 1.5rem;
+  .book-row {
+    display: flex;
+    gap: 2.5rem;
+    align-items: flex-start;
     margin-bottom: 2rem;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  }
+  .book-cover-wrapper {
+    flex: 0 0 auto;
+    max-width: 260px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+  }
+  .book-cover {
+    width: 100%;
+    height: auto;
+    max-width: 240px;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(52, 152, 219, 0.08);
+    margin-bottom: 0;
+  }
+  .book-details {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 1rem;
+    padding-top: 0.5rem;
+  }
+  .book-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-size: 1.1rem;
+  }
+  .book-meta-label {
+    font-weight: 600;
+    color: #555;
+    min-width: 90px;
+  }
+  .book-rating {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    background: none;
+    padding: 0;
+    color: #f5b342;
+    font-size: 1.3rem;
+  }
+  .book-rating .star.empty {
+    color: #eee;
+  }
+  .book-rating-value {
+    font-size: 1rem;
+    color: #3498db;
+    font-weight: 500;
+    margin-left: 0.6rem;
   }
 
   .book-meta-item {
@@ -39,14 +98,6 @@
     color: #555;
   }
 
-  .book-rating {
-    display: inline-block;
-    background-color: #3498db;
-    color: white;
-    border-radius: 4px;
-    padding: 0.2rem 0.8rem;
-    font-weight: 600;
-  }
 
   .book-notes h2 {
     color: #2c3e50;
@@ -94,37 +145,44 @@
   $titleParam $authorParam) -}} {{- $jsonRes := resources.GetRemote $coverApiUrl
   -}} {{- $coverData := $jsonRes | transform.Unmarshal -}} {{- $coverUrl :=
   default "/images/default-cover.jpg" (index $coverData "url") -}}
-  <div class="book-cover-wrapper">
-    <img src="{{ $coverUrl }}" alt="Cover of {{ .Title }}" class="book-cover" />
-  </div>
+
   <header class="book-header">
     <h1 class="book-title">Book Review: {{ .File.BaseFileName }}</h1>
-  </header>
-
-  <section class="book-metadata">
-    <div class="book-meta-item">
-      <span class="book-meta-label">Author:</span>
-      <span>{{ $authorStr }}</span>
-    </div>
-
-    <div class="book-meta-item">
-      <span class="book-meta-label">Date Added:</span>
-      <span class="book-created">{{ .Params.created }}</span>
-    </div>
-
-    {{ if .Params.rating }}
-    <div class="book-meta-item">
-      <span class="book-meta-label">Rating:</span>
-      <span class="book-rating">{{ .Params.rating }} / 5</span>
-    </div>
-    {{ end }} {{ if .Params.categories }}
-    <div class="book-meta-item">
-      <span class="book-meta-label">Categories:</span>
-      <span>{{ delimit .Params.categories ", " }}</span>
-    </div>
+    {{ with .Params.created }}
+      <div class="book-date-subtitle">Added: {{ . }}</div>
     {{ end }}
-  </section>
+  </header>
+  <div class="book-row">
+    <div class="book-cover-wrapper">
+      <img src="{{ $coverUrl }}" alt="Cover of {{ .Title }}" class="book-cover" />
+    </div>
+    <div class="book-details">
+      <div class="book-meta-item">
+        <span class="book-meta-label">Author:</span>
+        <span>{{ $authorStr }}</span>
+      </div>
+      {{ if .Params.rating }}
+      <div class="book-meta-item">
+        <span class="book-meta-label">Rating:</span>
+        <span class="book-rating">
+          {{ $rating := .Params.rating }}
+          {{ $fullStars := int (math.Floor $rating) }}
+          {{ $starsShown := (cond (gt (add $fullStars 0) 5) 5 $fullStars) }}
+          {{ range seq 1 $starsShown }}<span class="star">&#9733;</span>{{ end }}
+          {{ $remaining := sub 5 $starsShown }}
+          {{ range seq 1 $remaining }}<span class="star empty">&#9733;</span>{{ end }}
+        </span>
+      </div>
+      {{ end }}
+    </div>
+  </div>
 
-  <section class="book-notes">{{ .Content }}</section>
+  <section class="book-notes">
+    {{ .Content
+      | replaceRE `\[\[[^|\]]+\|([^\]]+)\]\]` "$1"
+      | replaceRE `\[\[([^|\]]+)\]\]` "$1"
+      | safeHTML
+    }}
+  </section>
 </article>
 {{ end }}

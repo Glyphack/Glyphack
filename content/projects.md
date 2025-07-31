@@ -3,10 +3,13 @@ title: "Projects"
 url: "/projects"
 ---
 
-Here are some of the projects I've been working on:
+Here are some of the projects I've been spending time on:
 
 - **[ReadsThis](https://r.glyphack.com)**: Find and Share interesting blogs.
-- **[Ruff](https://github.com/astral-sh/ruff)**: Contributing to Ruff, an extremely fast Python linter written in Rust.
+
+- **[readwise-reader-importer](https://github.com/Glyphack/readwise-reader-importer)**: Bulk import links into readwise.
+
+- **[Ty](https://github.com/astral-sh/ruff)**: I contributed to Ty Python type checker.
 
 - **[Enderpy](https://github.com/Glyphack/enderpy)**: A type checker for Python, focusing on performance and developer experience.
 

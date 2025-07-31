@@ -11,8 +11,8 @@ pygmentsCodeFences = true
 pygmentsUseClasses = true
 
 [permalinks]
-blog = "/:filename/"
-synced = "s/:filename/"
+blog = "/:contentbasename/"
+synced = "s/:contentbasename/"
 
 [[params.menu]]
 name = "Home"
