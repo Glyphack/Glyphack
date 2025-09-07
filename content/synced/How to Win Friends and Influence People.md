@@ -4,8 +4,8 @@ category:
   - "[[Books|Books]]"
 author: Dale Carnegie
 rating: "4"
-url: 
-tags: 
+url:
+tags:
 share: "true"
 layout: book
 title: How to Win Friends and Influence People
