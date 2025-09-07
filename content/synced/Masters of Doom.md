@@ -7,7 +7,7 @@ title: Masters of Doom
 author: David Kushner
 isbn13: 978-0749924898
 rating: "5"
-link: 
+link:
 layout: book
 share: "true"
 ---
