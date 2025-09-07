@@ -7,7 +7,7 @@ author: "[[Nassim Nicholas Taleb]]"
 isbn13: 978-0812979688
 tags:
   - Active
-rating: 
+rating:
 layout: book
 share: "true"
 ---

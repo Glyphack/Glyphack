@@ -5,7 +5,7 @@ category:
 title: Hackers & Painters
 author: "[[Paul Graham]]"
 isbn13: 978-1449389550
-link: 
+link:
 rating: "5"
 tags: []
 layout: book

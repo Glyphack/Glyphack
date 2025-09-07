@@ -7,7 +7,7 @@ author: "[[Richard Feynman]]"
 isbn13: 978-0393320923
 link: https://en.wikipedia.org/wiki/What_Do_You_Care_What_Other_People_Think%3F
 rating: "5"
-tags: 
+tags:
 layout: book
 share: "true"
 ---

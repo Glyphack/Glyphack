@@ -6,8 +6,8 @@ category:
 title: Tech Resume Inside Out
 author: "[[Gergely Orosz]]"
 rating: "5"
-isbn13: 
-link: 
+isbn13:
+link:
 layout: book
 share: "true"
 ---

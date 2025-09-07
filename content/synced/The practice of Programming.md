@@ -7,8 +7,8 @@ tags:
 title: The practice of Programming
 author: Brian Kernighan and Rob Pike
 isbn13: 978-0201615869
-link: 
-rating: 
+link:
+rating:
 layout: book
 share: "true"
 ---
