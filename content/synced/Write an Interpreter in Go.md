@@ -7,7 +7,7 @@ author: "[[Thorsten Ball]]"
 isbn13: 978-3982016115
 link: https://interpreterbook.com/
 rating: "4"
-tags: 
+tags:
 layout: book
 share: "true"
 ---
