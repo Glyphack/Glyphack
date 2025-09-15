@@ -4,7 +4,7 @@ category:
   - "[[Books|Books]]"
 title: Data Oriented Design
 author: Richard Fabian
-isbn13: 978-0201615869
+isbn13: 978-1916478701
 link: https://www.dataorienteddesign.com/dodbook/
 rating:
 tags:
