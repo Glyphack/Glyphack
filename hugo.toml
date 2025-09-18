@@ -7,8 +7,8 @@ pluralizeListTitles = false
 
 defaultContentLanguage = "en"
 
-pygmentsCodeFences = true
-pygmentsUseClasses = true
+
+
 
 [permalinks]
 blog = "/:contentbasename/"
@@ -94,4 +94,5 @@ dateFmt = "Jan 02, 2006"
 
 [markup]
 [markup.highlight]
-style = 'github'
+style = 'algol'
+noClasses = true
