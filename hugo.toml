@@ -91,3 +91,7 @@ head404 = "Sorry, I can't find what you want."
 sub404 = "Back to <a href='/'>Home</a>."
 
 dateFmt = "Jan 02, 2006"
+
+[markup]
+[markup.highlight]
+style = 'github'
