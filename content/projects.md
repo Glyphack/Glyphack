@@ -5,6 +5,10 @@ url: "/projects"
 
 Here are some of the projects I've been spending time on:
 
+- **[Simu](https://github.com/Glyphack/simu)**: Logic gate simulator written in rust compiled to web assembly that runs in the browser.
+
+- **[Newsletter](https://github.com/Glyphack/newsletter)**: The newsletter for this blog.
+
 - **[ReadsThis](https://r.glyphack.com)**: Find and Share interesting blogs.
 
 - **[readwise-reader-importer](https://github.com/Glyphack/readwise-reader-importer)**: Bulk import links into readwise.
