@@ -6,7 +6,7 @@ date: 2024-03-04T15:40:55+01:00
 This is my now page, which lists what I'm thinking and working on right now.
 If you are not familiar with [now pages](https://nownownow.com/about), consider creating one.
 
-Updated Jan 5th, 2025 from Amsterdam.
+Updated Oct 18ath, 2025 from Amsterdam.
 
 ## Contributing to Red Knot Python Type Checker
 
@@ -21,15 +21,21 @@ Now I'm trying to learn how to design my own models.
 
 ## Gardening
 
-Winter has come and plants are preserving their energy. I'm waiting for Sprint to plant new stuff.
+It all started when I saw some seed packages in the supermarket now  I have 20+ pots.
+I'm harvesting herbs. It feels good to make food with my own herbs.
 
-I'm practicing growing plants in my apartment both for decoration and consumption.
-This is another step to be a little bit more independent.
+Some of the things I have harvested:
+- parsely
+- basil
+- mint
+- potato
+- mangold
+- bell pepper
+- saffron
+- tomato
 
-I have 20+ pots, and I'm harvesting herbs. It feels good to make food with my own herbs.
-I got a gardening pot and going to fill that with soil on the balcony and grew larger plants.
+## Building A Logic Gate Simulator
 
-## Looking for Something New
-
-I'm looking for a problem to solve something that occupies my mind and give me energy every day I wake up.
-I'm solving <https://codecrafters.io> challenges right now. It might inspire me to do something different.
+It's been going on for two months and I'm making a lot of progress.
+https://github.com/Glyphack/simu
+Some live coding videos of me building this in persian: https://www.youtube.com/playlist?list=PL41E3XFK25FeOWqepl9q_fIDlZ74E-pLw
