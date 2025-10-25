@@ -1,5 +1,5 @@
 ---
-created: 2025-06-29
+created: 2025-10-25
 category:
   - "[[Books|Books]]"
 title: Where Good Ideas Come From
