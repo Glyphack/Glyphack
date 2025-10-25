@@ -1,8 +1,8 @@
 ---
-created: 2025-08-07
+created: 2025-02-07
 category:
   - "[[Books|Books]]"
-title: Joel on Software
+title: Joel On Software
 author: "[[Joel Spolsky]]"
 isbn13: 978-1590593899
 link:
