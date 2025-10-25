@@ -1,5 +1,5 @@
 ---
-created: 2025-08-07
+created: 2025-02-07
 category:
   - "[[Books|Books]]"
 title: Joel On Software
