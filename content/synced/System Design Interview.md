@@ -6,7 +6,7 @@ tags: []
 title: System Design Interview
 author: "[[Alex Xu]]"
 isbn13: 979-8664653403
-rating: "3"
+rating: "2"
 link:
 layout: book
 share: "true"
