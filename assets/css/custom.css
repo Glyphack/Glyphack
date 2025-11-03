@@ -1,17 +1,19 @@
 /* Social Icons */
 .social-icons {
-	display: flex;
-	gap: 15px;
-	justify-content: center;
+display: flex;
+gap: 20px;
+justify-content: center;
+	align-items: center;
+	padding: 20px 0;
 }
 
 .social-icons a {
-	display: inline-block;
-	transition: all 0.2s ease;
-	transform-origin: center;
-	padding: 10px;
-	border-radius: 50%;
-	background-color: transparent;
+display: inline-block;
+transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+transform-origin: center;
+padding: 12px;
+border-radius: 50%;
+	border: 1px solid rgba(255,255,255,0.2);
 	position: relative;
 	overflow: hidden;
 }
@@ -21,28 +23,34 @@
 }
 
 .social-icons a:hover svg {
-	filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.2));
+filter: drop-shadow(0 2px 8px rgba(0,0,0,0.1));
+transition: filter 0.3s ease;
 }
 
 .icon-ripple {
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
+position: absolute;
+top: 50%;
+left: 50%;
+width: 0;
+height: 0;
 	background: radial-gradient(circle,
-			rgba(255, 255, 255, 0.7) 0%,
-			rgba(255, 255, 255, 0) 70%);
-	border-radius: 50%;
-	transform: scale(0);
-	opacity: 0.7;
-	transition: all 0.4s ease-out;
+		rgba(255, 255, 255, 0.8) 0%,
+		rgba(255, 255, 255, 0.4) 50%,
+ rgba(255, 255, 255, 0) 100%);
+border-radius: 50%;
+	transform: translate(-50%, -50%);
+	transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 	pointer-events: none;
 }
 
 .social-icons a:hover .icon-ripple {
-	transform: scale(1.5);
+	width: 200px;
+	height: 200px;
 	opacity: 0;
+}
+
+.social-icons svg {
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .social-icons a svg {

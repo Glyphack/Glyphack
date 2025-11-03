@@ -1,0 +1,27 @@
+{{ define "main" }}
+{{ if eq .Title "Subscribe" }}
+{{ partial "subscribe.html" . }}
+{{ else }}
+<article class="post-single">
+  <header class="post-header">
+    <h1 class="post-title">{{ .Title }}</h1>
+    {{ with .Date }}
+    <div class="post-meta">
+      <time datetime="{{ .Format "2006-01-02T15:04:05Z07:00" }}">{{ .Format "Jan 2, 2006" }}</time>
+    </div>
+    {{ end }}
+  </header>
+  <div class="post-content">
+    {{ .Content }}
+  </div>
+  {{ if eq .Section "blog" }}
+  <div class="post-subscribe">
+    <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 30px 0 20px 0;">
+    <p style="font-size: 0.9em; font-weight: bold; color: #666; text-align: center; margin: 0;">
+      Enjoyed the article? I write about 1-2 a month. Subscribe via <a href="/subscribe" style="color: #007acc; text-decoration: none;">email</a> or <a href="/index.xml" style="color: #007acc; text-decoration: none;">RSS feed</a>.
+    </p>
+  </div>
+  {{ end }}
+</article>
+{{ end }}
+{{ end }}
