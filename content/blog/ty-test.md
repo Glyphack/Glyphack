@@ -1,7 +1,7 @@
 ---
 title: "Ty Test Suite"
 date: 2025-12-10T16:12:40+01:00
-draft: true
+draft: false
 tags: [] 
 ---
 
@@ -63,7 +63,7 @@ func TestFunctionLiteralParsing(t *testing.T) {
 }
 ```
 
-This test case is a beast.
+This test case is a beast[^1].
 All this code just to check a one-line function parses correctly.
 If we decide to update this test to check, say a function with 3 parameters we need to modify multiple places in this test.
 What you can do in this case is to define a function for it:
@@ -145,3 +145,5 @@ So let's write test cases as Python programs.
 If a program you're working on is not transforming text then applying this idea directly is not possible.
 But so do API servers (JSON responses), database systems (query results), even UI frameworks (rendered HTML).
 So by writing the code that reveals the internals as text it is possible to test using the above techniques.
+
+[^1]: In case you're wondering how does a simpler version of this look like. This is example of the [input](https://github.com/Glyphack/enderpy/blob/dc53f04f8223653b272bc8e806a1d59d33667b4e/parser/test_data/inputs/function_def.py#L1) and [output](https://github.com/Glyphack/enderpy/blob/dc53f04f8223653b272bc8e806a1d59d33667b4e/parser/test_data/output/enderpy_python_parser__parser__parser__tests__function_def.snap#L11-L46). The output file is long. But if you have a [good tool](https://insta.rs/) for snapshot tests it's easy to review changes. Otherwise you can split the big input file to smaller ones and have smaller output.
