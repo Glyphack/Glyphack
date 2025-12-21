@@ -8,8 +8,6 @@ pluralizeListTitles = false
 defaultContentLanguage = "en"
 
 
-
-
 [permalinks]
 blog = "/:contentbasename/"
 synced = "s/:contentbasename/"
@@ -72,8 +70,8 @@ You can checkout my Github for more details.
 
 From Iran, now living in the Netherlands.
 
-### [What Am I Doing Now](/now)
-See [my "now" page](/now).
+### [What Am I Doing Now](/now/)
+See [my "now" page](/now/).
 
 ### Contact Me
 I like meeting new people, [say hello](mailto:sh.hooshyari@gmail.com).
