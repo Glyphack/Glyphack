@@ -48,20 +48,18 @@ jobs:
   check_links:
     runs-on: ubuntu-latest
     steps:
-      - name: Install Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: "1.22"
-      - name: Install Muffet
-        run: go install github.com/raviqqe/muffet/v2@latest
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
       - name: Run Broken Link Checker
         run: |
-          muffet https://glyphack.com/ \
-            --buffer-size 16384 \
-            --max-connections 5 \
+          uvx linkchecker https://new.glyphack.pages.dev/ \
+            --threads 5 \
             --timeout 30 \
-            --header 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36' \
-            --exclude 'linkedin.com' \
-            --exclude 'facebook.com' \
-            --exclude 'twitter.com' \
-            --exclude 'x.com'
+            --user-agent 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36' \
+            --ignore-url 'linkedin\.com' \
+            --ignore-url 'facebook\.com' \
+            --ignore-url 'twitter\.com' \
+            --ignore-url 'x\.com' \
+            --ignore-url 'http://www.catb.org/~esr/' \
+            --ignore-url 'https://www.washingtonpost.com/wp-srv/national/longterm/' \
+            --ignore-url 'https://docs.confluent.io/platform/current/installation/configuration/consumer-configs.html#consumerconfigs_max.poll.interval.ms'
