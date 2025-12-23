@@ -20,7 +20,7 @@ tags: [coding]
 
 ## Introduction
 
-In the last [post](/blog/rate-limiter-python-1)
+In the last [post](/rate-limiter-python-1/)
 I started writing a rate limiter.
 The project right now supports only 1 rate limiting algorithm(Token Bucket).
 
@@ -314,7 +314,7 @@ Then when the next request comes we need to query all requests in the previous m
 Now the question is what data structure should be used here.
 We need a data structure which can search and return all the values within a range.
 
-Redis provides [sorted sets](https://redis.io/docs/data-types/sorted-sets/)
+Redis provides [sorted sets](https://redis.io/docs/latest/develop/data-types/sorted-sets/)
 which can provide an efficient way for finding a range of values in a list.
 
 Although sorted sets are

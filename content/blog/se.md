@@ -83,4 +83,4 @@ If you want to feel confident about your knowledge, start with the simplest task
 Don't take magical words as answers. The answers are simple.
 
 [^1]: He didn't prepare any slides. It was more a discussion. Presentation was three slides with one big word "AI" and it got bigger in each slide. He asked everyone to invest in themselves. Our work is the AI training data so there's still value in thinking. Don't delegate your thinking to AI.
-![Kelsey](/Kelsey.jpeg)
+![Kelsey](/kelsey.jpeg)

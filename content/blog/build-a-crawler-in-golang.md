@@ -49,7 +49,7 @@ provides a good introduction to building a crawler.
 
 ## But Why Building Another Crawler?
 
-I wrote down my reasons in the [previous post](/rate-limiter-from-scratch-in-python-2)
+I wrote down my reasons in the [previous post](/rate-limiter-python-2/)
 on why I'm building this stuff from sctrach.
 The short answer is that it seems simple until you try it.
 

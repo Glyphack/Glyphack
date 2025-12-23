@@ -38,7 +38,7 @@ When you want to see the beginning of the output or just read the logs from the 
 This turns out to be easy to do but requires configuration for the terminal and shell you are using.
 For Wezterm and Fish I did the following:
 
-Set key bindings for [ScrollToPrompt](https://wezfurlong.org/wezterm/config/lua/keyassignment/ScrollToPrompt.html) action.
+Set key bindings for [ScrollToPrompt](https://wezterm.org/config/lua/keyassignment/ScrollToPrompt.html) action.
 Create a fish function to emit the characters that marks the output of the command before executing a command.
 ```sh
 function pre_command --on-event fish_preexec

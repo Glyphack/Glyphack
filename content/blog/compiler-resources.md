@@ -14,7 +14,7 @@ There are different ways to approach parsing. You can either write one by hand o
 For compilers or interpreters, you can use a parser generator.
 However, if you're working on tools like formatters or language servers, your parser needs to handle broken code gracefully. This can be either done with a tool like treesitter that can handle broken code to some extent and also by writing your own. Of course writing your own is more fun.
 
-- [**"Write JS Parser in Rust"**](https://boshen.github.io/javascript-parser-in-rust/) by Boshen is an excellent introductory guide.
+- [**"Write JS Parser in Rust"**](https://oxc-project.github.io/javascript-parser-in-rust/) by Boshen is an excellent introductory guide.
 - For resilient parsing, check out this tutorial on [**resilient LL parsing**](https://matklad.github.io/2023/05/21/resilient-ll-parsing-tutorial.html).
 - Your language's official documentation. For Python, there is [**Python AST module**](https://docs.python.org/3/library/ast.html).
 - Look into implementation of open source linters or compilers. [**RustPython Lexer**](https://github.com/RustPython/Parser/blob/main/parser/src/lexer.rs) is a good one for python.

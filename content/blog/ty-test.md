@@ -133,7 +133,7 @@ If you get a bug report, you can paste the failing code straight into the tests 
 4. The test runner feeds this file to Ty, which evaluates each `reveal_type` call and compares the displayed type to the comment.
 
 `reveal_type` is not the only way to assert.
-There are more functions like `generic_context` to [check](https://github.com/Glyphack/ruff/blob/bcddab6680f5026718094a630e2891f79488a55a/crates/ty_python_semantic/resources/mdtest/generics/specialize_constrained.md#L150) the generic type information.
+There are more functions like `generic_context` to [check](https://github.com/Glyphack/ruff/blob/bcddab6680f5026718094a630e2891f79488a55a/crates/ty_python_semantic/resources/mdtest/generics/scoping.md) the generic type information.
 
 Python also uses [this style](https://github.com/python/typing/blob/main/conformance/tests/annotations_methods.py) of testing for type checker conformance tests.
 You want to test different type checkers.

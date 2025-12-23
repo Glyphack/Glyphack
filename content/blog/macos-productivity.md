@@ -46,7 +46,7 @@ keyboard, some examples are:
 - Caps lock: key can be remapped to `Esc` key when pressed and Hyper Key when held
 - `§`: which I don't know why is it here in the first place can be mapped to "\`"
 
-There are more advanced keybindings that can be done I have [created keybindings](https://glyphack.com/blog/a-better-keyboard/) to write symbols like `*`, `-`, etc. without reaching for shift key and a number.
+There are more advanced keybindings that can be done I have [created keybindings](https://glyphack.com/better-keyboard/) to write symbols like `*`, `-`, etc. without reaching for shift key and a number.
 This helped a lot with keeping my hands near the home row and reducing the work my pinky finger has to do.
 
 ## Text Expanding
@@ -147,7 +147,7 @@ This is useful when you want to have one application on the screen.
 For example for me it's terminal and browser.
 ![Raycast Apps](/raycast-apps.png)
 
-These days I'm using [a new solution](https://glyphack.com/blog/a-better-keyboard/) based on Hammerspoon for this.
+These days I'm using [a new solution](https://glyphack.com/better-keyboard/) based on Hammerspoon for this.
 
 ## Terminal
 
