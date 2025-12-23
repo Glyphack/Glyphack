@@ -111,7 +111,7 @@ The blogs read there:
 - <https://www.unqualified-reservations.org>
 - <http://www.catb.org/~esr/>
 - <https://ranprieur.com>
-- <https://datagenerics.com> my favorite math puzzle blog
+- <https://datagenetics.com> my favorite math puzzle blog
 - <https://starslatecodex.com>
 - <https://geohot.github.io/blog/>
 - <https://lukesmith.xyz>

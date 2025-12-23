@@ -76,7 +76,7 @@ pub struct Circuit {
 
 ```
 
-[Slotmap](https://crates.io/crates/slotmap) is similar to an array.
+[Slotmap](https://docs.rs/slotmap/1.1.1) is similar to an array.
 Upon inserting a new instance it returns an ID and that's why everything is a map from `InstanceId` to the actual data.
 Everything in the program refers to other things using the ID.
 
