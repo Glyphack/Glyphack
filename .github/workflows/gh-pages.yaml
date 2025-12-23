@@ -62,5 +62,9 @@ jobs:
             --ignore-url 'twitter\.com' \
             --ignore-url 'x\.com' \
             --ignore-url 'http://www.catb.org/~esr/' \
+            --ignore-url 'https://datagenetics.com' \
+            --ignore-url 'https://cacm.acm.org/blogs/blog-cacm/153780-data-mining-the-web-via-crawling/fulltext' \
             --ignore-url 'https://www.washingtonpost.com/wp-srv/national/longterm/' \
+            --ignore-url 'https://www.cloudflare.com/en-gb/learning/bots/what-is-rate-limiting/' \
+            --ignore-url 'ttps://www.science.org/content/article/people-would-rather-be-electrically-shocked-left-alone-their-thoughts' \
             --ignore-url 'https://docs.confluent.io/platform/current/installation/configuration/consumer-configs.html#consumerconfigs_max.poll.interval.ms'
