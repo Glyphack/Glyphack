@@ -16,8 +16,7 @@ I've experimented with different productivity tools for focus and time managemen
 ### Daily Planning
 
 I use [Notion](https://www.notion.so/) as my general notebook to organize projects, learn lists, and other random things that gather here, not to forget them.
-I also started to use it as my time management tool just by creating a table where each row is a date, and inside that, I write my day plan:
-![Daily planning with Notion](/notion-day-plan.png)
+I also started to use it as my time management tool just by creating a table where each row is a date, and inside that, I write my day plan.
 Of course, it does not offer any unique feature here that other apps don't. I prefer to write down my tasks as raw notes instead of task management apps to keep them simple and easy enough to do every day.
 This way, it helps me two organize my tasks such that:
 
@@ -28,7 +27,6 @@ This way, it helps me two organize my tasks such that:
 
 I use [Toggl](https://toggl.com/) to track how much time I spend on a task and focus while working.
 Toggl has a concept of clients and tasks, I defined my clients as DataChef, University and Personal stuff and tasks are my current work, whenever I decide to work on something I start the timer choose the client and start working. The remarkable feature is that they have a Pomodoro timer too, and I use this technique to focus on my job.
-![Toggl Timeline](/toggl-timeline.png)
 If you're not familiar with Pomodoro, here is the procedure from Wikipedia
 >
 >1. Decide on the task to be done.

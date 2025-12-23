@@ -20,7 +20,7 @@ tags: [coding]
 
 ## Introduction
 
-In the last [post](/blog/rate-limiter-python-1)
+In the last [post](/rate-limiter-python-1/)
 I started writing a rate limiter.
 The project right now supports only 1 rate limiting algorithm(Token Bucket).
 
