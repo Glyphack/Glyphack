@@ -60,7 +60,6 @@ linter/default-rules/unicode/pypinyin.py    1.00     31.7±0.29µs   132.6 MB/se
 I also learned that codespeed is a wonderful tool for exploring performance changes between my commits.
 [Example](https://codspeed.io/astral-sh/ruff/branches/Glyphack:linter-pylint-E0203), next time I use this.
 
-
 For enderpy I was looking for a test suite that I can develop against until my type checker is complete.
 Luckily it exists! You can view it [here](https://github.com/python/typing/tree/main/conformance).
 It does not have a basic test case were you only have functions and variables but that one is easy to come up with myself.

@@ -5,7 +5,7 @@ draft: false
 tags: [compilers] 
 ---
 
-This post is a compilation of great resources I found while building a type checker for Python. 
+This post is a compilation of great resources I found while building a type checker for Python.
 These resources are free and highly focused on specific topics, making them ideal for learning by doing rather than going through extensive materials.
 
 ## Parser
@@ -25,7 +25,7 @@ However, if you're working on tools like formatters or language servers, your pa
 
 For a comprehensive understanding of relevant topics, consider following the [**Stanford Compilers Class**](http://openclassroom.stanford.edu/MainFolder/CoursePage.php?course=Compilers). Although I haven't watched it personally, I found this [**guide**](https://pgrandinetti.github.io/compilers/) based on the class quite helpful.
 
-You can find examples of implemented programming languages and use them as a reference 
+You can find examples of implemented programming languages and use them as a reference
 [**Programming Languages Zoo**](https://plzoo.andrej.com/language/poly.html) is one resource for this.
 
 ### Symbol Table
@@ -36,7 +36,6 @@ This [**series on the Python symbol table implementation**](https://eli.thegreen
 from Eli Bendersky is useful for learning how does a symbol table works.
 
 RustPython's [**SymbolTable**](https://rustpython.github.io/website/rustpython_compiler/symboltable/struct.SymbolTable.html) implementation.
-
 
 ## Semantic Analyzer
 
@@ -69,9 +68,9 @@ Same as with type checking, for linters it's best to look into implementations a
 Specially linters have a lot in common with compilers and interpreters because they just emit a human readable error instead of machine code.
 
 The following tools are useful to understand how analysis is done and errors are reported:
+
 - [**oxc**](https://github.com/web-infra-dev/oxc)
 - [Ruff](https://github.com/astral-sh/ruff)
-
 
 ## Final Words
 

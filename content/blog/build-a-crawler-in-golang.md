@@ -7,29 +7,29 @@ tags: ["coding"]
 
 <!-- vim-markdown-toc GFM -->
 
-- [Introduction](#introduction)
-- [But Why Building Another Crawler?](#but-why-building-another-crawler)
-- [High Level Design](#high-level-design)
-  - [URL Frontier](#url-frontier)
-  - [Selector](#selector)
-  - [Workers](#workers)
-  - [Fetcher](#fetcher)
-  - [Content Processor](#content-processor)
-  - [Link Extractor](#link-extractor)
-- [Implementation](#implementation)
-  - [Let's talk about channels](#lets-talk-about-channels)
-  - [Storage](#storage)
-  - [Parser](#parser)
-  - [Processor](#processor)
-  - [Distribute and Collect Result from Workers](#distribute-and-collect-result-from-workers)
-  - [Worker](#worker)
-  - [Extracting Links](#extracting-links)
-  - [Saving Content](#saving-content)
-  - [Running Processors](#running-processors)
-  - [Failed URLs](#failed-urls)
-  - [HTML parser](#html-parser)
-  - [Putting it All Together](#putting-it-all-together)
-- [Conclusion](#conclusion)
+* [Introduction](#introduction)
+* [But Why Building Another Crawler?](#but-why-building-another-crawler)
+* [High Level Design](#high-level-design)
+  * [URL Frontier](#url-frontier)
+  * [Selector](#selector)
+  * [Workers](#workers)
+  * [Fetcher](#fetcher)
+  * [Content Processor](#content-processor)
+  * [Link Extractor](#link-extractor)
+* [Implementation](#implementation)
+  * [Let's talk about channels](#lets-talk-about-channels)
+  * [Storage](#storage)
+  * [Parser](#parser)
+  * [Processor](#processor)
+  * [Distribute and Collect Result from Workers](#distribute-and-collect-result-from-workers)
+  * [Worker](#worker)
+  * [Extracting Links](#extracting-links)
+  * [Saving Content](#saving-content)
+  * [Running Processors](#running-processors)
+  * [Failed URLs](#failed-urls)
+  * [HTML parser](#html-parser)
+  * [Putting it All Together](#putting-it-all-together)
+* [Conclusion](#conclusion)
 
 <!-- vim-markdown-toc -->
 
@@ -49,8 +49,8 @@ provides a good introduction to building a crawler.
 
 ## But Why Building Another Crawler?
 
-I wrote down my reasons in the [previous post](/rate-limiter-python-2/)
-on why I'm building this stuff from sctrach.
+I wrote down my reasons in the [rate limiter post](/rate-limiter-python-2/)
+on why I'm building this stuff from scratch.
 The short answer is that it seems simple until you try it.
 
 After reading through this project and implementing yourself,
@@ -59,7 +59,7 @@ applications in Go.
 
 ## High Level Design
 
-Let's look into what components a cralwer is made of, this helps
+Let's look into what components a crawler is made of, this helps
 to structure our code.
 
 The following diagram shows the execution flow of our program and
@@ -207,9 +207,9 @@ func (f *Frontier) Get() chan *url.URL {
 This method simply checks if the url is seen or not and if it's not
 excluded adds it to the channel.
 
-This function is blocking unless another gorutine is consuming from the urls channel.
+This function is blocking unless another goroutine is consuming from the urls channel.
 Why is this important?
-because if we run the Add in a blocking way without consuming the urls
+Because if we run the Add in a blocking way without consuming the urls
 we will block the goroutine & it's a deadlock.
 
 The `Get` function does not provide any abstraction here, but I like the idea that
@@ -304,7 +304,7 @@ type Storage interface {
 ### Parser
 
 Instead of parsing the content in the crawler we can provide an implementation
-for the filetypes we want to parse.
+for the file types we want to parse.
 We can have a single parser that handles all the file types but
 this way is much easier to extend.
 
@@ -340,8 +340,8 @@ processes to apply on the web pages.
 
 Some typical processes are:
 
-- Saving the page
-- Extracting links from the page
+* Saving the page
+* Extracting links from the page
 
 Let's define the interface based on the required actions.
 
@@ -358,7 +358,7 @@ Since a lot of operations can be done in this function we are not returning any 
 ### Distribute and Collect Result from Workers
 
 In the earlier section we discussed how can we parallelize the crawling
-task by distrubting the urls into multiple queues and assign workers to each
+task by distributing the urls into multiple queues and assign workers to each
 queue.
 
 Let's implement this functionality, We can create a new function called `Start`
@@ -389,7 +389,7 @@ Here we start by creating an input channel and an output channel for each worker
 There is a done channel here as well. It's a practice in go to use an empty
 channel to notify the goroutines that the process is done or cancelled.
 
-Then a function will start ditributing URLs from frontier to worker channels.
+Then a function will start distributing URLs from frontier to worker channels.
 
 Finally we have a another function that merges results from worker outputs.
 
@@ -475,16 +475,16 @@ type Worker struct {
 }
 ```
 
-The crawl result represents a successsful page load with content and the type.
+The crawl result represents a successful page load with content and the type.
 
 Let's breakdown what worker has:
 
-- input: the channel that worker consumes from
-- deadLetter: another channel that worker puts in the failed URLs into
-- result: channel for sending successful crawls
-- done: the channel that notifies the worker if it has to stop
-- id: an id assigned to the worker this is useful for marking logs from each worker
-- logger: a logger with worker context so log messages are distinguishable from others.
+* input: the channel that worker consumes from
+* deadLetter: another channel that worker puts in the failed URLs into
+* result: channel for sending successful crawls
+* done: the channel that notifies the worker if it has to stop
+* id: an id assigned to the worker this is useful for marking logs from each worker
+* logger: a logger with worker context so log messages are distinguishable from others.
   `logger := log.WithField("worker", id)`
 
 The Start method of the worker is a for-select statement to consume
@@ -647,7 +647,7 @@ So in the crawler we can add this processor and get the URLs:
 ### Saving Content
 
 To save the content we use another processor.
-This processor uses the storage backend provided to the crawler to store pages.
+This processor uses the storage backed provided to the crawler to store pages.
 
 ```go
 type SaveToFile struct {
@@ -825,7 +825,7 @@ func main() {
 ## Conclusion
 
 Going through building this crawler and facing many deadlocks taught me a lot
-about goalng.
+about golang.
 And writing about this was a good practice to question my design and
 the way I wrote the code.
 

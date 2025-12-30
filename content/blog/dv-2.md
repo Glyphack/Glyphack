@@ -23,7 +23,7 @@ So this is even better I don't need to fight the language any more, I can read t
 
 Aside from that,
 I'm building a C compiler from scratch with my friend. The goal is for it to compile itself.
-https://github.com/keyvank/30cc
+<https://github.com/keyvank/30cc>
 
 For some time I'm going to write my own projects in something other than Rust.
 It was hard for me to work with it and focus on the project.
@@ -40,6 +40,7 @@ For Wezterm and Fish I did the following:
 
 Set key bindings for [ScrollToPrompt](https://wezterm.org/config/lua/keyassignment/ScrollToPrompt.html) action.
 Create a fish function to emit the characters that marks the output of the command before executing a command.
+
 ```sh
 function pre_command --on-event fish_preexec
     printf '\033]133;A\033\\'
@@ -47,10 +48,11 @@ end
 ```
 
 This feature to run specific functions on an event in fish is really powerful. You can build custom workflows around your work. For example, you can do some project specific setup when entering a folder with this snippet:
+
 ```sh
 function some_setup --on-variable PWD
     if test "$PWD" = "$PROGRAMMING_DIR/"
-		# do some stuff
+  # do some stuff
     end
 end
 ```
@@ -61,49 +63,50 @@ If you know how to fold all the functions by default please let me know.
 <https://old.reddit.com/r/neovim/comments/1g41rjy/can_neovim_do_this_already_with_treesitter/>
 
 I'm proud of myself for writing these two simple commands:
+
 1. Key binding to insert a hyperlink in markdown file on visual selection
 2. Command to go to the test file of the current go file I have open. Very useful at my job
 
 ```
 vim.api.nvim_create_user_command("Link", function(opts)
-	local start_pos = vim.fn.getpos("'<")
-	local end_pos = vim.fn.getpos("'>")
+ local start_pos = vim.fn.getpos("'<")
+ local end_pos = vim.fn.getpos("'>")
 
-	local selected_text = vim.fn.getline(start_pos[2]):sub(start_pos[3], end_pos[3])
+ local selected_text = vim.fn.getline(start_pos[2]):sub(start_pos[3], end_pos[3])
 
-	vim.api.nvim_command("normal! gv")
-	if selected_text:match("^http") then
-		vim.fn.setreg('"', "[](" .. selected_text .. ")")
-		vim.api.nvim_command("normal! P")
-		local new_pos = { start_pos[2], start_pos[3] - 1 }
-		vim.api.nvim_win_set_cursor(0, new_pos)
-	else
-		vim.fn.setreg('"', "[" .. selected_text .. "]()")
-		vim.api.nvim_command("normal! P")
-		local new_pos = { start_pos[2], start_pos[3] + #selected_text + 2 }
-		vim.api.nvim_win_set_cursor(0, new_pos)
-	end
+ vim.api.nvim_command("normal! gv")
+ if selected_text:match("^http") then
+  vim.fn.setreg('"', "[](" .. selected_text .. ")")
+  vim.api.nvim_command("normal! P")
+  local new_pos = { start_pos[2], start_pos[3] - 1 }
+  vim.api.nvim_win_set_cursor(0, new_pos)
+ else
+  vim.fn.setreg('"', "[" .. selected_text .. "]()")
+  vim.api.nvim_command("normal! P")
+  local new_pos = { start_pos[2], start_pos[3] + #selected_text + 2 }
+  vim.api.nvim_win_set_cursor(0, new_pos)
+ end
 end, { range = true })
 
 vim.keymap.set("v", "<leader>k", ":Link<CR>", { noremap = true, silent = true })
 
 vim.api.nvim_create_user_command("GotoTest", function()
-	local current_file = vim.fn.expand("%:p")
-	local file_type = vim.bo.filetype
-	local test_file
+ local current_file = vim.fn.expand("%:p")
+ local file_type = vim.bo.filetype
+ local test_file
 
-	if file_type == "go" then
-		test_file = vim.fn.fnamemodify(current_file, ":r") .. "_test.go"
-	else
-		vim.api.nvim_err_writeln("Test file location not defined for filetype: " .. file_type)
-		return
-	end
+ if file_type == "go" then
+  test_file = vim.fn.fnamemodify(current_file, ":r") .. "_test.go"
+ else
+  vim.api.nvim_err_writeln("Test file location not defined for filetype: " .. file_type)
+  return
+ end
 
-	if vim.fn.filereadable(test_file) == 1 then
-		vim.cmd("edit " .. test_file)
-	else
-		vim.api.nvim_err_writeln("Test file not found: " .. test_file)
-	end
+ if vim.fn.filereadable(test_file) == 1 then
+  vim.cmd("edit " .. test_file)
+ else
+  vim.api.nvim_err_writeln("Test file not found: " .. test_file)
+ end
 end, {})
 
 ```
@@ -113,18 +116,18 @@ I could not find a way to resolve this so I wrote this hammerspoon script to res
 
 ```lua
 local function screenCallback(layout)
-	if layout == true then
-		print("Screen did not change")
-		return
-	end
-	setPrimary()
+ if layout == true then
+  print("Screen did not change")
+  return
+ end
+ setPrimary()
 
-	local flameshot_bundle = "/Applications/flameshot.app"
-	local flameshot = hs.application.find(flameshot_bundle, false, false)
-	if flameshot then
-		flameshot:kill()
-	end
-	hs.application.open(flameshot_bundle)
+ local flameshot_bundle = "/Applications/flameshot.app"
+ local flameshot = hs.application.find(flameshot_bundle, false, false)
+ if flameshot then
+  flameshot:kill()
+ end
+ hs.application.open(flameshot_bundle)
 end
 
 hs.screen.watcher.newWithActiveScreen(screenCallback):start()

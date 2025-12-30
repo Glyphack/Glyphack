@@ -232,8 +232,8 @@ This is how the example procedure looks like:
 Or in a case that the order of incoming events is not guaranteed when the user event comes in application joins it with the pull request table and creates the user_info message.
 Here also based on the join type we either publish a new `user_info` message or not, in this case this is a left join where the left is user entity:
 
-1.  If user event is consumed even if it do not match any pull request the `user_info` message must be published.
-2.  If pull_request event is consumed `user_info` message will only be published when pull request matches a user record, then the application updates the corresponding `user_info` message with the new pull request and publishes the message again.
+1. If user event is consumed even if it do not match any pull request the `user_info` message must be published.
+2. If pull_request event is consumed `user_info` message will only be published when pull request matches a user record, then the application updates the corresponding `user_info` message with the new pull request and publishes the message again.
 
 #### Benefits
 

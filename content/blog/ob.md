@@ -12,8 +12,9 @@ Since I've been writing both on my blog and in Obsidian there were times that I 
 One way to do this is using Obsidian Publish, but after reading the [creator of Obsidian himself suggesting alternatives to it](https://www.reddit.com/r/ObsidianMD/comments/16e5jek/comment/jzv38ja/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button) I searched for ways to publish my notes on my blog.
 
 There are great plugins that make this thing called digital garden (basically a website that you can browse) from Obsidian vault:
-- http://github.com/oleeskild/obsidian-digital-garden
-- https://github.com/jackyzha0/quartz
+
+- <http://github.com/oleeskild/obsidian-digital-garden>
+- <https://github.com/jackyzha0/quartz>
 
 While they are good I was looking for something that I can use to generate the site myself.
 So I can have my notes in the same theme as my blog, so it looks like the same page.
@@ -77,7 +78,6 @@ Here are some of the books I've read and plan to read.
 ```
 
 Now I have a `/reading-list` page on my website, that filters all the notes related to books. And show them.
-
 
 This shows how simple and without any magic you can publish Obsidian notes.
 There are unlimited customizations that can be done. Like showing the books in a specific order or format. I left that out since it's lengthy and does not fit in the scope of this post.

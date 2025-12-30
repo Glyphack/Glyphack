@@ -8,38 +8,54 @@ tags: ['software-documentation', 'documentation-writing', 'writing-documentation
 Software documents play an important role in software development, everyone pays attention to writing documentation but just like writing code, writing the text is not enough but it has to be readable and understandable for other people, after all the purpose of documenting is to communicate. Recently I was reading documentation of a system and noticed that there's something  strange about it. although all the components are documented, but still it's not easy to find information on something.
 
 Let's review the documentation role in these two situations, onboarding a new person with the system and improving collaboration between a team. This comes down to these two questions:
+
 1. Can I hand over my technical docs to someone and expect them to have all information they need to make their first commit?
 2. If situation X happens, do my teammates have to call someone to know what is happening?
 So every day, when one of these happens, think about the answers and see how well your documentation is. For example, when you get similar questions from teammates about a system, think of it as a failure in the documentation system, not all questions can be answered inside docs, but the frequent ones must be answered.
 
 ## Avoid Common Problems of Technical Software Documentation
+
 So what are the problems that can be in your technical notes?
+
 ### Non existent documents
+
 #### No Entry Point Link Around a Topic
+
 There is no primary documentation around a topic; you have to pass multiple links when someone is on boarded or read a single document after cloning the repo.
+
 #### Cover all information needed for a project
+
 If someone joins your team, they need information on how a system works. They also have to know how to set up their local and sandbox environment and use it.
 
 ### Hidden Documents
-####  Nesting Overuse
+
+#### Nesting Overuse
+
 Having sub-pages inside sub-pages makes the text to be scattered in different documents. Suppose someone reads a note on compiling a project. They also have to find the testing guide and deployment guide next to that text. It can be another section within that doc or a document next to it. Just make sure you don't need to browse again to find those.
 This pattern is similar to coupling the code that is related to each other like putting it inside a single module.
+
 #### Multiple channels
+
 Some materials might be found on the slack channel, others on your documentation tool. Keep all of them in one place as much as possible.
 
 ### Inaccurate Documents
+
 If the documents are not updated along with the code, they become inaccurate as you change the software. One possible solution is to link the code and document together(by using Readme file) so more people will see the document while writing code.
 Here you can see that why is it valuable to have a single document for a topic, for example here if you have 4 documents that has to change after changing system codes then it's much harder to update the documents that a single document.
 
 ### Obsolete Documents
+
 If a design is changed and older design decisions don't apply anymore, archive them.
 
 ### Afterthought Documents
+
 This is a problem because if you write your docs after delivering a project, you will end up:
+
 1. Forgetting to include important notes on the topic because you are in the [curse of knowledge](https://en.wikipedia.org/wiki/Curse_of_knowledge).
 2. Have to explain the project to someone personally if you need to hand it over in the middle.
 
 ## How to Make Technical Documentations Better
+
 It's essential to organize documents so that it's visible to everyone.
 
 **Be Careful with Nesting**
@@ -56,6 +72,7 @@ It's hard to keep documents that no one reads updated, make sure your documents 
 
 **Writing Software Documentation is a Collaborative Process**
 Write documents with the mindset of other people are going to use them. so you should considering:
+
 - Ask your team to review the docs you write
 - Put new pages you create on draft
 

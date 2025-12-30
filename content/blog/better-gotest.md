@@ -26,10 +26,8 @@ You have other tools to watch and run commands.
 Happy that I found an opportunity I created [gotest](https://github.com/Glyphack/gotest).
 It's a very simple tool. It takes in the output of `go test` command and organizes output to a human friendly output. I'm planning to add more commands and see how far can I improve the testing on CLI. You don't have to install an IDE just for running tests easily, it's not Java.
 
-
 **Why not contributing to Golang?**
 
 I think some of these features could be added in the `go test`, and I'm going to use this project as an experiment to see how they turn out to be.
-
 
 If you are interested let me know.

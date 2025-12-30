@@ -18,7 +18,7 @@ I usually avoided reading docs from start to finish or diving into the code of t
 The [first](https://github.com/python/cpython/pull/104986) & [second PR](https://github.com/python/cpython/pull/104986) were the result of reading the grammar and `ast` package docs and finding inconsistencies.
 
 Also after I was working on my type checker I started reading PEPs and playing around with other Python type checkers such as pyright.
-Then suddenly ( I found )[https://github.com/quora/pyanalyze/issues/707] a rule in PEP-586(https://peps.python.org/pep-0586/#illegal-parameters-for-literal-at-type-check-time)
+Then suddenly [I found](https://github.com/quora/pyanalyze/issues/707) a rule in PEP-586(<https://peps.python.org/pep-0586/#illegal-parameters-for-literal-at-type-check-time>)
 which was not possible to implement with Python ast structure.
 I haven't started an issue for this one yet because it requires more effort but it's another opportunity.
 

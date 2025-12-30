@@ -5,7 +5,7 @@ draft: false
 tags: [] 
 ---
 
-I can finally start making a CPU using my logic gate simulator.
+I can finally start making a CPU using [my logic gate simulator](https://github.com/Glyphack/simu).
 
 Try it yourself [here](https://glyphack.github.io/simu/)!
 
@@ -76,6 +76,8 @@ pub struct Circuit {
 
 ```
 
+[source](https://github.com/Glyphack/simu/blob/35177cdb0dbabd1ec884a8331cfb70233a4d628d/src/db.rs#L60)
+
 [Slotmap](https://docs.rs/slotmap/1.1.1) is similar to an array.
 Upon inserting a new instance it returns an ID and that's why everything is a map from `InstanceId` to the actual data.
 Everything in the program refers to other things using the ID.
@@ -95,6 +97,8 @@ pub struct Pin {
     pub kind: PinKind,
 }
 ```
+
+[source](https://github.com/Glyphack/simu/blob/35177cdb0dbabd1ec884a8331cfb70233a4d628d/src/connection_manager.rs#L20)
 
 As an example to get to instances connected to a pin with this data structure we have to:
 

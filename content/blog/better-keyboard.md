@@ -142,55 +142,55 @@ Here's the solution I use based on [this post](https://rakhesh.com/coding/using-
 ```lua
 WINDOW_MANAGEMENT_KEY = { "alt", "command", "ctrl" }
 WINDOWS_SHORTCUTS = {
-	{ "J", "Brave Browser" },
-	{ "K", "WezTerm" },
+ { "J", "Brave Browser" },
+ { "K", "WezTerm" },
 }
 
 local function launchOrFocusOrRotate(app)
-	local focusedWindow = hs.window.focusedWindow()
-	if focusedWindow == nil then
-		hs.application.launchOrFocus(app)
-		return
-	end
+ local focusedWindow = hs.window.focusedWindow()
+ if focusedWindow == nil then
+  hs.application.launchOrFocus(app)
+  return
+ end
 
-	local focusedWindowApp = focusedWindow:application()
-	local focusedWindowAppName = focusedWindowApp:name()
-	local focusedWindowPath = focusedWindowApp:path()
-	local appNameOnDisk = string.gsub(focusedWindowPath, "/Applications/", "")
-	local appNameOnDisk = string.gsub(appNameOnDisk, ".app", "")
-	local appNameOnDisk = string.gsub(appNameOnDisk, "/System/Library/CoreServices/", "")
-	if focusedWindow and appNameOnDisk == app then
-		local currentApp = hs.application.get(focusedWindowAppName)
-		local appWindows = currentApp:allWindows()
-		-- https://www.hammerspoon.org/docs/hs.application.html#allWindows
-		-- A table of zero or more hs.window objects owned by the application. From the current space.
-		if #appWindows == 1 then
-			currentApp:hide()
-			return
-		end
+ local focusedWindowApp = focusedWindow:application()
+ local focusedWindowAppName = focusedWindowApp:name()
+ local focusedWindowPath = focusedWindowApp:path()
+ local appNameOnDisk = string.gsub(focusedWindowPath, "/Applications/", "")
+ local appNameOnDisk = string.gsub(appNameOnDisk, ".app", "")
+ local appNameOnDisk = string.gsub(appNameOnDisk, "/System/Library/CoreServices/", "")
+ if focusedWindow and appNameOnDisk == app then
+  local currentApp = hs.application.get(focusedWindowAppName)
+  local appWindows = currentApp:allWindows()
+  -- https://www.hammerspoon.org/docs/hs.application.html#allWindows
+  -- A table of zero or more hs.window objects owned by the application. From the current space.
+  if #appWindows == 1 then
+   currentApp:hide()
+   return
+  end
 
-		if #appWindows > 0 then
-			-- It seems that this list order changes after one window get focused,
-			-- Let's directly bring the last one to focus every time
-			-- https://www.hammerspoon.org/docs/hs.window.html#focus
-			if app == "Finder" then
-				-- If the app is Finder the window count returned is one more than the actual count, so I subtract
-				appWindows[#appWindows - 1]:focus()
-			else
-				appWindows[#appWindows]:focus()
-			end
-		else
-			hs.application.launchOrFocus(app)
-		end
-	else
-		hs.application.launchOrFocus(app)
-	end
+  if #appWindows > 0 then
+   -- It seems that this list order changes after one window get focused,
+   -- Let's directly bring the last one to focus every time
+   -- https://www.hammerspoon.org/docs/hs.window.html#focus
+   if app == "Finder" then
+    -- If the app is Finder the window count returned is one more than the actual count, so I subtract
+    appWindows[#appWindows - 1]:focus()
+   else
+    appWindows[#appWindows]:focus()
+   end
+  else
+   hs.application.launchOrFocus(app)
+  end
+ else
+  hs.application.launchOrFocus(app)
+ end
 end
 
 for _, shortcut in ipairs(WINDOWS_SHORTCUTS) do
-	hs.hotkey.bind(WINDOW_MANAGEMENT_KEY, shortcut[1], function()
-		launchOrFocusOrRotate(shortcut[2])
-	end)
+ hs.hotkey.bind(WINDOW_MANAGEMENT_KEY, shortcut[1], function()
+  launchOrFocusOrRotate(shortcut[2])
+ end)
 end
 ```
 
@@ -228,32 +228,32 @@ The following Hammerspoon config allows moving windows with shortcuts:
 ```lua
 -- left
 hs.hotkey.bind(WINDOW_MANAGEMENT_KEY, "a", function()
-	hs.window.focusedWindow():moveToUnit({ 0, 0, 0.5, 1 })
+ hs.window.focusedWindow():moveToUnit({ 0, 0, 0.5, 1 })
 end)
 -- right
 hs.hotkey.bind(WINDOW_MANAGEMENT_KEY, "d", function()
-	hs.window.focusedWindow():moveToUnit({ 0.5, 0, 0.5, 1 })
+ hs.window.focusedWindow():moveToUnit({ 0.5, 0, 0.5, 1 })
 end)
 -- up
 hs.hotkey.bind(WINDOW_MANAGEMENT_KEY, "w", function()
-	hs.window.focusedWindow():moveToUnit({ 0, 0, 1, 0.5 })
+ hs.window.focusedWindow():moveToUnit({ 0, 0, 1, 0.5 })
 end)
 -- down
 hs.hotkey.bind(WINDOW_MANAGEMENT_KEY, "s", function()
-	hs.window.focusedWindow():moveToUnit({ 0, 0.5, 1, 0.5 })
+ hs.window.focusedWindow():moveToUnit({ 0, 0.5, 1, 0.5 })
 end)
 -- center
 hs.hotkey.bind(WINDOW_MANAGEMENT_KEY, "c", function()
-	hs.window.focusedWindow():centerOnScreen()
+ hs.window.focusedWindow():centerOnScreen()
 end)
 -- full screen
 hs.hotkey.bind(WINDOW_MANAGEMENT_KEY, "i", function()
-	hs.window.focusedWindow():moveToUnit({ 0, 0, 1, 1 })
+ hs.window.focusedWindow():moveToUnit({ 0, 0, 1, 1 })
 end)
 ```
 
 You can also use a layout mode for moving windows:
-https://github.com/jasonrudolph/keyboard#window-layout-mode
+<https://github.com/jasonrudolph/keyboard#window-layout-mode>
 
 ## Symbol Layers
 

@@ -63,7 +63,6 @@ fun main() {
 
 In this code the `this` in `toHi()` function is not referring to the Hello class anymore.
 
-
 The next one is the [builder syntax](https://kotlinlang.org/docs/type-safe-builders.html)(it's ironically called type safe builders).
 with builders, you can write code like:
 
@@ -71,7 +70,7 @@ with builders, you can write code like:
 class Hello {
     fun sayHi(str: String) {
         buildHello {
-	        name=str
+         name=str
         }.say()
 }
 ```
@@ -80,9 +79,9 @@ This code can create a new class inside the buildHello scope, and then call the 
 
 ```kotlin
 fun sayHi(name: String) {
-	buildHello {
-		name=name
-	}.say()
+ buildHello {
+  name=name
+ }.say()
 ```
 
 Now the point you missed is that name in the buildHello scope is referring to the attribute name of the builder. So that name is not referencing the name in the argument. This is seriously tricky to catch.
