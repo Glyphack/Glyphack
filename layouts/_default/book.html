@@ -168,10 +168,12 @@
 <article class="book-container">
   {{- /* Book cover retrieval */ -}} {{- $rawTitle := .Title -}} {{- $titleParam
   := urlquery $rawTitle -}} {{- $rawAuthor := default "" .Params.author -}} {{-
-  $authorStr := replaceRE "\\[\\[|\\]\\]" "" $rawAuthor -}} {{- $authorParam :=
-  urlquery $authorStr -}} {{- $isbn := default "" .Params.isbn13 -}} {{-
-  $coverApiUrl := cond (ne $isbn "") (printf
-  "https://bookcover.longitood.com/bookcover/%s" (urlquery $isbn)) (printf
+  $authorStr := "" -}} {{- if reflect.IsSlice $rawAuthor -}} {{- $authorStr =
+  delimit $rawAuthor ", " -}} {{- else -}} {{- $authorStr = replaceRE
+  "\\[\\[|\\]\\]" "" $rawAuthor -}} {{- end -}} {{- $authorParam := urlquery
+  $authorStr -}} {{- $isbn := default "" .Params.isbn13 -}} {{- $coverApiUrl :=
+  cond (ne $isbn "") (printf "https://bookcover.longitood.com/bookcover/%s"
+  (urlquery $isbn)) (printf
   "https://bookcover.longitood.com/bookcover?book_title=%s&author_name=%s"
   $titleParam $authorParam) -}} {{- $jsonRes := resources.GetRemote $coverApiUrl
   -}} {{- $coverData := $jsonRes | transform.Unmarshal -}} {{- $coverUrl :=
