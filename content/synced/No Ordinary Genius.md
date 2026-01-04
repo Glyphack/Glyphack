@@ -12,4 +12,7 @@ tags:
 layout: book
 share: "true"
 ---
+progress 180
 I've been enjoying Feynman books recently.
+
+180 is ai?
