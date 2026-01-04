@@ -14,6 +14,8 @@ share: "true"
 My dad recommended the book to me when I was 13. Now I'm 26.
 I read it after 13 years. I wish I read it earlier.
 
+Russell sees through the time. What he described 100 years ago still holds true.
+
 I became interested in reading it after [In Praise of Idleness](https://harpers.org/archive/1932/10/in-praise-of-idleness/).
 I enjoyed the essay and looked for more [[Bertrand Russell]] books.
 
