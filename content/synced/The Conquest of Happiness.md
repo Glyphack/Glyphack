@@ -1,5 +1,5 @@
 ---
-created: 2025-11-30
+created: 2026-01-04
 category:
   - "[[Books|Books]]"
 title: The Conquest of Happiness
