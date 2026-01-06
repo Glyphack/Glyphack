@@ -15,6 +15,8 @@ Here are some of the projects I've been spending time on:
 
 - **[Ty](https://github.com/astral-sh/ruff)**: I contributed to Ty Python type checker.
 
+- **[30cc](https://github.com/keyvank/30cc)**: A small C compiler that can compile itself! x86 assembly.
+
 - **[Enderpy](https://github.com/Glyphack/enderpy)**: A type checker for Python, focusing on performance and developer experience.
 
 - **[pytse-client](https://github.com/Glyphack/pytse-client)**: A Python library for working with Tehran Stock Exchange (TSE) data. Features real-time market data, historical price data, and trading statistics.
