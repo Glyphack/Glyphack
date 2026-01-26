@@ -55,3 +55,6 @@ I don't know if time tracking is necessary or not.
 Maybe after a while these habits are shaped, so it's not needed any more.
 I think if there's something that grabs your attention, and you want to do it, you will do it. No focus or do not disturb mode needed for true captivation.
 But all the other times it's easy to get distracted and not find the intriguing.
+
+Update 2026-01-26: I stopped using time tracking software.
+I got value out of it. It helped me notice patterns and habits. I don't want to optimize my life around screen time metrics.
