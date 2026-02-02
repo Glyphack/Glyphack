@@ -1,0 +1,32 @@
+<div class="image-grid">
+  {{ .Inner | .Page.RenderString }}
+</div>
+
+<style>
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+.image-grid img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  cursor: pointer;
+}
+.image-grid figure {
+  margin: 0;
+}
+.image-grid .img-container {
+  margin: 0;
+}
+</style>
+
+<script>
+document.currentScript.parentElement.querySelector('.image-grid').addEventListener('click', function(e) {
+  if (e.target.tagName === 'IMG') {
+    window.open(e.target.src, '_blank');
+  }
+});
+</script>
