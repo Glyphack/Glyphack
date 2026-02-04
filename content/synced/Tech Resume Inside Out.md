@@ -6,7 +6,7 @@ category:
 title: Tech Resume Inside Out
 author: "[[Gergely Orosz]]"
 rating: "5"
-isbn13:
+isbn13: 978-1-63649-416-6
 link:
 layout: book
 share: "true"
