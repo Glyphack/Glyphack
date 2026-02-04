@@ -1,0 +1,19 @@
+{{ define "main" }}
+<main>
+  <header class="page-header">
+    <h1>{{ .Title }}</h1>
+  </header>
+  <div class="page-content">
+    {{ .Content }}
+    <ul class="post-list">
+      {{ $talks := where site.RegularPages "Params.tags" "intersect" (slice "talk") }}
+      {{ range $talks.ByDate.Reverse }}
+      <li>
+        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format site.Params.listDateFormat }}</time>
+        <a href="{{ .Permalink }}">{{ .Title }}</a>
+      </li>
+      {{ end }}
+    </ul>
+  </div>
+</main>
+{{ end }}
