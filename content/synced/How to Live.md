@@ -1,14 +1,14 @@
 ---
-created: 2025-04-09
+created: 2025-08-19
 category:
   - "[[Books|Books]]"
-layout: book
 title: How to Live
 author: "[[Derek Sivers]]"
+isbn13: 978-1991152336
+link: https://sive.rs/h
 rating: "5"
-url: 
-tags: 
-status: []
+tags:
+layout: book
 share: "true"
 ---
 ## Review
