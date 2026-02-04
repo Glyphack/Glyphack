@@ -1,0 +1,13 @@
+{{- /* 
+  Returns the formatted author string for a book page.
+  Usage: {{ partial "book-author" . }}
+  Expects a page context with .Params.author (string or slice)
+*/ -}}
+{{- $rawAuthor := default "" .Params.author -}}
+{{- $authorStr := "" -}}
+{{- if reflect.IsSlice $rawAuthor -}}
+  {{- $authorStr = delimit $rawAuthor ", " -}}
+{{- else -}}
+  {{- $authorStr = replaceRE "\\[\\[|\\]\\]" "" $rawAuthor -}}
+{{- end -}}
+{{- return $authorStr -}}

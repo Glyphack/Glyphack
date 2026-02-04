@@ -82,7 +82,8 @@
       padding-top: 0.2rem;
       gap: 0.5rem;
     }
-    .book-meta-item, .book-meta-label {
+    .book-meta-item,
+    .book-meta-label {
       font-size: 1rem;
       width: auto;
       min-width: 0;
@@ -129,7 +130,6 @@
     color: #555;
   }
 
-
   .book-notes h2 {
     color: #2c3e50;
     border-bottom: 1px solid #eee;
@@ -166,28 +166,22 @@
 </style>
 
 <article class="book-container">
-  {{- /* Book cover retrieval */ -}} {{- $rawTitle := .Title -}} {{- $titleParam
-  := urlquery $rawTitle -}} {{- $rawAuthor := default "" .Params.author -}} {{-
-  $authorStr := "" -}} {{- if reflect.IsSlice $rawAuthor -}} {{- $authorStr =
-  delimit $rawAuthor ", " -}} {{- else -}} {{- $authorStr = replaceRE
-  "\\[\\[|\\]\\]" "" $rawAuthor -}} {{- end -}} {{- $authorParam := urlquery
-  $authorStr -}} {{- $isbn := default "" .Params.isbn13 -}} {{- $coverApiUrl :=
-  cond (ne $isbn "") (printf "https://bookcover.longitood.com/bookcover/%s"
-  (urlquery $isbn)) (printf
-  "https://bookcover.longitood.com/bookcover?book_title=%s&author_name=%s"
-  $titleParam $authorParam) -}} {{- $jsonRes := resources.GetRemote $coverApiUrl
-  -}} {{- $coverData := $jsonRes | transform.Unmarshal -}} {{- $coverUrl :=
-  default "/images/default-cover.jpg" (index $coverData "url") -}}
+  {{- $coverUrl := partial "book-cover-url" . -}}
+  {{- $authorStr := partial "book-author" . -}}
 
   <header class="book-header">
     <h1 class="book-title">Book Review: {{ .File.BaseFileName }}</h1>
     {{ with .Params.created }}
-      <div class="book-date-subtitle">Added: {{ . }}</div>
+    <div class="book-date-subtitle">Added: {{ . }}</div>
     {{ end }}
   </header>
   <div class="book-row">
     <div class="book-cover-wrapper">
-      <img src="{{ $coverUrl }}" alt="Cover of {{ .Title }}" class="book-cover" />
+      <img
+        src="{{ $coverUrl }}"
+        alt="Cover of {{ .Title }}"
+        class="book-cover"
+      />
     </div>
     <div class="book-details">
       <div class="book-meta-item">
@@ -198,11 +192,11 @@
       <div class="book-meta-item">
         <span class="book-meta-label">Rating:</span>
         <span class="book-rating">
-          {{ $rating := .Params.rating }}
-          {{ $fullStars := int (math.Floor $rating) }}
-          {{ range $i := seq 1 5 }}
-            {{ if le $i $fullStars }}<span class="star">&#9733;</span>{{ else }}<span class="star empty">&#9733;</span>{{ end }}
-          {{ end }}
+          {{ $rating := .Params.rating }} {{ $fullStars := int (math.Floor
+          $rating) }} {{ range $i := seq 1 5 }} {{ if le $i $fullStars }}<span
+            class="star"
+            >&#9733;</span
+          >{{ else }}<span class="star empty">&#9733;</span>{{ end }} {{ end }}
         </span>
       </div>
       {{ end }}
@@ -210,11 +204,8 @@
   </div>
 
   <section class="book-notes">
-    {{ .Content
-      | replaceRE `\[\[[^|\]]+\|([^\]]+)\]\]` "$1"
-      | replaceRE `\[\[([^|\]]+)\]\]` "$1"
-      | safeHTML
-    }}
+    {{ .Content | replaceRE `\[\[[^|\]]+\|([^\]]+)\]\]` "$1" | replaceRE
+    `\[\[([^|\]]+)\]\]` "$1" | safeHTML }}
   </section>
 </article>
 {{ end }}

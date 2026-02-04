@@ -1,0 +1,8 @@
+{{- /* 
+  Returns the cover URL for a book page.
+  Usage: {{ partial "book-cover-url" . }}
+  Expects a page context with .Params.isbn13
+*/ -}}
+{{- $isbn := default "" .Params.isbn13 -}}
+{{- $coverUrl := cond (ne $isbn "") (printf "https://covers.openlibrary.org/b/isbn/%s.jpg" $isbn) "/images/default-cover.jpg" -}}
+{{- return $coverUrl -}}

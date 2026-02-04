@@ -1,0 +1,51 @@
+{{- /* 
+  Renders a book card.
+  Usage: {{ partial "book-card" (dict "page" . "showStatus" true) }}
+  Parameters:
+    - page: the book page context
+    - showStatus: whether to show the status tag (optional, default false)
+*/ -}}
+{{- $page := .page -}}
+{{- $showStatus := default false .showStatus -}}
+{{- $coverUrl := partial "book-cover-url" $page -}}
+{{- $authorStr := partial "book-author" $page -}}
+
+<a href="{{ $page.RelPermalink }}" class="book-card">
+  <div class="book-cover-wrapper">
+    <img
+      src="{{ $coverUrl }}"
+      alt="Cover of {{ $page.Title }}"
+      class="book-cover"
+    />
+  </div>
+  <div class="book-card-content">
+    <h3 class="book-title">{{ $page.Title }}</h3>
+    <div class="book-metadata">
+      {{ if $page.Params.author }}
+      <div class="book-author">
+        <span class="metadata-label">By </span> {{ $authorStr }}
+      </div>
+      {{ end }}
+      {{ if $page.Params.rating }}
+      <div class="book-rating">
+        <span class="stars">
+          {{ $rating := int $page.Params.rating }}
+          {{ range $i := (seq 5) }}
+            {{ if le $i $rating }}
+              <span class="star filled">★</span>
+            {{ else }}
+              <span class="star">☆</span>
+            {{ end }}
+          {{ end }}
+        </span>
+      </div>
+      {{ end }}
+      {{ if and $showStatus $page.Params.status }}
+      <div class="book-status">
+        <span class="metadata-label">Status:</span>
+        <span class="status-tag {{ index $page.Params.status 0 | lower }}">{{ index $page.Params.status 0 }}</span>
+      </div>
+      {{ end }}
+    </div>
+  </div>
+</a>

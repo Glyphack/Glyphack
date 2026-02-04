@@ -19,107 +19,18 @@
     <h2>Currently Reading</h2>
     <div class="book-card-container">
       {{ range sort $activeBooks "Params.created" "desc" }}
-      <a href="{{ .RelPermalink }}" class="book-card">
-        {{/* Book Cover Image */}} {{- $rawTitle := .Title -}} {{- $titleParam
-        := urlquery $rawTitle -}} {{- $rawAuthor := default "" .Params.author
-        -}} {{- $authorStr := "" -}} {{- if reflect.IsSlice $rawAuthor -}} {{-
-        $authorStr = delimit $rawAuthor ", " -}} {{- else -}} {{- $authorStr =
-        replaceRE "\\[\\[|\\]\\]" "" $rawAuthor -}} {{- end -}} {{- $authorParam
-        := urlquery $authorStr -}} {{- $isbn := default "" .Params.isbn13 -}}
-        {{- $coverApiUrl := cond (ne $isbn "") (printf
-        "https://bookcover.longitood.com/bookcover/%s" (urlquery $isbn)) (printf
-        "https://bookcover.longitood.com/bookcover?book_title=%s&author_name=%s"
-        $titleParam $authorParam) -}} {{- $jsonRes := resources.GetRemote
-        $coverApiUrl -}} {{- $coverData := $jsonRes | transform.Unmarshal -}}
-        {{- $coverUrl := default "/images/default-cover.jpg" (index $coverData
-        "url") -}}
-        <div class="book-cover-wrapper">
-          <img
-            src="{{ $coverUrl }}"
-            alt="Cover of {{ .Title }}"
-            class="book-cover"
-          />
-        </div>
-        <div class="book-card-content">
-          <h3 class="book-title">{{ .Title }}</h3>
-          <div class="book-metadata">
-            {{ if .Params.author }}
-            <div class="book-author">
-              <span class="metadata-label">By </span> {{ $authorStr }}
-            </div>
-            {{ end }} {{ if .Params.rating }}
-            <div class="book-rating">
-              <span class="stars">
-                {{ $rating := int .Params.rating }} {{ range $i := (seq 5) }} {{
-                if le $i $rating }}
-                <span class="star filled">★</span>
-                {{ else }}
-                <span class="star">☆</span>
-                {{ end }} {{ end }}
-              </span>
-            </div>
-            {{ end }}
-          </div>
-        </div>
-      </a>
+        {{ partial "book-card" (dict "page" . "showStatus" false) }}
       {{ end }}
     </div>
     {{ end }}
 
     <h2>Books</h2>
     <div class="book-card-container">
-      {{ if gt (len $otherBooks) 0 }} {{ range sort $otherBooks "Params.created" "desc" }}
-      <a href="{{ .RelPermalink }}" class="book-card">
-        {{/* Book Cover Image */}} {{- $rawTitle := .Title -}} {{- $titleParam
-        := urlquery $rawTitle -}} {{- $rawAuthor := default "" .Params.author
-        -}} {{- $authorStr := "" -}} {{- if reflect.IsSlice $rawAuthor -}} {{-
-        $authorStr = delimit $rawAuthor ", " -}} {{- else -}} {{- $authorStr =
-        replaceRE "\\[\\[|\\]\\]" "" $rawAuthor -}} {{- end -}} {{- $authorParam
-        := urlquery $authorStr -}} {{- $isbn := default "" .Params.isbn13 -}}
-        {{- $coverApiUrl := cond (ne $isbn "") (printf
-        "https://bookcover.longitood.com/bookcover/%s" (urlquery $isbn)) (printf
-        "https://bookcover.longitood.com/bookcover?book_title=%s&author_name=%s"
-        $titleParam $authorParam) -}} {{- $jsonRes := resources.GetRemote
-        $coverApiUrl -}} {{- $coverData := $jsonRes | transform.Unmarshal -}}
-        {{- $coverUrl := default "/images/default-cover.jpg" (index $coverData
-        "url") -}}
-        <div class="book-cover-wrapper">
-          <img
-            src="{{ $coverUrl }}"
-            alt="Cover of {{ .Title }}"
-            class="book-cover"
-          />
-        </div>
-        <div class="book-card-content">
-          <h3 class="book-title">{{ .Title }}</h3>
-          <div class="book-metadata">
-            {{ if .Params.author }}
-            <div class="book-author">
-              <span class="metadata-label">By </span> {{ $authorStr }}
-            </div>
-            {{ end }} {{ if .Params.rating }}
-            <div class="book-rating">
-              <span class="stars">
-                {{ $rating := int .Params.rating }} {{ range $i := (seq 5) }} {{
-                if le $i $rating }}
-                <span class="star filled">★</span>
-                {{ else }}
-                <span class="star">☆</span>
-                {{ end }} {{ end }}
-              </span>
-            </div>
-            {{ end }} {{ if .Params.status }}
-            <div class="book-status">
-              <span class="metadata-label">Status:</span>
-              <span class="status-tag {{ index .Params.status 0 | lower }}"
-                >{{ index .Params.status 0 }}</span
-              >
-            </div>
-            {{ end }}
-          </div>
-        </div>
-      </a>
-      {{ end }} {{ else }}
+      {{ if gt (len $otherBooks) 0 }}
+        {{ range sort $otherBooks "Params.created" "desc" }}
+          {{ partial "book-card" (dict "page" . "showStatus" true) }}
+        {{ end }}
+      {{ else }}
       <p class="no-books-message">No books found matching the criteria.</p>
       {{ end }}
     </div>
