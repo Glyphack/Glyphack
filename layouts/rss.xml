@@ -19,7 +19,11 @@
       <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</pubDate>
       {{ with .Site.Author.email }}<author>{{.}}{{ with $.Site.Author.name }} ({{.}}){{end}}</author>{{end}}
       <guid>{{ .Permalink }}</guid>
-      <description>{{ .Content | replaceRE `<div class="youtube-video-container"[^>]*>\s*<iframe[^>]*src="https://www\.youtube\.com/embed/([^"?]+)[^"]*"[^>]*></iframe>\s*</div>` `<p><a href="https://www.youtube.com/watch?v=$1"><img src="https://img.youtube.com/vi/$1/maxresdefault.jpg" alt="YouTube video" style="max-width:100%;" /></a></p><p><a href="https://www.youtube.com/watch?v=$1">▶ Watch on YouTube</a></p>` | replaceRE `Your browser does not support video playback.` (printf `<p><a href="%s">Open this post to view the video</a></p>` .Permalink) | html }}</description>
+      {{- $content := .Content -}}
+      {{- $content = replaceRE `(<iframe[^>]+src="([^"]+)"[^>]*>.*?</iframe>)` `$1<p><a href="$2">View embedded content</a></p>` $content -}}
+      {{- $content = replaceRE `(<video[^>]+src="([^"]+)"[^>]*>.*?</video>)` `$1<p><a href="$2">Watch video</a></p>` $content -}}
+      {{- $content = replaceRE `Your browser does not support video playback.` (printf `<p><a href="%s">Open this post to view the video</a></p>` .Permalink) $content -}}
+      <description>{{ $content | html }}</description>
     </item>
     {{ end }}
   </channel>
