@@ -1,0 +1,15 @@
+{
+  "dictionary": {
+    "en-US": [
+      "blendr",
+      "mireds",
+      "xy"
+    ]
+  },
+  "disabledRules": {
+    "en-US": [
+      "ENGLISH_WORD_REPEAT_RULE",
+      "A_INFINITIVE"
+    ]
+  }
+}

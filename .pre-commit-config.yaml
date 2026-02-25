@@ -5,3 +5,10 @@ repos:
       - id: markdownlint-fix
         files: ^content/blog/
         args: ['--disable', 'MD013']
+  - repo: local
+    hooks:
+      - id: ltex-cli
+        name: LTeX Grammar and Spell Checker
+        entry: ltex-cli --client-configuration .ltex.json
+        language: system
+        types_or: [markdown]

@@ -30,17 +30,17 @@ I don't need to use the shitty app anymore.
 
 My goal was to have a workflow like this:
 
-- Turn on/off the light from the computer. For when I'm sitting at the desk and don't want to grab my phone. Also it's nice to be able to set brightness and color.
+- Turn on/off the light from the computer. For when I'm sitting at the desk and don't want to grab my phone. Also, it's nice to be able to set brightness and color.
 - Turn on the light in the morning when I wake up and turn off when the sun is up.
 
-The first functionality is almost done. I can turn the light on and off but how do I change the color?
+The first functionality is almost done. I can turn the light on and off, but how do I change the color?
 
 ## Color
 
 I looked around in the characteristics and tried out all the characteristics below the on/off one.
 Here's the full list of services and characteristics from blendr:
 
-```
+```text
 Service Device Information (0x1800)
   Manufacturer Name String (0x2A29) [Read]
   Model Number String (0x2A24) [Read]
@@ -90,24 +90,24 @@ There are multiple characteristics that change when you change the light color:
 The third option is more general hence more useful.
 The value inside of it looks like this:
 
-```
+```text
 cool white:
 0x01,0x01,0x01,0x02,0x01,0xFE,0x03,0x02,0x9C,0x00
 warm white:
 0x01,0x01,0x01,0x02,0x01,0xFE,0x03,0x02,0x5a,0x01
 ```
 
-It's clear that `FE` is the brightness. it's 254.
+It's clear that `FE` is the brightness. It's 254.
 For some reason you cannot set the brightness to 255 and this is the limit.
 The last two bytes together (little-endian 16-bit) control the color temperature — that's the warm white to cool white spectrum. The values are in [mireds](https://en.wikipedia.org/wiki/Mired) (micro reciprocal degrees = 1,000,000 / Kelvin), which is how Philips Hue encodes color temperature. So 156 mireds ≈ 6410K (cool white) and 346 mireds ≈ 2890K (warm white).
 
-The initial bytes until brightness byte seem to be constant. It does not change. with different things I tried.
+The initial bytes until brightness byte seem to be constant. It does not change. With different things I tried.
 
 There are two bytes between the brightness and warmth.
 `0x03,0x02` seem to be only the case for white color.
 
 When I set it to another color the bytes change to this format:
-```
+```text
 0x01,0x01,0x01,0x02,0x01,
 brightness,0x04,0x04,
 color byte 1, color byte 2,
@@ -117,8 +117,8 @@ color byte 3, color byte 4
 The number of bytes increase.
 So we have 4 bytes in total to set the color.
 
-I haven't dug deeper. I gave some examples to Perplexity and it informed me that the color is encoded in **CIE 1931 xy chromaticity** format.
-So I skipped this part for now. my goal was not to control the light exactly. This was just a side quest.
+I haven't dug deeper. I gave some examples to Perplexity, and it informed me that the color is encoded in **CIE 1931 xy chromaticity** format.
+So I skipped this part for now. My goal was not to control the light exactly. This was just a side quest.
 
 ## Timer
 
@@ -136,7 +136,7 @@ Well the good news is that there is software from Apple called Packet Logger.
 It can be downloaded from [Bluetooth - Apple Developer](https://developer.apple.com/bluetooth/).
 You need an Apple account to download it.
 I hate this because when I was in Iran any of these tools was blocked because you can't easily open an account.
-I have since moved to a place where I am allowed to open an account so I have it.
+I have since moved to a place where I am allowed to open an account, so I have it.
 So I went ahead and downloaded that you also need a profile to install on IOS.
 You can get it [Profiles and Logs - Feedback Assistant - Apple Developer](https://developer.apple.com/feedback-assistant/profiles-and-logs/).
 
@@ -145,7 +145,7 @@ Install Packet Logger on your computer and the profile on your iPhone. Then, con
 So I started checking what the application does when I connect to the light.
 I found the following requests:
 
-```
+```text
 Feb 12 12:10:23.743  ATT Send         0x005A  Hue lightstrip pl  Write Request - Handle:0x0068 - Value: 0311 00  
 	Write Request - Handle:0x0068 - Value: 0311 00
 	Opcode: 0x12
@@ -204,22 +204,22 @@ That's how I got the one.
 Here's the breakdown. The timer characteristic (`9da2ddf1-0001-44d0-909c-3f3d3cb34a7b`) is like a server.
 You can write different messages to it and subscribe to it to get back responses as notifications.
 When the app connects the first packet is:
-```
+```text
 0x00
 ```
 
 Then the application responds back the list of IDs for the alarms that are already set:
-```
+```text
 00 00 00 03 | ID0_lo ID0_hi | ID1_lo ID1_hi | ID2_lo ID2_hi
 ```
 
 The `03` is the number of alarms.
 
 So it's basically like a CRUD app.
-Next is to read the alarm details using its id.
+Next is to read the alarm details using its ID.
 
 We construct this message:
-```
+```text
 0x02, lo, hi, 0x00, 0x00
 ```
 
@@ -232,7 +232,7 @@ That's what I did.
 
 Let's look at one example:
 
-```
+```text
 02 00 2c 00 35 00 00 00 00 01 00 60 55 95 69 00
 09 01 01 01 06 01 09 08 01 7d 22 01 d4 0c 13 8d
 81 b9 4a 4c aa 42 b9 9a ce c6 2d 88 00 ff ff ff
@@ -244,7 +244,7 @@ Here's what I found out:
 2.  `0x002C` is the alarm ID.
 3. `0x35` is length of the payload.
 4. The `0100` before the `60`... is the alarm active state.
-5. `60 55 95 69` is the timestamp for the alarm in little endian format which is 2026-02-16 6:00.
+5. `60 55 95 69` is the timestamp for the alarm in little-endian format which is 2026-02-16 6:00.
 6. Then you have a series of bytes that I don't know what they are related to, we call them mystery bytes.
 7. Then you have `ff ff ff ff` which I think is a separator for the alarm info and the name. I verified it by sending `00 00 00 00` instead and seems like the lamp ignores it.
 8. Then you have the name `0a 4d 6f 72 6e 69 6e 67 20 75 70 01` length + characters + `01`
@@ -257,31 +257,31 @@ When I took this same message and just tried to create random alarms by substitu
 
 From my investigation I found this is the packet that the app uses to create an alarm.
 
-```
 01FF FF00 0100 D8B6 8E69 0009 0101 0106 0109 0801 5B19 0194 D184 84B7 5143 DAA8 67A9 2F02 110C 8D00 FFFF FFFF 0141 01
+```text
 ```
 
 1. `01FF` is the command to create a new alarm.
 2. `0100` tells the alarm is active.
-3. `D8B6 8E69` is timestamp in little endian format.
-4. `0009 0101 0106 0109 0801` hasn't change I guess it's related to the effect (here it's "sunrise").
+3. `D8B6 8E69` is timestamp in little-endian format.
+4. `0009 0101 0106 0109 0801` hasn't changed I guess it's related to the effect (here it's "sunrise").
 5.  `5B19 0194 D184 84B7 5143 DAA8 67A9 2F02 110C 8D00` mystery bytes.
 6. After `0141 01` separator it's name of the alarm.
 
-After alarm write is success there will be these two notifications which reply back with the ID of the alarm.
+After alarm write is success there will be these two notifications which reply with the ID of the alarm.
 It's useful to verify the write actually happened. But I didn't get any extra information from it.
 
-```
+```text
 0100 FFFF 1E00
 ```
 
-```
+```text
 04FF FF1E 00
 ```
 
 Then I tried making the same alarm twice with everything and here's the result:
 
-```
+```text
 01FF FF00 0100 305C 9169 0009 0101 0106 
 0109 0801 651F 01FB D061 C25B 6340 F6AA 
 71BB 49E1 86F0 C900 FFFF FFFF 0757 616B 
@@ -296,10 +296,10 @@ Then I tried making the same alarm twice with everything and here's the result:
 ---
 Then I tried turning alarms on and off. My plan was to see if I can just make the alarm with my phone and then enable it with the computer that would work too.
 
-Here's the packets for that.
+Here are the packets for that.
 What I did here was turning the alarm on and off and check the alarm by querying the alarm detail the way I explained above with the timer characteristic.
 
-```
+```text
 Created alarm with state on:
 
 	Value: 01FF FF00 0100 D8B6 8E69 0009 0101 0106 
@@ -337,47 +337,47 @@ So I did this experiment to be sure what happens to the light:
 
 Experiment create a new alarm:
 
-```
+```text
 Value: 01FF FF00 0100 4089 9069 0009 0101 0106 
 0109 0801 651C 01EF 5572 FEF8 174B 67AC 
 ED26 721F CFAA 2400 FFFF FFFF 0454 6573 
 7401
 ```
 
-```
+```text
 Handle Value Notification - Handle:0x0068 -Value: 0100 FFFF 0100
 ```
 
-```
+```text
 Handle Value Notification - Handle:0x0068 - Value: 04FF FF01 00
 ```
 
 After alarm went off this is the alarm payload using read alarms:
 
-```
+```text
 02 00 06 00 2f 00 00 00 00 00 00 c0 da 91 69 00 09 01 01 01 06 01 09 08 01 65 1c 01 ef 55 72 fe f8 17 4b 67 ac ed 26 72 1f cf aa 24 00 ff ff ff ff 04 54 65 73 74 00
 ```
 
 Then after alarm went off I turned it on again for tomorrow this is the packet it sent to the device.
 
-```
+```text
 Value: 0102 0000 0100 C0DA 9169 0009 0101 0106 
 0109 0801 651C 01EF 5572 FEF8 174B 67AC 
 ED26 721F CFAA 2400 FFFF FFFF 0454 6573 
 7401
 ```
 
-```
+```text
 Handle Value Notification - Handle:0x0068 - Value: 0100 0200 0300
 ```
 
-```
+```text
 Handle Value Notification - Handle:0x0068 - Value: 0402 0003 00
 ```
 
-this is the new state of the alarm after enabling again:
+This is the new state of the alarm after enabling again:
 
-```
+```text
 02 00 07 00 2f 00 00 00 00 01 00 c0 da 91 69 00 09 01 01 01 06 01 09 08 01 65 1c 01 ef 55 72 fe f8 17 4b 67 ac ed 26 72 1f cf aa 24 00 ff ff ff ff 04 54 65 73 74 01
 ```
 
@@ -390,19 +390,19 @@ How about deleting alarms?
 
 Delete Alarm
 
-```
+```text
 031E 00
 ```
 
-`1E 00` is the ID (little endian).
+`1E 00` is the ID (little-endian).
 
-response after delete:
+Response after delete:
 
-```
+```text
 0300 1E00
 ```
 
-```
+```text
 041E 00FF FF
 ```
 
@@ -413,26 +413,26 @@ How about timers?
 Hue also has this feature timers where you can set the light to flash after few minutes.
 Fancier way to have a timer than a clock.
 
-```
+```text
 02 00 38 00 28 00 00 00 00 00 01 b9 ba 94 69 01
 01 02 1d 01 50 c1 53 49 69 60 40 b1 b3 38 46 6b
 c3 bb 42 58 03 2c 01 00 00 05 54 69 6d 65 72 01
 ```
 
-Timers have the same format. more or less. The timer name is at the end.
+Timers have the same format. More or less. The timer name is at the end.
 
 `05 54 69 6d 65 72 01` Timer name.
 `b9 ba 94 69` Time that the timer should go off.
 `00 01` the Timer is active.
 The rest is again mystery bytes.
-Before the timer name and before the `00 00` there is `03 2c` that's the timer length in little endian format.
+Before the timer name and before the `00 00` there is `03 2c` that's the timer length in little-endian format.
 
 
 ---
 <details>
 <summary>More examples of alarm creation packets</summary>
 
-```
+```text
 Wake up 07:00 sunrise fade in 30 min
 
 01FF FF00 0100 D8B6 8E69 0009 0101 0106 0109 0801 5B19 0194 D184 84B7 5143 DAA8 67A9 2F02 110C 8D00 FFFF FFFF 0141 01
