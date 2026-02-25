@@ -96,6 +96,8 @@ sub404 = "Back to <a href='/'>Home</a>."
 dateFmt = "Jan 02, 2006"
 
 [markup]
+[markup.goldmark.renderer]
+unsafe = true
 [markup.highlight]
 style = 'algol'
 noClasses = true

@@ -12,7 +12,7 @@ But I don't want to buy another device from this company that keeps its stuff un
 
 So while I was waiting for the light to die slowly and then replace it with another light. I found something that "inspired" me to do something.
 
-I found this tool blendr(todo link) that can connect to low energy Bluetooth devices. (todo maybe more explain.)
+I found this tool [blendr](https://github.com/dmtrKovalenko/blendr/) that can connect to low energy Bluetooth devices and lets you browse their services and characteristics in a terminal UI.
 
 So after installing it(didn't work on rust 1.90 downgraded 1.79)
 I started looking into my lights.
@@ -38,13 +38,54 @@ The first functionality is almost done. I can turn the light on and off but how 
 ## Color
 
 I looked around in the characteristics and tried out all the characteristics below the on/off one.
-todo: list them.
+Here's the full list of services and characteristics from blendr:
+
+```
+Service Device Information (0x1800)
+  Manufacturer Name String (0x2A29) [Read]
+  Model Number String (0x2A24) [Read]
+  Software Revision String (0x2A28) [Read]
+
+Service 932c32bd-0001-47a2-835a-a8d455b859dd
+  932c32bd-0001-47a2-835a-a8d455b859dd [Read]
+  932c32bd-0002-47a2-835a-a8d455b859dd [Read, Write, Notify]    — Power
+  932c32bd-0003-47a2-835a-a8d455b859dd [Read, Write, Notify]    — Brightness
+  932c32bd-0004-47a2-835a-a8d455b859dd [Read, Write, Notify]
+  932c32bd-0005-47a2-835a-a8d455b859dd [Read, Write, Notify]    — RGB Color
+  932c32bd-0006-47a2-835a-a8d455b859dd [Write]
+  932c32bd-0007-47a2-835a-a8d455b859dd [Read, Write, Notify]    — Color (brightness, RGB, temperature)
+  932c32bd-1005-47a2-835a-a8d455b859dd [Read, Write]
+
+Service 97fe6561-0001-4f62-86e9-b71ee2da3d22
+  97fe6561-0001-4f62-86e9-b71ee2da3d22 [Read]
+  97fe6561-0003-4f62-86e9-b71ee2da3d22 [Read, Write]
+  97fe6561-0004-4f62-86e9-b71ee2da3d22 [Write]
+  97fe6561-0005-4f62-86e9-b71ee2da3d22 [Write]
+  97fe6561-0006-4f62-86e9-b71ee2da3d22 [Read, Write]
+  97fe6561-0008-4f62-86e9-b71ee2da3d22 [Write, Notify]
+  97fe6561-1001-4f62-86e9-b71ee2da3d22 [Read, Write, Notify]
+  97fe6561-2001-4f62-86e9-b71ee2da3d22 [Read, Write]
+  97fe6561-2002-4f62-86e9-b71ee2da3d22 [Write]
+  97fe6561-2004-4f62-86e9-b71ee2da3d22 [Write]
+  97fe6561-a001-4f62-86e9-b71ee2da3d22 [Write]
+  97fe6561-a002-4f62-86e9-b71ee2da3d22 [Read]
+  97fe6561-a003-4f62-86e9-b71ee2da3d22 [Read, Write]
+
+Service 9da2ddf1-0001-44d0-909c-3f3d3cb34a7b
+  9da2ddf1-0001-44d0-909c-3f3d3cb34a7b [Write, Notify]         — Timer
+
+Service b8843add-0001-4aa1-8794-c3f462030bda
+  b8843add-0001-4aa1-8794-c3f462030bda [Read]
+  b8843add-0002-4aa1-8794-c3f462030bda [Write, Notify]
+  b8843add-0003-4aa1-8794-c3f462030bda [Write]
+  b8843add-0004-4aa1-8794-c3f462030bda [Read]
+```
 
 You can easily find out the pattern by changing the light color and observing the characteristic values.
 There are multiple characteristics that change when you change the light color:
-- todo changes with brightness
-- todo changes with color (if I do warm white then cool white stays the same)
-- todo changes with everything.
+- `932c32bd-0003-47a2-835a-a8d455b859dd` changes with brightness
+- `932c32bd-0005-47a2-835a-a8d455b859dd` changes with color (if I do warm white then cool white stays the same)
+- `932c32bd-0007-47a2-835a-a8d455b859dd` changes with everything.
 
 The third option is more general hence more useful.
 The value inside of it looks like this:
@@ -58,10 +99,9 @@ warm white:
 
 It's clear that `FE` is the brightness. it's 254.
 For some reason you cannot set the brightness to 255 and this is the limit.
-The byte before the last one is controlling the todo: kelvin.
+The last two bytes together (little-endian 16-bit) control the color temperature — that's the warm white to cool white spectrum. The values are in [mireds](https://en.wikipedia.org/wiki/Mired) (micro reciprocal degrees = 1,000,000 / Kelvin), which is how Philips Hue encodes color temperature. So 156 mireds ≈ 6410K (cool white) and 346 mireds ≈ 2890K (warm white).
 
 The initial bytes until brightness byte seem to be constant. It does not change. with different things I tried.
-todo: verify
 
 There are two bytes between the brightness and warmness.
 `0x03,0x02` seem to be only the case for white color.
@@ -155,7 +195,7 @@ Feb 12 12:10:23.959  HCI Event        0x005A  Hue lightstrip pl  Number Of Compl
 	Number Of Packets: 0x0001
 ```
 
-I had a good run with [perplexity](https://www.perplexity.ai/search/how-to-capture-the-ble-writes-bsgCtVUHQKqln9khE5Hh7w) helping me in this whole investigation(todo: I don't like this word).
+I had a good run with [perplexity](https://www.perplexity.ai/search/how-to-capture-the-ble-writes-bsgCtVUHQKqln9khE5Hh7w) helping me in this whole process.
 It told me what to do and then figured out how the app gets the timers.
 You might notice that there is no trace of characteristic uuids here.
 I searched around and didn't find a way to map the handle that I see in the logs to uuid.
@@ -163,7 +203,7 @@ So I did what a sane person would do and stopped spending more time.
 I just brute forced my way by sending the same message to every characteristic and see which one responded back.
 That's how I got the one.
 
-Here's the breakdown. The timer characteristic (todo uuid) is like a server.
+Here's the breakdown. The timer characteristic (`9da2ddf1-0001-44d0-909c-3f3d3cb34a7b`) is like a server.
 You can write different messages to it and subscribe to it to get back responses as notifications.
 When the app connects the first packet is:
 ```
@@ -391,7 +431,9 @@ Before the timer name and before the `00 00` there is `03 2c` that's the timer l
 
 
 ---
-TODO: Make this a footnote for more examples of alarm creation.
+<details>
+<summary>More examples of alarm creation packets</summary>
+
 ```
 Wake up 07:00 sunrise fade in 30 min
 
@@ -430,3 +472,5 @@ Wake up 06:50 sunrise fade in 30 min
 Wake up 06:50 full brightness fade in 30 min
 01FF FF00 0100 80B4 8E69 000E 0101 0102 01FE 0302 BF01 0502 5046 1901 1478 FFD5 B1F1 431E AB18 E212 A720 34D6 00FF FFFF FF01 4101
 ```
+
+</details>
