@@ -6,13 +6,21 @@ tags: []
 ---
 
 For a long time I was looking for a way to control my Philips light strip.
-I searched and what came up was controlling the lamp with Hue bridge.
+I searched and what came up was controlling the lamp with the Hue bridge.
 That's the normal way to control a smart Philips lamp.
-But I don't want to buy another device from this company that keeps its stuff undocumented and releases a shitty app.
+But I don't want to buy another device from this company that keeps parts undocumented and releases a shitty app.
 
-So while I was waiting for the light to die slowly and then replace it with another light. I found something that "inspired" me to do something.
+While waiting for the strip to die, so I could replace it, I found something that "inspired" me to do something.
 
-I found this tool [blendr](https://github.com/dmtrKovalenko/blendr/) that can connect to low energy Bluetooth devices and lets you browse their services and characteristics in a terminal UI.
+I found this tool [blendr](https://github.com/dmtrKovalenko/blendr/) that can connect to Bluetooth Low Energy (BLE) devices and lets you browse their services and characteristics in a terminal UI.
+
+A quick primer on BLE terminology since it comes up a lot below:
+
+- **Service** – a group of related features on a BLE device (e.g. "light control"). Think of it as a folder.
+- **Characteristic** – a single data point inside a service that you can read, write, or subscribe to (e.g. "brightness"). Think of it as a file inside that folder.
+- **UUID** – a long unique identifier (like `932c32bd-0002-…`) that names a service or characteristic. Standard ones are short (e.g. `0x1800`); vendor-specific ones are 128-bit.
+- **Handle** – a short numeric address (e.g. `0x0068`) that the low-level BLE protocol uses to refer to a characteristic. Packet captures show handles, not UUIDs, which makes mapping between the two annoying.
+- **Notify** – a mode where the device pushes updates to you whenever a characteristic's value changes, instead of you polling for it.
 
 So after installing it (it didn't work on Rust 1.90, so I downgraded to Rust 1.79)
 I started looking into my lights.
@@ -25,7 +33,7 @@ I found a library called [Bleak](https://bleak.readthedocs.io/en/latest/).
 
 Then I wrote some code to write 0x01 and 0x00 into that characteristic and tried it.
 And it turned the light on and off!
-It was huge. It means that I can use my computer to control the light.
+That was a big moment. It means that I can use my computer to control the light.
 I don't need to use the shitty app anymore.
 
 My goal was to have a workflow like this:
@@ -101,7 +109,7 @@ It's clear that `FE` is the brightness. It's 254.
 For some reason you cannot set the brightness to 255 and this is the limit.
 The last two bytes together (little-endian 16-bit) control the color temperature — that's the warm white to cool white spectrum. The values are in [mireds](https://en.wikipedia.org/wiki/Mired) (micro reciprocal degrees = 1,000,000 / Kelvin), which is how Philips Hue encodes color temperature. So 156 mireds ≈ 6410K (cool white) and 346 mireds ≈ 2890K (warm white).
 
-The initial bytes until brightness byte seem to be constant. It does not change. With different things I tried.
+The initial bytes until the brightness byte seem to be constant. It does not change. With different things I tried.
 
 There are two bytes between the brightness and warmth.
 `0x03,0x02` seem to be only the case for white color.
@@ -123,7 +131,7 @@ So I skipped this part for now. My goal was not to control the light exactly. Th
 ## Timer
 
 Then I started looking into timers.
-Timers was the ultimate goal for me. I wanted my light to turn on every day.
+Timers were the ultimate goal for me. I wanted my light to turn on every day.
 But turning on using the on and off command meant that I have to have some device controlling the light.
 
 I started looking into other characteristics and I didn't find anything related timers.
@@ -135,10 +143,10 @@ So for this I needed to see what my phone was doing to set the alarms.
 Well the good news is that there is software from Apple called Packet Logger.
 It can be downloaded from [Bluetooth - Apple Developer](https://developer.apple.com/bluetooth/).
 You need an Apple account to download it.
-I hate this because when I was in Iran any of these tools was blocked because you can't easily open an account.
+I hate this because when I was in Iran many of these tools were blocked because you can't easily open an account.
 I have since moved to a place where I am allowed to open an account, so I have it.
-So I went ahead and downloaded that you also need a profile to install on IOS.
-You can get it [Profiles and Logs - Feedback Assistant - Apple Developer](https://developer.apple.com/feedback-assistant/profiles-and-logs/).
+So I went ahead and downloaded it. You also need a profile to install on iOS.
+You can get it from [Profiles and Logs - Feedback Assistant - Apple Developer](https://developer.apple.com/feedback-assistant/profiles-and-logs/).
 
 Install Packet Logger on your computer and the profile on your iPhone. Then, connect the phone to the computer. Start using the app, and you will see the packets.
 
@@ -257,8 +265,8 @@ When I took this same message and just tried to create random alarms by substitu
 
 From my investigation I found this is the packet that the app uses to create an alarm.
 
-01FF FF00 0100 D8B6 8E69 0009 0101 0106 0109 0801 5B19 0194 D184 84B7 5143 DAA8 67A9 2F02 110C 8D00 FFFF FFFF 0141 01
 ```text
+01FF FF00 0100 D8B6 8E69 0009 0101 0106 0109 0801 5B19 0194 D184 84B7 5143 DAA8 67A9 2F02 110C 8D00 FFFF FFFF 0141 01
 ```
 
 1. `01FF` is the command to create a new alarm.
