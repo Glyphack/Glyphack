@@ -2,7 +2,7 @@
 title: "Devlog 4: I made a chrome extension"
 date: 2025-04-12T11:49:07+02:00
 draft: false
-tags: [devlog] 
+tags: [devlog, log] 
 ---
 
 I'm not sure if some time comes that I finally can say I know vim. But I don't think that would happen before I [read the whole manual](https://www.youtube.com/watch?v=rT-fbLFOCy0).

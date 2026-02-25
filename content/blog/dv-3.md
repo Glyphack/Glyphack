@@ -2,7 +2,7 @@
 title: "Devlog 3: Coding a redis clone in C and things I learned"
 date: 2025-02-15T18:02:46+01:00
 draft: false
-tags: [coding, devlog]
+tags: [coding, devlog, log]
 ---
 
 About two months ago I started the build your own Redis challenge from <https://codecrafters.io>.

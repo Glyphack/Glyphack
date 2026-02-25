@@ -2,7 +2,7 @@
 title: "Devlog 5: Simu, Ty, Book Reader"
 date: 2025-09-28T10:52:46+02:00
 draft: false
-tags: [] 
+tags: [log] 
 ---
 
 ## Chat with New People

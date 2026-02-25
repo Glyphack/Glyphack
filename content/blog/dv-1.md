@@ -1,8 +1,8 @@
 ---
-title: "Devlog 0001: Contributing to Ruff, Profiling, Python Types Conformance Tests"
+title: "Devlog 1: Contributing to Ruff, Profiling, Python Types Conformance Tests"
 date: 2024-02-03T10:56:48+01:00
 draft: false
-tags: ["devlog"]
+tags: ["devlog", "log"]
 ---
 
 Last week I wanted to start contributing to rust.

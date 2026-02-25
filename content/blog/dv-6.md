@@ -2,7 +2,7 @@
 title: "Devlog 6: I Can Make a CPU with My Logic Gate Simulator"
 date: 2025-12-21T21:43:56+01:00
 draft: false
-tags: [] 
+tags: [log] 
 ---
 
 I can finally start making a CPU using [my logic gate simulator](https://github.com/Glyphack/simu).

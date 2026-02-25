@@ -2,7 +2,7 @@
 title: "Devlog 2"
 date: 2024-11-02T11:11:05+01:00
 draft: false
-tags: [devlog]
+tags: [devlog, log]
 ---
 Random notes from past month.
 

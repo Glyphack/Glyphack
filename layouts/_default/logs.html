@@ -1,0 +1,17 @@
+{{ define "main" }}
+
+<div class="list-container">
+
+    {{ partial "breadcrumbs.html" . }}
+
+    <h1>{{ .Title }}</h1>
+    {{ .Content }}
+
+    {{ $logs := where .Site.Taxonomies.tags.log "Draft" false }}
+
+    {{ range $logs }}
+    {{ partial "post-entry.html" .Page }}
+    {{ end }}
+
+</div>
+{{ end }}
