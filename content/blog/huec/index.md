@@ -5,23 +5,23 @@ draft: true
 tags: [] 
 ---
 
-For a long time I was looking for a way to control my Phillips light strip.
+For a long time I was looking for a way to control my Philips light strip.
 I searched and what came up was controlling the lamp with Hue bridge.
-That's the normal way to control a smart Phillips lamp.
-But I don't want to buy another device from this company that keeps its stuff undocumented and release a shitty app.
+That's the normal way to control a smart Philips lamp.
+But I don't want to buy another device from this company that keeps its stuff undocumented and releases a shitty app.
 
 So while I was waiting for the light to die slowly and then replace it with another light. I found something that "inspired" me to do something.
 
 I found this tool [blendr](https://github.com/dmtrKovalenko/blendr/) that can connect to low energy Bluetooth devices and lets you browse their services and characteristics in a terminal UI.
 
-So after installing it(didn't work on rust 1.90 downgraded 1.79)
+So after installing it (it didn't work on Rust 1.90, so I downgraded to Rust 1.79)
 I started looking into my lights.
-I found a couple of values that where written into characteristics.
+I found a couple of values that were written into characteristics.
 These values were controlling the state of the lamp.
 I took my phone and turned it on and then off and checked the characteristics and I found one that was related to the turning on and off.
 
 Next I searched how can I control this programmatically.
-I found a library called Bleak.
+I found a library called [Bleak](https://bleak.readthedocs.io/en/latest/).
 
 Then I wrote some code to write 0x01 and 0x00 into that characteristic and tried it.
 And it turned the light on and off!
@@ -30,7 +30,7 @@ I don't need to use the shitty app anymore.
 
 My goal was to have a workflow like this:
 
-- Turn on/off the light form computer. For when I'm sitting on the desk and don't want to grab my phone. Also it's nice to be able to set brightness and color.
+- Turn on/off the light from the computer. For when I'm sitting at the desk and don't want to grab my phone. Also it's nice to be able to set brightness and color.
 - Turn on the light in the morning when I wake up and turn off when the sun is up.
 
 The first functionality is almost done. I can turn the light on and off but how do I change the color?
@@ -103,7 +103,7 @@ The last two bytes together (little-endian 16-bit) control the color temperature
 
 The initial bytes until brightness byte seem to be constant. It does not change. with different things I tried.
 
-There are two bytes between the brightness and warmness.
+There are two bytes between the brightness and warmth.
 `0x03,0x02` seem to be only the case for white color.
 
 When I set it to another color the bytes change to this format:
@@ -117,7 +117,7 @@ color byte 3, color byte 4
 The number of bytes increase.
 So we have 4 bytes in total to set the color.
 
-I haven't dug deeper. I gave some examples to perplexity and it informed me that the color is encoded in **CIE 1931 xy chromaticity** format.
+I haven't dug deeper. I gave some examples to Perplexity and it informed me that the color is encoded in **CIE 1931 xy chromaticity** format.
 So I skipped this part for now. my goal was not to control the light exactly. This was just a side quest.
 
 ## Timer
@@ -127,22 +127,20 @@ Timers was the ultimate goal for me. I wanted my light to turn on every day.
 But turning on using the on and off command meant that I have to have some device controlling the light.
 
 I started looking into other characteristics and I didn't find anything related timers.
-Characteristics have multiple kinds. For color and power they are read and write.
-Meaning that you can write to it and you can read from it.
-But there are also characteristics with notify option.
-Which you can write to and get notification from it.
+Characteristics have multiple kinds. For color and power they are read and write, meaning that you can write to them and read from them.
+But there are also characteristics with a notify option, which you can write to and get notifications from.
 
 So for this I needed to see what my phone was doing to set the alarms.
 
-Well The good news is that there is a software from Apple called Packet Logger.
-Which can be downloaded from [Bluetooth - Apple Developer](https://developer.apple.com/bluetooth/).
-You need an apple account to download it.
+Well the good news is that there is software from Apple called Packet Logger.
+It can be downloaded from [Bluetooth - Apple Developer](https://developer.apple.com/bluetooth/).
+You need an Apple account to download it.
 I hate this because when I was in Iran any of these tools was blocked because you can't easily open an account.
-But I'm now upgraded and live in a place where I am allowed to open an account so I have it.
+I have since moved to a place where I am allowed to open an account so I have it.
 So I went ahead and downloaded that you also need a profile to install on IOS.
 You can get it [Profiles and Logs - Feedback Assistant - Apple Developer](https://developer.apple.com/feedback-assistant/profiles-and-logs/).
 
-Install packet logger on computer and the profile on an iPhone and then connect the phone to computer and start working with the app and you would see the packets coming and going.
+Install Packet Logger on your computer and the profile on your iPhone. Then, connect the phone to the computer. Start using the app, and you will see the packets.
 
 So I started checking what the application does when I connect to the light.
 I found the following requests:
@@ -197,8 +195,8 @@ Feb 12 12:10:23.959  HCI Event        0x005A  Hue lightstrip pl  Number Of Compl
 
 I had a good run with [perplexity](https://www.perplexity.ai/search/how-to-capture-the-ble-writes-bsgCtVUHQKqln9khE5Hh7w) helping me in this whole process.
 It told me what to do and then figured out how the app gets the timers.
-You might notice that there is no trace of characteristic uuids here.
-I searched around and didn't find a way to map the handle that I see in the logs to uuid.
+You might notice that there is no trace of characteristic UUIDs here.
+I searched around and didn't find a way to map the handle that I see in the logs to UUID.
 So I did what a sane person would do and stopped spending more time.
 I just brute forced my way by sending the same message to every characteristic and see which one responded back.
 That's how I got the one.
@@ -228,7 +226,7 @@ We construct this message:
 Which gives us the full alarm details.
 
 Now we have a bit of decoding to do here.
-The way I did this was by setting up a lot of alarms and seeing how the change the payload.
+The way I did this was by setting up a lot of alarms and seeing how they change the payload.
 In the end I didn't fully decode what this payload means. For me the goal was to enable an alarm every day.
 That's what I did.
 
@@ -257,7 +255,7 @@ Can we create any alarm we like now?
 No, I tried this, the problem is that the magic bytes seem to have a special meaning.
 When I took this same message and just tried to create random alarms by substituting my timestamp and name the lamp was not creating the alarm.
 
-From my investigation I found this is the packet that the app uses to create alarm.
+From my investigation I found this is the packet that the app uses to create an alarm.
 
 ```
 01FF FF00 0100 D8B6 8E69 0009 0101 0106 0109 0801 5B19 0194 D184 84B7 5143 DAA8 67A9 2F02 110C 8D00 FFFF FFFF 0141 01
@@ -271,7 +269,7 @@ From my investigation I found this is the packet that the app uses to create ala
 6. After `0141 01` separator it's name of the alarm.
 
 After alarm write is success there will be these two notifications which reply back with the ID of the alarm.
-It's useful to verify the right actually happened. But I didn't get any extra information from it.
+It's useful to verify the write actually happened. But I didn't get any extra information from it.
 
 ```
 0100 FFFF 1E00
