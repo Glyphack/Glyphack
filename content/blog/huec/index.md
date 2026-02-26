@@ -10,6 +10,8 @@ I searched and what came up was controlling the lamp with the Hue bridge.
 That's the normal way to control a smart Philips lamp.
 But I don't want to buy another device from this company that keeps parts undocumented and releases a shitty app.
 
+(I have a lot to say about Philips, not only they cannot make one app to control all the stuff you have from Philips in your home. Their individual apps suck. They are slow. There is startup time. They don't have good features. I guess you need to buy Hue from them to have this basic functionality? But I don't want to spend more money on Philips.)
+
 While waiting for the strip to die, so I could replace it, I found something that "inspired" me to do something.
 
 I found this tool [blendr](https://github.com/dmtrKovalenko/blendr/) that can connect to Bluetooth Low Energy (BLE) devices and lets you browse their services and characteristics in a terminal UI.
@@ -17,10 +19,7 @@ I found this tool [blendr](https://github.com/dmtrKovalenko/blendr/) that can co
 A quick primer on BLE terminology since it comes up a lot below:
 
 - **Service** – a group of related features on a BLE device (e.g. "light control"). Think of it as a folder.
-- **Characteristic** – a single data point inside a service that you can read, write, or subscribe to (e.g. "brightness"). Think of it as a file inside that folder.
-- **UUID** – a long unique identifier (like `932c32bd-0002-…`) that names a service or characteristic. Standard ones are short (e.g. `0x1800`); vendor-specific ones are 128-bit.
-- **Handle** – a short numeric address (e.g. `0x0068`) that the low-level BLE protocol uses to refer to a characteristic. Packet captures show handles, not UUIDs, which makes mapping between the two annoying.
-- **Notify** – a mode where the device pushes updates to you whenever a characteristic's value changes, instead of you polling for it.
+- **Characteristic** – a single data point inside a service that you can read, write, or subscribe to. Think of it as a file inside that folder.
 
 So after installing it (it didn't work on Rust 1.90, so I downgraded to Rust 1.79)
 I started looking into my lights.
@@ -98,10 +97,23 @@ There are multiple characteristics that change when you change the light color:
 The third option is more general hence more useful.
 The value inside of it looks like this:
 
-```text
 cool white:
-0x01,0x01,0x01,0x02,0x01,0xFE,0x03,0x02,0x9C,0x00
+
+{{< ble-packet payload="01 01 01 02 01 FE 03 02 9C 00" >}}
+0 | Lime Compass | Random label for byte 0.
+1 | Copper Meteor | Random label for byte 1.
+2 | Velvet Engine | Random label for byte 2.
+3 | Solar Pebble | Random label for byte 3.
+4 | Ivory Signal | Random label for byte 4.
+5 | Ruby Lantern | Random label for byte 5.
+6 | Mint Orbit | Random label for byte 6.
+7 | Cedar Pixel | Random label for byte 7.
+8 | Amber Glacier | Random label for byte 8.
+9 | Onyx Breeze | Random label for byte 9.
+{{< /ble-packet >}}
+
 warm white:
+```text
 0x01,0x01,0x01,0x02,0x01,0xFE,0x03,0x02,0x5a,0x01
 ```
 
@@ -437,6 +449,7 @@ Before the timer name and before the `00 00` there is `03 2c` that's the timer l
 
 
 ---
+These should be footnotes
 <details>
 <summary>More examples of alarm creation packets</summary>
 

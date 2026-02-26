@@ -1,0 +1,544 @@
+{{/*
+  ble-packet shortcode
+  Self-contained single-file version:
+  - No external CSS/JS files required
+  - No theme partial wiring required
+
+  Usage:
+
+    {{< ble-packet payload="AA D6 BE 89 8E 02 09 16 A4 C1 38 FA D2 11" >}}
+    0     | Preamble       | Alternating bits for receiver clock sync
+    1-4   | Access Address | Fixed BLE advertising address 0x8E89BED6
+    5-6   | PDU Header     | PDU type ADV_NONCONN_IND, TxAdd/RxAdd flags
+    7     | Length         | PDU payload length in bytes
+    8-13  | Advertiser MAC | Device MAC address, LSB first
+    {{< /ble-packet >}}
+
+  Build errors if:
+    - A byte is not covered by any field
+    - Two fields overlap on the same byte
+    - A field references an out-of-range byte index
+*/}}
+
+{{/* Emit assets once per page */}}
+{{ if not (.Page.Store.Get "ble_packet_assets_emitted") }}
+<style>
+.ble-packet {
+  --bp-bg: #0f1218;
+  --bp-bg2: #151a22;
+  --bp-border: #1e2530;
+  --bp-border2: #263040;
+  --bp-text: #c8d4e0;
+  --bp-text-dim: #4a6070;
+  --bp-text-hi: #e8f0f8;
+  --bp-mono: "IBM Plex Mono", "Fira Mono", "Consolas", monospace;
+  background: var(--bp-bg);
+  border: 1px solid var(--bp-border);
+  border-radius: 10px;
+  padding: 20px 22px 18px;
+  margin: 28px 0;
+}
+
+.ble-packet__hex {
+  font-family: var(--bp-mono);
+  font-size: 13.5px;
+  line-height: 2.1;
+  letter-spacing: 0.06em;
+  word-break: break-all;
+}
+
+.ble-byte {
+  display: inline;
+  color: var(--fc, #888);
+  background: color-mix(in srgb, var(--fc, #888) 13%, transparent);
+  padding: 2px 1px;
+  border-radius: 0;
+  cursor: default;
+  transition: filter 0.12s, background 0.12s;
+  outline: none;
+}
+
+.ble-byte::after {
+  content: " ";
+  white-space: pre;
+}
+
+.ble-byte--first {
+  padding-left: 5px;
+  border-radius: 3px 0 0 3px;
+}
+
+.ble-byte--last {
+  padding-right: 5px;
+  border-radius: 0 3px 3px 0;
+}
+
+.ble-byte--first.ble-byte--last {
+  border-radius: 3px;
+}
+
+.ble-byte:hover,
+.ble-byte:focus,
+.ble-byte.is-active {
+  filter: brightness(1.4);
+  background: color-mix(in srgb, var(--fc, #888) 28%, transparent);
+}
+
+.ble-packet.has-active .ble-byte:not(.is-active) {
+  opacity: 0.3;
+}
+
+.ble-packet__panel {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+  background: var(--bp-bg2);
+  border: 1px solid var(--bp-border2);
+  border-radius: 7px;
+  padding: 11px 14px;
+  margin-top: 14px;
+  min-height: 48px;
+}
+
+.ble-packet__panel-bar {
+  width: 3px;
+  border-radius: 2px;
+  background: var(--bp-border2);
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+
+.ble-packet__panel-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+}
+
+.ble-packet__panel-hint {
+  font-size: 12px;
+  color: var(--bp-text-dim);
+  font-style: italic;
+}
+
+.ble-packet__panel-name {
+  font-family: var(--bp-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--bp-text-hi);
+}
+
+.ble-packet__panel-bytes {
+  font-family: var(--bp-mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  transition: color 0.2s;
+}
+
+.ble-packet__panel-desc {
+  font-size: 12.5px;
+  color: var(--bp-text);
+  line-height: 1.55;
+}
+
+.ble-packet__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--bp-border);
+}
+
+.ble-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--bp-mono);
+  font-size: 11px;
+  color: var(--bp-text-dim);
+  background: none;
+  border: 1px solid var(--bp-border);
+  border-radius: 4px;
+  padding: 3px 9px 3px 6px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.ble-legend-item:hover,
+.ble-legend-item.is-active {
+  color: var(--bp-text-hi);
+  border-color: var(--fc);
+  background: color-mix(in srgb, var(--fc) 10%, transparent);
+}
+
+.ble-legend-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  background: var(--fc);
+  flex-shrink: 0;
+}
+
+.ble-tooltip {
+  position: fixed;
+  z-index: 9999;
+  background: #1a2030;
+  border: 1px solid #2a3848;
+  border-radius: 8px;
+  padding: 9px 13px;
+  max-width: 240px;
+  pointer-events: none;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.55);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.12s, transform 0.12s;
+}
+
+.ble-tooltip.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.ble-tooltip__field {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+
+.ble-tooltip__byte {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 13px;
+  color: #e8f0f8;
+  margin-bottom: 3px;
+}
+
+.ble-tooltip__desc {
+  font-size: 11.5px;
+  color: #8099b0;
+  line-height: 1.5;
+}
+</style>
+
+<script>
+(function () {
+  "use strict";
+
+  if (window.__blePacketInlineInit) {
+    return;
+  }
+  window.__blePacketInlineInit = true;
+
+  var tip = null;
+  function getTip() {
+    if (!tip) {
+      tip = document.createElement("div");
+      tip.className = "ble-tooltip";
+      tip.innerHTML =
+        '<div class="ble-tooltip__field"></div>' +
+        '<div class="ble-tooltip__byte"></div>' +
+        '<div class="ble-tooltip__desc"></div>';
+      document.body.appendChild(tip);
+    }
+    return tip;
+  }
+
+  function showTip(x, y, color, name, hex, desc) {
+    var t = getTip();
+    t.querySelector(".ble-tooltip__field").textContent = name;
+    t.querySelector(".ble-tooltip__field").style.color = color;
+    t.querySelector(".ble-tooltip__byte").textContent = "0x" + hex;
+    t.querySelector(".ble-tooltip__desc").textContent = desc;
+    t.classList.add("is-visible");
+
+    var pad = 12;
+    var tw = t.offsetWidth;
+    var th = t.offsetHeight;
+    var lx = x + 14;
+    var ly = y - 10;
+    if (lx + tw + pad > window.innerWidth) lx = x - tw - 14;
+    if (ly + th + pad > window.innerHeight) ly = y - th - 10;
+    if (ly < pad) ly = pad;
+    t.style.left = lx + "px";
+    t.style.top = ly + "px";
+  }
+
+  function hideTip() {
+    getTip().classList.remove("is-visible");
+  }
+
+  function getColor(el) {
+    return el.style.getPropertyValue("--fc") || "#888";
+  }
+
+  function activate(packet, fi) {
+    packet.classList.add("has-active");
+    packet.querySelectorAll(".ble-byte").forEach(function (b) {
+      b.classList.toggle("is-active", +b.dataset.fi === fi);
+    });
+    packet.querySelectorAll(".ble-legend-item").forEach(function (item) {
+      item.classList.toggle("is-active", +item.dataset.fi === fi);
+    });
+  }
+
+  function deactivate(packet) {
+    packet.classList.remove("has-active");
+    packet.querySelectorAll(".ble-byte, .ble-legend-item").forEach(function (el) {
+      el.classList.remove("is-active");
+    });
+  }
+
+  function esc(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function updatePanel(packet, fi, color, name, desc) {
+    var bar = packet.querySelector(".ble-packet__panel-bar");
+    var body = packet.querySelector(".ble-packet__panel-body");
+    var allHex = Array.from(packet.querySelectorAll('.ble-byte[data-fi="' + fi + '"]'))
+      .map(function (b) { return b.textContent.trim(); })
+      .join(" ");
+    bar.style.background = color;
+    body.innerHTML =
+      '<div class="ble-packet__panel-name">' + esc(name) + "</div>" +
+      '<div class="ble-packet__panel-bytes" style="color:' + color + '">' + esc(allHex) + "</div>" +
+      '<div class="ble-packet__panel-desc">' + esc(desc) + "</div>";
+  }
+
+  function resetPanel(packet) {
+    packet.querySelector(".ble-packet__panel-bar").style.background = "";
+    packet.querySelector(".ble-packet__panel-body").innerHTML =
+      '<span class="ble-packet__panel-hint">Hover any byte to inspect</span>';
+  }
+
+  function initPacket(packet) {
+    if (packet._ble) return;
+    packet._ble = true;
+    var pinned = null;
+
+    packet.querySelectorAll(".ble-byte").forEach(function (b) {
+      var fi = +b.dataset.fi;
+      var name = b.dataset.name;
+      var desc = b.dataset.desc;
+      var hex = b.textContent.trim();
+
+      b.addEventListener("mouseenter", function (e) {
+        if (pinned !== null) return;
+        var c = getColor(b);
+        activate(packet, fi);
+        updatePanel(packet, fi, c, name, desc);
+        showTip(e.clientX, e.clientY, c, name, hex, desc);
+      });
+
+      b.addEventListener("mousemove", function (e) {
+        if (pinned !== null) return;
+        showTip(e.clientX, e.clientY, getColor(b), name, hex, desc);
+      });
+
+      b.addEventListener("mouseleave", function () {
+        if (pinned !== null) return;
+        deactivate(packet);
+        resetPanel(packet);
+        hideTip();
+      });
+
+      b.addEventListener("focus", function () {
+        if (pinned !== null) return;
+        var c = getColor(b);
+        activate(packet, fi);
+        updatePanel(packet, fi, c, name, desc);
+      });
+
+      b.addEventListener("blur", function () {
+        if (pinned !== null) return;
+        deactivate(packet);
+        resetPanel(packet);
+      });
+    });
+
+    packet.querySelectorAll(".ble-legend-item").forEach(function (item) {
+      item.addEventListener("click", function () {
+        var fi = +item.dataset.fi;
+        if (pinned === fi) {
+          pinned = null;
+          deactivate(packet);
+          resetPanel(packet);
+        } else {
+          pinned = fi;
+          var first = packet.querySelector('.ble-byte[data-fi="' + fi + '"]');
+          if (first) {
+            var c = getColor(first);
+            activate(packet, fi);
+            updatePanel(packet, fi, c, first.dataset.name, first.dataset.desc);
+          }
+        }
+      });
+    });
+
+    document.addEventListener("click", function (e) {
+      if (!packet.contains(e.target)) {
+        pinned = null;
+        deactivate(packet);
+        resetPanel(packet);
+        hideTip();
+      }
+    });
+  }
+
+  function initAll() {
+    document.querySelectorAll(".ble-packet").forEach(initPacket);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initAll);
+  } else {
+    initAll();
+  }
+
+  new MutationObserver(function (ms) {
+    ms.forEach(function (m) {
+      m.addedNodes.forEach(function (n) {
+        if (n.nodeType !== 1) return;
+        if (n.classList && n.classList.contains("ble-packet")) initPacket(n);
+        if (n.querySelectorAll) n.querySelectorAll(".ble-packet").forEach(initPacket);
+      });
+    });
+  }).observe(document.body, { childList: true, subtree: true });
+}());
+</script>
+{{ .Page.Store.Set "ble_packet_assets_emitted" true }}
+{{ end }}
+
+{{/* ── 1. Parse payload into byte slice ── */}}
+{{ $rawPayload := .Params.payload | default "" }}
+{{ if eq $rawPayload "" }}
+  {{ errorf "[ble-packet] 'payload' parameter is required at %s" .Position }}
+{{ end }}
+
+{{ $allBytes := slice }}
+{{ range split $rawPayload " " }}
+  {{ $b := . | upper | strings.TrimSpace }}
+  {{ if ne $b "" }}
+    {{ $allBytes = $allBytes | append $b }}
+  {{ end }}
+{{ end }}
+
+{{ $totalBytes := len $allBytes }}
+{{ if eq $totalBytes 0 }}
+  {{ errorf "[ble-packet] payload is empty at %s" .Position }}
+{{ end }}
+
+{{/* ── 2. Parse inner text — one field per non-empty line ── */}}
+{{/* Format: bytes | name | desc */}}
+{{ $fields := slice }}
+{{ range split .Inner "\n" }}
+  {{ $line := . | strings.TrimSpace }}
+  {{/* Skip empty lines and HTML comments Hugo may inject */}}
+  {{ if and (ne $line "") (not (hasPrefix $line "<")) (not (hasPrefix $line "//")) }}
+    {{ $parts := split $line "|" }}
+    {{ if lt (len $parts) 3 }}
+      {{ errorf "[ble-packet] invalid field line %q — expected format: 'bytes | name | desc' at %s" $line $.Position }}
+    {{ end }}
+    {{ $bytesStr := index $parts 0 | strings.TrimSpace }}
+    {{ $name     := index $parts 1 | strings.TrimSpace }}
+    {{ $desc     := index $parts 2 | strings.TrimSpace }}
+    {{/* Parse byte range */}}
+    {{ $start := 0 }}
+    {{ $end   := 0 }}
+    {{ if in $bytesStr "-" }}
+      {{ $rng   := split $bytesStr "-" }}
+      {{ $start  = int (index $rng 0) }}
+      {{ $end    = int (index $rng 1) }}
+      {{ if gt $start $end }}
+        {{ errorf "[ble-packet] field '%s': range start %d > end %d at %s" $name $start $end $.Position }}
+      {{ end }}
+    {{ else }}
+      {{ $start = int $bytesStr }}
+      {{ $end   = $start }}
+    {{ end }}
+    {{ $fields = $fields | append (dict "start" $start "end" $end "name" $name "desc" $desc) }}
+  {{ end }}
+{{ end }}
+
+{{ if eq (len $fields) 0 }}
+  {{ errorf "[ble-packet] no fields defined — add lines like '0 | Preamble | description' inside the shortcode at %s" .Position }}
+{{ end }}
+
+{{/* ── 3. Validate coverage ── */}}
+{{ $bs := newScratch }}
+
+{{ range $fi, $f := $fields }}
+  {{ $start := int (index $f "start") }}
+  {{ $end   := int (index $f "end") }}
+  {{ $fname := index $f "name" }}
+
+  {{ if lt $start 0 }}
+    {{ errorf "[ble-packet] field '%s' has negative byte index at %s" $fname $.Position }}
+  {{ end }}
+  {{ if ge $end $totalBytes }}
+    {{ errorf "[ble-packet] field '%s' references byte %d but payload only has %d bytes (0-%d) at %s" $fname $end $totalBytes (sub $totalBytes 1) $.Position }}
+  {{ end }}
+
+  {{ range $offset := seq (add (sub $end $start) 1) }}
+    {{ $idx := add $start (sub $offset 1) }}
+    {{ $key := printf "b%d" $idx }}
+    {{ if ne ($bs.Get $key) nil }}
+      {{ errorf "[ble-packet] byte %d is claimed by more than one field — '%s' overlaps a previous field at %s" $idx $fname $.Position }}
+    {{ end }}
+    {{ $bs.Set $key $fi }}
+  {{ end }}
+{{ end }}
+
+{{ range $i, $hexByte := $allBytes }}
+  {{ if eq ($bs.Get (printf "b%d" $i)) nil }}
+    {{ errorf "[ble-packet] byte %d (0x%s) is not assigned to any field. Add a line '%d | Name | description' at %s" $i $hexByte $i $.Position }}
+  {{ end }}
+{{ end }}
+
+{{/* ── 4. Color palette ── */}}
+{{ $palette := slice "#ff6b6b" "#ffa94d" "#ffd43b" "#a9e34b" "#38d9a9" "#74c0fc" "#da77f2" "#f783ac" "#63e6be" "#b197fc" "#ff8787" "#66d9e8" "#e599f7" "#8ce99a" "#4dabf7" "#ffc078" }}
+
+{{/* ── 5. Emit HTML ── */}}
+<div class="ble-packet">
+
+  <div class="ble-packet__hex">
+    {{- range $i, $hexByte := $allBytes -}}
+      {{- $fi := $bs.Get (printf "b%d" $i) -}}
+      {{- $f  := index $fields $fi -}}
+      {{- $color := index $palette (mod $fi (len $palette)) -}}
+      {{- $isFirst := eq $i (int (index $f "start")) -}}
+      {{- $isLast  := eq $i (int (index $f "end")) -}}
+      <span
+        class="ble-byte{{ if $isFirst }} ble-byte--first{{ end }}{{ if $isLast }} ble-byte--last{{ end }}"
+        style="--fc:{{ $color }}"
+        data-fi="{{ $fi }}"
+        data-name="{{ index $f "name" }}"
+        data-desc="{{ index $f "desc" }}"
+        tabindex="0"
+      >{{ $hexByte }}</span>
+    {{- end }}
+  </div>
+
+  <div class="ble-packet__panel">
+    <div class="ble-packet__panel-bar"></div>
+    <div class="ble-packet__panel-body">
+      <span class="ble-packet__panel-hint">Hover any byte to inspect</span>
+    </div>
+  </div>
+
+  <div class="ble-packet__legend">
+    {{- range $fi, $f := $fields -}}
+      <button class="ble-legend-item" style="--fc:{{ index $palette (mod $fi (len $palette)) }}" data-fi="{{ $fi }}" type="button">
+        <span class="ble-legend-dot"></span>{{ index $f "name" }}
+      </button>
+    {{- end }}
+  </div>
+
+</div>
