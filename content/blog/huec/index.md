@@ -101,31 +101,26 @@ There are multiple characteristics that change when you change the light color:
 The third option is more general hence more useful.
 The value inside of it looks like this:
 
-cool white:
+Cool white:
 
 {{< ble-packet payload="01 01 01 02 01 FE 03 02 9C 00" >}}
-0 | Lime Compass | Random label for byte 0.
-1 | Copper Meteor | Random label for byte 1.
-2 | Velvet Engine | Random label for byte 2.
-3 | Solar Pebble | Random label for byte 3.
-4 | Ivory Signal | Random label for byte 4.
-5 | Ruby Lantern | Random label for byte 5.
-6 | Mint Orbit | Random label for byte 6.
-7 | Cedar Pixel | Random label for byte 7.
-8 | Amber Glacier | Random label for byte 8.
-9 | Onyx Breeze | Random label for byte 9.
+0-4 | Constant |
+5   | Brightness |
+6-7  | Mode | 03 02 for white 04 04 for colors
+8-9 | Color temperature | Little-endian 16-bit value in mireds — 156 mireds ≈ 6410K (cool white)
 {{< /ble-packet >}}
 
-warm white:
-```text
-0x01,0x01,0x01,0x02,0x01,0xFE,0x03,0x02,0x5a,0x01
-```
+Warm white:
 
-It's clear that `FE` is the brightness. It's 254.
-For some reason you cannot set the brightness to 255 and this is the limit.
-The last two bytes together (little-endian 16-bit) control the color temperature — that's the warm white to cool white spectrum. The values are in [mireds](https://en.wikipedia.org/wiki/Mired) (micro reciprocal degrees = 1,000,000 / Kelvin), which is how Philips Hue encodes color temperature. So 156 mireds ≈ 6410K (cool white) and 346 mireds ≈ 2890K (warm white).
+{{< ble-packet payload="01 01 01 02 01 FE 03 02 5A 01" >}}
+0-4 | Constant |
+5   | Brightness |
+6-7 | Mode | 03 02 for white 04 04 for colors
+8-9 | Color temperature | Little-endian 16-bit value in mireds — 346 mireds ≈ 2890K (warm white)
+{{< /ble-packet >}}
 
-The initial bytes until the brightness byte seem to be constant. It does not change. With different things I tried.
+The values are in [mireds](https://en.wikipedia.org/wiki/Mired), which is how Philips Hue encodes color temperature.
+So 156 mireds ≈ 6410K (cool white) and 346 mireds ≈ 2890K (warm white).
 
 There are two bytes between the brightness and warmth.
 `0x03,0x02` seem to be only the case for white color.
