@@ -1,51 +1,30 @@
 ---
-title: "Huec"
+title: "Reverse Engineering Philips Hue light strip to control from pc"
 date: 2026-02-25T22:25:08+01:00
 draft: true
 tags: [] 
 ---
 
-For a long time I was looking for a way to control my Philips light strip.
-I searched and what came up was controlling the lamp with the Hue bridge.
-That's the normal way to control a smart Philips lamp.
-But I don't want to buy another device from this company that keeps parts undocumented and releases a shitty app.
+I was looking for a way to control my Philips light without their terrible app.
+All my searches led to this conclusion: you need to buy a hue bridge to control the lamp from pc.
+But I don't want to have another device just to do what my pc is capable of doing right now.
 
-(I have a lot to say about Philips, not only they cannot make one app to control all the stuff you have from Philips in your home. Their individual apps suck. They are slow. There is startup time. They don't have good features. I guess you need to buy Hue from them to have this basic functionality? But I don't want to spend more money on Philips.)
+I want my light to turn on and off automatically every day without paying for another device. I also want to control it from my desk without grabbing my phone.
 
-While waiting for the strip to die, so I could replace it, I found something that "inspired" me to do something.
+I published the end result of this project in [huec](https://github.com/Glyphack/hue-control), a CLI app that lets you control Philips lights.
+Here I discuss the journey of discovering the protocol, explaining how power, brightness, color, and alarms are controlled.
 
-I found this tool [blendr](https://github.com/dmtrKovalenko/blendr/) that can connect to Bluetooth Low Energy (BLE) devices and lets you browse their services and characteristics in a terminal UI.
+<!-- End of introduction -->
 
-A quick primer on BLE terminology since it comes up a lot below:
+It all started when I found [Blendr](https://github.com/dmtrKovalenko/blendr/).
+Blendr connects to Bluetooth Low Energy (BLE) devices and lets you browse their services and characteristics.
 
-- **Service** – a group of related features on a BLE device (e.g. "light control"). Think of it as a folder.
-- **Characteristic** – a single data point inside a service that you can read, write, or subscribe to. Think of it as a file inside that folder.
+Characteristics are a place where light stores some data.
+You can get data from a characteristic or write into it.
+A service is simply a group of characteristic.
+For example a service could be for changing color and brightness.
 
-So after installing it (it didn't work on Rust 1.90, so I downgraded to Rust 1.79)
-I started looking into my lights.
-I found a couple of values that were written into characteristics.
-These values were controlling the state of the lamp.
-I took my phone and turned it on and then off and checked the characteristics and I found one that was related to the turning on and off.
-
-Next I searched how can I control this programmatically.
-I found a library called [Bleak](https://bleak.readthedocs.io/en/latest/).
-
-Then I wrote some code to write 0x01 and 0x00 into that characteristic and tried it.
-And it turned the light on and off!
-That was a big moment. It means that I can use my computer to control the light.
-I don't need to use the shitty app anymore.
-
-My goal was to have a workflow like this:
-
-- Turn on/off the light from the computer. For when I'm sitting at the desk and don't want to grab my phone. Also, it's nice to be able to set brightness and color.
-- Turn on the light in the morning when I wake up and turn off when the sun is up.
-
-The first functionality is almost done. I can turn the light on and off, but how do I change the color?
-
-## Color
-
-I looked around in the characteristics and tried out all the characteristics below the on/off one.
-Here's the full list of services and characteristics from blendr:
+Here's how the output looked like for my lamp:
 
 ```text
 Service Device Information (0x1800)
@@ -55,12 +34,12 @@ Service Device Information (0x1800)
 
 Service 932c32bd-0001-47a2-835a-a8d455b859dd
   932c32bd-0001-47a2-835a-a8d455b859dd [Read]
-  932c32bd-0002-47a2-835a-a8d455b859dd [Read, Write, Notify]    — Power
-  932c32bd-0003-47a2-835a-a8d455b859dd [Read, Write, Notify]    — Brightness
+  932c32bd-0002-47a2-835a-a8d455b859dd [Read, Write, Notify]
+  932c32bd-0003-47a2-835a-a8d455b859dd [Read, Write, Notify]
   932c32bd-0004-47a2-835a-a8d455b859dd [Read, Write, Notify]
-  932c32bd-0005-47a2-835a-a8d455b859dd [Read, Write, Notify]    — RGB Color
+  932c32bd-0005-47a2-835a-a8d455b859dd [Read, Write, Notify]   — RGB Color
   932c32bd-0006-47a2-835a-a8d455b859dd [Write]
-  932c32bd-0007-47a2-835a-a8d455b859dd [Read, Write, Notify]    — Color (brightness, RGB, temperature)
+  932c32bd-0007-47a2-835a-a8d455b859dd [Read, Write, Notify]
   932c32bd-1005-47a2-835a-a8d455b859dd [Read, Write]
 
 Service 97fe6561-0001-4f62-86e9-b71ee2da3d22
@@ -79,7 +58,7 @@ Service 97fe6561-0001-4f62-86e9-b71ee2da3d22
   97fe6561-a003-4f62-86e9-b71ee2da3d22 [Read, Write]
 
 Service 9da2ddf1-0001-44d0-909c-3f3d3cb34a7b
-  9da2ddf1-0001-44d0-909c-3f3d3cb34a7b [Write, Notify]         — Timer
+  9da2ddf1-0001-44d0-909c-3f3d3cb34a7b [Write, Notify]
 
 Service b8843add-0001-4aa1-8794-c3f462030bda
   b8843add-0001-4aa1-8794-c3f462030bda [Read]
@@ -87,6 +66,31 @@ Service b8843add-0001-4aa1-8794-c3f462030bda
   b8843add-0003-4aa1-8794-c3f462030bda [Write]
   b8843add-0004-4aa1-8794-c3f462030bda [Read]
 ```
+
+Some characteristics have "Read" in front of them.
+This means you can read their values, using Blendr.
+
+Now the question is, what does each characteristic do?
+There are two ways to find this out:
+
+Randomly write data into different characteristics to see if the lamp reacts
+For example we can write `0x0` into all characteristics and see when the lamp turns off.
+This requires guessing the value for example what turns the light on and off and what value changes the color.
+
+Use the app to change properties of the lamp and then read values using Blendr.
+I turned the lamp off and checked what characteristic has `0x0` in it.
+It was the `932c32bd-0002-47a2-835a-a8d455b859dd`.
+Which suggests that it's for the power.
+
+To send and receive data from the lamp there is [Bleak](https://bleak.readthedocs.io/en/latest/).
+
+
+The first functionality is almost done. I can turn the light on and off, but how do I change the color?
+
+## Color
+
+I looked around in the characteristics and tried out all the characteristics below the on/off one.
+Here's the full list of services and characteristics from blendr:
 
 You can easily find out the pattern by changing the light color and observing the characteristic values.
 There are multiple characteristics that change when you change the light color:
@@ -493,3 +497,5 @@ Wake up 06:50 full brightness fade in 30 min
 ```
 
 </details>
+
+(I have a lot to say about Philips, not only they cannot make one app to control all the stuff you have from Philips in your home. Their individual apps suck. They are slow. There is startup time. They don't have good features. I guess you need to buy Hue from them to have this basic functionality? But I don't want to spend more money on Philips.)

@@ -24,37 +24,54 @@
 {{ if not (.Page.Store.Get "ble_packet_assets_emitted") }}
 <style>
 .ble-packet {
-  --bp-bg: #0f1218;
-  --bp-bg2: #151a22;
-  --bp-border: #1e2530;
-  --bp-border2: #263040;
-  --bp-text: #c8d4e0;
-  --bp-text-dim: #4a6070;
-  --bp-text-hi: #e8f0f8;
-  --bp-mono: "IBM Plex Mono", "Fira Mono", "Consolas", monospace;
-  background: var(--bp-bg);
+  --bp-bg: var(--code-background);
+  --bp-bg-soft: color-mix(in srgb, var(--background) 72%, var(--code-background));
+  --bp-border: var(--code-border);
+  --bp-text: var(--content-primary);
+  --bp-text-dim: var(--content-secondary);
+  --bp-glow: color-mix(in srgb, var(--content-primary) 14%, transparent);
+  --bp-mono: var(--font-mono, "Monaspace", ui-monospace, monospace);
+  position: relative;
+  overflow: hidden;
+  color: var(--bp-text);
+  background:
+    linear-gradient(120deg, color-mix(in srgb, var(--background) 86%, transparent), transparent 46%),
+    var(--bp-bg);
   border: 1px solid var(--bp-border);
-  border-radius: 10px;
-  padding: 20px 22px 18px;
-  margin: 28px 0;
+  border-radius: 12px;
+  padding: 1.05rem 1.12rem 1rem;
+  margin: 1.8rem 0;
+  box-shadow: 0 14px 30px -24px var(--bp-glow);
+}
+
+.ble-packet::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: linear-gradient(90deg, #c45d4c 0%, #c69a42 34%, #4f8d7f 66%, #5f7db8 100%);
+  opacity: 0.55;
 }
 
 .ble-packet__hex {
   font-family: var(--bp-mono);
-  font-size: 13.5px;
-  line-height: 2.1;
-  letter-spacing: 0.06em;
+  font-size: 0.9rem;
+  line-height: 2.12;
+  letter-spacing: 0.045em;
+  font-variant-numeric: tabular-nums;
   word-break: break-all;
+  padding-top: 0.18rem;
 }
 
 .ble-byte {
-  display: inline;
-  color: var(--fc, #888);
-  background: color-mix(in srgb, var(--fc, #888) 13%, transparent);
-  padding: 2px 1px;
+  display: inline-block;
+  color: color-mix(in srgb, var(--bp-text) 80%, var(--fc, #777) 20%);
+  background: color-mix(in srgb, var(--fc, #777) 14%, transparent);
+  border: 1px solid transparent;
+  padding: 0.11rem 0.14rem;
   border-radius: 0;
   cursor: default;
-  transition: filter 0.12s, background 0.12s;
+  transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease, color 0.15s ease, filter 0.15s ease;
   outline: none;
 }
 
@@ -64,46 +81,55 @@
 }
 
 .ble-byte--first {
-  padding-left: 5px;
-  border-radius: 3px 0 0 3px;
+  padding-left: 0.42rem;
+  border-radius: 0.4rem 0 0 0.4rem;
 }
 
 .ble-byte--last {
-  padding-right: 5px;
-  border-radius: 0 3px 3px 0;
+  padding-right: 0.42rem;
+  border-radius: 0 0.4rem 0.4rem 0;
 }
 
 .ble-byte--first.ble-byte--last {
-  border-radius: 3px;
+  border-radius: 0.4rem;
 }
 
 .ble-byte:hover,
 .ble-byte:focus,
 .ble-byte.is-active {
-  filter: brightness(1.4);
-  background: color-mix(in srgb, var(--fc, #888) 28%, transparent);
+  background: color-mix(in srgb, var(--fc, #777) 24%, var(--background) 76%);
+  border-color: color-mix(in srgb, var(--fc, #777) 56%, var(--bp-border));
+  color: color-mix(in srgb, var(--bp-text) 67%, var(--fc, #777) 33%);
+  transform: translateY(-1px);
 }
 
 .ble-packet.has-active .ble-byte:not(.is-active) {
-  opacity: 0.3;
+  opacity: 0.38;
+  filter: saturate(0.7);
+}
+
+.ble-byte:focus-visible,
+.ble-legend-item:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--content-primary) 42%, transparent);
+  outline-offset: 2px;
 }
 
 .ble-packet__panel {
   display: flex;
   align-items: stretch;
-  gap: 12px;
-  background: var(--bp-bg2);
-  border: 1px solid var(--bp-border2);
-  border-radius: 7px;
-  padding: 11px 14px;
-  margin-top: 14px;
-  min-height: 48px;
+  gap: 0.72rem;
+  background: var(--bp-bg-soft);
+  border: 1px solid var(--bp-border);
+  border-radius: 10px;
+  padding: 0.72rem 0.84rem;
+  margin-top: 0.86rem;
+  min-height: 56px;
 }
 
 .ble-packet__panel-bar {
-  width: 3px;
-  border-radius: 2px;
-  background: var(--bp-border2);
+  width: 4px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--bp-text-dim) 25%, transparent);
   flex-shrink: 0;
   transition: background 0.2s;
 }
@@ -113,87 +139,95 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 3px;
+  gap: 0.2rem;
 }
 
 .ble-packet__panel-hint {
-  font-size: 12px;
+  font-size: 0.83rem;
   color: var(--bp-text-dim);
   font-style: italic;
 }
 
 .ble-packet__panel-name {
   font-family: var(--bp-mono);
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--bp-text-hi);
+  font-size: 0.73rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--bp-text-dim);
 }
 
 .ble-packet__panel-bytes {
   font-family: var(--bp-mono);
-  font-size: 11px;
-  letter-spacing: 0.05em;
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  line-height: 1.35;
   transition: color 0.2s;
 }
 
 .ble-packet__panel-desc {
-  font-size: 12.5px;
+  font-size: 0.92rem;
   color: var(--bp-text);
-  line-height: 1.55;
+  line-height: 1.4;
 }
 
 .ble-packet__legend {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 14px;
-  padding-top: 14px;
+  gap: 0.42rem;
+  margin-top: 0.9rem;
+  padding-top: 0.86rem;
   border-top: 1px solid var(--bp-border);
 }
 
 .ble-legend-item {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 0.42rem;
   font-family: var(--bp-mono);
-  font-size: 11px;
+  font-size: 0.66rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
   color: var(--bp-text-dim);
-  background: none;
+  background: color-mix(in srgb, var(--background) 82%, transparent);
   border: 1px solid var(--bp-border);
-  border-radius: 4px;
-  padding: 3px 9px 3px 6px;
+  border-radius: 999px;
+  padding: 0.23rem 0.62rem 0.23rem 0.42rem;
   cursor: pointer;
-  transition: color 0.15s, border-color 0.15s, background 0.15s;
+  transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
 }
 
 .ble-legend-item:hover,
 .ble-legend-item.is-active {
-  color: var(--bp-text-hi);
-  border-color: var(--fc);
-  background: color-mix(in srgb, var(--fc) 10%, transparent);
+  color: var(--bp-text);
+  border-color: color-mix(in srgb, var(--fc) 58%, var(--bp-border));
+  background: color-mix(in srgb, var(--fc) 14%, var(--background));
+  transform: translateY(-1px);
 }
 
 .ble-legend-dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 2px;
+  width: 0.56rem;
+  height: 0.56rem;
+  border-radius: 999px;
   background: var(--fc);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--fc) 30%, var(--bp-border));
   flex-shrink: 0;
 }
 
 .ble-tooltip {
   position: fixed;
   z-index: 9999;
-  background: #1a2030;
-  border: 1px solid #2a3848;
-  border-radius: 8px;
-  padding: 9px 13px;
-  max-width: 240px;
+  background: color-mix(in srgb, var(--background) 92%, var(--code-background));
+  border: 1px solid var(--bp-border);
+  border-radius: 10px;
+  padding: 0.52rem 0.7rem;
+  max-width: 260px;
   pointer-events: none;
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 16px 36px -28px color-mix(in srgb, var(--content-primary) 38%, transparent);
+  backdrop-filter: blur(3px);
   opacity: 0;
   transform: translateY(4px);
-  transition: opacity 0.12s, transform 0.12s;
+  transition: opacity 0.14s ease, transform 0.14s ease;
 }
 
 .ble-tooltip.is-visible {
@@ -202,24 +236,43 @@
 }
 
 .ble-tooltip__field {
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 10px;
+  font-family: var(--bp-mono);
+  font-size: 0.62rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  margin-bottom: 3px;
+  margin-bottom: 0.18rem;
 }
 
 .ble-tooltip__byte {
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 13px;
-  color: #e8f0f8;
-  margin-bottom: 3px;
+  font-family: var(--bp-mono);
+  font-size: 0.84rem;
+  color: var(--bp-text);
+  margin-bottom: 0.18rem;
 }
 
 .ble-tooltip__desc {
-  font-size: 11.5px;
-  color: #8099b0;
-  line-height: 1.5;
+  font-size: 0.78rem;
+  color: var(--bp-text-dim);
+  line-height: 1.42;
+}
+
+@media (max-width: 640px) {
+  .ble-packet {
+    padding: 0.92rem 0.88rem 0.84rem;
+  }
+
+  .ble-packet__hex {
+    font-size: 0.84rem;
+    line-height: 2;
+  }
+
+  .ble-packet__panel {
+    padding: 0.64rem 0.72rem;
+  }
+
+  .ble-legend-item {
+    font-size: 0.62rem;
+  }
 }
 </style>
 
@@ -302,6 +355,7 @@
   function updatePanel(packet, fi, color, name, desc) {
     var bar = packet.querySelector(".ble-packet__panel-bar");
     var body = packet.querySelector(".ble-packet__panel-body");
+    if (!bar || !body) return;
     var allHex = Array.from(packet.querySelectorAll('.ble-byte[data-fi="' + fi + '"]'))
       .map(function (b) { return b.textContent.trim(); })
       .join(" ");
@@ -313,9 +367,12 @@
   }
 
   function resetPanel(packet) {
-    packet.querySelector(".ble-packet__panel-bar").style.background = "";
-    packet.querySelector(".ble-packet__panel-body").innerHTML =
-      '<span class="ble-packet__panel-hint">Hover any byte to inspect</span>';
+    var bar = packet.querySelector(".ble-packet__panel-bar");
+    var body = packet.querySelector(".ble-packet__panel-body");
+    if (!bar || !body) return;
+    bar.style.background = "";
+    body.innerHTML =
+      '<span class="ble-packet__panel-hint">Hover or focus a byte to inspect it</span>';
   }
 
   function initPacket(packet) {
@@ -503,7 +560,7 @@
 {{ end }}
 
 {{/* ── 4. Color palette ── */}}
-{{ $palette := slice "#ff6b6b" "#ffa94d" "#ffd43b" "#a9e34b" "#38d9a9" "#74c0fc" "#da77f2" "#f783ac" "#63e6be" "#b197fc" "#ff8787" "#66d9e8" "#e599f7" "#8ce99a" "#4dabf7" "#ffc078" }}
+{{ $palette := slice "#c45d4c" "#be7c3e" "#b29a43" "#819158" "#4f8d7f" "#4f81a8" "#7469a6" "#9f6f92" "#609081" "#99774d" "#b95b58" "#4d8f97" "#8a6d9f" "#719063" "#5c7d9b" "#bf8d58" }}
 
 {{/* ── 5. Emit HTML ── */}}
 <div class="ble-packet">
@@ -524,13 +581,6 @@
         tabindex="0"
       >{{ $hexByte }}</span>
     {{- end }}
-  </div>
-
-  <div class="ble-packet__panel">
-    <div class="ble-packet__panel-bar"></div>
-    <div class="ble-packet__panel-body">
-      <span class="ble-packet__panel-hint">Hover any byte to inspect</span>
-    </div>
   </div>
 
   <div class="ble-packet__legend">
