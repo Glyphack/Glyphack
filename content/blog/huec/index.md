@@ -285,51 +285,43 @@ That's how I got the characteristic.
 
 Here's the breakdown. The timer characteristic (`9da2ddf1-0001-44d0-909c-3f3d3cb34a7b`) is like a server.
 You can write different messages to it and subscribe to it to get back responses as notifications.
-When the app connects the first packet is:
-```text
-0x00
-```
 
-Then the application responds back the list of IDs for the alarms that are already set:
-```text
-00 00 00 03 | ID0_lo ID0_hi | ID1_lo ID1_hi | ID2_lo ID2_hi
-```
+When the app connects it writes this to the characteristic:
 
-The `03` is the number of alarms.
+{{< ble-packet payload="00" >}}
+0 | Command | Request alarm list
+{{< /ble-packet >}}
 
-So it's basically like a CRUD app.
-Next is to read the alarm details using its ID.
+Then the characteristic responds back with the list of alarm IDs:
 
-We construct this message:
-```text
-0x02, lo, hi, 0x00, 0x00
-```
+{{< ble-packet payload="00 00 07 02 2C 00 2D 00" >}}
+0-2 | Constant | Response type (alarm list)
+3   | Count   | Number of alarms (2)
+4-5 | Alarm 1 ID | Little-endian 16-bit ID (0x002C = 44)
+6-7 | Alarm 2 ID | Little-endian 16-bit ID (0x002D = 45)
+{{< /ble-packet >}}
 
-Which gives us the full alarm details.
+To read the alarm details using its ID. We construct this message:
 
-Now we have a bit of decoding to do here.
-The way I did this was by setting up a lot of alarms and seeing how they change the payload.
-In the end I didn't fully decode what this payload means. For me the goal was to enable an alarm every day.
-That's what I did.
+{{< ble-packet payload="02 2C 00 00 00" >}}
+0   | Command  | Read alarm details
+1-2 | Alarm ID | Little-endian 16-bit ID (0x002C = 44)
+3-4 | Padding  |
+{{< /ble-packet >}}
 
-Let's look at one example:
+Which gives us the full alarm details:
 
-```text
-02 00 2c 00 35 00 00 00 00 01 00 60 55 95 69 00
-09 01 01 01 06 01 09 08 01 7d 22 01 d4 0c 13 8d
-81 b9 4a 4c aa 42 b9 9a ce c6 2d 88 00 ff ff ff
-ff 0a 4d 6f 72 6e 69 6e 67 20 75 70 01
-```
-
-Here's what I found out:
-1. `02 00` is saying that this response is for alarm info.
-2.  `0x002C` is the alarm ID.
-3. `0x35` is length of the payload.
-4. The `0100` before the `60`... is the alarm active state.
-5. `60 55 95 69` is the timestamp for the alarm in little-endian format which is 2026-02-16 6:00.
-6. Then you have a series of bytes that I don't know what they are related to, we call them mystery bytes.
-7. Then you have `ff ff ff ff` which I think is a separator for the alarm info and the name. I verified it by sending `00 00 00 00` instead and seems like the lamp ignores it.
-8. Then you have the name `0a 4d 6f 72 6e 69 6e 67 20 75 70 01` length + characters + `01`
+{{< ble-packet payload="02 00 2C 00 35 00 00 00 00 01 00 60 55 95 69 00 09 01 01 01 06 01 09 08 01 7D 22 01 D4 0C 13 8D 81 B9 4A 4C AA 42 B9 9A CE C6 2D 88 00 FF FF FF FF 0A 4D 6F 72 6E 69 6E 67 20 75 70 01" >}}
+0-1   | Command    | Response type (alarm info)
+2-3   | Alarm ID   | Little-endian 16-bit ID (0x002C = 44)
+4     | Length     | Payload length (0x35 = 53 bytes)
+5-8   | Padding    |
+9-10  | Active     | Alarm state (01 00 = active)
+11-14 | Timestamp  | Little-endian Unix timestamp (2026-02-16 6:00 UTC)
+15-44 | Mystery    | Unknown bytes, possibly effect and crypto data
+45-48 | Separator  | Always FF FF FF FF, lamp ignores this value
+49-60 | Name       | Length-prefixed alarm name "Morning up" + 01 terminator
+{{< /ble-packet >}}
 
 That's it. You can read and parse the alarm.
 
