@@ -5,7 +5,7 @@ draft: true
 tags: [] 
 ---
 
-I was looking for a way to control my Philips light without their terrible app.
+I was looking for a way to control my Philips light without their terrible app[^1].
 All my searches led to this conclusion: you need to buy a hue bridge to control the lamp from pc.
 But I don't want to have another device just to do what my pc is capable of doing right now.
 
@@ -13,6 +13,36 @@ I want my light to turn on and off automatically every day without paying for an
 
 I published the end result of this project in [huec](https://github.com/Glyphack/hue-control), a CLI app that lets you control Philips lights.
 Here I discuss the journey of discovering the protocol, explaining how power, brightness, color, and alarms are controlled.
+
+## Usages
+
+Here are some usage scenarios I have for `huec`
+
+**Turn lights on and off everyday**
+
+I have two alarms for my light to turn on at 07:00 and turn off at 08:00.
+To have this repeat everyday I run the following command:
+```text
+huec alarms enable --all
+```
+
+I have a 5 minute timer on the light.
+Using this script I can trigger this timer to start.
+
+```py
+result = run("uv run huec alarms list --json")
+alarms = json.loads(result.stdout)
+matches = [a for a in alarms if a["name"] == "Timer"]
+if not matches:
+    print("No alarm named 'Timer' found", file=sys.stderr)
+    sys.exit(1)
+
+alarm_id = matches[0]["id"]
+print(f"Enabling alarm ID: {alarm_id}")
+run(f"uv run huec alarms enable --id {alarm_id}")
+```
+
+Without further ado, let’s see what I figured out to control the light!
 
 <!-- End of introduction -->
 
@@ -192,7 +222,7 @@ These tools allow you to see what data software running on the system is sending
 I was using MacOS + iOS. For this combination there is:
 
 - [Bluetooth Packet Logger](https://developer.apple.com/bluetooth/)
-- [Bluetooth logging config for iOS](https://developer.apple.com/services-account/download?path=/iOS/iOS_Logs/iOSBluetoothLogging.mobileconfig) (add footnote apple id and sanctions, text is at the end)
+- [Bluetooth logging config for iOS](https://developer.apple.com/services-account/download?path=/iOS/iOS_Logs/iOSBluetoothLogging.mobileconfig)[^2]
 
 Install Packet Logger on your computer and the profile on your iPhone. 
 Then, connect the phone to the computer.
@@ -383,7 +413,7 @@ This suggests that the app generates these bytes as a checksum.
 The lamp checks the checksum to verify if the alarm is valid or not.
 Which means if I just use repeat this with any configuration I want it's not going to work.
 
-After spending some time on it I decided to come up with another solution to control alarms.
+After spending some time on it[^3] I decided to come up with another solution to control alarms.
 My goal was to have an alarm that repeats every day.
 What if I can just change the activate byte of the alarm and it would be enabled every day? 
 
@@ -528,54 +558,52 @@ Response confirming the deletion:
 {{< /ble-packet >}}
 
 ---
-These should be footnotes
 
-(I have a lot to say about Philips, not only they cannot make one app to control all the stuff you have from Philips in your home. Their individual apps suck. They are slow. There is startup time. They don't have good features. I guess you need to buy Hue from them to have this basic functionality? But I don't want to spend more money on Philips.)
+[^1]: I have a lot to say about Philips, not only they cannot make one app to control all the stuff you have from Philips in your home. Their individual apps suck. They are slow. There is startup time. They don't have good features. I guess you need to buy Hue from them to have this basic functionality? But I don't want to spend more money on Philips.
 
-You need an Apple account to download it.
-I hate this because when I was in Iran many of these tools were blocked because you can't easily open an account.
-I have since moved to a place where I am allowed to open an account, so I have it.
+[^2]: You need an Apple account to download it. I hate this because when I was in Iran many of these tools were blocked because you can't easily open an account. I have since moved to a place where I am allowed to open an account, so I have it.
 
-<details>
-<summary>More examples of alarm creation packets</summary>
+[^3]: I created more alarms with different configurations trying to figure out the mystery bytes but I did not find a pattern. Let me know if you do!
+    <details>
+    <summary>alarm creation packets</summary>
 
-```text
-Wake up 07:00 sunrise fade in 30 min
+    ```text
+    Wake up 07:00 sunrise fade in 30 min
 
-01FF FF00 0100 D8B6 8E69 0009 0101 0106 0109 0801 5B19 0194 D184 84B7 5143 DAA8 67A9 2F02 110C 8D00 FFFF FFFF 0141 01
+    01FF FF00 0100 D8B6 8E69 0009 0101 0106 0109 0801 5B19 0194 D184 84B7 5143 DAA8 67A9 2F02 110C 8D00 FFFF FFFF 0141 01
 
---
-Wake up 06:50 sunrise fade in 20 min
+    --
+    Wake up 06:50 sunrise fade in 20 min
 
-01FF FF00 0100 D8B6 8E69 0009 0101 0106 0109 0801 6519 01CA 492E A08E 6A48 6883 4FC0 1C5B 8E8F 4700 FFFF FFFF 0141 01
+    01FF FF00 0100 D8B6 8E69 0009 0101 0106 0109 0801 6519 01CA 492E A08E 6A48 6883 4FC0 1C5B 8E8F 4700 FFFF FFFF 0141 01
 
---
-Wake up 06:50 sunrise fade in 10 min
+    --
+    Wake up 06:50 sunrise fade in 10 min
 
-01FF FF00 0100 30B9 8E69 0009 0101 0106 0109 0801 7D19 01FA 3FD8 C1E2 304D 1E81 948B AE5E C246 3000 FFFF FFFF 0141 01
+    01FF FF00 0100 30B9 8E69 0009 0101 0106 0109 0801 7D19 01FA 3FD8 C1E2 304D 1E81 948B AE5E C246 3000 FFFF FFFF 0141 01
 
---
-Wake up 07:00 full brightness fade in 30 min
+    --
+    Wake up 07:00 full brightness fade in 30 min
 
-010C 0000 0100 D8B6 8E69 000E 0101 0102 01FE 0302 BF01 0502 5046 1901 2114 F58F E794 40F1 86C4 BF6A 8529 73C4 00FF FFFF FF01 4101
+    010C 0000 0100 D8B6 8E69 000E 0101 0102 01FE 0302 BF01 0502 5046 1901 2114 F58F E794 40F1 86C4 BF6A 8529 73C4 00FF FFFF FF01 4101
 
---
-Wake up 06:50 full brightness fade in 20 min
+    --
+    Wake up 06:50 full brightness fade in 20 min
 
-01FF FF00 0100 D8B6 8E69 000E 0101 0102 01FE 0302 BF01 0502 E02E 1901 BE74 4F8A 71FA 464D 8C10 910D 7983 676C 00FF FFFF FF01 4101
+    01FF FF00 0100 D8B6 8E69 000E 0101 0102 01FE 0302 BF01 0502 E02E 1901 BE74 4F8A 71FA 464D 8C10 910D 7983 676C 00FF FFFF FF01 4101
 
---
-Wake up 06:50 full brightness fade in 10 min
+    --
+    Wake up 06:50 full brightness fade in 10 min
 
-01FF FF00 0100 30B9 8E69 000E 0101 0102 01FE 0302 BF01 0502 7017 1901 AA85 9C87 96F4 4A08 A30D 26A7 E9E0 629B 00FF FFFF FF01 4101
+    01FF FF00 0100 30B9 8E69 000E 0101 0102 01FE 0302 BF01 0502 7017 1901 AA85 9C87 96F4 4A08 A30D 26A7 E9E0 629B 00FF FFFF FF01 4101
 
---
-Wake up 06:50 sunrise fade in 30 min
-01FF FF00 0100 80B4 8E69 0009 0101 0106 0109 0801 5B19 012D A26C 130F A94B F882 E9C3 215C 27A4 8700 FFFF FFFF 0141 01
+    --
+    Wake up 06:50 sunrise fade in 30 min
+    01FF FF00 0100 80B4 8E69 0009 0101 0106 0109 0801 5B19 012D A26C 130F A94B F882 E9C3 215C 27A4 8700 FFFF FFFF 0141 01
 
---
-Wake up 06:50 full brightness fade in 30 min
-01FF FF00 0100 80B4 8E69 000E 0101 0102 01FE 0302 BF01 0502 5046 1901 1478 FFD5 B1F1 431E AB18 E212 A720 34D6 00FF FFFF FF01 4101
-```
+    --
+    Wake up 06:50 full brightness fade in 30 min
+    01FF FF00 0100 80B4 8E69 000E 0101 0102 01FE 0302 BF01 0502 5046 1901 1478 FFD5 B1F1 431E AB18 E212 A720 34D6 00FF FFFF FF01 4101
+    ```
 
-</details>
+    </details>
