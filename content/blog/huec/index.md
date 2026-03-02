@@ -331,179 +331,211 @@ When I took this same message and just tried to create random alarms by substitu
 
 From my investigation I found this is the packet that the app uses to create an alarm.
 
-```text
-01FF FF00 0100 D8B6 8E69 0009 0101 0106 0109 0801 5B19 0194 D184 84B7 5143 DAA8 67A9 2F02 110C 8D00 FFFF FFFF 0141 01
-```
-
-1. `01FF` is the command to create a new alarm.
-2. `0100` tells the alarm is active.
-3. `D8B6 8E69` is timestamp in little-endian format.
-4. `0009 0101 0106 0109 0801` hasn't changed I guess it's related to the effect (here it's "sunrise").
-5.  `5B19 0194 D184 84B7 5143 DAA8 67A9 2F02 110C 8D00` mystery bytes.
-6. After `0141 01` separator it's name of the alarm.
+{{< ble-packet payload="01 FF FF 00 01 00 D8 B6 8E 69 00 09 01 01 01 06 01 09 08 01 5B 19 01 94 D1 84 84 B7 51 43 DA A8 67 A9 2F 02 11 0C 8D 00 FF FF FF FF 01 41 01" >}}
+0-1   | Command   | 01 FF to create a new alarm
+2-3   | State     | 01 00 tells the alarm is active
+4-7   | Timestamp | Little-endian Unix timestamp
+8-19  | Effect    | Sunrise effect
+20-39 | Mystery   | Unknown bytes, possibly crypto data
+40-43 | Separator | Always FF FF FF FF
+44-46 | Name      | Length-prefixed alarm name + 01 terminator
+{{< /ble-packet >}}
 
 After alarm write is success there will be these two notifications which reply with the ID of the alarm.
 It's useful to verify the write actually happened. But I didn't get any extra information from it.
 
-```text
-0100 FFFF 1E00
-```
+{{< ble-packet payload="01 00 FF FF 1E 00" >}}
+0     | Command  | 01 echoes back the create command
+1     | Status   | 00 indicates success
+2-3   | Separator| FF FF
+4-5   | Alarm ID | Little-endian 16-bit ID of the created alarm (0x001E = 30)
+{{< /ble-packet >}}
 
-```text
-04FF FF1E 00
-```
+{{< ble-packet payload="04 FF FF 1E 00" >}}
+0     | Command  | 04 confirmation notification
+1-2   | Separator| FF FF
+3-4   | Alarm ID | Little-endian 16-bit ID matching the created alarm (0x001E = 30)
+{{< /ble-packet >}}
 
-Then I tried making the same alarm twice with everything and here's the result:
+With this information I was hoping that I can create any alarm I want.
+But when I created an alarm it would not be created.
+So then I checked what happens when I create the same alarm twice via the app.
 
-```text
-01FF FF00 0100 305C 9169 0009 0101 0106 
-0109 0801 651F 01FB D061 C25B 6340 F6AA 
-71BB 49E1 86F0 C900 FFFF FFFF 0757 616B 
-6520 7570 01
+First alarm creation payload:
 
-01FF FF00 0100 305C 9169 0009 0101 0106 
-0109 0801 651F 0185 97FE 881C C146 47A1 
-9D9F 6A8C 2C29 7B00 FFFF FFFF 0757 616B 
-6520 7570 01
-```
+{{< ble-packet payload="01 FF FF 00 01 00 30 5C 91 69 00 09 01 01 01 06 01 09 08 01 65 1F 01 FB D0 61 C2 5B 63 40 F6 AA 71 BB 49 E1 86 F0 C9 00 FF FF FF FF 07 57 61 6B 65 20 75 70 01" >}}
+0-22  | Alarm time | Command, state, timestamp, and effect — identical in both
+23-39 | Mystery    | FB D0 61 C2 5B 63 40 F6 AA 71 BB 49 E1 86 F0 C9 00
+40-52 | Name       | Separator + name "Wake up" — identical in both
+{{< /ble-packet >}}
 
----
-Then I tried turning alarms on and off. My plan was to see if I can just make the alarm with my phone and then enable it with the computer that would work too.
+Second alarm creation, same configuration:
 
-Here are the packets for that.
-What I did here was turning the alarm on and off and check the alarm by querying the alarm detail the way I explained above with the timer characteristic.
+{{< ble-packet payload="01 FF FF 00 01 00 30 5C 91 69 00 09 01 01 01 06 01 09 08 01 65 1F 01 85 97 FE 88 1C C1 46 47 A1 9D 9F 6A 8C 2C 29 7B 00 FF FF FF FF 07 57 61 6B 65 20 75 70 01" >}}
+0-22  | Alarm time | Command, state, timestamp, and effect — identical in both
+23-39 | Mystery    | 85 97 FE 88 1C C1 46 47 A1 9D 9F 6A 8C 2C 29 7B 00 — only these bytes changed
+40-52 | Name       | Separator + name "Wake up" — identical in both
+{{< /ble-packet >}}
 
-```text
-Created alarm with state on:
+As you see the bytes in the middle change.
+We don't have any change in the alarm configuration.
+This suggests that the app generates these bytes as a checksum.
+The lamp checks the checksum to verify if the alarm is valid or not.
+Which means if I just use repeat this with any configuration I want it's not going to work.
 
-	Value: 01FF FF00 0100 D8B6 8E69 0009 0101 0106 
-	0109 0801 5B1C 0134 A261 1076 CA45 7FA7 
-	E50B F7F3 9063 7200 FFFF FFFF 0457 616B 
-	6501
+After spending some time on it I decided to come up with another solution to control alarms.
+My goal was to have an alarm that repeats every day.
+What if I can just change the activate byte of the alarm and it would be enabled every day? 
 
-off:
+Then I created and alarm and turned it off and on again in the app.
+I already knew how to read alarm information.
+I was able to read the alarm info and see what has changed.
 
-	Value: 010E 0000 0000 D8B6 8E69 0009 0101 0106 
-	0109 0801 5B1C 0134 A261 1076 CA45 7FA7 
-	E50B F7F3 9063 7200 FFFF FFFF 0457 616B 
-	6500
+Create a new alarm called "Test":
 
-on:
-	Value: 010F 0000 0100 D8B6 8E69 0009 0101 0106 
-	0109 0801 5B1C 0134 A261 1076 CA45 7FA7 
-	E50B F7F3 9063 7200 FFFF FFFF 0457 616B 
-	6501
+{{< ble-packet payload="01 FF FF 00 01 00 40 89 90 69 00 09 01 01 01 06 01 09 08 01 65 1C 01 EF 55 72 FE F8 17 4B 67 AC ED 26 72 1F CF AA 24 00 FF FF FF FF 04 54 65 73 74 01" >}}
+0-1   | Command   | 01 FF to create a new alarm
+2-3   | State     | 00 01 00 tells the alarm is active
+4-7   | Timestamp | Little-endian Unix timestamp
+8-19  | Effect    | Sunrise effect
+20-39 | Mystery   | Unknown bytes, possibly crypto data
+40-43 | Separator | Always FF FF FF FF
+44-49 | Name      | Length-prefixed alarm name "Test" + 01 terminator
+{{< /ble-packet >}}
 
-off:
-	Value: 0110 0000 0000 D8B6 8E69 0009 0101 0106 
-	0109 0801 5B1C 0134 A261 1076 CA45 7FA7 
-	E50B F7F3 9063 7200 FFFF FFFF 0457 616B 
-	6500
+Response confirming the alarm was created with ID 1:
 
-```
+{{< ble-packet payload="01 00 FF FF 01 00" >}}
+0     | Command  | 01 echoes back the create command
+1     | Status   | 00 indicates success
+2-3   | Separator| FF FF
+4-5   | Alarm ID | Little-endian 16-bit ID (0x0001 = 1)
+{{< /ble-packet >}}
 
-Notes here:
+{{< ble-packet payload="04 FF FF 01 00" >}}
+0     | Command  | 04 confirmation notification
+1-2   | Separator| FF FF
+3-4   | Alarm ID | Little-endian 16-bit ID matching the created alarm (0x0001 = 1)
+{{< /ble-packet >}}
 
-1. The alarm ID is increasing every time it is edited. But it's the responsibility of the lamp to assign the ID.
-2. the 5th byte is active/deactivate info.
+After the alarm went off I read the alarm details. Alarm active byte is 0:
 
-So I did this experiment to be sure what happens to the light:
+{{< ble-packet payload="02 00 06 00 2F 00 00 00 00 00 00 C0 DA 91 69 00 09 01 01 01 06 01 09 08 01 65 1C 01 EF 55 72 FE F8 17 4B 67 AC ED 26 72 1F CF AA 24 00 FF FF FF FF 04 54 65 73 74 01" >}}
+0-1   | Command    | Response type (alarm info)
+2-3   | Alarm ID   | Little-endian 16-bit ID (0x0006)
+4     | Length     | Payload length (0x2F = 47 bytes)
+5-8   | Padding    |
+9-10  | Active     | Alarm state (00 00 = inactive, alarm has fired)
+11-14 | Timestamp  | Little-endian Unix timestamp
+15-44 | Mystery    | Unknown bytes, possibly effect and crypto data
+45-48 | Separator  | Always FF FF FF FF
+49-54 | Name       | Length-prefixed alarm name "Test" + 00 terminator (inactive)
+{{< /ble-packet >}}
 
-Experiment create a new alarm:
+Then I turned it on again for tomorrow via the app. This is the edit request sets the active byte to 1:
 
-```text
-Value: 01FF FF00 0100 4089 9069 0009 0101 0106 
-0109 0801 651C 01EF 5572 FEF8 174B 67AC 
-ED26 721F CFAA 2400 FFFF FFFF 0454 6573 
-7401
-```
+{{< ble-packet payload="01 02 00 00 01 00 C0 DA 91 69 00 09 01 01 01 06 01 09 08 01 65 1C 01 EF 55 72 FE F8 17 4B 67 AC ED 26 72 1F CF AA 24 00 FF FF FF FF 04 54 65 73 74 01" >}}
+0     | Command   | 01 to edit an existing alarm
+1-2   | Alarm ID  | Little-endian 16-bit ID (0x0002)
+3-4   | State     | 00 01 00 tells the alarm is active
+5-8   | Timestamp | Little-endian Unix timestamp
+9-20  | Effect    | Sunrise effect
+21-40 | Mystery   | Same crypto data as the original alarm
+41-44 | Separator | Always FF FF FF FF
+45-49 | Name      | Length-prefixed alarm name "Test" + 01 terminator
+{{< /ble-packet >}}
 
-```text
-Handle Value Notification - Handle:0x0068 -Value: 0100 FFFF 0100
-```
+Responses confirming the edit:
 
-```text
-Handle Value Notification - Handle:0x0068 - Value: 04FF FF01 00
-```
+{{< ble-packet payload="01 00 02 00 03 00" >}}
+0     | Command  | 01 echoes back the edit command
+1     | Status   | 00 indicates success
+2-3   | Alarm ID | Little-endian 16-bit ID (0x0002)
+4-5   | Version  | Little-endian revision counter (0x0003 = 3)
+{{< /ble-packet >}}
 
-After alarm went off this is the alarm payload using read alarms:
+{{< ble-packet payload="04 02 00 03 00" >}}
+0     | Command  | 04 confirmation notification
+1-2   | Alarm ID | Little-endian 16-bit ID (0x0002)
+3-4   | Version  | Little-endian revision counter (0x0003 = 3)
+{{< /ble-packet >}}
 
-```text
-02 00 06 00 2f 00 00 00 00 00 00 c0 da 91 69 00 09 01 01 01 06 01 09 08 01 65 1c 01 ef 55 72 fe f8 17 4b 67 ac ed 26 72 1f cf aa 24 00 ff ff ff ff 04 54 65 73 74 00
-```
+Reading the alarm again after re-enabling byte 9 is now `01` (active):
 
-Then after alarm went off I turned it on again for tomorrow this is the packet it sent to the device.
+{{< ble-packet payload="02 00 07 00 2F 00 00 00 00 01 00 C0 DA 91 69 00 09 01 01 01 06 01 09 08 01 65 1C 01 EF 55 72 FE F8 17 4B 67 AC ED 26 72 1F CF AA 24 00 FF FF FF FF 04 54 65 73 74 01" >}}
+0-1   | Command    | Response type (alarm info)
+2-3   | Alarm ID   | Little-endian 16-bit ID (0x0007)
+4     | Length     | Payload length (0x2F = 47 bytes)
+5-8   | Padding    |
+9-10  | Active     | Alarm state (01 00 = active)
+11-14 | Timestamp  | Little-endian Unix timestamp
+15-44 | Mystery    | Unknown bytes, possibly effect and crypto data
+45-48 | Separator  | Always FF FF FF FF
+49-54 | Name       | Length-prefixed alarm name "Test" + 01 terminator (active)
+{{< /ble-packet >}}
 
-```text
-Value: 0102 0000 0100 C0DA 9169 0009 0101 0106 
-0109 0801 651C 01EF 5572 FEF8 174B 67AC 
-ED26 721F CFAA 2400 FFFF FFFF 0454 6573 
-7401
-```
+So in order to turn on the alarm for the next day I have to do two things:
 
-```text
-Handle Value Notification - Handle:0x0068 - Value: 0100 0200 0300
-```
+- change activate byte to `01`.
+- Update the time stamp to be the next day. The alarm time stamp contains date and time. Clock time is UTC and user time needs to be converted.
 
-```text
-Handle Value Notification - Handle:0x0068 - Value: 0402 0003 00
-```
+### Timers
 
-This is the new state of the alarm after enabling again:
+Philips app also has a feature called timer.
+You can start a timer and after it reaches 0 the light starts flashing.
 
-```text
-02 00 07 00 2f 00 00 00 00 01 00 c0 da 91 69 00 09 01 01 01 06 01 09 08 01 65 1c 01 ef 55 72 fe f8 17 4b 67 ac ed 26 72 1f cf aa 24 00 ff ff ff ff 04 54 65 73 74 01
-```
+{{< ble-packet payload="02 00 38 00 28 00 00 00 00 00 01 b9 ba 94 69 01 01 02 1d 01 50 c1 53 49 69 60 40 b1 b3 38 46 6b c3 bb 42 58 03 2c 01 00 00 05 54 69 6d 65 72 01" >}}
+0-1   | Command    | alarm info
+2-3   | Alarm ID   | Little-endian 16-bit
+4     | Payload length     |
+5-8   | Padding    |
+9-10  | Active     | Alarm state (01 00 = active)
+11-14 | Timestamp  | Little-endian Unix timestamp
+15-36 | Mystery    |
+37-38 | Timer length  | little endian number
+39-40 | Separator       | 
+41-47 | Name       | Length-prefixed alarm name "Test" + 01 terminator (active)
+{{< /ble-packet >}}
 
-Seems like flipping on `00` to `01` before `c0` and then sending the same payload along with the ID will enable the alarm again.
+Timers can be turned on and off in the same way.
+So the code that turns alarms on and off works on timers too.
 
-Clock time is UTC and user time needs to be converted.
+### Deleting Alarms
 
----
-How about deleting alarms?
+Deleting alarms happen using the same characteristic.
 
-Delete Alarm
+By setting first byte to `03` we can make a delete alarm request. For example:
 
-```text
-031E 00
-```
+Delete alarm with ID 30:
 
-`1E 00` is the ID (little-endian).
+{{< ble-packet payload="03 1E 00" >}}
+0     | Command  | 03 to delete an alarm
+1-2   | Alarm ID | Little-endian 16-bit ID (0x001E = 30)
+{{< /ble-packet >}}
 
-Response after delete:
+Response confirming the deletion:
 
-```text
-0300 1E00
-```
+{{< ble-packet payload="03 00 1E 00" >}}
+0     | Command  | 03 echoes back the delete command
+1     | Status   | 00 indicates success
+2-3   | Alarm ID | Little-endian 16-bit ID (0x001E = 30)
+{{< /ble-packet >}}
 
-```text
-041E 00FF FF
-```
-
----
-
-How about timers?
-
-Hue also has this feature timers where you can set the light to flash after few minutes.
-Fancier way to have a timer than a clock.
-
-```text
-02 00 38 00 28 00 00 00 00 00 01 b9 ba 94 69 01
-01 02 1d 01 50 c1 53 49 69 60 40 b1 b3 38 46 6b
-c3 bb 42 58 03 2c 01 00 00 05 54 69 6d 65 72 01
-```
-
-Timers have the same format. More or less. The timer name is at the end.
-
-`05 54 69 6d 65 72 01` Timer name.
-`b9 ba 94 69` Time that the timer should go off.
-`00 01` the Timer is active.
-The rest is again mystery bytes.
-Before the timer name and before the `00 00` there is `03 2c` that's the timer length in little-endian format.
-
+{{< ble-packet payload="04 1E 00 FF FF" >}}
+0     | Command  | 04 confirmation notification
+1-2   | Alarm ID | Little-endian 16-bit ID (0x001E = 30)
+3-4   | Separator| FF FF
+{{< /ble-packet >}}
 
 ---
 These should be footnotes
+
+(I have a lot to say about Philips, not only they cannot make one app to control all the stuff you have from Philips in your home. Their individual apps suck. They are slow. There is startup time. They don't have good features. I guess you need to buy Hue from them to have this basic functionality? But I don't want to spend more money on Philips.)
+
+You need an Apple account to download it.
+I hate this because when I was in Iran many of these tools were blocked because you can't easily open an account.
+I have since moved to a place where I am allowed to open an account, so I have it.
+
 <details>
 <summary>More examples of alarm creation packets</summary>
 
@@ -547,9 +579,3 @@ Wake up 06:50 full brightness fade in 30 min
 ```
 
 </details>
-
-(I have a lot to say about Philips, not only they cannot make one app to control all the stuff you have from Philips in your home. Their individual apps suck. They are slow. There is startup time. They don't have good features. I guess you need to buy Hue from them to have this basic functionality? But I don't want to spend more money on Philips.)
-
-You need an Apple account to download it.
-I hate this because when I was in Iran many of these tools were blocked because you can't easily open an account.
-I have since moved to a place where I am allowed to open an account, so I have it.
