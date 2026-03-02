@@ -84,16 +84,33 @@ Which suggests that it's for the power.
 
 To send and receive data from the lamp there is [Bleak](https://bleak.readthedocs.io/en/latest/).
 
+By knowing the name of the lamp(you can get it from Blendr) you can connect to the lamp using:
 
-The first functionality is almost done. I can turn the light on and off, but how do I change the color?
+```py
+POWER_UUID = '932c32bd-0002-47a2-835a-a8d455b859dd'
+
+async def connect_to_light(name: str, timeout: float = 10.0) -> BleakClient:
+    device = await BleakScanner.find_device_by_name(name, timeout=timeout)
+    if not device:
+        raise SystemExit(f"Device '{name}' not found.")
+
+    client = BleakClient(device, timeout=timeout)
+    await client.connect(timeout=timeout)
+    return client
+
+await client.write_gatt_char(POWER_UUID, b"\x01")  # turn on
+await client.write_gatt_char(POWER_UUID, b"\x00")  # turn off
+```
+
+The `client` then can be used to read and write values.
 
 ## Color
 
 I looked around in the characteristics and tried out all the characteristics below the on/off one.
-Here's the full list of services and characteristics from blendr:
 
 You can easily find out the pattern by changing the light color and observing the characteristic values.
 There are multiple characteristics that change when you change the light color:
+
 - `932c32bd-0003-47a2-835a-a8d455b859dd` changes with brightness
 - `932c32bd-0005-47a2-835a-a8d455b859dd` changes with color (if I do warm white then cool white stays the same)
 - `932c32bd-0007-47a2-835a-a8d455b859dd` changes with everything.
@@ -107,7 +124,7 @@ Cool white:
 0-4 | Constant |
 5   | Brightness |
 6-7  | Mode | 03 02 for white 04 04 for colors
-8-9 | Color temperature | Little-endian 16-bit value in mireds — 156 mireds ≈ 6410K (cool white)
+8-9 | Color temperature | Little-endian 16-bit value in mireds
 {{< /ble-packet >}}
 
 Warm white:
@@ -115,110 +132,156 @@ Warm white:
 {{< ble-packet payload="01 01 01 02 01 FE 03 02 5A 01" >}}
 0-4 | Constant |
 5   | Brightness |
-6-7 | Mode | 03 02 for white 04 04 for colors
-8-9 | Color temperature | Little-endian 16-bit value in mireds — 346 mireds ≈ 2890K (warm white)
+6-7 | Mode | 03 02 for white
+8-9 | Color temperature | Little-endian 16-bit value in mireds
 {{< /ble-packet >}}
 
-The values are in [mireds](https://en.wikipedia.org/wiki/Mired), which is how Philips Hue encodes color temperature.
-So 156 mireds ≈ 6410K (cool white) and 346 mireds ≈ 2890K (warm white).
-
-There are two bytes between the brightness and warmth.
-`0x03,0x02` seem to be only the case for white color.
+The temperature values are in [mireds](https://en.wikipedia.org/wiki/Mired), which is how Philips Hue encodes color temperature.
+Warm white and cool white only differ in bytes 8-9.
 
 When I set it to another color the bytes change to this format:
-```text
-0x01,0x01,0x01,0x02,0x01,
-brightness,0x04,0x04,
-color byte 1, color byte 2,
-color byte 3, color byte 4
+
+For example, here's the packet for red
+
+{{< ble-packet payload="01 01 01 02 01 fe 04 04 c5 af 51 4e" >}}
+0-4 | Constant |
+5   | Brightness |
+6-7 | Mode | 04 04 for colors
+8-9 | X value | Little-endian 16-bit value for X
+10-11 | Y value | Little-endian 16-bit value for Y
+{{< /ble-packet >}}
+
+The color is encoded in [CIE xy](https://en.wikipedia.org/wiki/CIE_1931_color_space) format.
+
+Philips hue [developer docs](https://developers.meethue.com/develop/application-design-guidance/color-conversion-formulas-rgb-to-xy-and-back/#xy-to-rgb-color) require login! So I asked AI to figure out what's this format and how can I get to it from RGB.
+
+1. Convert the 8 bit number from R/G/B into a number between 0 and 1
+2. Linearise the numbers based on this forumla `if g > 0.04045 then g / 12.92 else ((g + 0.055) / 1.055) ^ 2.4`
+3. Apply matrix transformation, one full matrix example is [here](https://www.image-engineering.de/library/technotes/958-how-to-convert-between-srgb-and-ciexyz).
+
+You can play around with it in the box below:
+
+{{< hue/xy-convertor >}}
+
+Now that we know the payload format we can use this code to send the packet to lamp:
+
+
+When you run the app in interactive mode with `huec interactive` it will open up a browser page and runs a server.
+The browser displays a color picker and calculates the payload for the color based on explanations above.
+The server accepts the payload and sends it to the light using Bleak.
+
+```py
+async def set_color(self, data: bytes) -> None:
+    COLOR_UUID = "932c32bd-0007-47a2-835a-a8d455b859dd"
+    await self.client.write_gatt_char(COLOR_UUID, data, response=True)
 ```
+## Alarms
 
-The number of bytes increase.
-So we have 4 bytes in total to set the color.
+Timer in Philips app is a functionality to turn on/off the light at specific time or create countdown to flash the lights.
 
-I haven't dug deeper. I gave some examples to Perplexity, and it informed me that the color is encoded in **CIE 1931 xy chromaticity** format.
-So I skipped this part for now. My goal was not to control the light exactly. This was just a side quest.
+But there are some limitations for example when you set the alarm to turn on in the morning it will only turn on the next day.
+If I want it to turn on the day after I need to again toggle the alarm for the next day. (I like to rewrite this with simpler words in once sentence.)
 
-## Timer
+Similar to how I discovered how colors work I tried to look into what characteristics change when I create an alarm.
+But I didn't see anything changing.
 
-Then I started looking into timers.
-Timers were the ultimate goal for me. I wanted my light to turn on every day.
-But turning on using the on and off command meant that I have to have some device controlling the light.
+I needed to see what my phone was doing to create alarms.
 
-I started looking into other characteristics and I didn't find anything related timers.
-Characteristics have multiple kinds. For color and power they are read and write, meaning that you can write to them and read from them.
-But there are also characteristics with a notify option, which you can write to and get notifications from.
+For capturing Bluetooth packets there are tools like Wireshark.
+These tools allow you to see what data software running on the system is sending to where.
+I was using MacOS + iOS. For this combination there is:
 
-So for this I needed to see what my phone was doing to set the alarms.
+- [Bluetooth Packet Logger](https://developer.apple.com/bluetooth/)
+- [Bluetooth logging config for iOS](https://developer.apple.com/services-account/download?path=/iOS/iOS_Logs/iOSBluetoothLogging.mobileconfig) (add footnote apple id and sanctions, text is at the end)
 
-Well the good news is that there is software from Apple called Packet Logger.
-It can be downloaded from [Bluetooth - Apple Developer](https://developer.apple.com/bluetooth/).
-You need an Apple account to download it.
-I hate this because when I was in Iran many of these tools were blocked because you can't easily open an account.
-I have since moved to a place where I am allowed to open an account, so I have it.
-So I went ahead and downloaded it. You also need a profile to install on iOS.
-You can get it from [Profiles and Logs - Feedback Assistant - Apple Developer](https://developer.apple.com/feedback-assistant/profiles-and-logs/).
+Install Packet Logger on your computer and the profile on your iPhone. 
+Then, connect the phone to the computer.
+Start using the app, and you will see the packets being sent or received.
 
-Install Packet Logger on your computer and the profile on your iPhone. Then, connect the phone to the computer. Start using the app, and you will see the packets.
-
-So I started checking what the application does when I connect to the light.
-I found the following requests:
+After setting up the tools I checked what is happening when the app connects to the light.
+The logs looked like this:
 
 ```text
-Feb 12 12:10:23.743  ATT Send         0x005A  Hue lightstrip pl  Write Request - Handle:0x0068 - Value: 0311 00  
+0x005A  Hue lightstrip pl  Write Request - Handle:0x0068 - Value: 0311 00  
 	Write Request - Handle:0x0068 - Value: 0311 00
 	Opcode: 0x12
 	Attribute Handle: 0x0068 (104)
 	Value: 0311 00
-Feb 12 12:10:23.743  L2CAP Send       0x005A  Hue lightstrip pl  Channel ID: 0x0004  Length: 0x0006 (06) [ 12 68 00 03 11 00 ]  
+0x005A  Hue lightstrip pl  Channel ID: 0x0004  Length: 0x0006 (06) [ 12 68 00 03 11 00 ]  
 	Channel ID: 0x0004  Length: 0x0006 (06) [ 12 68 00 03 11 00 ]
 	L2CAP Payload:
 	00000000: 1268 0003 1100                           .h....
-Feb 12 12:10:23.743  ACL Send         0x005A  Hue lightstrip pl  Data [Handle: 0x005A, Packet Boundary Flags: 0x0, Length: 0x000A (10)]  
-Feb 12 12:10:23.789  ATT Receive      0x005A  Hue lightstrip pl  Write Response  
+0x005A  Hue lightstrip pl  Data [Handle: 0x005A, Packet Boundary Flags: 0x0, Length: 0x000A (10)]  
+0x005A  Hue lightstrip pl  Write Response  
 	Write Response
 	Opcode: 0x13
-Feb 12 12:10:23.789  L2CAP Receive    0x005A  Hue lightstrip pl  Channel ID: 0x0004  Length: 0x0001 (01) [ 13 ]  
+0x005A  Hue lightstrip pl  Channel ID: 0x0004  Length: 0x0001 (01) [ 13 ]  
 	Channel ID: 0x0004  Length: 0x0001 (01) [ 13 ]
 	L2CAP Payload:
 	00000000: 13                                       .
-Feb 12 12:10:23.789  ACL Receive      0x005A  Hue lightstrip pl  Data [Handle: 0x005A, Packet Boundary Flags: 0x2, Length: 0x0005 (5)]  
-Feb 12 12:10:23.789  ATT Receive      0x005A  Hue lightstrip pl  Handle Value Notification - Handle:0x0068 - Value: 0300 1100  
+0x005A  Hue lightstrip pl  Data [Handle: 0x005A, Packet Boundary Flags: 0x2, Length: 0x0005 (5)]  
+0x005A  Hue lightstrip pl  Handle Value Notification - Handle:0x0068 - Value: 0300 1100  
 	Handle Value Notification - Handle:0x0068 - Value: 0300 1100
 	Opcode: 0x1B
 	Attribute Handle: 0x0068 (104)
-Feb 12 12:10:23.789  L2CAP Receive    0x005A  Hue lightstrip pl  Channel ID: 0x0004  Length: 0x0007 (07) [ 1B 68 00 03 00 11 00 ]  
+0x005A  Hue lightstrip pl  Channel ID: 0x0004  Length: 0x0007 (07) [ 1B 68 00 03 00 11 00 ]  
 	Channel ID: 0x0004  Length: 0x0007 (07) [ 1B 68 00 03 00 11 00 ]
 	L2CAP Payload:
 	00000000: 1B68 0003 0011 00                        .h.....
-Feb 12 12:10:23.789  ACL Receive      0x005A  Hue lightstrip pl  Data [Handle: 0x005A, Packet Boundary Flags: 0x2, Length: 0x000B (11)]  
-Feb 12 12:10:23.791  ATT Receive      0x005A  Hue lightstrip pl  Handle Value Notification - Handle:0x0068 - Value: 0411 00FF FF  
+0x005A  Hue lightstrip pl  Data [Handle: 0x005A, Packet Boundary Flags: 0x2, Length: 0x000B (11)]  
+0x005A  Hue lightstrip pl  Handle Value Notification - Handle:0x0068 - Value: 0411 00FF FF  
 	Handle Value Notification - Handle:0x0068 - Value: 0411 00FF FF
 	Opcode: 0x1B
 	Attribute Handle: 0x0068 (104)
-Feb 12 12:10:23.791  L2CAP Receive    0x005A  Hue lightstrip pl  Channel ID: 0x0004  Length: 0x0008 (08) [ 1B 68 00 04 11 00 FF FF ]  
+0x005A  Hue lightstrip pl  Channel ID: 0x0004  Length: 0x0008 (08) [ 1B 68 00 04 11 00 FF FF ]  
 	Channel ID: 0x0004  Length: 0x0008 (08) [ 1B 68 00 04 11 00 FF FF ]
 	L2CAP Payload:
 	00000000: 1B68 0004 1100 FFFF                      .h......
-Feb 12 12:10:23.791  ACL Receive      0x005A  Hue lightstrip pl  Data [Handle: 0x005A, Packet Boundary Flags: 0x2, Length: 0x000C (12)]  
+0x005A  Hue lightstrip pl  Data [Handle: 0x005A, Packet Boundary Flags: 0x2, Length: 0x000C (12)]  
 	Packet Boundary Flags: [10] 0x02 - First Flushable Packet Of Higher Layer Message (Start Of An L2CAP Packet)
 	Broadcast Flags: [00] 0x00 - Point-to-point
 	Data (0x000C Bytes)
-Feb 12 12:10:23.791  ACL Receive      0x0000  00:00:00:00:00:00  00000000: 5A20 0C00 0800 0400 1B68 0004 1100 FFFF  Z .......h......  
-Feb 12 12:10:23.959  HCI Event        0x005A  Hue lightstrip pl  Number Of Completed Packets - Handle: 0x005A - Packets: 0x0001    
+0x0000  00:00:00:00:00:00  00000000: 5A20 0C00 0800 0400 1B68 0004 1100 FFFF  Z .......h......  
+0x005A  Hue lightstrip pl  Number Of Completed Packets - Handle: 0x005A - Packets: 0x0001    
 	Parameter Length: 5 (0x05)
 	Number Of Handles: 0x01
 	Connection Handle: 0x005A
 	Number Of Packets: 0x0001
 ```
 
-I had a good run with [perplexity](https://www.perplexity.ai/search/how-to-capture-the-ble-writes-bsgCtVUHQKqln9khE5Hh7w) helping me in this whole process.
-It told me what to do and then figured out how the app gets the timers.
-You might notice that there is no trace of characteristic UUIDs here.
-I searched around and didn't find a way to map the handle that I see in the logs to UUID.
-So I did what a sane person would do and stopped spending more time.
-I just brute forced my way by sending the same message to every characteristic and see which one responded back.
-That's how I got the one.
+I asked AI to figure out what the light was doing and gave it the context about what I was looking for.
+It figured out that when the app it performs this process:
+
+1. Write `00` to a characteristic.
+2. The characteristic replies with current alarm IDs.
+3. the app writes each alarm ID to the characteristic again and receives more information about that alarm.
+
+So I learned that characteristics can also reply back.
+This happens through subscriptions.
+From the first list of characteristics you can see some have read and write properties.
+Some characteristics have write and notify properties.
+You can write into these characteristics and receive a response back.
+
+Here's the code to do this:
+
+```py
+TIMER_UUID = "9da2ddf1-0001-44d0-909c-3f3d3cb34a7b"
+
+notifications = asyncio.Queue()
+
+def on_timer_notification(sender, data: bytearray):
+    notifications.put_nowait(data)
+
+await client.start_notify(TIMER_UUID, on_timer_notification)
+
+await client.write_gatt_char(TIMER_UUID, bytes([0x00]))
+
+response = await asyncio.wait_for(notifications.get(), timeout=5.0)
+```
+
+You might notice that in the Packet Logger logs there is only a handle. There is no characteristic ID.
+I tried a simple approach: I subscribed to all characteristics and then wrote `00` payload to all and checked which one replied back.
+That's how I got the characteristic.
 
 Here's the breakdown. The timer characteristic (`9da2ddf1-0001-44d0-909c-3f3d3cb34a7b`) is like a server.
 You can write different messages to it and subscribe to it to get back responses as notifications.
@@ -494,3 +557,7 @@ Wake up 06:50 full brightness fade in 30 min
 </details>
 
 (I have a lot to say about Philips, not only they cannot make one app to control all the stuff you have from Philips in your home. Their individual apps suck. They are slow. There is startup time. They don't have good features. I guess you need to buy Hue from them to have this basic functionality? But I don't want to spend more money on Philips.)
+
+You need an Apple account to download it.
+I hate this because when I was in Iran many of these tools were blocked because you can't easily open an account.
+I have since moved to a place where I am allowed to open an account, so I have it.

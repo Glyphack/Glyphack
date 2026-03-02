@@ -65,9 +65,9 @@
 
 .ble-byte {
   display: inline-block;
-  color: color-mix(in srgb, var(--bp-text) 80%, var(--fc, #777) 20%);
-  background: color-mix(in srgb, var(--fc, #777) 14%, transparent);
-  border: 1px solid transparent;
+  color: color-mix(in srgb, var(--bp-text) 55%, var(--fc, #777) 45%);
+  background: color-mix(in srgb, var(--fc, #777) 22%, transparent);
+  border: 1px solid color-mix(in srgb, var(--fc, #777) 28%, transparent);
   padding: 0.11rem 0.14rem;
   border-radius: 0;
   cursor: default;
@@ -243,13 +243,6 @@
   margin-bottom: 0.18rem;
 }
 
-.ble-tooltip__byte {
-  font-family: var(--bp-mono);
-  font-size: 0.84rem;
-  color: var(--bp-text);
-  margin-bottom: 0.18rem;
-}
-
 .ble-tooltip__desc {
   font-size: 0.78rem;
   color: var(--bp-text-dim);
@@ -292,7 +285,6 @@
       tip.className = "ble-tooltip";
       tip.innerHTML =
         '<div class="ble-tooltip__field"></div>' +
-        '<div class="ble-tooltip__byte"></div>' +
         '<div class="ble-tooltip__desc"></div>';
       document.body.appendChild(tip);
     }
@@ -303,7 +295,6 @@
     var t = getTip();
     t.querySelector(".ble-tooltip__field").textContent = name;
     t.querySelector(".ble-tooltip__field").style.color = color;
-    t.querySelector(".ble-tooltip__byte").textContent = "0x" + hex;
     t.querySelector(".ble-tooltip__desc").textContent = desc;
     t.classList.add("is-visible");
 

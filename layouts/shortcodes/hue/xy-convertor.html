@@ -1,0 +1,125 @@
+{{/*
+  hue/xy-convertor shortcode
+  Displays a color picker that converts RGB to CIE XY format used by Philips Hue.
+
+  Usage:
+    {{< hue/xy-convertor >}}
+*/}}
+
+{{ $id := printf "hue-xy-%d" (index (seq 1 (add (.Ordinal) 1)) (.Ordinal)) }}
+
+<style>
+.hue-xy-convertor {
+  --bp-bg: var(--code-background);
+  --bp-border: var(--code-border);
+  --bp-text: var(--content-primary);
+  --bp-text-dim: var(--content-secondary);
+  --bp-glow: color-mix(in srgb, var(--content-primary) 14%, transparent);
+  --bp-mono: var(--font-mono, "Monaspace", ui-monospace, monospace);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--bp-text);
+  background:
+    linear-gradient(120deg, color-mix(in srgb, var(--background) 86%, transparent), transparent 46%),
+    var(--bp-bg);
+  border: 1px solid var(--bp-border);
+  border-radius: 12px;
+  padding: 0.9rem 1.12rem;
+  margin: 1.8rem 0;
+  box-shadow: 0 14px 30px -24px var(--bp-glow);
+}
+
+.hue-xy-convertor::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: linear-gradient(90deg, #c45d4c 0%, #c69a42 34%, #4f8d7f 66%, #5f7db8 100%);
+  opacity: 0.55;
+}
+
+.hue-xy-convertor__picker {
+  width: 42px;
+  height: 42px;
+  border: 2px solid var(--bp-border);
+  border-radius: 8px;
+  padding: 0;
+  cursor: pointer;
+  background: none;
+  flex-shrink: 0;
+}
+
+.hue-xy-convertor__picker::-webkit-color-swatch-wrapper { padding: 0; }
+.hue-xy-convertor__picker::-webkit-color-swatch { border: none; border-radius: 6px; }
+.hue-xy-convertor__picker::-moz-color-swatch { border: none; border-radius: 6px; }
+
+.hue-xy-convertor__values {
+  font-family: var(--bp-mono);
+  font-size: 0.9rem;
+  letter-spacing: 0.045em;
+  font-variant-numeric: tabular-nums;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.hue-xy-convertor__label {
+  font-size: 0.73rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--bp-text-dim);
+  margin-right: 0.4rem;
+}
+
+.hue-xy-convertor__bytes {
+  color: var(--bp-text);
+  letter-spacing: 0.08em;
+}
+</style>
+
+<div id="{{ $id }}" class="hue-xy-convertor">
+  <input type="color" class="hue-xy-convertor__picker hue-xy-picker" value="#ff0000" />
+  <div class="hue-xy-convertor__values">
+    <span><span class="hue-xy-convertor__label">X</span><span class="hue-xy-convertor__bytes hue-xy-x"></span></span>
+    <span><span class="hue-xy-convertor__label">Y</span><span class="hue-xy-convertor__bytes hue-xy-y"></span></span>
+  </div>
+</div>
+
+<script>
+(function () {
+  var root = document.getElementById("{{ $id }}");
+  var picker = root.querySelector(".hue-xy-picker");
+  var xOut = root.querySelector(".hue-xy-x");
+  var yOut = root.querySelector(".hue-xy-y");
+
+  function toHex(b) { return b.toString(16).padStart(2, "0"); }
+
+  function update() {
+    var hex = picker.value;
+    var r = parseInt(hex.substring(1, 3), 16) / 255;
+    var g = parseInt(hex.substring(3, 5), 16) / 255;
+    var b = parseInt(hex.substring(5, 7), 16) / 255;
+    r = r > 0.04045 ? Math.pow((r + 0.055) / 1.055, 2.4) : r / 12.92;
+    g = g > 0.04045 ? Math.pow((g + 0.055) / 1.055, 2.4) : g / 12.92;
+    b = b > 0.04045 ? Math.pow((b + 0.055) / 1.055, 2.4) : b / 12.92;
+    var X = r * 0.664511 + g * 0.154324 + b * 0.162028;
+    var Y = r * 0.283881 + g * 0.668433 + b * 0.047685;
+    var Z = r * 0.000088 + g * 0.072310 + b * 0.986039;
+    var sum = X + Y + Z;
+    var cx = sum === 0 ? 0.3127 : X / sum;
+    var cy = sum === 0 ? 0.3290 : Y / sum;
+    var x16 = Math.round(cx * 65535);
+    var y16 = Math.round(cy * 65535);
+    xOut.textContent = toHex(x16 & 0xff) + " " + toHex((x16 >> 8) & 0xff);
+    yOut.textContent = toHex(y16 & 0xff) + " " + toHex((y16 >> 8) & 0xff);
+  }
+
+  picker.addEventListener("input", update);
+  picker.addEventListener("change", update);
+  update();
+}());
+</script>
