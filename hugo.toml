@@ -99,5 +99,5 @@ dateFmt = "Jan 02, 2006"
 [markup.goldmark.renderer]
 unsafe = true
 [markup.highlight]
-style = 'algol'
+style = 'friendly'
 noClasses = true

@@ -58,6 +58,49 @@ border-radius: 50%;
 }
 
 
+/* Code block improvements */
+
+/* Better contrast using higher-specificity selectors to override default.css :root */
+body.light {
+	--code-background: rgb(240, 240, 240);
+	--code-border: rgb(200, 200, 200);
+}
+
+body.dark {
+	--code-background: rgb(25, 25, 28);
+	--code-border: rgb(58, 58, 65);
+}
+
+/* Color-only syntax highlighting - strip bold/italic/underline from chroma */
+pre code span {
+	font-weight: normal !important;
+	font-style: normal !important;
+	text-decoration: none !important;
+}
+
+/* Line numbers via CSS counters */
+pre code {
+	counter-reset: line;
+}
+
+pre code > span {
+	display: flex !important;
+	counter-increment: line;
+}
+
+pre code > span::before {
+	content: counter(line);
+	min-width: 2.5em;
+	padding-right: 0.75em;
+	margin-right: 0.75em;
+	text-align: right;
+	color: var(--content-secondary);
+	user-select: none;
+	-webkit-user-select: none;
+	border-right: 1px solid var(--code-border);
+	flex-shrink: 0;
+}
+
 /* Links */
 
 a:not(.social-icons a):not(h1 a):not(h2 a):not(h3 a):not(h4 a):not(h5 a):not(h6 a):not(.book-card) {

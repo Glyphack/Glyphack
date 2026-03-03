@@ -44,54 +44,145 @@
   box-shadow: 0 14px 30px -24px var(--bp-glow);
 }
 
-.ble-packet::before {
+/* Scanline overlay */
+.ble-packet::after {
   content: "";
   position: absolute;
-  inset: 0 0 auto 0;
-  height: 3px;
-  background: linear-gradient(90deg, #c45d4c 0%, #c69a42 34%, #4f8d7f 66%, #5f7db8 100%);
-  opacity: 0.55;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 1px,
+    color-mix(in srgb, var(--bp-text) 2%, transparent) 1px,
+    color-mix(in srgb, var(--bp-text) 2%, transparent) 2px
+  );
 }
 
+/* ── Terminal title bar ── */
+.ble-packet__titlebar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.72rem;
+  padding-bottom: 0.52rem;
+  border-bottom: 1px solid var(--bp-border);
+  position: relative;
+  z-index: 1;
+}
+
+.ble-packet__titlebar-dots {
+  display: flex;
+  gap: 0.28rem;
+}
+
+.ble-packet__titlebar-dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: var(--bp-text-dim);
+  opacity: 0.3;
+}
+
+.ble-packet__titlebar-label {
+  font-family: var(--bp-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--bp-text-dim);
+  margin-left: auto;
+}
+
+/* ── Hex dump area ── */
 .ble-packet__hex {
   font-family: var(--bp-mono);
   font-size: 0.9rem;
-  line-height: 2.12;
   letter-spacing: 0.045em;
   font-variant-numeric: tabular-nums;
-  word-break: break-all;
   padding-top: 0.18rem;
+  position: relative;
+  z-index: 1;
 }
 
+/* Column index header */
+.ble-packet__col-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.28rem;
+}
+
+.ble-packet__col-offset-spacer {
+  width: 4rem;
+  flex-shrink: 0;
+  margin-right: 0.6rem;
+}
+
+.ble-packet__col-idx {
+  flex: 1;
+  text-align: center;
+  font-family: var(--bp-mono);
+  font-size: 0.68rem;
+  color: var(--bp-text-dim);
+  opacity: 0.45;
+  user-select: none;
+}
+
+/* Row layout */
+.ble-packet__row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.2rem;
+}
+
+.ble-packet__row:last-child {
+  margin-bottom: 0;
+}
+
+.ble-packet__row-offset {
+  font-family: var(--bp-mono);
+  font-size: 0.72rem;
+  color: var(--bp-text-dim);
+  opacity: 0.45;
+  width: 4rem;
+  flex-shrink: 0;
+  margin-right: 0.6rem;
+  user-select: none;
+}
+
+/* ── Byte cells ── */
 .ble-byte {
-  display: inline-block;
+  flex: 1;
+  text-align: center;
   color: color-mix(in srgb, var(--bp-text) 55%, var(--fc, #777) 45%);
   background: color-mix(in srgb, var(--fc, #777) 22%, transparent);
   border: 1px solid color-mix(in srgb, var(--fc, #777) 28%, transparent);
-  padding: 0.11rem 0.14rem;
+  border-right-width: 0;
+  padding: 0.18rem 0;
   border-radius: 0;
   cursor: default;
-  transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease, color 0.15s ease, filter 0.15s ease;
+  transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease,
+              color 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease;
   outline: none;
 }
 
-.ble-byte::after {
-  content: " ";
-  white-space: pre;
-}
-
-.ble-byte--first {
-  padding-left: 0.42rem;
+.ble-byte--left {
   border-radius: 0.4rem 0 0 0.4rem;
 }
 
-.ble-byte--last {
-  padding-right: 0.42rem;
+.ble-byte--right {
   border-radius: 0 0.4rem 0.4rem 0;
+  border-right-width: 1px;
 }
 
-.ble-byte--first.ble-byte--last {
+.ble-byte--left.ble-byte--right {
   border-radius: 0.4rem;
+  border-right-width: 1px;
+}
+
+.ble-byte--filler {
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .ble-byte:hover,
@@ -101,6 +192,10 @@
   border-color: color-mix(in srgb, var(--fc, #777) 56%, var(--bp-border));
   color: color-mix(in srgb, var(--bp-text) 67%, var(--fc, #777) 33%);
   transform: translateY(-1px);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--fc, #777) 50%, transparent),
+              0 0 2px color-mix(in srgb, var(--fc, #777) 30%, transparent);
+  position: relative;
+  z-index: 2;
 }
 
 .ble-packet.has-active .ble-byte:not(.is-active) {
@@ -114,6 +209,7 @@
   outline-offset: 2px;
 }
 
+/* ── Info panel ── */
 .ble-packet__panel {
   display: flex;
   align-items: stretch;
@@ -124,6 +220,8 @@
   padding: 0.72rem 0.84rem;
   margin-top: 0.86rem;
   min-height: 56px;
+  position: relative;
+  z-index: 1;
 }
 
 .ble-packet__panel-bar {
@@ -171,6 +269,7 @@
   line-height: 1.4;
 }
 
+/* ── Legend ── */
 .ble-packet__legend {
   display: flex;
   flex-wrap: wrap;
@@ -178,6 +277,8 @@
   margin-top: 0.9rem;
   padding-top: 0.86rem;
   border-top: 1px solid var(--bp-border);
+  position: relative;
+  z-index: 1;
 }
 
 .ble-legend-item {
@@ -214,40 +315,6 @@
   flex-shrink: 0;
 }
 
-.ble-tooltip {
-  position: fixed;
-  z-index: 9999;
-  background: color-mix(in srgb, var(--background) 92%, var(--code-background));
-  border: 1px solid var(--bp-border);
-  border-radius: 10px;
-  padding: 0.52rem 0.7rem;
-  max-width: 260px;
-  pointer-events: none;
-  box-shadow: 0 16px 36px -28px color-mix(in srgb, var(--content-primary) 38%, transparent);
-  backdrop-filter: blur(3px);
-  opacity: 0;
-  transform: translateY(4px);
-  transition: opacity 0.14s ease, transform 0.14s ease;
-}
-
-.ble-tooltip.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.ble-tooltip__field {
-  font-family: var(--bp-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  margin-bottom: 0.18rem;
-}
-
-.ble-tooltip__desc {
-  font-size: 0.78rem;
-  color: var(--bp-text-dim);
-  line-height: 1.42;
-}
 
 @media (max-width: 640px) {
   .ble-packet {
@@ -255,8 +322,7 @@
   }
 
   .ble-packet__hex {
-    font-size: 0.84rem;
-    line-height: 2;
+    font-size: 0.78rem;
   }
 
   .ble-packet__panel {
@@ -265,6 +331,10 @@
 
   .ble-legend-item {
     font-size: 0.62rem;
+  }
+
+  .ble-packet__col-header {
+    display: none;
   }
 }
 </style>
@@ -277,42 +347,6 @@
     return;
   }
   window.__blePacketInlineInit = true;
-
-  var tip = null;
-  function getTip() {
-    if (!tip) {
-      tip = document.createElement("div");
-      tip.className = "ble-tooltip";
-      tip.innerHTML =
-        '<div class="ble-tooltip__field"></div>' +
-        '<div class="ble-tooltip__desc"></div>';
-      document.body.appendChild(tip);
-    }
-    return tip;
-  }
-
-  function showTip(x, y, color, name, hex, desc) {
-    var t = getTip();
-    t.querySelector(".ble-tooltip__field").textContent = name;
-    t.querySelector(".ble-tooltip__field").style.color = color;
-    t.querySelector(".ble-tooltip__desc").textContent = desc;
-    t.classList.add("is-visible");
-
-    var pad = 12;
-    var tw = t.offsetWidth;
-    var th = t.offsetHeight;
-    var lx = x + 14;
-    var ly = y - 10;
-    if (lx + tw + pad > window.innerWidth) lx = x - tw - 14;
-    if (ly + th + pad > window.innerHeight) ly = y - th - 10;
-    if (ly < pad) ly = pad;
-    t.style.left = lx + "px";
-    t.style.top = ly + "px";
-  }
-
-  function hideTip() {
-    getTip().classList.remove("is-visible");
-  }
 
   function getColor(el) {
     return el.style.getPropertyValue("--fc") || "#888";
@@ -362,50 +396,38 @@
     var body = packet.querySelector(".ble-packet__panel-body");
     if (!bar || !body) return;
     bar.style.background = "";
-    body.innerHTML =
-      '<span class="ble-packet__panel-hint">Hover or focus a byte to inspect it</span>';
+    body.innerHTML = '';
   }
 
   function initPacket(packet) {
     if (packet._ble) return;
     packet._ble = true;
-    var pinned = null;
 
     packet.querySelectorAll(".ble-byte").forEach(function (b) {
+      if (b.classList.contains("ble-byte--filler")) return;
       var fi = +b.dataset.fi;
       var name = b.dataset.name;
       var desc = b.dataset.desc;
       var hex = b.textContent.trim();
 
-      b.addEventListener("mouseenter", function (e) {
-        if (pinned !== null) return;
+      b.addEventListener("mouseenter", function () {
         var c = getColor(b);
         activate(packet, fi);
         updatePanel(packet, fi, c, name, desc);
-        showTip(e.clientX, e.clientY, c, name, hex, desc);
-      });
-
-      b.addEventListener("mousemove", function (e) {
-        if (pinned !== null) return;
-        showTip(e.clientX, e.clientY, getColor(b), name, hex, desc);
       });
 
       b.addEventListener("mouseleave", function () {
-        if (pinned !== null) return;
         deactivate(packet);
         resetPanel(packet);
-        hideTip();
       });
 
       b.addEventListener("focus", function () {
-        if (pinned !== null) return;
         var c = getColor(b);
         activate(packet, fi);
         updatePanel(packet, fi, c, name, desc);
       });
 
       b.addEventListener("blur", function () {
-        if (pinned !== null) return;
         deactivate(packet);
         resetPanel(packet);
       });
@@ -414,29 +436,13 @@
     packet.querySelectorAll(".ble-legend-item").forEach(function (item) {
       item.addEventListener("click", function () {
         var fi = +item.dataset.fi;
-        if (pinned === fi) {
-          pinned = null;
-          deactivate(packet);
-          resetPanel(packet);
-        } else {
-          pinned = fi;
-          var first = packet.querySelector('.ble-byte[data-fi="' + fi + '"]');
-          if (first) {
-            var c = getColor(first);
-            activate(packet, fi);
-            updatePanel(packet, fi, c, first.dataset.name, first.dataset.desc);
-          }
+        var first = packet.querySelector('.ble-byte[data-fi="' + fi + '"]');
+        if (first) {
+          var c = getColor(first);
+          activate(packet, fi);
+          updatePanel(packet, fi, c, first.dataset.name, first.dataset.desc);
         }
       });
-    });
-
-    document.addEventListener("click", function (e) {
-      if (!packet.contains(e.target)) {
-        pinned = null;
-        deactivate(packet);
-        resetPanel(packet);
-        hideTip();
-      }
     });
   }
 
@@ -553,27 +559,65 @@
 {{/* ── 4. Color palette ── */}}
 {{ $palette := slice "#c45d4c" "#be7c3e" "#b29a43" "#819158" "#4f8d7f" "#4f81a8" "#7469a6" "#9f6f92" "#609081" "#99774d" "#b95b58" "#4d8f97" "#8a6d9f" "#719063" "#5c7d9b" "#bf8d58" }}
 
-{{/* ── 5. Emit HTML ── */}}
+{{/* ── 5. Row layout variables ── */}}
+{{ $rowWidth  := 16 }}
+{{ $numRows   := div (add $totalBytes 15) 16 }}
+{{ $byteLabel := printf "%d bytes" $totalBytes }}
+
+{{/* ── 6. Emit HTML ── */}}
 <div class="ble-packet">
 
   <div class="ble-packet__hex">
-    {{- range $i, $hexByte := $allBytes -}}
-      {{- $fi := $bs.Get (printf "b%d" $i) -}}
-      {{- $f  := index $fields $fi -}}
-      {{- $color := index $palette (mod $fi (len $palette)) -}}
-      {{- $isFirst := eq $i (int (index $f "start")) -}}
-      {{- $isLast  := eq $i (int (index $f "end")) -}}
-      <span
-        class="ble-byte{{ if $isFirst }} ble-byte--first{{ end }}{{ if $isLast }} ble-byte--last{{ end }}"
-        style="--fc:{{ $color }}"
-        data-fi="{{ $fi }}"
-        data-name="{{ index $f "name" }}"
-        data-desc="{{ index $f "desc" }}"
-        tabindex="0"
-      >{{ $hexByte }}</span>
+
+    {{/* Column index header: 00 01 02 ... 0F */}}
+    <div class="ble-packet__col-header">
+      <span class="ble-packet__col-offset-spacer"></span>
+      {{- range $c := seq 16 -}}
+        <span class="ble-packet__col-idx">{{ printf "%02X" (sub $c 1) }}</span>
+      {{- end }}
+    </div>
+
+    {{/* Row loop — 16 bytes per row */}}
+    {{- range $rowIdx := seq $numRows -}}
+      {{- $rowStart := mul (sub $rowIdx 1) $rowWidth -}}
+      <div class="ble-packet__row">
+        <span class="ble-packet__row-offset">{{ printf "%04X" $rowStart }}</span>
+        {{- range $col := seq $rowWidth -}}
+          {{- $byteIdx := add $rowStart (sub $col 1) -}}
+          {{- if lt $byteIdx $totalBytes -}}
+            {{- $fi     := $bs.Get (printf "b%d" $byteIdx) -}}
+            {{- $f      := index $fields $fi -}}
+            {{- $color  := index $palette (mod $fi (len $palette)) -}}
+            {{- $fStart := int (index $f "start") -}}
+            {{- $fEnd   := int (index $f "end") -}}
+            {{- $col0   := sub $col 1 -}}
+            {{- $needLeft  := or (eq $byteIdx $fStart) (eq $col0 0) -}}
+            {{- $needRight := or (eq $byteIdx $fEnd) (eq $col0 (sub $rowWidth 1)) -}}
+            <span
+              class="ble-byte{{ if $needLeft }} ble-byte--left{{ end }}{{ if $needRight }} ble-byte--right{{ end }}"
+              style="--fc:{{ $color }}"
+              data-fi="{{ $fi }}"
+              data-name="{{ index $f "name" }}"
+              data-desc="{{ index $f "desc" }}"
+              tabindex="0"
+            >{{ index $allBytes $byteIdx }}</span>
+          {{- else -}}
+            <span class="ble-byte ble-byte--filler" aria-hidden="true">FF</span>
+          {{- end -}}
+        {{- end }}
+      </div>
     {{- end }}
+
   </div>
 
+  {{/* Info panel */}}
+  <div class="ble-packet__panel">
+    <div class="ble-packet__panel-bar"></div>
+    <div class="ble-packet__panel-body">
+    </div>
+  </div>
+
+  {{/* Legend */}}
   <div class="ble-packet__legend">
     {{- range $fi, $f := $fields -}}
       <button class="ble-legend-item" style="--fc:{{ index $palette (mod $fi (len $palette)) }}" data-fi="{{ $fi }}" type="button">

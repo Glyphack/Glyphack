@@ -16,7 +16,7 @@ Here I discuss the journey of discovering the protocol, explaining how power, br
 
 ## Usages
 
-Here are some usage scenarios I have for `huec`
+Here are some usage scenarios I have for `huec`:
 
 **Turn lights on and off every day**
 
@@ -25,6 +25,8 @@ To have this repeat every day I run the following command:
 ```text
 huec alarms enable --all
 ```
+
+**Timer using the lamps**
 
 I have a 5-minute timer on the light.
 Using this script I can trigger this timer to start.
@@ -106,8 +108,8 @@ There are two ways to find this out:
 1. Randomly write data into different characteristics to see if the lamp reacts. For example we can write `0x00` into all characteristics and see when the lamp turns off. This requires guessing what value turns the light on and off and what value changes the color.
 2. Use the app to change properties of the lamp and then read values using Blendr.
 
-I turned the lamp off and checked what characteristic has `0x00` in it.
-It was the `932c32bd-0002-47a2-835a-a8d455b859dd`, which suggests that it's for the power.
+I turned the lamp off using Philips Hue app and checked what characteristic has `0x00` in it.
+It was the `932c32bd-0002-47a2-835a-a8d455b859dd`, and that was the characteristic that controls power.
 
 To send and receive data from the lamp there is [Bleak](https://bleak.readthedocs.io/en/latest/).
 
@@ -141,8 +143,6 @@ There are multiple characteristics that change when you change the light color:
 
 You can find out the pattern by changing the light color and observing the characteristic values.
 
-The value inside of it looks like this:
-
 Cool white:
 
 {{< ble-packet payload="01 01 01 02 01 FE 03 02 9C 00" >}}
@@ -161,7 +161,7 @@ Warm white:
 8-9 | Temperature | Little-endian 16-bit, in mireds
 {{< /ble-packet >}}
 
-The temperature values are in [mireds](https://en.wikipedia.org/wiki/Mired), which is how Philips Hue encodes color temperature.
+The temperature values are in [mireds](https://en.wikipedia.org/wiki/Mired).
 Warm white and cool white only differ in bytes 8-9.
 
 When I set it to another color the bytes change to this format:
@@ -300,7 +300,7 @@ await client.write_gatt_char(ALARM_ID, bytes([0x00]))
 response = await asyncio.wait_for(notifications.get(), timeout=5.0)
 ```
 
-You might notice that in the Packet Logger logs there is only a handle. There is no characteristic ID.
+You can see that in the Packet Logger logs there is only a handle. There is no characteristic ID.
 I tried a simple approach: I subscribed to all characteristics and then wrote `00` payload to all and checked which one replied back.
 That's how I got the characteristic.
 
@@ -339,7 +339,8 @@ This gives us the full alarm details:
 5-8   | Padding   |
 9-10  | State     | Active
 11-14 | Timestamp | Little-endian Unix timestamp (2026-02-18 6:00 UTC)
-15-44 | Mystery   | Unknown bytes, possibly effect and crypto data
+15-27 | Effect    | Sunrise effect
+28-44 | Mystery   | Unknown bytes, possibly crypto data
 45-48 | Separator | Always FF FF FF FF
 49-60 | Name      | Length-prefixed alarm name "Morning up" with 01 terminator
 {{< /ble-packet >}}
@@ -350,7 +351,7 @@ Can we create any alarm we like now?
 No, I tried this, the problem is that the magic bytes seem to have a special meaning.
 When I took this same message and just tried to create random alarms by substituting my timestamp and name the lamp was not creating the alarm.
 
-From my investigation I found this is the packet that the app uses to create an alarm.
+So I checked what the app sends to the lamp to create an alarm:
 
 {{< ble-packet payload="01 FF FF 00 01 00 D8 B6 8E 69 00 09 01 01 01 06 01 09 08 01 5B 19 01 94 D1 84 84 B7 51 43 DA A8 67 A9 2F 02 11 0C 8D 00 FF FF FF FF 01 41 01" >}}
 0     | Command   | Create or edit an alarm
@@ -443,7 +444,7 @@ Response confirming the alarm was created with ID 1:
 3-4   | Alarm ID  | Little-endian 16-bit
 {{< /ble-packet >}}
 
-After the alarm went off I read the alarm details. Alarm active byte is 0:
+I turned off the alarm via the app, then I read the alarm details. Alarm active byte is 0:
 
 {{< ble-packet payload="02 00 06 00 2F 00 00 00 00 00 00 C0 DA 91 69 00 09 01 01 01 06 01 09 08 01 65 1C 01 EF 55 72 FE F8 17 4B 67 AC ED 26 72 1F CF AA 24 00 FF FF FF FF 04 54 65 73 74 01" >}}
 0-1   | Command   | Alarm info response
@@ -555,9 +556,9 @@ Response confirming the deletion:
 
 ---
 
-[^1]: I have a lot to say about Philips, not only they cannot make one app to control all the stuff you have from Philips in your home. Their individual apps suck. They are slow. There is startup time. They don't have good features. I guess you need to buy Hue from them to have this basic functionality? But I don't want to spend more money on Philips.
+[^1]: They have one app per device. Each app is slow and unresponsive. They don't have good features. When I open the light app I need to wait a few seconds before it loads. If you want to the lamp to turn on on a routine you need to pay extra. It's a mess. I don't want another Philips device in my home.
 
-[^2]: You need an Apple account to download it. I hate this because when I was in Iran many of these tools were blocked because you can't easily open an account. I have since moved to a place where I am allowed to open an account, so I have it.
+[^2]: You need an Apple account to download it. I hate this because when I was in Iran many of these tools were blocked because you can't easily open an account.
 
 [^3]: I created more alarms with different configurations trying to figure out the mystery bytes but I did not find a pattern. Let me know if you do!
     <details>
