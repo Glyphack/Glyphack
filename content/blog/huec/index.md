@@ -6,7 +6,7 @@ tags: []
 ---
 
 I was looking for a way to control my [Philips Hue light strip](https://amzn.to/4r7oN4M) without their terrible app[^1].
-All my searches led to this conclusion: you need to buy a Hue Bridge to control the lamp from a PC.
+All my searches led to this conclusion: you need to buy a [Hue Bridge](https://amzn.to/4aN5NDR) to control the lamp from a PC.
 But I don't want to have another device just to do what my PC is capable of doing right now.
 
 I want my light to turn on and off automatically every day without paying for another device. I also want to control it from my desk without grabbing my phone.
