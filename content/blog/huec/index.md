@@ -44,6 +44,20 @@ print(f"Enabling alarm ID: {alarm_id}")
 run(f"uv run huec alarms enable --id {alarm_id}")
 ```
 
+**Turn on after unlocking my Mac**
+
+Using [Hammerspoon](https://www.hammerspoon.org/) I set the lights to turn on when I unlock my Mac:
+
+```lua
+function ToggleLights(eventType)
+	if eventType == hs.caffeinate.watcher.screensDidUnlock or eventType == hs.caffeinate.watcher.systemDidWake then
+		fishRunCommand("huec power on")
+	end
+end
+local ToggleLights = hs.caffeinate.watcher.new(toggleLights)
+ToggleLights:start()
+```
+
 Without further ado, let’s see what I figured out about controlling the light.
 
 <!-- End of introduction -->
