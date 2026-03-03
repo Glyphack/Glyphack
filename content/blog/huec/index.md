@@ -200,7 +200,7 @@ async def set_color(self, data: bytes) -> None:
 ```
 ## Alarms
 
-Timer in the Philips app is a functionality to turn on/off the light at a specific time or create a countdown to flash the lights.
+Alarms in the Philips app is a functionality to turn on/off the light at a specific time or create a countdown to flash the lights.
 Once an alarm fires, it deactivates and must be manually re-enabled to go off again the next day.
 
 Similar to how I discovered how colors work I tried to look into what characteristics change when I create an alarm.
@@ -290,10 +290,10 @@ ALARM_ID = "9da2ddf1-0001-44d0-909c-3f3d3cb34a7b"
 
 notifications = asyncio.Queue()
 
-def on_timer_notification(sender, data: bytearray):
+def on_alarm_notification(sender, data: bytearray):
     notifications.put_nowait(data)
 
-await client.start_notify(ALARM_ID, on_timer_notification)
+await client.start_notify(ALARM_ID, on_alarm_notification)
 
 await client.write_gatt_char(ALARM_ID, bytes([0x00]))
 
@@ -304,7 +304,7 @@ You might notice that in the Packet Logger logs there is only a handle. There is
 I tried a simple approach: I subscribed to all characteristics and then wrote `00` payload to all and checked which one replied back.
 That's how I got the characteristic.
 
-Here's the breakdown. The timer characteristic (`9da2ddf1-0001-44d0-909c-3f3d3cb34a7b`) is like a server.
+Here's the breakdown. The alarm characteristic (`9da2ddf1-0001-44d0-909c-3f3d3cb34a7b`) is like a server.
 You can write different messages to it and subscribe to it to get back responses as notifications.
 
 When the app connects it writes this to the characteristic:
@@ -337,9 +337,9 @@ This gives us the full alarm details:
 2-3   | Alarm ID   | Little-endian 16-bit ID (0x002C = 44)
 4     | Length     | Payload length (0x35 = 53 bytes)
 5-8   | Padding    |
-9-10  | Active     | Alarm state (01 00 = active)
-11-14 | Timestamp  | Little-endian Unix timestamp (2026-02-16 6:00 UTC)
-15-44 | Mystery    | Unknown bytes, possibly effect and crypto data
+9-10  | State      | Active
+11-14 | Timestamp  | Little-endian Unix timestamp
+15-44 | Mystery    |
 45-48 | Separator  | Always FF FF FF FF, lamp ignores this value
 49-60 | Name       | Length-prefixed alarm name "Morning up" + 01 terminator
 {{< /ble-packet >}}
@@ -353,11 +353,13 @@ When I took this same message and just tried to create random alarms by substitu
 From my investigation I found this is the packet that the app uses to create an alarm.
 
 {{< ble-packet payload="01 FF FF 00 01 00 D8 B6 8E 69 00 09 01 01 01 06 01 09 08 01 5B 19 01 94 D1 84 84 B7 51 43 DA A8 67 A9 2F 02 11 0C 8D 00 FF FF FF FF 01 41 01" >}}
-0-1   | Command   | 01 FF to create a new alarm
-2-3   | State     | 01 00 tells the alarm is active
-4-7   | Timestamp | Little-endian Unix timestamp
-8-19  | Effect    | Sunrise effect
-20-39 | Mystery   | Unknown bytes, possibly crypto data
+0     | Command   | Create or edit an alarm
+1-2   | Reference | FF FF for a new alarm
+3     | Padding   |
+4-5   | State     | Active
+6-9   | Timestamp | Little-endian Unix timestamp
+10-22 | Effect    | Sunrise effect
+23-39 | Mystery   | Unknown bytes, possibly crypto data
 40-43 | Separator | Always FF FF FF FF
 44-46 | Name      | Length-prefixed alarm name + 01 terminator
 {{< /ble-packet >}}
@@ -385,7 +387,7 @@ So then I checked what happens when I create the same alarm twice via the app.
 First alarm creation payload:
 
 {{< ble-packet payload="01 FF FF 00 01 00 30 5C 91 69 00 09 01 01 01 06 01 09 08 01 65 1F 01 FB D0 61 C2 5B 63 40 F6 AA 71 BB 49 E1 86 F0 C9 00 FF FF FF FF 07 57 61 6B 65 20 75 70 01" >}}
-0-22  | Alarm time | Command, state, timestamp, and effect — identical in both
+0-22  | Alarm Info | Command, state, timestamp, and effect — identical in both
 23-39 | Mystery    | FB D0 61 C2 5B 63 40 F6 AA 71 BB 49 E1 86 F0 C9 00
 40-52 | Name       | Separator + name "Wake up" — identical in both
 {{< /ble-packet >}}
@@ -393,7 +395,7 @@ First alarm creation payload:
 Second alarm creation, same configuration:
 
 {{< ble-packet payload="01 FF FF 00 01 00 30 5C 91 69 00 09 01 01 01 06 01 09 08 01 65 1F 01 85 97 FE 88 1C C1 46 47 A1 9D 9F 6A 8C 2C 29 7B 00 FF FF FF FF 07 57 61 6B 65 20 75 70 01" >}}
-0-22  | Alarm time | Command, state, timestamp, and effect — identical in both
+0-22  | Alarm Info | Command, state, timestamp, and effect — identical in both
 23-39 | Mystery    | 85 97 FE 88 1C C1 46 47 A1 9D 9F 6A 8C 2C 29 7B 00 — only these bytes changed
 40-52 | Name       | Separator + name "Wake up" — identical in both
 {{< /ble-packet >}}
@@ -415,11 +417,13 @@ I was able to read the alarm info and see what has changed.
 Create a new alarm called "Test":
 
 {{< ble-packet payload="01 FF FF 00 01 00 40 89 90 69 00 09 01 01 01 06 01 09 08 01 65 1C 01 EF 55 72 FE F8 17 4B 67 AC ED 26 72 1F CF AA 24 00 FF FF FF FF 04 54 65 73 74 01" >}}
-0-1   | Command   | 01 FF to create a new alarm
-2-3   | State     | 00 01 00 tells the alarm is active
-4-7   | Timestamp | Little-endian Unix timestamp
-8-19  | Effect    | Sunrise effect
-20-39 | Mystery   | Unknown bytes, possibly crypto data
+0     | Command   | 01 to create or edit an alarm
+1-2   | Reference | FF FF for a new alarm
+3     | Padding   |
+4-5   | State     | Active
+6-9   | Timestamp | Little-endian Unix timestamp
+10-22 | Effect    | Sunrise effect
+23-39 | Mystery   | Unknown bytes, possibly crypto data
 40-43 | Separator | Always FF FF FF FF
 44-49 | Name      | Length-prefixed alarm name "Test" + 01 terminator
 {{< /ble-packet >}}
@@ -443,27 +447,28 @@ After the alarm went off I read the alarm details. Alarm active byte is 0:
 
 {{< ble-packet payload="02 00 06 00 2F 00 00 00 00 00 00 C0 DA 91 69 00 09 01 01 01 06 01 09 08 01 65 1C 01 EF 55 72 FE F8 17 4B 67 AC ED 26 72 1F CF AA 24 00 FF FF FF FF 04 54 65 73 74 01" >}}
 0-1   | Command    | Response type (alarm info)
-2-3   | Alarm ID   | Little-endian 16-bit ID (0x0006)
-4     | Length     | Payload length (0x2F = 47 bytes)
+2-3   | Alarm ID   | Little-endian
+4     | Length     | Payload length
 5-8   | Padding    |
-9-10  | Active     | Alarm state (00 00 = inactive, alarm has fired)
+9-10  | State      | Inactive
 11-14 | Timestamp  | Little-endian Unix timestamp
 15-44 | Mystery    | Unknown bytes, possibly effect and crypto data
-45-48 | Separator  | Always FF FF FF FF
-49-54 | Name       | Length-prefixed alarm name "Test" + 00 terminator (inactive)
+45-48 | Separator  |
+49-54 | Name       | Length-prefixed alarm name "Test" + 01 terminator
 {{< /ble-packet >}}
 
 Then I turned it on again for tomorrow via the app. This is the edit request that sets the active byte to 1:
 
 {{< ble-packet payload="01 02 00 00 01 00 C0 DA 91 69 00 09 01 01 01 06 01 09 08 01 65 1C 01 EF 55 72 FE F8 17 4B 67 AC ED 26 72 1F CF AA 24 00 FF FF FF FF 04 54 65 73 74 01" >}}
-0     | Command   | 01 to edit an existing alarm
-1-2   | Alarm ID  | Little-endian 16-bit ID (0x0002)
-3-4   | State     | 00 01 00 tells the alarm is active
-5-8   | Timestamp | Little-endian Unix timestamp
-9-20  | Effect    | Sunrise effect
-21-40 | Mystery   | Same crypto data as the original alarm
-41-44 | Separator | Always FF FF FF FF
-45-49 | Name      | Length-prefixed alarm name "Test" + 01 terminator
+0     | Command   | 01 to create or edit an alarm
+1-2   | Alarm ID  | Little-endian
+3     | Padding   |
+4-5   | State     | Active
+6-9   | Timestamp | Little-endian Unix timestamp
+10-22 | Effect    | Sunrise effect
+23-39 | Mystery   | Same crypto data as the original alarm
+40-43 | Separator |
+44-49 | Name      | Length-prefixed alarm name "Test" + 01 terminator
 {{< /ble-packet >}}
 
 Responses confirming the edit:
@@ -471,27 +476,27 @@ Responses confirming the edit:
 {{< ble-packet payload="01 00 02 00 03 00" >}}
 0     | Command  | 01 echoes back the edit command
 1     | Status   | 00 indicates success
-2-3   | Alarm ID | Little-endian 16-bit ID (0x0002)
-4-5   | Version  | Little-endian revision counter (0x0003 = 3)
+2-3   | Alarm ID | Little-endian 16-bit ID
+4-5   | Version  | Little-endian
 {{< /ble-packet >}}
 
 {{< ble-packet payload="04 02 00 03 00" >}}
 0     | Command  | 04 confirmation notification
-1-2   | Alarm ID | Little-endian 16-bit ID (0x0002)
-3-4   | Version  | Little-endian revision counter (0x0003 = 3)
+1-2   | Alarm ID | Little-endian 16-bit ID
+3-4   | Version  | Little-endian
 {{< /ble-packet >}}
 
 Reading the alarm again after re-enabling byte 9 is now `01` (active):
 
 {{< ble-packet payload="02 00 07 00 2F 00 00 00 00 01 00 C0 DA 91 69 00 09 01 01 01 06 01 09 08 01 65 1C 01 EF 55 72 FE F8 17 4B 67 AC ED 26 72 1F CF AA 24 00 FF FF FF FF 04 54 65 73 74 01" >}}
 0-1   | Command    | Response type (alarm info)
-2-3   | Alarm ID   | Little-endian 16-bit ID (0x0007)
-4     | Length     | Payload length (0x2F = 47 bytes)
+2-3   | Alarm ID   | Little-endian
+4     | Length     | Payload length
 5-8   | Padding    |
-9-10  | Active     | Alarm state (01 00 = active)
+9-10  | State      | Active
 11-14 | Timestamp  | Little-endian Unix timestamp
 15-44 | Mystery    | Unknown bytes, possibly effect and crypto data
-45-48 | Separator  | Always FF FF FF FF
+45-48 | Separator  |
 49-54 | Name       | Length-prefixed alarm name "Test" + 01 terminator (active)
 {{< /ble-packet >}}
 
@@ -510,12 +515,12 @@ You can start a timer and after it reaches 0 the light starts flashing.
 2-3   | Alarm ID   | Little-endian 16-bit
 4     | Payload length     |
 5-8   | Padding    |
-9-10  | Active     | Alarm state (01 00 = active)
+9-10  | State     | Active
 11-14 | Timestamp  | Little-endian Unix timestamp
 15-36 | Mystery    |
-37-38 | Timer length  | little endian number
-39-40 | Separator       | 
-41-47 | Name       | Length-prefixed alarm name "Test" + 01 terminator (active)
+37-38 | Timer length  | Little-endian number of seconds (0x012C = 300 = 5 minutes)
+39-40 | Separator  |
+41-47 | Name       | Length-prefixed alarm name "Timer" + 01 terminator
 {{< /ble-packet >}}
 
 Timers can be turned on and off in the same way.
