@@ -133,16 +133,14 @@ The `client` then can be used to read and write values.
 
 ## Color
 
-I looked around in the characteristics and tried out all the characteristics below the on/off one.
-
-You can easily find out the pattern by changing the light color and observing the characteristic values.
 There are multiple characteristics that change when you change the light color:
 
 - `932c32bd-0003-47a2-835a-a8d455b859dd` changes with brightness
 - `932c32bd-0005-47a2-835a-a8d455b859dd` changes with color (if I do warm white then cool white stays the same)
 - `932c32bd-0007-47a2-835a-a8d455b859dd` changes with everything.
 
-The third option is more general hence more useful.
+You can find out the pattern by changing the light color and observing the characteristic values.
+
 The value inside of it looks like this:
 
 Cool white:
@@ -184,7 +182,7 @@ Philips Hue [developer docs](https://developers.meethue.com/develop/application-
 
 1. Convert the 8-bit number from R/G/B into a number between 0 and 1
 2. Linearize the numbers based on this formula `if g > 0.04045 then g / 12.92 else ((g + 0.055) / 1.055) ^ 2.4`
-3. Apply matrix transformation, one full matrix example is [here](https://www.image-engineering.de/library/technotes/958-how-to-convert-between-srgb-and-ciexyz).
+3. Apply D65 [matrix](https://en.wikipedia.org/wiki/Adobe_RGB_color_space#Reference_viewing_conditions) transformation, one full matrix example is [here](https://www.image-engineering.de/library/technotes/958-how-to-convert-between-srgb-and-ciexyz).
 
 You can play around with it in the box below:
 
@@ -288,16 +286,16 @@ You can write into these characteristics and receive a response.
 Here's the code to do this:
 
 ```py
-TIMER_UUID = "9da2ddf1-0001-44d0-909c-3f3d3cb34a7b"
+ALARM_ID = "9da2ddf1-0001-44d0-909c-3f3d3cb34a7b"
 
 notifications = asyncio.Queue()
 
 def on_timer_notification(sender, data: bytearray):
     notifications.put_nowait(data)
 
-await client.start_notify(TIMER_UUID, on_timer_notification)
+await client.start_notify(ALARM_ID, on_timer_notification)
 
-await client.write_gatt_char(TIMER_UUID, bytes([0x00]))
+await client.write_gatt_char(ALARM_ID, bytes([0x00]))
 
 response = await asyncio.wait_for(notifications.get(), timeout=5.0)
 ```
