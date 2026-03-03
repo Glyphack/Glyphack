@@ -69,7 +69,7 @@ Service 932c32bd-0001-47a2-835a-a8d455b859dd
   932c32bd-0002-47a2-835a-a8d455b859dd [Read, Write, Notify]
   932c32bd-0003-47a2-835a-a8d455b859dd [Read, Write, Notify]
   932c32bd-0004-47a2-835a-a8d455b859dd [Read, Write, Notify]
-  932c32bd-0005-47a2-835a-a8d455b859dd [Read, Write, Notify]   — RGB Color
+  932c32bd-0005-47a2-835a-a8d455b859dd [Read, Write, Notify]
   932c32bd-0006-47a2-835a-a8d455b859dd [Write]
   932c32bd-0007-47a2-835a-a8d455b859dd [Read, Write, Notify]
   932c32bd-1005-47a2-835a-a8d455b859dd [Read, Write]
