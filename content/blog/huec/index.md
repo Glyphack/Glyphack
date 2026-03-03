@@ -1,32 +1,32 @@
 ---
-title: "Reverse Engineering Philips Hue light strip to control from pc"
+title: "Reverse Engineering Philips Hue light strip to control from PC"
 date: 2026-02-25T22:25:08+01:00
 draft: true
 tags: [] 
 ---
 
 I was looking for a way to control my Philips light without their terrible app[^1].
-All my searches led to this conclusion: you need to buy a hue bridge to control the lamp from pc.
-But I don't want to have another device just to do what my pc is capable of doing right now.
+All my searches led to this conclusion: you need to buy a Hue Bridge to control the lamp from a PC.
+But I don't want to have another device just to do what my PC is capable of doing right now.
 
 I want my light to turn on and off automatically every day without paying for another device. I also want to control it from my desk without grabbing my phone.
 
-I published the end result of this project in [huec](https://github.com/Glyphack/hue-control), a CLI app that lets you control Philips lights.
+I published the end result of this project in [huec](https://github.com/Glyphack/hue-control), a CLI app that lets you control Philips Hue lights.
 Here I discuss the journey of discovering the protocol, explaining how power, brightness, color, and alarms are controlled.
 
 ## Usages
 
 Here are some usage scenarios I have for `huec`
 
-**Turn lights on and off everyday**
+**Turn lights on and off every day**
 
 I have two alarms for my light to turn on at 07:00 and turn off at 08:00.
-To have this repeat everyday I run the following command:
+To have this repeat every day I run the following command:
 ```text
 huec alarms enable --all
 ```
 
-I have a 5 minute timer on the light.
+I have a 5-minute timer on the light.
 Using this script I can trigger this timer to start.
 
 ```py
@@ -49,9 +49,9 @@ Without further ado, let’s see what I figured out to control the light!
 It all started when I found [Blendr](https://github.com/dmtrKovalenko/blendr/).
 Blendr connects to Bluetooth Low Energy (BLE) devices and lets you browse their services and characteristics.
 
-Characteristics are a place where light stores some data.
+Characteristics are a place where the light stores some data.
 You can get data from a characteristic or write into it.
-A service is simply a group of characteristic.
+A service is simply a group of characteristics.
 For example a service could be for changing color and brightness.
 
 Here's how the output looked like for my lamp:
@@ -98,19 +98,16 @@ Service b8843add-0001-4aa1-8794-c3f462030bda
 ```
 
 Some characteristics have "Read" in front of them.
-This means you can read their values, using Blendr.
+This means you can read their values using Blendr.
 
 Now the question is, what does each characteristic do?
 There are two ways to find this out:
 
-Randomly write data into different characteristics to see if the lamp reacts
-For example we can write `0x0` into all characteristics and see when the lamp turns off.
-This requires guessing the value for example what turns the light on and off and what value changes the color.
+1. Randomly write data into different characteristics to see if the lamp reacts. For example we can write `0x00` into all characteristics and see when the lamp turns off. This requires guessing what value turns the light on and off and what value changes the color.
+2. Use the app to change properties of the lamp and then read values using Blendr.
 
-Use the app to change properties of the lamp and then read values using Blendr.
-I turned the lamp off and checked what characteristic has `0x0` in it.
-It was the `932c32bd-0002-47a2-835a-a8d455b859dd`.
-Which suggests that it's for the power.
+I turned the lamp off and checked what characteristic has `0x00` in it.
+It was the `932c32bd-0002-47a2-835a-a8d455b859dd`, which suggests that it's for the power.
 
 To send and receive data from the lamp there is [Bleak](https://bleak.readthedocs.io/en/latest/).
 
@@ -183,23 +180,21 @@ For example, here's the packet for red
 
 The color is encoded in [CIE xy](https://en.wikipedia.org/wiki/CIE_1931_color_space) format.
 
-Philips hue [developer docs](https://developers.meethue.com/develop/application-design-guidance/color-conversion-formulas-rgb-to-xy-and-back/#xy-to-rgb-color) require login! So I asked AI to figure out what's this format and how can I get to it from RGB.
+Philips Hue [developer docs](https://developers.meethue.com/develop/application-design-guidance/color-conversion-formulas-rgb-to-xy-and-back/#xy-to-rgb-color) require login! So I asked AI to figure out what this format is and how to convert from RGB.
 
-1. Convert the 8 bit number from R/G/B into a number between 0 and 1
-2. Linearise the numbers based on this forumla `if g > 0.04045 then g / 12.92 else ((g + 0.055) / 1.055) ^ 2.4`
+1. Convert the 8-bit number from R/G/B into a number between 0 and 1
+2. Linearize the numbers based on this formula `if g > 0.04045 then g / 12.92 else ((g + 0.055) / 1.055) ^ 2.4`
 3. Apply matrix transformation, one full matrix example is [here](https://www.image-engineering.de/library/technotes/958-how-to-convert-between-srgb-and-ciexyz).
 
 You can play around with it in the box below:
 
 {{< hue/xy-convertor >}}
 
-Now that we know the payload format we can use this code to send the packet to lamp:
-
-
-When you run the app in interactive mode with `huec interactive` it will open up a browser page and runs a server.
-The browser displays a color picker and calculates the payload for the color based on explanations above.
+When you run the app in interactive mode with `huec interactive`, it will open up a browser page and run a server.
+The browser displays a color picker and calculates the payload for the color based on the explanations above.
 The server accepts the payload and sends it to the light using Bleak.
 
+The `set_color` function below sends the packet to the lamp:
 ```py
 async def set_color(self, data: bytes) -> None:
     COLOR_UUID = "932c32bd-0007-47a2-835a-a8d455b859dd"
@@ -207,10 +202,8 @@ async def set_color(self, data: bytes) -> None:
 ```
 ## Alarms
 
-Timer in Philips app is a functionality to turn on/off the light at specific time or create countdown to flash the lights.
-
-But there are some limitations for example when you set the alarm to turn on in the morning it will only turn on the next day.
-If I want it to turn on the day after I need to again toggle the alarm for the next day. (I like to rewrite this with simpler words in once sentence.)
+Timer in the Philips app is a functionality to turn on/off the light at a specific time or create a countdown to flash the lights.
+Once an alarm fires, it deactivates and must be manually re-enabled to go off again the next day.
 
 Similar to how I discovered how colors work I tried to look into what characteristics change when I create an alarm.
 But I didn't see anything changing.
@@ -218,15 +211,15 @@ But I didn't see anything changing.
 I needed to see what my phone was doing to create alarms.
 
 For capturing Bluetooth packets there are tools like Wireshark.
-These tools allow you to see what data software running on the system is sending to where.
-I was using MacOS + iOS. For this combination there is:
+These tools allow you to see what data software running on the system is sending and where it's going.
+I was using macOS + iOS. For this combination there is:
 
 - [Bluetooth Packet Logger](https://developer.apple.com/bluetooth/)
 - [Bluetooth logging config for iOS](https://developer.apple.com/services-account/download?path=/iOS/iOS_Logs/iOSBluetoothLogging.mobileconfig)[^2]
 
 Install Packet Logger on your computer and the profile on your iPhone. 
 Then, connect the phone to the computer.
-Start using the app, and you will see the packets being sent or received.
+Start using the Philips Hue app, and you will see the packets being sent or received.
 
 After setting up the tools I checked what is happening when the app connects to the light.
 The logs looked like this:
@@ -280,17 +273,17 @@ The logs looked like this:
 ```
 
 I asked AI to figure out what the light was doing and gave it the context about what I was looking for.
-It figured out that when the app it performs this process:
+It figured out that the app performs this process:
 
 1. Write `00` to a characteristic.
 2. The characteristic replies with current alarm IDs.
-3. the app writes each alarm ID to the characteristic again and receives more information about that alarm.
+3. The app writes each alarm ID to the characteristic again and receives more information about that alarm.
 
 So I learned that characteristics can also reply back.
 This happens through subscriptions.
 From the first list of characteristics you can see some have read and write properties.
 Some characteristics have write and notify properties.
-You can write into these characteristics and receive a response back.
+You can write into these characteristics and receive a response.
 
 Here's the code to do this:
 
@@ -331,7 +324,7 @@ Then the characteristic responds back with the list of alarm IDs:
 6-7 | Alarm 2 ID | Little-endian 16-bit ID (0x002D = 45)
 {{< /ble-packet >}}
 
-To read the alarm details using its ID. We construct this message:
+To read the alarm details using its ID, we construct this message:
 
 {{< ble-packet payload="02 2C 00 00 00" >}}
 0   | Command  | Read alarm details
@@ -339,7 +332,7 @@ To read the alarm details using its ID. We construct this message:
 3-4 | Padding  |
 {{< /ble-packet >}}
 
-Which gives us the full alarm details:
+This gives us the full alarm details:
 
 {{< ble-packet payload="02 00 2C 00 35 00 00 00 00 01 00 60 55 95 69 00 09 01 01 01 06 01 09 08 01 7D 22 01 D4 0C 13 8D 81 B9 4A 4C AA 42 B9 9A CE C6 2D 88 00 FF FF FF FF 0A 4D 6F 72 6E 69 6E 67 20 75 70 01" >}}
 0-1   | Command    | Response type (alarm info)
@@ -411,13 +404,13 @@ As you see the bytes in the middle change.
 We don't have any change in the alarm configuration.
 This suggests that the app generates these bytes as a checksum.
 The lamp checks the checksum to verify if the alarm is valid or not.
-Which means if I just use repeat this with any configuration I want it's not going to work.
+This means if I just repeat this with any configuration I want, it's not going to work.
 
 After spending some time on it[^3] I decided to come up with another solution to control alarms.
 My goal was to have an alarm that repeats every day.
-What if I can just change the activate byte of the alarm and it would be enabled every day? 
+What if I can just change the active byte of the alarm and it would be enabled every day?
 
-Then I created and alarm and turned it off and on again in the app.
+Then I created an alarm and turned it off and on again in the app.
 I already knew how to read alarm information.
 I was able to read the alarm info and see what has changed.
 
@@ -462,7 +455,7 @@ After the alarm went off I read the alarm details. Alarm active byte is 0:
 49-54 | Name       | Length-prefixed alarm name "Test" + 00 terminator (inactive)
 {{< /ble-packet >}}
 
-Then I turned it on again for tomorrow via the app. This is the edit request sets the active byte to 1:
+Then I turned it on again for tomorrow via the app. This is the edit request that sets the active byte to 1:
 
 {{< ble-packet payload="01 02 00 00 01 00 C0 DA 91 69 00 09 01 01 01 06 01 09 08 01 65 1C 01 EF 55 72 FE F8 17 4B 67 AC ED 26 72 1F CF AA 24 00 FF FF FF FF 04 54 65 73 74 01" >}}
 0     | Command   | 01 to edit an existing alarm
@@ -506,12 +499,12 @@ Reading the alarm again after re-enabling byte 9 is now `01` (active):
 
 So in order to turn on the alarm for the next day I have to do two things:
 
-- change activate byte to `01`.
-- Update the time stamp to be the next day. The alarm time stamp contains date and time. Clock time is UTC and user time needs to be converted.
+- Change the active byte to `01`.
+- Update the timestamp to be the next day. The alarm timestamp contains date and time. Clock time is UTC and user time needs to be converted.
 
 ### Timers
 
-Philips app also has a feature called timer.
+The Philips app also has a feature called timer.
 You can start a timer and after it reaches 0 the light starts flashing.
 
 {{< ble-packet payload="02 00 38 00 28 00 00 00 00 00 01 b9 ba 94 69 01 01 02 1d 01 50 c1 53 49 69 60 40 b1 b3 38 46 6b c3 bb 42 58 03 2c 01 00 00 05 54 69 6d 65 72 01" >}}
