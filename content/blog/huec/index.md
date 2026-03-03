@@ -1,7 +1,7 @@
 ---
 title: "Reverse Engineering Philips Hue light strip to control from PC"
 date: 2026-02-25T22:25:08+01:00
-draft: true
+draft: false
 tags: [] 
 ---
 
