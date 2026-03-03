@@ -25,8 +25,7 @@
 <style>
 .ble-packet {
   --bp-bg: var(--code-background);
-  --bp-bg-soft: color-mix(in srgb, var(--background) 72%, var(--code-background));
-  --bp-border: var(--code-border);
+--bp-border: var(--code-border);
   --bp-text: var(--content-primary);
   --bp-text-dim: var(--content-secondary);
   --bp-glow: color-mix(in srgb, var(--content-primary) 14%, transparent);
@@ -58,40 +57,6 @@
     color-mix(in srgb, var(--bp-text) 2%, transparent) 1px,
     color-mix(in srgb, var(--bp-text) 2%, transparent) 2px
   );
-}
-
-/* ── Terminal title bar ── */
-.ble-packet__titlebar {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.72rem;
-  padding-bottom: 0.52rem;
-  border-bottom: 1px solid var(--bp-border);
-  position: relative;
-  z-index: 1;
-}
-
-.ble-packet__titlebar-dots {
-  display: flex;
-  gap: 0.28rem;
-}
-
-.ble-packet__titlebar-dot {
-  width: 0.55rem;
-  height: 0.55rem;
-  border-radius: 999px;
-  background: var(--bp-text-dim);
-  opacity: 0.3;
-}
-
-.ble-packet__titlebar-label {
-  font-family: var(--bp-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: var(--bp-text-dim);
-  margin-left: auto;
 }
 
 /* ── Hex dump area ── */
@@ -209,64 +174,27 @@
   outline-offset: 2px;
 }
 
-/* ── Info panel ── */
-.ble-packet__panel {
-  display: flex;
-  align-items: stretch;
-  gap: 0.72rem;
-  background: var(--bp-bg-soft);
-  border: 1px solid var(--bp-border);
-  border-radius: 10px;
-  padding: 0.72rem 0.84rem;
-  margin-top: 0.86rem;
-  min-height: 56px;
-  position: relative;
-  z-index: 1;
-}
-
-.ble-packet__panel-bar {
-  width: 4px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--bp-text-dim) 25%, transparent);
-  flex-shrink: 0;
-  transition: background 0.2s;
-}
-
-.ble-packet__panel-body {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 0.2rem;
-}
-
-.ble-packet__panel-hint {
+/* ── Status line ── */
+.ble-packet__status {
   font-size: 0.83rem;
   color: var(--bp-text-dim);
-  font-style: italic;
+  margin-top: 0.7rem;
+  min-height: 1.2em;
+  position: relative;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.15s ease;
 }
 
-.ble-packet__panel-name {
+.ble-packet__status.is-visible {
+  opacity: 1;
+}
+
+.ble-packet__status-name {
   font-family: var(--bp-mono);
-  font-size: 0.73rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--bp-text-dim);
-}
-
-.ble-packet__panel-bytes {
-  font-family: var(--bp-mono);
-  font-size: 0.9rem;
-  letter-spacing: 0.08em;
-  line-height: 1.35;
-  transition: color 0.2s;
-}
-
-.ble-packet__panel-desc {
-  font-size: 0.92rem;
-  color: var(--bp-text);
-  line-height: 1.4;
 }
 
 /* ── Legend ── */
@@ -325,11 +253,7 @@
     font-size: 0.78rem;
   }
 
-  .ble-packet__panel {
-    padding: 0.64rem 0.72rem;
-  }
-
-  .ble-legend-item {
+.ble-legend-item {
     font-size: 0.62rem;
   }
 
@@ -377,26 +301,18 @@
       .replace(/"/g, "&quot;");
   }
 
-  function updatePanel(packet, fi, color, name, desc) {
-    var bar = packet.querySelector(".ble-packet__panel-bar");
-    var body = packet.querySelector(".ble-packet__panel-body");
-    if (!bar || !body) return;
-    var allHex = Array.from(packet.querySelectorAll('.ble-byte[data-fi="' + fi + '"]'))
-      .map(function (b) { return b.textContent.trim(); })
-      .join(" ");
-    bar.style.background = color;
-    body.innerHTML =
-      '<div class="ble-packet__panel-name">' + esc(name) + "</div>" +
-      '<div class="ble-packet__panel-bytes" style="color:' + color + '">' + esc(allHex) + "</div>" +
-      '<div class="ble-packet__panel-desc">' + esc(desc) + "</div>";
+  function updatePanel(packet, color, name, desc) {
+    var el = packet.querySelector(".ble-packet__status");
+    if (!el) return;
+    el.innerHTML = '<span class="ble-packet__status-name" style="color:' + color + '">' + esc(name) + '</span>' +
+      ' &middot; ' + esc(desc);
+    el.classList.add("is-visible");
   }
 
   function resetPanel(packet) {
-    var bar = packet.querySelector(".ble-packet__panel-bar");
-    var body = packet.querySelector(".ble-packet__panel-body");
-    if (!bar || !body) return;
-    bar.style.background = "";
-    body.innerHTML = '';
+    var el = packet.querySelector(".ble-packet__status");
+    if (!el) return;
+    el.classList.remove("is-visible");
   }
 
   function initPacket(packet) {
@@ -408,12 +324,11 @@
       var fi = +b.dataset.fi;
       var name = b.dataset.name;
       var desc = b.dataset.desc;
-      var hex = b.textContent.trim();
 
       b.addEventListener("mouseenter", function () {
         var c = getColor(b);
         activate(packet, fi);
-        updatePanel(packet, fi, c, name, desc);
+        updatePanel(packet, c, name, desc);
       });
 
       b.addEventListener("mouseleave", function () {
@@ -424,7 +339,7 @@
       b.addEventListener("focus", function () {
         var c = getColor(b);
         activate(packet, fi);
-        updatePanel(packet, fi, c, name, desc);
+        updatePanel(packet, c, name, desc);
       });
 
       b.addEventListener("blur", function () {
@@ -440,7 +355,7 @@
         if (first) {
           var c = getColor(first);
           activate(packet, fi);
-          updatePanel(packet, fi, c, first.dataset.name, first.dataset.desc);
+          updatePanel(packet, c, first.dataset.name, first.dataset.desc);
         }
       });
     });
@@ -562,7 +477,6 @@
 {{/* ── 5. Row layout variables ── */}}
 {{ $rowWidth  := 16 }}
 {{ $numRows   := div (add $totalBytes 15) 16 }}
-{{ $byteLabel := printf "%d bytes" $totalBytes }}
 
 {{/* ── 6. Emit HTML ── */}}
 <div class="ble-packet">
@@ -610,12 +524,7 @@
 
   </div>
 
-  {{/* Info panel */}}
-  <div class="ble-packet__panel">
-    <div class="ble-packet__panel-bar"></div>
-    <div class="ble-packet__panel-body">
-    </div>
-  </div>
+  <div class="ble-packet__status"></div>
 
   {{/* Legend */}}
   <div class="ble-packet__legend">

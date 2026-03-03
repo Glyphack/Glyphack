@@ -14,9 +14,9 @@ I want my light to turn on and off automatically every day without paying for an
 I published the end result of this project in [huec](https://github.com/Glyphack/hue-control), a CLI app that lets you control Philips Hue lights.
 Here I discuss the journey of discovering the protocol, explaining how power, brightness, color, and alarms are controlled.
 
-## Usages
+## Use Cases
 
-Here are some usage scenarios I have for `huec`:
+Here are two scenarios I have for `huec`:
 
 **Turn lights on and off every day**
 
@@ -29,7 +29,7 @@ huec alarms enable --all
 **Timer using the lamps**
 
 I have a 5-minute timer on the light.
-Using this script I can trigger this timer to start.
+Using this script I can start this timer.
 
 ```py
 result = run("uv run huec alarms list --json")
@@ -44,7 +44,7 @@ print(f"Enabling alarm ID: {alarm_id}")
 run(f"uv run huec alarms enable --id {alarm_id}")
 ```
 
-Without further ado, let’s see what I figured out to control the light!
+Without further ado, let’s see what I figured out about controlling the light.
 
 <!-- End of introduction -->
 
@@ -52,11 +52,11 @@ It all started when I found [Blendr](https://github.com/dmtrKovalenko/blendr/).
 Blendr connects to Bluetooth Low Energy (BLE) devices and lets you browse their services and characteristics.
 
 Characteristics are a place where the light stores some data.
-You can get data from a characteristic or write into it.
+You can get data from a characteristic or write to it.
 A service is simply a group of characteristics.
 For example a service could be for changing color and brightness.
 
-Here's how the output looked like for my lamp:
+Here's how the output looked for my lamp:
 
 ```text
 Service Device Information (0x1800)
@@ -131,11 +131,11 @@ await client.write_gatt_char(POWER_UUID, b"\x01")  # turn on
 await client.write_gatt_char(POWER_UUID, b"\x00")  # turn off
 ```
 
-The `client` then can be used to read and write values.
+The `client` can then be used to read and write values.
 
 ## Color
 
-There are multiple characteristics that change when you change the light color:
+There are multiple characteristics that update when you change the color the light color:
 
 - `932c32bd-0003-47a2-835a-a8d455b859dd` changes with brightness
 - `932c32bd-0005-47a2-835a-a8d455b859dd` changes with color (if I do warm white then cool white stays the same)
@@ -178,7 +178,7 @@ For example, here's the packet for red
 
 The color is encoded in [CIE xy](https://en.wikipedia.org/wiki/CIE_1931_color_space) format.
 
-Philips Hue [developer docs](https://developers.meethue.com/develop/application-design-guidance/color-conversion-formulas-rgb-to-xy-and-back/#xy-to-rgb-color) require login! So I asked AI to figure out what this format is and how to convert from RGB.
+Philips Hue [developer docs](https://developers.meethue.com/develop/application-design-guidance/color-conversion-formulas-rgb-to-xy-and-back/#xy-to-rgb-color) require login! So I asked Claude to figure out what this format is and how to convert from RGB.
 
 1. Convert the 8-bit number from R/G/B into a number between 0 and 1
 2. Linearize the numbers based on this formula `if g > 0.04045 then g / 12.92 else ((g + 0.055) / 1.055) ^ 2.4`
@@ -200,7 +200,7 @@ async def set_color(self, data: bytes) -> None:
 ```
 ## Alarms
 
-Alarms in the Philips app is a functionality to turn on/off the light at a specific time or create a countdown to flash the lights.
+Alarms in the Philips app are a functionality to turn on/off the light at a specific time or create a countdown to flash the lights.
 Once an alarm fires, it deactivates and must be manually re-enabled to go off again the next day.
 
 Similar to how I discovered how colors work I tried to look into what characteristics change when I create an alarm.
@@ -219,7 +219,7 @@ Install Packet Logger on your computer and the profile on your iPhone.
 Then, connect the phone to the computer.
 Start using the Philips Hue app, and you will see the packets being sent or received.
 
-After setting up the tools I checked what is happening when the app connects to the light.
+After setting up the tools I checked what was happening when the app connects to the light.
 The logs looked like this:
 
 ```text
@@ -270,18 +270,18 @@ The logs looked like this:
 	Number Of Packets: 0x0001
 ```
 
-I asked AI to figure out what the light was doing and gave it the context about what I was looking for.
+I asked Claude to figure out what the light was doing and gave it the context about what I was looking for.
 It figured out that the app performs this process:
 
 1. Write `00` to a characteristic.
 2. The characteristic replies with current alarm IDs.
 3. The app writes each alarm ID to the characteristic again and receives more information about that alarm.
 
-So I learned that characteristics can also reply back.
+So I learned that characteristics can also reply.
 This happens through subscriptions.
 From the first list of characteristics you can see some have read and write properties.
 Some characteristics have write and notify properties.
-You can write into these characteristics and receive a response.
+You can write to these characteristics and receive a response.
 
 Here's the code to do this:
 
@@ -301,10 +301,10 @@ response = await asyncio.wait_for(notifications.get(), timeout=5.0)
 ```
 
 You can see that in the Packet Logger logs there is only a handle. There is no characteristic ID.
-I tried a simple approach: I subscribed to all characteristics and then wrote `00` payload to all and checked which one replied back.
+I tried a simple approach: I subscribed to all characteristics and then wrote `00` payload to all and checked which one replied.
 That's how I got the characteristic.
 
-Here's the breakdown. The alarm characteristic (`9da2ddf1-0001-44d0-909c-3f3d3cb34a7b`) is like a server.
+The alarm characteristic (`9da2ddf1-0001-44d0-909c-3f3d3cb34a7b`) is like a server.
 You can write different messages to it and subscribe to it to get back responses as notifications.
 
 When the app connects it writes this to the characteristic:
@@ -365,7 +365,7 @@ So I checked what the app sends to the lamp to create an alarm:
 44-46 | Name      | Length-prefixed alarm name with 01 terminator
 {{< /ble-packet >}}
 
-After alarm write is success there will be these two notifications which reply with the ID of the alarm.
+After the alarm write succeeds there will be these two notifications which reply with the ID of the alarm.
 It's useful to verify the write actually happened. But I didn't get any extra information from it.
 
 {{< ble-packet payload="01 00 FF FF 1E 00" >}}
@@ -381,8 +381,9 @@ It's useful to verify the write actually happened. But I didn't get any extra in
 3-4   | Alarm ID  | Little-endian 16-bit
 {{< /ble-packet >}}
 
-With this information I was hoping that I can create any alarm I want.
-But when I created an alarm it would not be created.
+With this information I was hoping that I could create any alarm I want.
+But when I created an alarm it did not work.
+But the alarm never actually got created
 So then I checked what happens when I create the same alarm twice via the app.
 
 First alarm creation payload:
@@ -402,18 +403,18 @@ Second alarm creation, same configuration:
 {{< /ble-packet >}}
 
 As you see the bytes in the middle change.
-We don't have any change in the alarm configuration.
+There's no change in the alarm configuration.
 This suggests that the app generates these bytes as a checksum.
 The lamp checks the checksum to verify if the alarm is valid or not.
 This means if I just repeat this with any configuration I want, it's not going to work.
 
 After spending some time on it[^3] I decided to come up with another solution to control alarms.
 My goal was to have an alarm that repeats every day.
-What if I can just change the active byte of the alarm and it would be enabled every day?
+What if I could just change the active byte of the alarm and it would be enabled every day?
 
 Then I created an alarm and turned it off and on again in the app.
 I already knew how to read alarm information.
-I was able to read the alarm info and see what has changed.
+I was able to read the alarm info and see what had changed.
 
 Create a new alarm called "Test":
 
@@ -504,7 +505,7 @@ Reading the alarm again after re-enabling byte 9 is now `01` (active):
 So in order to turn on the alarm for the next day I have to do two things:
 
 - Change the active byte to `01`.
-- Update the timestamp to be the next day. The alarm timestamp contains date and time. Clock time is UTC and user time needs to be converted.
+- Update the timestamp to be the next day. The alarm timestamp contains date and time. Time stamp is in UTC.
 
 ### Timers
 
@@ -556,9 +557,9 @@ Response confirming the deletion:
 
 ---
 
-[^1]: They have one app per device. Each app is slow and unresponsive. They don't have good features. When I open the light app I need to wait a few seconds before it loads. If you want to the lamp to turn on on a routine you need to pay extra. It's a mess. I don't want another Philips device in my home.
+[^1]: They have one app per device. Each app is slow and unresponsive. They don't have good features. When I open the light app I need to wait a few seconds before it loads. If you want the lamp to turn on on a routine you need to pay extra. It's a mess. I don't want another Philips device in my home.
 
-[^2]: You need an Apple account to download it. I hate this because when I was in Iran many of these tools were blocked because you can't easily open an account.
+[^2]: You need an Apple account to download it. I hate this because when I was in Iran many of these tools were blocked because you can't easily create an account.
 
 [^3]: I created more alarms with different configurations trying to figure out the mystery bytes but I did not find a pattern. Let me know if you do!
     <details>
