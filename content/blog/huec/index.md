@@ -21,8 +21,6 @@ Here I discuss the journey of discovering the protocol, explaining how power, br
 
 ## Use Cases
 
-Here are two scenarios I have for `huec`:
-
 **Turn lights on and off every day**
 
 I have two alarms for my light to turn on at 07:00 and turn off at 08:00.
