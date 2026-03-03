@@ -5,14 +5,19 @@ draft: false
 tags: [] 
 ---
 
-I was looking for a way to control my Philips light without their terrible app[^1].
+I was looking for a way to control my [Philips Hue light strip](https://amzn.to/4r7oN4M) without their terrible app[^1].
 All my searches led to this conclusion: you need to buy a Hue Bridge to control the lamp from a PC.
 But I don't want to have another device just to do what my PC is capable of doing right now.
 
 I want my light to turn on and off automatically every day without paying for another device. I also want to control it from my desk without grabbing my phone.
 
 I published the end result of this project in [huec](https://github.com/Glyphack/hue-control), a CLI app that lets you control Philips Hue lights.
+Here's a quick demo:
+
+{{< youtube isGCe3Zvm54 >}}
+
 Here I discuss the journey of discovering the protocol, explaining how power, brightness, color, and alarms are controlled.
+
 
 ## Use Cases
 
@@ -46,7 +51,8 @@ run(f"uv run huec alarms enable --id {alarm_id}")
 
 **Turn on after unlocking my Mac**
 
-Using [Hammerspoon](https://www.hammerspoon.org/) I set the lights to turn on when I unlock my Mac:
+Using [Hammerspoon](https://www.hammerspoon.org/) I [set](https://github.com/Glyphack/dotfiles/blob/2b56c48ea21fde3a65dbfdf98374882103c20e2a/hammerspoon/init.lua#L663) the lights to turn on when I unlock my Mac:
+
 
 ```lua
 function ToggleLights(eventType)
