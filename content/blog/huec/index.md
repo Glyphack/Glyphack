@@ -348,8 +348,7 @@ This gives us the full alarm details:
 That's it. You can read and parse the alarm.
 
 Can we create any alarm we like now?
-No, I tried this, the problem is that the magic bytes seem to have a special meaning.
-When I took this same message and just tried to create random alarms by substituting my timestamp and name the lamp was not creating the alarm.
+When I took this same message and just tried to create an alarm by substituting my timestamp and name the lamp was not creating the alarm.
 
 So I checked what the app sends to the lamp to create an alarm:
 
@@ -365,8 +364,7 @@ So I checked what the app sends to the lamp to create an alarm:
 44-46 | Name      | Length-prefixed alarm name with 01 terminator
 {{< /ble-packet >}}
 
-After the alarm write succeeds there will be these two notifications which reply with the ID of the alarm.
-It's useful to verify the write actually happened. But I didn't get any extra information from it.
+After the alarm write succeeds there will be these two notifications which reply with the ID of the alarm:
 
 {{< ble-packet payload="01 00 FF FF 1E 00" >}}
 0     | Command   | Echoes back the command
@@ -381,9 +379,8 @@ It's useful to verify the write actually happened. But I didn't get any extra in
 3-4   | Alarm ID  | Little-endian 16-bit
 {{< /ble-packet >}}
 
-With this information I was hoping that I could create any alarm I want.
-But when I created an alarm it did not work.
-But the alarm never actually got created
+Then I tried sending the same payload to the lamp to create an alarm.
+But the alarm never actually got created.
 So then I checked what happens when I create the same alarm twice via the app.
 
 First alarm creation payload:
@@ -402,7 +399,7 @@ Second alarm creation, same configuration:
 40-52 | Name       | Separator + name "Wake up" — identical in both
 {{< /ble-packet >}}
 
-As you see the bytes in the middle change.
+As you see the mystery bytes change.
 There's no change in the alarm configuration.
 This suggests that the app generates these bytes as a checksum.
 The lamp checks the checksum to verify if the alarm is valid or not.
