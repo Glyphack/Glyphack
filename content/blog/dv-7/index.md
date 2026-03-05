@@ -1,7 +1,7 @@
 ---
 title: "Devlog 7: I made a code review tool"
 date: 2026-03-04T08:51:24+01:00
-draft: true
+draft: false
 tags: [] 
 ---
 
@@ -76,7 +76,7 @@ It's small and easy to work with. You can learn it in under an hour.
 I found [Tristan Hume's Hammerspoon config](https://github.com/trishume/dotfiles/blob/master/hammerspoon/hammerspoon.symlink/init.lua).
 I borrowed some nice improvements for my own dotfiles.
 My window manager now knows the last focused window and I can switch to it.
-Did you know that he created [this module](https://www.hammerspoon.org/docs/hs.noises.html) that makes your mac responds to sounds?
+Did you know that he created [this module](https://www.hammerspoon.org/docs/hs.noises.html) that makes your mac respond to sounds?
 
 
 [This channel](https://www.youtube.com/watch?v=b2F-DItXtZs) is so funny.
@@ -90,7 +90,7 @@ I wish I had it when I was debugging crashes in [ty](../ty-self.md). I will defi
 I am starting to make more scripts in my projects.
 It's more convenient, and `make` is not convenient for random scripting.
 After reading [make.ts](https://matklad.github.io/2026/01/27/make-ts.html) I'm thinking about making the same setup with `uv`.
-Right now I'm also using Typescript but I'm more comfortable with Python.
+Right now I'm also using Typescript, but I'm more comfortable with Python.
 
 
 I finally learned why git has conflicts when I am working on branch A from master, and branch B from A, then when A is merged to master and I rebase B, I get conflicts.
@@ -114,28 +114,29 @@ Generate as a single HTML file tailwind. No js for functionality.
 </details>
 
 
-I made a [new raycast command](https://github.com/Glyphack/dotfiles/blob/2b56c48ea21fde3a65dbfdf98374882103c20e2a/raycast/commands/md-link.sh#L1) that pastes the current URL in my clipboard as markdown link.
+I made a [new raycast command](https://github.com/Glyphack/dotfiles/blob/2b56c48ea21fde3a65dbfdf98374882103c20e2a/raycast/commands/md-link.sh#L1) that pastes the current URL in my clipboard as a markdown link.
 It automatically fetches the title. Titles are so long and full of fluff these days.
 
 
 I usually use [Harper](https://writewithharper.com/) when I'm writing to catch grammar and spelling mistakes.
 Sometimes it's too noisy with the false positives about my writing. So I also tried using more LLMs to check my writing and teach me my mistakes.
-I still think Harper is a good tool(and similar tools) but I feel with LLMs it's nicer that you get a review with the context of what I'm writing.
+I still think Harper is a good tool (and similar tools), but I feel with LLMs it's nicer that you get a review with the context of what I'm writing.
 
-Over that last couple of weeks I found myself having more projects open at the same time.
+Over the last couple of weeks I found myself having more projects open at the same time.
 I usually have a couple of tabs open in my terminal.
 So when having multiple projects it becomes a lot of tabs and hard to jump between them.
-I asked Claude to make a workspace switcher for me, it was not successful initially.
+I asked Claude to make a workspace switcher for me, but it was not successful initially.
 I found [smart_workspace_switcher.wezterm](https://github.com/MLFlexer/smart_workspace_switcher.wezterm/) and browsed some wezterm docs and guided it myself.
-Finally it was able to deliver make a [good session manager](https://github.com/Glyphack/dotfiles/blob/2b56c48ea21fde3a65dbfdf98374882103c20e2a/wezterm/wezterm.lua#L228).
-Whenever I hit CMD + Enter I can switch between workspaces, create a new one or delete. It has fuzzy searching too.
+Finally it was able to make a [good session manager](https://github.com/Glyphack/dotfiles/blob/2b56c48ea21fde3a65dbfdf98374882103c20e2a/wezterm/wezterm.lua#L228).
+Whenever I hit CMD + Enter I can switch between workspaces, create a new one, or delete one. It has fuzzy searching too.
 
 I started making more functions for my fish shell. Just to make hard things easier.
-For example I used to have this problem where I generate some output in terminal and needed to send that in Slack.
+For example, I used to have this problem where I generated some output in the terminal and needed to send it in Slack.
 The problem was that I had to go to Slack and navigate to the correct folder.
-Instead I made [this script](https://github.com/Glyphack/dotfiles/blob/master/fish/functions/%2Ccp.fish) that copies the file to my clipboard so I run the command and just go to slack to paste.
+Instead I made [this script](https://github.com/Glyphack/dotfiles/blob/master/fish/functions/%2Ccp.fish) that copies the file to my clipboard so I run the command and just go to Slack to paste.
 
-I also finally decided to make my own git wrapper `,g` it's for frequent stuff that I do:
+I also finally decided to make my own git wrapper `,g`. 
+It's for frequent stuff that I do:
 - Update main and create a new branch from it
 - List branches that I committed to and select one to switch
 And more stuff that you can check [here](https://github.com/Glyphack/dotfiles/blob/master/fish/functions/%2Cg.fish)
