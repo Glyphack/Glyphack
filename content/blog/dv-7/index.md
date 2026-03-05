@@ -121,3 +121,21 @@ It automatically fetches the title. Titles are so long and full of fluff these d
 I usually use [Harper](https://writewithharper.com/) when I'm writing to catch grammar and spelling mistakes.
 Sometimes it's too noisy with the false positives about my writing. So I also tried using more LLMs to check my writing and teach me my mistakes.
 I still think Harper is a good tool(and similar tools) but I feel with LLMs it's nicer that you get a review with the context of what I'm writing.
+
+Over that last couple of weeks I found myself having more projects open at the same time.
+I usually have a couple of tabs open in my terminal.
+So when having multiple projects it becomes a lot of tabs and hard to jump between them.
+I asked Claude to make a workspace switcher for me, it was not successful initially.
+I found [smart_workspace_switcher.wezterm](https://github.com/MLFlexer/smart_workspace_switcher.wezterm/) and browsed some wezterm docs and guided it myself.
+Finally it was able to deliver make a [good session manager](https://github.com/Glyphack/dotfiles/blob/2b56c48ea21fde3a65dbfdf98374882103c20e2a/wezterm/wezterm.lua#L228).
+Whenever I hit CMD + Enter I can switch between workspaces, create a new one or delete. It has fuzzy searching too.
+
+I started making more functions for my fish shell. Just to make hard things easier.
+For example I used to have this problem where I generate some output in terminal and needed to send that in Slack.
+The problem was that I had to go to Slack and navigate to the correct folder.
+Instead I made [this script](https://github.com/Glyphack/dotfiles/blob/master/fish/functions/%2Ccp.fish) that copies the file to my clipboard so I run the command and just go to slack to paste.
+
+I also finally decided to make my own git wrapper `,g` it's for frequent stuff that I do:
+- Update main and create a new branch from it
+- List branches that I committed to and select one to switch
+And more stuff that you can check [here](https://github.com/Glyphack/dotfiles/blob/master/fish/functions/%2Cg.fish)
