@@ -1,5 +1,5 @@
 ---
-created: 2025-04-27
+created: 2026-03-17
 category:
   - "[[Books|Books]]"
 tags:
@@ -16,6 +16,8 @@ share: "true"
 I started reading the book because of the authors.
 Although it's old it has good lessons about programming that are not outdated.
 And it's a book from Rob pike so you would hear about simplicity over and over again.
+
+I feel this book could have been a better general programming read than pragmatic programmer. It's more practical and with actual coding.
 
 The book takes these general ideas and goes over multiple chapters that explain things like designing, testing, debugging in programming and explains multiple approaches in each scenario.
 Along the book you write some programs.
