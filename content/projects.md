@@ -5,6 +5,10 @@ url: "/projects"
 
 Here are some of the projects I've been spending time on:
 
+- **[Towelie](https://github.com/Glyphack/towelie)**: Local code review tool supporting comments.
+
+- **[Hue Control](https://github.com/Glyphack/hue-control)**: Control Philips Hue lights using bluetooth from PC without a bridge.
+
 - **[Simu](https://github.com/Glyphack/simu)**: Logic gate simulator written in rust compiled to web assembly that runs in the browser.
 
 - **[Newsletter](https://github.com/Glyphack/newsletter)**: The newsletter for this blog.
