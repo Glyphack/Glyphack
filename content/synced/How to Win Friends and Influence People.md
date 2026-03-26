@@ -1,5 +1,5 @@
 ---
-created: 2026-02-04
+created: 2025-02-04
 category:
   - "[[Books|Books]]"
 author: Dale Carnegie
