@@ -47,7 +47,7 @@ Also useful questions to ask in the interfaces chapter:
 
 ---
 
-The testing chapters are things that I mostly knew.
+The testing chapter contained things that I mostly knew.
 I think people started doing more testing since 1998 and what this book is trying to explain are things you probably already do.
 The book emphasizes automation a lot. Which people do a lot more now days.
 Maybe there are places where automation is not used and should be but I don't see it.
