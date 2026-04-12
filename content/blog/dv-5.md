@@ -25,7 +25,7 @@ You can watch me [here](https://youtu.be/ROll1Qz64OQ?t=295) using it to build a 
 
 ## Ty
 
-Ty worked on the [self feature]({{< relref "blog/ty-self.md" >}}) a bit and then I'm taking a break. I'll get back this week.
+Ty worked on the [self feature](ty-self) a bit and then I'm taking a break. I'll get back this week.
 Most of the blocking issues are resolved by others. They did the super hard part.
 We are close to have Self type in Ty!
 
@@ -37,14 +37,14 @@ Now my girlfriend is using it so I spend more time working on it. The good part 
 
 ## Books
 
-I started reading [Data Oriented Design]({{< relref "synced/Data Oriented Design.md" >}}) when I worked on Simu.
+I started reading [Data Oriented Design](/synced/Data Oriented Design) when I worked on Simu.
 It's a good book, I never had correct training on data normalization and this book had new stuff for me right away.
 
 As I read more of the book it got more abstract and it was talking about topics that are hard to apply. For example "Avoid enums" But the author does not talk about the huge amount of code you need to write when you avoid enums. I think overall there are useful ideas in the book but on the other hand it's not as practical as I expected it to be.
 
 While reading it my friend Kevin sent me [this blog post](https://kyju.org/blog/rustconf-2018-keynote/) which had more examples of writing code in DoD way.
 
-[Creativity, Inc.]({{< relref "synced/Creativity, Inc..md" >}}) was in my reading list for a long time.
+[Creativity, Inc.](/synced/Creativity, Inc.) was in my reading list for a long time.
 I heard good things about it from a lot of blogs and people.
 
 First chapters are cool. It talks about the history of Pixar, how Ed got interested in making animations with computers and how long it took for him to get funded and pursue this dream.

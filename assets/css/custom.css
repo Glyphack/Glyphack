@@ -103,12 +103,12 @@ pre code > span::before {
 
 /* Links */
 
-a:not(.social-icons a):not(h1 a):not(h2 a):not(h3 a):not(h4 a):not(h5 a):not(h6 a):not(.book-card) {
+a:not(.social-icons a):not(h1 a):not(h2 a):not(h3 a):not(h4 a):not(h5 a):not(h6 a):not(.book-card):not(.project-link) {
 	transition: all 0.3s ease;
 }
 
 
-a:not(.social-icons a):not(h1 a):not(h2 a):not(h3 a):not(h4 a):not(h5 a):not(h6 a):not(.book-card):hover {
+a:not(.social-icons a):not(h1 a):not(h2 a):not(h3 a):not(h4 a):not(h5 a):not(h6 a):not(.book-card):not(.project-link):hover {
 	background-color: #000;
 	color: #fff;
 	padding: 1px 1px;
@@ -117,10 +117,10 @@ a:not(.social-icons a):not(h1 a):not(h2 a):not(h3 a):not(h4 a):not(h5 a):not(h6 
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-a:not(.social-icons a):not(h1 a):not(h2 a):not(h3 a):not(h4 a):not(h5 a):not(h6 a):not(.book-card) code {
+a:not(.social-icons a):not(h1 a):not(h2 a):not(h3 a):not(h4 a):not(h5 a):not(h6 a):not(.book-card):not(.project-link) code {
 	transition: all 0.3s ease;
 }
 
-a:not(.social-icons a):not(h1 a):not(h2 a):not(h3 a):not(h4 a):not(h5 a):not(h6 a):not(.book-card):hover code {
+a:not(.social-icons a):not(h1 a):not(h2 a):not(h3 a):not(h4 a):not(h5 a):not(h6 a):not(.book-card):not(.project-link):hover code {
 	background-color: #000;
 }

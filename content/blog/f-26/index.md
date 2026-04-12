@@ -19,7 +19,7 @@ About type checking, structuring a complex project and taming complexity.
 
 ## Slides
 
-[ty: Adventures of type-checking Python in Rust](/ty-f26.pdf)
+[ty: Adventures of type-checking Python in Rust](ty-f26.pdf)
 
 ## Links
 

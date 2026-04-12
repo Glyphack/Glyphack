@@ -5,3 +5,17 @@ repos:
       - id: markdownlint-fix
         files: ^content/blog/
         args: ['--disable', 'MD013']
+  - repo: local
+    hooks:
+      - id: fetch-project-stats
+        name: Fetch project stats
+        entry: uv run scripts/fetch_project_stats.py
+        language: system
+        pass_filenames: false
+        always_run: true
+      - id: download-covers
+        name: Download book covers
+        entry: uv run scripts/download-covers.py
+        language: system
+        pass_filenames: false
+        always_run: true

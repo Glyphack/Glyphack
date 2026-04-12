@@ -1,26 +1,71 @@
----
-title: "Projects"
-url: "/projects"
----
++++
+title = "Projects"
+url = "/projects"
+layout = "projects"
+github_username = "Glyphack"
 
-Here are some of the projects I've been spending time on:
+[[projects]]
+name = "ReadsThis"
+description = "📖 Find and share interesting blogs"
+url = "https://r.glyphack.com"
+role = "owner"
 
-- **[Towelie](https://github.com/Glyphack/towelie)**: Local code review tool supporting comments.
+[[projects]]
+name = "readwise-reader-importer"
+description = "📥 Bulk import links into Readwise"
+repo = "Glyphack/readwise-reader-importer"
+url = "https://chromewebstore.google.com/detail/readwise-reader-importer/biaidjfcmkeeiidenndhkdaldkljaipi"
+role = "owner"
 
-- **[Hue Control](https://github.com/Glyphack/hue-control)**: Control Philips Hue lights using bluetooth from PC without a bridge.
+[[projects]]
+name = "Enderpy"
+description = "🐍 A type checker for Python"
+repo = "Glyphack/enderpy"
+role = "owner"
 
-- **[Simu](https://github.com/Glyphack/simu)**: Logic gate simulator written in rust compiled to web assembly that runs in the browser.
+[[projects]]
+name = "pytse-client"
+description = "📈 Download market data from Tehran stock exchange"
+repo = "Glyphack/pytse-client"
+role = "owner"
 
-- **[Newsletter](https://github.com/Glyphack/newsletter)**: The newsletter for this blog.
+[[projects]]
+name = "Towelie"
+description = "🔍 Code review to review AI generated code"
+repo = "Glyphack/towelie"
+role = "owner"
 
-- **[ReadsThis](https://r.glyphack.com)**: Find and Share interesting blogs.
+[[projects]]
+name = "Hue Control"
+description = "💡 Control Philips lights using bluetooth from PC"
+repo = "Glyphack/hue-control"
+role = "owner"
 
-- **[readwise-reader-importer](https://github.com/Glyphack/readwise-reader-importer)**: Bulk import links into readwise.
+[[projects]]
+name = "Simu"
+description = "🔌 Logic gate simulator that runs in the browser"
+repo = "Glyphack/simu"
+url = "https://glyphack.github.io/simu/"
+role = "owner"
 
-- **[Ty](https://github.com/astral-sh/ruff)**: I contributed to Ty Python type checker.
+[[projects]]
+name = "Newsletter"
+description = "📬 The newsletter for this blog"
+repo = "Glyphack/newsletter"
+role = "owner"
 
-- **[30cc](https://github.com/keyvank/30cc)**: A small C compiler that can compile itself! x86 assembly.
+[[projects]]
+name = "Ty"
+description = "Contributed to the Ty Python type checker by Astral"
+repo = "astral-sh/ruff"
+role = "contributor"
+ownerImage = true
 
-- **[Enderpy](https://github.com/Glyphack/enderpy)**: A type checker for Python, focusing on performance and developer experience.
+[[projects]]
+name = "30cc"
+description = "⚙️ A small C compiler that can compile itself! x86 assembly"
+repo = "keyvank/30cc"
+role = "contributor"
++++
 
-- **[pytse-client](https://github.com/Glyphack/pytse-client)**: A Python library for working with Tehran Stock Exchange (TSE) data. Features real-time market data, historical price data, and trading statistics.
+Here are some projects I've built and contributed to.

@@ -22,14 +22,14 @@ url = "/blog/"
 name = "Projects"
 url = "/projects/"
 [[params.menu]]
-name = "Talks"
-url = "/talks/"
-[[params.menu]]
 name = "Now"
 url = "/now/"
 [[params.menu]]
 name = "Reading List"
 url = "/reading-list/"
+[[params.menu]]
+name = "Talks"
+url = "/talks/"
 [[params.menu]]
 name = "Reads This"
 url = "https://r.glyphack.com/s/s"
