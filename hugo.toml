@@ -31,6 +31,9 @@ url = "/reading-list/"
 name = "Talks"
 url = "/talks/"
 [[params.menu]]
+name = "Tools"
+url = "/t/"
+[[params.menu]]
 name = "Reads This"
 url = "https://r.glyphack.com/s/s"
 [[params.menu]]
