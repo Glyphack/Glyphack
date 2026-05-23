@@ -13,54 +13,82 @@
       line-height: 1.5;
     }
     h1 { font-size: 1.4rem; margin-bottom: 1.5rem; }
+    h2 { font-size: 1rem; margin: 1.25rem 0 0.5rem; opacity: 0.75; }
     label { display: block; margin-bottom: 0.5rem; }
     input { width: 100%; padding: 0.4rem; box-sizing: border-box; font-size: 1rem; }
     .grid { display: grid; gap: 0.75rem; }
-    .out {
-      margin-top: 1.25rem;
-      padding: 0.85rem;
-      background: rgba(128, 128, 128, 0.1);
-      border-radius: 6px;
-    }
     .back { display: inline-block; margin-top: 2rem; font-size: 0.9rem; }
   </style>
 </head>
 <body>
   <h1>🍞 Bread calculator</h1>
 
+  <h2>Percentages</h2>
   <div class="grid">
-    <label>Total dough (g):
-      <input type="number" id="bc-dough" value="1000" oninput="bcCalc()">
-    </label>
     <label>Hydration (%):
-      <input type="number" id="bc-hyd" value="70" oninput="bcCalc()">
+      <input type="number" id="bc-hyd" value="75" oninput="bcRecalc('hyd')">
     </label>
     <label>Salt (%):
-      <input type="number" id="bc-salt" value="2" step="0.1" oninput="bcCalc()">
+      <input type="number" id="bc-salt-pct" value="1.5" step="0.1" oninput="bcRecalc('saltPct')">
     </label>
     <label>Yeast (%):
-      <input type="number" id="bc-yeast" value="1" step="0.1" oninput="bcCalc()">
+      <input type="number" id="bc-yeast-pct" value="1.5" step="0.1" oninput="bcRecalc('yeastPct')">
     </label>
   </div>
 
-  <div id="bc-out" class="out"></div>
+  <h2>Weights (edit any)</h2>
+  <div class="grid">
+    <label>Total dough (g):
+      <input type="number" id="bc-dough" value="1000" oninput="bcRecalc('dough')">
+    </label>
+    <label>Flour (g):
+      <input type="number" id="bc-flour" oninput="bcRecalc('flour')">
+    </label>
+    <label>Water (g):
+      <input type="number" id="bc-water" oninput="bcRecalc('water')">
+    </label>
+    <label>Salt (g):
+      <input type="number" id="bc-salt" step="0.1" oninput="bcRecalc('salt')">
+    </label>
+    <label>Yeast (g):
+      <input type="number" id="bc-yeast" step="0.1" oninput="bcRecalc('yeast')">
+    </label>
+  </div>
 
   <a class="back" href="/t">← back to tools</a>
 
   <script>
-    function bcCalc() {
-      const total = +document.getElementById('bc-dough').value;
+    function bcRecalc(source) {
       const h = +document.getElementById('bc-hyd').value / 100;
-      const s = +document.getElementById('bc-salt').value / 100;
-      const y = +document.getElementById('bc-yeast').value / 100;
-      const flour = total / (1 + h + s + y);
-      document.getElementById('bc-out').innerHTML =
-        `Flour: <b>${Math.round(flour)} g</b><br>` +
-        `Water: <b>${Math.round(flour * h)} g</b><br>` +
-        `Salt: <b>${Math.round(flour * s)} g</b><br>` +
-        `Yeast: <b>${Math.round(flour * y)} g</b>`;
+      const s = +document.getElementById('bc-salt-pct').value / 100;
+      const y = +document.getElementById('bc-yeast-pct').value / 100;
+      const factor = 1 + h + s + y;
+
+      let flour;
+      if (source === 'flour') {
+        flour = +document.getElementById('bc-flour').value;
+      } else if (source === 'water') {
+        flour = h ? +document.getElementById('bc-water').value / h : 0;
+      } else if (source === 'salt') {
+        flour = s ? +document.getElementById('bc-salt').value / s : 0;
+      } else if (source === 'yeast') {
+        flour = y ? +document.getElementById('bc-yeast').value / y : 0;
+      } else {
+        flour = +document.getElementById('bc-dough').value / factor;
+      }
+
+      const round = n => Math.round(n * 10) / 10;
+      const setIfNot = (id, val) => {
+        if (source !== id) document.getElementById('bc-' + id).value = round(val);
+      };
+
+      setIfNot('flour', flour);
+      setIfNot('water', flour * h);
+      setIfNot('salt', flour * s);
+      setIfNot('yeast', flour * y);
+      setIfNot('dough', flour * factor);
     }
-    bcCalc();
+    bcRecalc('dough');
   </script>
 </body>
 </html>
