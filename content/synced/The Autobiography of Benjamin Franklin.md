@@ -1,5 +1,5 @@
 ---
-created: 2025-07-02
+created: 2026-03-26
 category:
   - "[[Books|Books]]"
 title: The Autobiography of Benjamin Franklin
