@@ -67,6 +67,7 @@ jsLocation = "https://cloud.umami.is/script.js"
 debugCSS = false
 customCSS = []
 theme = 'light'
+footerContent = "Powered by [Hugo](https://gohugo.io/) and [tomfran/typo](https://github.com/tomfran/typo). Book cover images provided by [Open Library](https://openlibrary.org/)."
 
 homeIntroTitle = ""
 homeIntroContent = """
