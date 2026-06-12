@@ -2,6 +2,7 @@
 title = "Tools"
 url = "/t"
 layout = "tools"
+outputs = ["HTML"]
 
 [[tools]]
 name = "Bread Calculator"

@@ -163,11 +163,19 @@
     font-style: italic;
     color: #777;
   }
+
+  .book-back-link {
+    display: inline-block;
+    margin-bottom: 1.2rem;
+    font-size: 0.95rem;
+  }
 </style>
 
 <article class="book-container">
   {{- $coverUrl := partial "book-cover-url" . -}}
   {{- $authorStr := partial "book-author" . -}}
+
+  <a href="/reading-list" class="book-back-link">&larr; Bookshelf</a>
 
   <header class="book-header">
     <h1 class="book-title">Book Review: {{ .File.BaseFileName }}</h1>
@@ -198,6 +206,12 @@
             >&#9733;</span
           >{{ else }}<span class="star empty">&#9733;</span>{{ end }} {{ end }}
         </span>
+      </div>
+      {{ end }}
+      {{ with .Params.link }}
+      <div class="book-meta-item">
+        <span class="book-meta-label">Link:</span>
+        <a href="{{ . }}" target="_blank" rel="noopener noreferrer">{{ . }}</a>
       </div>
       {{ end }}
     </div>
