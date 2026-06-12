@@ -1,10 +1,11 @@
 {{- $isbn := replaceRE "-" "" (default "" .Params.isbn13) -}}
-{{- $path := printf "book-covers/%s.webp" $isbn -}}
+{{- $coverUrl := "/images/default-cover.jpg" -}}
 {{- if $isbn -}}
-  {{- if not (resources.Get $path) -}}
+  {{- $res := resources.Get (printf "book-covers/%s.webp" $isbn) -}}
+  {{- if $res -}}
+    {{- $coverUrl = $res.RelPermalink -}}
+  {{- else -}}
     {{- errorf "Missing book cover for ISBN %s. Run: uv run scripts/download-covers.py" $isbn -}}
   {{- end -}}
-  {{- return (resources.Get $path).RelPermalink -}}
-{{- else -}}
-  {{- return "/images/default-cover.jpg" -}}
 {{- end -}}
+{{- return $coverUrl -}}
