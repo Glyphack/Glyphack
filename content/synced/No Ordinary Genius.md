@@ -1,5 +1,5 @@
 ---
-created: 2025-07-24
+created: 2026-01-24
 category:
   - "[[Books|Books]]"
 title: No Ordinary Genius
