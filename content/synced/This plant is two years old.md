@@ -5,7 +5,7 @@ category:
 tags:
   - Active
 share: true
-path: blog
+path:
 slug: 2g
 ---
 I planted my first plant in this apartment nearly three years ago.
