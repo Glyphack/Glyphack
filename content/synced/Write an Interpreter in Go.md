@@ -9,7 +9,7 @@ link: https://interpreterbook.com/
 rating: "4"
 tags:
 layout: book
-share: "true"
+share: true
 ---
 Nice book. I think I would have learned a lot from it if I read it before writing a compiler. The content were what I knew already.
 I think it's a good resource for the first thing you want to read if you haven't written anything in compilers.
