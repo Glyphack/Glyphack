@@ -3,10 +3,12 @@ created: 2026-06-28
 category:
   - "[[Blog|Blog]]"
 tags:
-  - Active
 share-path: blog
 slug: 2g
 share: true
+title: This plant is two years old
+date: 2026-06-29
+draft: "false"
 ---
 I planted my first plant in this apartment nearly three years ago.
 It was the result of a walk through a supermarket with my friend, where I suddenly saw the stuff needed for gardening and tried planting some herbs.
