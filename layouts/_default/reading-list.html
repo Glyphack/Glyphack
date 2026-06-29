@@ -18,7 +18,7 @@
     {{ if gt (len $activeBooks) 0 }}
     <h2>Currently Reading</h2>
     <div class="book-card-container">
-      {{ range sort $activeBooks "Params.created" "desc" }}
+      {{ range sort $activeBooks "Date" "desc" }}
         {{ partial "book-card" (dict "page" . "showStatus" false) }}
       {{ end }}
     </div>
@@ -27,7 +27,7 @@
     <h2>Books</h2>
     <div class="book-card-container">
       {{ if gt (len $otherBooks) 0 }}
-        {{ range sort $otherBooks "Params.created" "desc" }}
+        {{ range sort $otherBooks "Date" "desc" }}
           {{ partial "book-card" (dict "page" . "showStatus" true) }}
         {{ end }}
       {{ else }}

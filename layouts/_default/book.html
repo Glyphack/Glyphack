@@ -178,9 +178,9 @@
   <a href="/reading-list" class="book-back-link">&larr; Bookshelf</a>
 
   <header class="book-header">
-    <h1 class="book-title">Book Review: {{ .File.BaseFileName }}</h1>
-    {{ with .Params.created }}
-    <div class="book-date-subtitle">Added: {{ . }}</div>
+    <h1 class="book-title">Book Review: {{ .Title }}</h1>
+    {{ if not .Date.IsZero }}
+    <div class="book-date-subtitle">Added: {{ .Date.Format site.Params.dateFmt }}</div>
     {{ end }}
   </header>
   <div class="book-row">
