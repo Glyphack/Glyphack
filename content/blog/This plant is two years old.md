@@ -4,7 +4,7 @@ category:
   - "[[Blog|Blog]]"
 tags:
   - Active
-path: blog
+share-path: blog
 slug: 2g
 share: true
 ---
