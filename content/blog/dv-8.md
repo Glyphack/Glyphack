@@ -1,5 +1,5 @@
 ---
-title: "Devlog 8"
+title: "Devlog 8: Fuzzing ty and dotfile improvements"
 date: 2026-06-02T00:05:46+02:00
 draft: false
 tags: [log] 
