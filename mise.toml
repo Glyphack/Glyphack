@@ -1,3 +1,2 @@
 [tools]
-go = "latest"
-"go:github.com/gohugoio/hugo" = "latest"
+hugo-extended = "0.164.0"

@@ -6,7 +6,7 @@
   <div class="post-content">
     {{ .Content }}
 
-    {{ $stats := hugo.Data.projects_stats | default dict }}
+    {{ $stats := site.Data.projects_stats | default dict }}
 
     {{ $sections := slice
       (dict "title" "Contributions" "role" "contributor")
