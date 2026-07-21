@@ -2,7 +2,7 @@
 title: "Devlog 7: I made a code review tool"
 date: 2026-03-04T08:51:24+01:00
 draft: false
-tags: [] 
+tags: [log] 
 ---
 
 Last month I created a new project. It's called [Towelie](https://github.com/Glyphack/towelie).

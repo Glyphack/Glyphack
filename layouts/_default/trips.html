@@ -1,0 +1,18 @@
+{{ define "main" }}
+
+<div class="list-container">
+
+    {{ partial "breadcrumbs.html" . }}
+
+    <h1>{{ .Title }}</h1>
+    {{ .Content }}
+
+    {{ $syncPages := where .Site.RegularPages "Section" "synced" }}
+    {{ $trips := where $syncPages "Params.category" "intersect" (slice "[[Trips]]") }}
+
+    {{ range sort $trips "Date" "desc" }}
+    {{ partial "post-entry.html" . }}
+    {{ end }}
+
+</div>
+{{ end }}

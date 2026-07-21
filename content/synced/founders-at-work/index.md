@@ -15,3 +15,5 @@ The book is a bit shallow. I read first two chapters and it's not deep into stuf
 
 - Paypal succeeded because they were good at detecting fraud?
 - Hotmail succeed because internet was new and other big corps did not catch up with putting their stuff into web browsers?
+
+112
