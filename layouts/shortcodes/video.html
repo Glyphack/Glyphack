@@ -1,7 +1,15 @@
-<video 
+{{- $src := .Get "src" -}}
+{{- $u := urls.Parse $src -}}
+{{- if not $u.IsAbs -}}
+  {{- $path := strings.TrimPrefix "./" $u.Path -}}
+  {{- with .Page.Resources.Get $path -}}
+    {{- $src = .RelPermalink -}}
+  {{- end -}}
+{{- end -}}
+<video
   style="max-width: 100%; height: auto; width: 900px; display: block; margin: 0 auto; object-fit: contain;"
-  controls 
+  controls
   preload="metadata">
-  <source src="{{ .Get "src" }}" type="{{ .Get "type" }}">
+  <source src="{{ $src }}" type="{{ .Get "type" }}">
   Your browser does not support video playback.
 </video>
