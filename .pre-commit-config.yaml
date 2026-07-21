@@ -19,3 +19,8 @@ repos:
         language: system
         pass_filenames: false
         always_run: true
+      - id: check-image-gps
+        name: Check images for GPS data
+        entry: uv run scripts/check_image_gps.py
+        language: system
+        types: [image]
