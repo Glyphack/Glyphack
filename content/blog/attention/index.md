@@ -14,7 +14,7 @@ During the last few years I was always studying, working, and doing open source.
 And actually got stuff done.
 Doing all of those at the same time requires paying attention to what I wanted to do and ignore the noise.
 
-Nowadays I'm lucky if I get 1 hour of focused time.
+Nowadays, I'm lucky if I get 1 hour of focused time.
 Just to be clear, my goal is not to work 90 hours a week or anything crazy.
 That is not possible for me.
 I just want the hour I spend programming, learning, or writing to be just one activity.
@@ -105,7 +105,7 @@ Which makes focusing harder.
 ---
 
 So how can I regain my ability to focus?
-Sometimes I live stream what I'm doing just because with a camera I cannot escape from hard challenges by grabbing my phone.
+Sometimes I [live stream](https://www.youtube.com/channel/UCcmQIfYP9cdK291cvDIsllg) what I'm doing just because with a camera I cannot escape from hard challenges by grabbing my phone.
 I used to co-work with my friends over discord.
 Unfortunately it's not possible anymore because people in Iran cannot have a stable internet connection nowadays.
 
