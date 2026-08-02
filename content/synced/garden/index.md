@@ -20,6 +20,8 @@ Once you take the individual stems and plant them again they grow.
 
 ![IMG_4569.jpeg](IMG_4569.jpeg)
 
+2026-07-31: I planted a larger pot 2 weeks ago they are growing
+![image 1.jpg](image 1.jpg)
 # Lemon
 
 I bought this lemon tree about a year ago.
@@ -132,3 +134,12 @@ I'm waiting for it to grow to know what it is.
 I'm also not sure if this would survive or not given the rough situation it had on the street and other plants were dead.
 
 ![IMG_4553.jpeg](IMG_4553.jpeg)
+
+It keeps growing and seems healthy
+![7EC0371D-239A-45AC-ABA9-2A84F58A00DB.jpeg](7EC0371D-239A-45AC-ABA9-2A84F58A00DB.jpeg)
+
+## Avocado
+
+I found this a few days ago (2026-07-29) still not growing.
+![IMG_4654.jpeg](IMG_4654.jpeg)
+![image.jpg](image.jpg)
