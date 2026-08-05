@@ -20,7 +20,7 @@ OPENLIBRARY_URL = "https://covers.openlibrary.org/b/isbn/{isbn}.jpg?default=fals
 
 def collect_isbns() -> list[str]:
     isbns = []
-    for md_file in CONTENT_DIR.glob("*.md"):
+    for md_file in CONTENT_DIR.glob("**/*.md"):
         text = md_file.read_text()
         match = re.search(r"^isbn13:\s*(.+)$", text, re.MULTILINE)
         if match:
@@ -73,7 +73,9 @@ def sync() -> None:
         except Exception as e:
             errors.append((isbn, str(e)))
 
-    print(f"\nSummary: {already_present} already present, {len(missing) - len(errors)} downloaded")
+    print(
+        f"\nSummary: {already_present} already present, {len(missing) - len(errors)} downloaded"
+    )
     if errors:
         for isbn, msg in errors:
             print(f"ERROR {isbn}: {msg}")
