@@ -103,20 +103,8 @@
   .book-rating {
     display: flex;
     align-items: center;
-    gap: 0.2rem;
     background: none;
     padding: 0;
-    color: #f5b342;
-    font-size: 1.3rem;
-  }
-  .book-rating .star.empty {
-    color: #eee;
-  }
-  .book-rating-value {
-    font-size: 1rem;
-    color: #3498db;
-    font-weight: 500;
-    margin-left: 0.6rem;
   }
 
   .book-meta-item {
@@ -199,13 +187,7 @@
       {{ if .Params.rating }}
       <div class="book-meta-item">
         <span class="book-meta-label">Rating:</span>
-        <span class="book-rating">
-          {{ $rating := .Params.rating }} {{ $fullStars := int (math.Floor
-          $rating) }} {{ range $i := seq 1 5 }} {{ if le $i $fullStars }}<span
-            class="star"
-            >&#9733;</span
-          >{{ else }}<span class="star empty">&#9733;</span>{{ end }} {{ end }}
-        </span>
+        <span class="book-rating">{{ .Params.rating }}/5</span>
       </div>
       {{ end }}
       {{ with .Params.link }}

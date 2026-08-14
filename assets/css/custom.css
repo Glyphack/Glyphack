@@ -1,3 +1,9 @@
+/* Footnotes */
+
+.footnotes hr {
+	display: none;
+}
+
 /* Social Icons */
 .social-icons {
 display: flex;
