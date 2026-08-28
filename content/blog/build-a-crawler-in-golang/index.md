@@ -46,7 +46,7 @@ provides a good introduction to building a crawler.
 
 ## But Why Building Another Crawler?
 
-I wrote down my reasons in the rate limiter post
+I wrote down my reasons in a [previous post](/blog/rate-limiter-python-2/).
 on why I'm building this stuff from scratch.
 The short answer is that it seems simple until you try it.
 
