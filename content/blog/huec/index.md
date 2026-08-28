@@ -1,10 +1,10 @@
 ---
-title: "Reverse Engineering Philips Hue light strip to control from PC"
-date: 2026-02-25T22:25:08+01:00
-draft: false
-tags: [] 
+date: 2026-02-25 22:25:08+01:00
+category:
+  - "Blog"
+tags: []
+title: Reverse Engineering Philips Hue light strip to control from PC
 ---
-
 I was looking for a way to control my [Philips Hue light strip](https://amzn.to/4r7oN4M) without their terrible app[^1].
 All my searches led to this conclusion: you need to buy a [Hue Bridge](https://amzn.to/4aN5NDR) to control the lamp from a PC.
 But I don't want to have another device just to do what my PC is capable of doing right now.
@@ -14,7 +14,8 @@ I want my light to turn on and off automatically every day without paying for an
 I published the end result of this project in [huec](https://github.com/Glyphack/hue-control), a CLI app that lets you control Philips Hue lights.
 Here's a quick demo:
 
-{{< youtube isGCe3Zvm54 >}}
+![](https://www.youtube.com/watch?v=isGCe3Zvm54)
+
 
 Here I discuss the journey of discovering the protocol, explaining how power, brightness, color, and alarms are controlled.
 

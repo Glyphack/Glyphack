@@ -1,8 +1,9 @@
 ---
-title: "A Better Keyboard"
-date: 2023-12-30T10:54:35+01:00
-draft: false
-tags: [tools]
+date: 2023-12-30 10:54:35+01:00
+category:
+  - "Blog"
+tags:
+title: A Better Keyboard
 ---
 
 Imagine you want to make a better keyboard.

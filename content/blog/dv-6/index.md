@@ -1,10 +1,11 @@
 ---
+date: 2025-12-21 21:43:56+01:00
+category:
+  - "Blog"
+tags:
+  - devlog
 title: "Devlog 6: I Can Make a CPU with My Logic Gate Simulator"
-date: 2025-12-21T21:43:56+01:00
-draft: false
-tags: [log] 
 ---
-
 I can finally start making a CPU using [my logic gate simulator](https://github.com/Glyphack/simu).
 
 Try it yourself [here](https://glyphack.github.io/simu/)!
@@ -15,7 +16,7 @@ Attach them together using wires.
 Wires stick to pins like magnets.
 You can detach a wire by selecting it and then move it.
 
-{{< video src="simu-1.mp4" type="video/mp4" >}}
+![simu-1.mp4](simu-1.mp4)
 
 You can create a connection between two gates by dragging a pin to another.
 When a wire is connected to a gate it stays connected even if the gate moves.
@@ -28,14 +29,14 @@ Simulator is simple and it runs real-time.
 It supports feedback loops.
 You can build memory circuits like [Flip Flops](https://en.wikipedia.org/wiki/Flip-flop_(electronics)).
 
-{{< video src="simu-2.mp4" type="video/mp4" >}}
+![simu-2.mp4](simu-2.mp4)
 
 The next feature that I needed was a way to create circuits.
 A CPU contains thousands of similar circuits. Like Registers.
 In Simu you can select gates and create a module from them.
 The module input/output is mapped to input/output pins that are unconnected.
 
-{{< video src="simu-3.mp4" type="video/mp4" >}}
+![simu-3.mp4](simu-3.mp4)
 
 To create a module you need to first free up some pins.
 Free pins are what is considered input/output of the module.

@@ -1,7 +1,7 @@
 ---
 date: 2026-07-21
 category:
-  - "[[Trips]]"
+  - "Trips"
 start: 2026-06-30
 end: 2026-08-05
 location:

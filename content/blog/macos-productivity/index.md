@@ -1,10 +1,10 @@
 ---
-title: "Personalize Macos Environment for Your Productivity"
-date: 2023-02-19T20:58:33+01:00
-draft: false
-tags: [tools]
+date: 2023-02-19 20:58:33+01:00
+category:
+  - "Blog"
+tags:
+title: Personalize Macos Environment for Your Productivity
 ---
-
 MacOS is already a polished environment and unlike some other OSes it works out of the box.
 Still, spending investing time to personalize your tools and environment is a smart move.
 

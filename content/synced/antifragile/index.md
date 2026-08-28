@@ -1,9 +1,9 @@
 ---
 date: 2026-03-26
 category:
-  - "[[Books]]"
+  - "Books"
 title: Antifragile
-author: "[[Nassim Nicholas Taleb]]"
+author: "Nassim Nicholas Taleb"
 isbn13: 978-0812979688
 tags:
 rating: "4"

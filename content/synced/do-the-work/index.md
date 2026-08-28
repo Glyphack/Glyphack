@@ -1,7 +1,7 @@
 ---
 date: 2026-08-05
 category:
-  - "[[Books]]"
+  - "Books"
 layout: book
 title: Do the Work
 author: Steven Pressfield

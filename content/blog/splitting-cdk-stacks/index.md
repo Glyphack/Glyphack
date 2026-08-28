@@ -1,8 +1,9 @@
 ---
-title: "Everything you need to know about splitting CDK stacks"
-date: 2022-11-13T09:49:50+03:30
-draft: false
-tags: ["aws", "cdk"]
+date: 2022-11-13 09:49:50+03:30
+category:
+  - "Blog"
+tags:
+title: Everything you need to know about splitting CDK stacks
 ---
 
 AWS CDK is a tool that lets you define your cloud resources

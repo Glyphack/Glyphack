@@ -1,7 +1,7 @@
 ---
 date: 2025-10-25
 category:
-  - "[[Books]]"
+  - "Books"
 title: Where Good Ideas Come From
 author: Steven Johnson
 isbn13: 978-1594485381

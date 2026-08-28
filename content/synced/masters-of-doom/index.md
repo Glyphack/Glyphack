@@ -2,7 +2,7 @@
 date: 2025-04-27
 tags: []
 category:
-  - "[[Books]]"
+  - "Books"
 title: Masters of Doom
 author: David Kushner
 isbn13: 978-0749924898

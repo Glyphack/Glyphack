@@ -1,12 +1,11 @@
 ---
-title: "Building a Web Crawler in Golang"
-date: 2023-03-20T18:17:24+01:00
-draft: false
-tags: ["coding"]
+date: 2023-03-20 18:17:24+01:00
+category:
+  - "Blog"
+tags:
+  - coding
+title: Building a Web Crawler in Golang
 ---
-
-<!-- vim-markdown-toc GFM -->
-
 * [Introduction](#introduction)
 * [But Why Building Another Crawler?](#but-why-building-another-crawler)
 * [High Level Design](#high-level-design)
@@ -31,8 +30,6 @@ tags: ["coding"]
   * [Putting it All Together](#putting-it-all-together)
 * [Conclusion](#conclusion)
 
-<!-- vim-markdown-toc -->
-
 ## Introduction
 
 Web crawler is a program that explores the Internet,
@@ -49,7 +46,7 @@ provides a good introduction to building a crawler.
 
 ## But Why Building Another Crawler?
 
-I wrote down my reasons in the [rate limiter post](rate-limiter-python-2)
+I wrote down my reasons in the rate limiter post
 on why I'm building this stuff from scratch.
 The short answer is that it seems simple until you try it.
 

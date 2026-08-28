@@ -1,10 +1,10 @@
 ---
 date: 2025-04-27
 category:
-  - "[[Books]]"
+  - "Books"
 tags: []
 title: System Design Interview
-author: "[[Alex Xu]]"
+author: "Alex Xu"
 isbn13: 979-8664653403
 rating: "2"
 link:

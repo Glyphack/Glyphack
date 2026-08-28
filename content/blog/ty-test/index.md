@@ -1,8 +1,9 @@
 ---
-title: "Ty Test Suite"
-date: 2025-12-10T16:12:40+01:00
-draft: false
-tags: [] 
+date: 2025-12-10 16:12:40+01:00
+category:
+  - "Blog"
+tags: []
+title: Ty Test Suite
 ---
 
 [Ty](https://github.com/astral-sh/ty) tests use markdown.

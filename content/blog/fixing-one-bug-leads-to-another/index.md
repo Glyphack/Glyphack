@@ -1,8 +1,9 @@
 ---
-title: "Fixing One Bug Leads to Another"
-date: 2022-02-05T09:49:50+03:30
-draft: false
-tags: ['bugs', 'yak-shaving']
+date: 2022-02-05 09:49:50+03:30
+category:
+  - "Blog"
+tags:
+title: Fixing One Bug Leads to Another
 ---
 
 One thing that frequently frustrates me when I'm working is sloppy work. I'm using the word "work" here because it can refer to anything, but here I'll talk about sloppy code.
@@ -44,8 +45,7 @@ After realizing that it was not easy to fix and needed proper investigation, I h
 The issue was that Kafka has a [max poll interval](https://docs.confluent.io/platform/current/installation/configuration/consumer-configs.html#consumerconfigs_max.poll.interval.ms) configuration which determines how long it takes for the consumer to poll a message(read a new message from the topic). If a consumer reaches this time limit before polling a message, it will be considered unhealthy and replaced with a new consumer. Meanwhile, the consumer has a timeout to commit all the pending messages to offset, and if it cannot, then those messages are not considered as done and will be consumed again.
 
 The point here is that the second bug was buried under the first issue, and I brought it up by fixing the first one. Kind of a rabbit hole, and who knows, I would not face [Hydra](https://en.wikipedia.org/wiki/Lernaean_Hydra) if I continued fixing the problem?
-![Hydra, a see monster that that as soon as one head was cut off, two more heads would emerge from the fresh wound](Hydra.png)
-
+![Hydra.png](Hydra.png)
 ## Yak shaving
 
 The more precise term about this situation is [Yak Shaving](https://seths.blog/2005/03/dont_shave_that/). It's a situation where you have to fix something else before working on the current issue.

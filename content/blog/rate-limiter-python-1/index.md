@@ -1,16 +1,15 @@
 ---
-title: "Rate Limiter From Scratch in Python Part 1"
-date: 2023-02-14T23:19:18+01:00
-draft: false
-tags: [coding]
+date: 2023-02-14 23:19:18+01:00
+category:
+  - "Blog"
+tags:
+title: Rate Limiter From Scratch in Python Part 1
 ---
 
 ## Introduction
 
-After reading [ByteByteGo course](https://bytebytego.com/)
-motivated me to write a rate limiter.
-So I decided to do it in [500lines](https://aosabook.org/en/500L/introduction.html)
-theme.
+After reading [ByteByteGo course](https://bytebytego.com/) motivated me to write a rate limiter.
+So I decided to do it in [500lines](https://aosabook.org/en/500L/introduction.html) theme.
 
 We will focus on how to create the interfaces and components,
 to allow extensibility in the predicted ways.

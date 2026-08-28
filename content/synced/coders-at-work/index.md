@@ -1,7 +1,7 @@
 ---
 date: 2026-04-15
 category:
-  - "[[Books]]"
+  - "Books"
 title: Coders at Work
 author: Peter Seibel
 isbn13: 978-1430219484

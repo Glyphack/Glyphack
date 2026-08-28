@@ -1,9 +1,9 @@
 ---
-date: 2025-02-07
+date: 2026-08-28
 category:
-  - "[[Books]]"
+  - "Books"
 title: Joel On Software
-author: "[[Joel Spolsky]]"
+author: "Joel Spolsky"
 isbn13: 978-1590593899
 link:
 rating: "5"

@@ -2,9 +2,9 @@
 date: 2025-04-27
 tags: []
 category:
-  - "[[Books]]"
+  - "Books"
 title: Tech Resume Inside Out
-author: "[[Gergely Orosz]]"
+author: "Gergely Orosz"
 rating: "5"
 isbn13: 978-1-63649-416-6
 link:

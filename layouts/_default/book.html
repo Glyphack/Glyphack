@@ -200,8 +200,7 @@
   </div>
 
   <section class="book-notes">
-    {{ .Content | replaceRE `\[\[[^|\]]+\|([^\]]+)\]\]` "$1" | replaceRE
-    `\[\[([^|\]]+)\]\]` "$1" | safeHTML }}
+    {{ .Content }}
   </section>
 </article>
 {{ end }}

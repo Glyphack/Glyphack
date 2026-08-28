@@ -1,9 +1,9 @@
 ---
 date: 2025-08-19
 category:
-  - "[[Books]]"
+  - "Books"
 title: How to Live
-author: "[[Derek Sivers]]"
+author: "Derek Sivers"
 isbn13: 978-1991152336
 link: https://sive.rs/h
 rating: "5"

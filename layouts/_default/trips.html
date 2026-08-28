@@ -8,7 +8,7 @@
     {{ .Content }}
 
     {{ $syncPages := where .Site.RegularPages "Section" "synced" }}
-    {{ $trips := where $syncPages "Params.category" "intersect" (slice "[[Trips]]") }}
+    {{ $trips := where $syncPages "Params.category" "intersect" (slice "Trips") }}
 
     {{ range sort $trips "Date" "desc" }}
     {{ partial "post-entry.html" . }}

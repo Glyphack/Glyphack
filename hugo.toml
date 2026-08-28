@@ -58,6 +58,11 @@ url = "https://glyphack.com/index.xml"
 [taxonomies]
 tag = "tags"
 
+[frontmatter]
+date = ["created", "date", "publishdate", "pubdate", "published", "lastmod", "modified"]
+lastmod = [":git", "lastmod", "modified", "created", "date", "publishdate", "pubdate", "published"]
+publishDate = ["publishdate", "pubdate", "published", "created", "date"]
+
 [params.umami]
 enable = true
 websiteId = "e8710f0c-a6f2-4d2d-8b95-ef6b66e72226"

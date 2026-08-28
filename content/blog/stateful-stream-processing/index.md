@@ -1,10 +1,10 @@
 ---
-title: "Stateful Stream Processing"
-date: 2022-08-15T08:53:57+04:30
-draft: false
+date: 2022-08-15 08:53:57+04:30
+category:
+  - "Blog"
 tags: []
+title: Stateful Stream Processing
 ---
-
 A pattern that I have recently seen in a project is data replication through
 real-time stream processing. This pattern happens when a company has all of
 it's data stored on centralized databases and applications access this data,

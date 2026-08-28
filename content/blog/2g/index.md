@@ -1,7 +1,7 @@
 ---
 date: 2026-06-28
 category:
-  - "[[Blog]]"
+  - "Blog"
 tags:
 title: This plant is two years old
 ---

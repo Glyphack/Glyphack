@@ -1,7 +1,7 @@
 ---
 date: 2026-04-06
 category:
-  - "[[Books]]"
+  - "Books"
 title: Founders at Work
 author: Jessica Livingstone
 isbn13: 978-1430210788

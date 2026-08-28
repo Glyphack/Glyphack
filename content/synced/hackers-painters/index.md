@@ -1,11 +1,11 @@
 ---
-date: 2025-08-07
+date: 2026-08-28
 category:
-  - "[[Books]]"
+  - "Books"
 title: Hackers & Painters
-author: "[[Paul Graham]]"
+author: "Paul Graham"
 isbn13: 978-1449389550
-link: 
+link:
 rating: "5"
 tags: []
 layout: book

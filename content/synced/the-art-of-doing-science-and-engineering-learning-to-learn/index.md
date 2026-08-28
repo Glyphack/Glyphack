@@ -1,7 +1,7 @@
 ---
 date: 2026-05-04
 category:
-  - "[[Books]]"
+  - "Books"
 title: Learning to Learn
 author: Richard Hamming
 isbn13: 978-1732265172

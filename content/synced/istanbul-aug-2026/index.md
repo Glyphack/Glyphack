@@ -1,12 +1,11 @@
 ---
 date: 2026-08-14
 category:
-  - "[[Trips]]"
+  - "Trips"
 start: 2026-08-06
 end: 2026-08-11
 location:
 tags:
-  - Active
 title: Istanbul Trip
 ---
 These are practical notes for getting to Istanbul From Amsterdam.

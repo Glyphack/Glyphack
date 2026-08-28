@@ -1,8 +1,9 @@
 ---
-title: "The best lasagna I've ever had"
-date: 2025-07-12T00:16:52+02:00
-draft: false
-tags: [] 
+date: 2025-07-12 00:16:52+02:00
+category:
+  - "Blog"
+tags: []
+title: The best lasagna I've ever had
 ---
 
 I went to Italy in March with my friends from first grade.

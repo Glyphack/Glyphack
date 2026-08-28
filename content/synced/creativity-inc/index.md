@@ -1,7 +1,7 @@
 ---
 date: 2025-08-05
 category:
-  - "[[Books]]"
+  - "Books"
 title: Creativity, Inc.
 author: Ed Catmull
 isbn13: 978-0812993011

@@ -1,7 +1,7 @@
 ---
 date: 2025-02-04
 category:
-  - "[[Books]]"
+  - "Books"
 author: Dale Carnegie
 rating: "4"
 link:

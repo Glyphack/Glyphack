@@ -1,7 +1,7 @@
 ---
-date: 2025-10-25
+date: 2026-08-28
 category:
-  - "[[Books]]"
+  - "Books"
 title: Leonardo Da Vinci
 author: Walter Isaacson
 isbn13: 978-1501139154

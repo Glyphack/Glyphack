@@ -20,6 +20,28 @@
   {{- end -}}
 {{- end -}}
 
+{{- $videoExtensions := slice "mp4" "webm" "ogv" "mov" "m4v" -}}
+{{- $isVideo := in $videoExtensions (lower (strings.TrimPrefix "." (path.Ext $u.Path))) -}}
+{{- with $imgResource -}}
+  {{- $isVideo = eq .MediaType.MainType "video" -}}
+{{- end -}}
+
+{{- $isPdf := eq (lower (path.Ext $u.Path)) ".pdf" -}}
+{{- with $imgResource -}}
+  {{- $isPdf = eq .MediaType.Type "application/pdf" -}}
+{{- end -}}
+
+{{- $youtubeHosts := slice "youtube.com" "www.youtube.com" "m.youtube.com" -}}
+{{- $youtubeID := "" -}}
+{{- $host := lower $u.Host -}}
+{{- if and (in $youtubeHosts $host) (eq $u.Path "/watch") -}}
+  {{- $youtubeID = $u.Query.Get "v" -}}
+{{- else if and (in $youtubeHosts $host) (strings.HasPrefix $u.Path "/shorts/") -}}
+  {{- $youtubeID = strings.TrimPrefix "/shorts/" $u.Path -}}
+{{- else if eq $host "youtu.be" -}}
+  {{- $youtubeID = strings.TrimPrefix "/" $u.Path -}}
+{{- end -}}
+
 {{ $url = $url | safeURL }}
 {{ $file_name_array := split $url "#" }}
 
@@ -34,16 +56,39 @@
 <figure class="{{ $classes }}">
 
     {{ $text := .Text }}
-    {{ with $imgResource }}
-      {{ if eq $imgResource.MediaType.SubType "svg" }}
-        <div class="img-container">
-            <img loading="lazy" alt="{{ $text }}" src="{{ $url }}">
-        </div>
-      {{ else }}
-        {{ $img := .Filter (images.AutoOrient) }}
-        <div class="img-container" style="--w: {{ $img.Width }}; --h: {{ $img.Height }};">
-            <img loading="lazy" alt="{{ $text }}" src="{{ $img.RelPermalink }}" width="{{ $img.Width }}" height="{{ $img.Height }}">
-        </div>
+    {{ if $isPdf }}
+      <div class="pdf-container">
+          <iframe src="{{ $url }}" loading="lazy"{{ with $text }} title="{{ . }}"{{ end }}></iframe>
+          <p class="pdf-fallback"><a href="{{ $url }}">{{ with $text }}{{ . }}{{ else }}Open PDF{{ end }}</a></p>
+      </div>
+    {{ else if $youtubeID }}
+      <div class="youtube-container">
+          <iframe
+              src="https://www.youtube.com/embed/{{ $youtubeID }}"
+              title="{{ with $text }}{{ . }}{{ else }}YouTube video{{ end }}"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+              referrerpolicy="strict-origin-when-cross-origin"
+              loading="lazy"></iframe>
+      </div>
+    {{ else if $isVideo }}
+      <div class="video-container">
+          <video controls playsinline preload="metadata" {{ with $text }}aria-label="{{ . }}"{{ end }}>
+              <source src="{{ $url }}"{{ with $imgResource }} type="{{ .MediaType.Type }}"{{ end }}>
+              Your browser does not support video playback.
+          </video>
+      </div>
+    {{ else }}
+      {{ with $imgResource }}
+        {{ if eq $imgResource.MediaType.SubType "svg" }}
+          <div class="img-container">
+              <img loading="lazy" alt="{{ $text }}" src="{{ $url }}">
+          </div>
+        {{ else }}
+          {{ $img := .Filter (images.AutoOrient) }}
+          <div class="img-container" style="--w: {{ $img.Width }}; --h: {{ $img.Height }};">
+              <img loading="lazy" alt="{{ $text }}" src="{{ $img.RelPermalink }}" width="{{ $img.Width }}" height="{{ $img.Height }}">
+          </div>
+        {{ end }}
       {{ end }}
     {{ end }}
 

@@ -1,9 +1,9 @@
 ---
 date: 2025-04-26
 category:
-  - "[[Books]]"
+  - "Books"
 title: Surely You're Joking, Mr. Feynman!
-author: "[[Richard Feynman]]"
+author: "Richard Feynman"
 rating: "5"
 isbn13: 978-0393316049
 link: https://en.wikipedia.org/wiki/Surely_You%27re_Joking,_Mr._Feynman!

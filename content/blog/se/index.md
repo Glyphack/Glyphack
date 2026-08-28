@@ -1,11 +1,10 @@
 ---
-title: "Simple Expertise"
-date: 2025-10-25T11:09:19+02:00
-draft: false
-tags: [] 
+date: 2025-10-25 11:09:19+02:00
+category:
+  - "Blog"
+tags: []
+title: Simple Expertise
 ---
-
-
 If you think about how we judge skills you'd see we do it by questioning the advanced stuff.
 
 Some think this is right. If a person has experience in something they must know the advanced topics that beginners haven’t heard of.

@@ -1,9 +1,9 @@
 ---
 date: 2025-05-17
 category:
-  - "[[Books]]"
+  - "Books"
 title: Write an Interpreter in Go
-author: "[[Thorsten Ball]]"
+author: "Thorsten Ball"
 isbn13: 978-3982016115
 link: https://interpreterbook.com/
 rating: 4

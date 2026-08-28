@@ -1,10 +1,11 @@
 ---
+date: 2026-03-04 08:51:24+01:00
+category:
+  - "Blog"
+tags:
+  - devlog
 title: "Devlog 7: I made a code review tool"
-date: 2026-03-04T08:51:24+01:00
-draft: false
-tags: [log] 
 ---
-
 Last month I created a new project. It's called [Towelie](https://github.com/Glyphack/towelie).
 Towelie is a tool for reviewing code locally, similar to the GitHub pull request review tool.
 
@@ -28,13 +29,13 @@ Then I can return to my own work and leave it to work until it's finished.
 
 Once it has the complete code I run `towelie`:
 
-![Towelie](./tw-1.png)
+![Towelie](tw-1.png)
 
 Here I can select the changes I want to look for (branch, commit, or even not committed changes) and review them.
 
 If I find something that I don't like I leave a comment:
 
-![Towelie](./tw-2.png)
+![Towelie](tw-2.png)
 
 Then I can click finish review and have this copied to my clipboard:
 
@@ -84,7 +85,7 @@ And so relevant.
 
 
 I recently learned about [c reduce](https://bernsteinbear.com/blog/creduce/).
-I wish I had it when I was debugging crashes in [ty](../ty-self.md). I will definitely use it next time I am debugging crashes.
+I wish I had it when I was [Adding Support for Self to Ty](/blog/ty-self/) and debugging crashes.
 
 
 I am starting to make more scripts in my projects.

@@ -1,7 +1,7 @@
 ---
 date: 2026-03-17
 category:
-  - "[[Books]]"
+  - "Books"
 tags:
 title: The practice of Programming
 author:

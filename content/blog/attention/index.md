@@ -1,7 +1,7 @@
 ---
 date: 2026-07-15
 category:
-  - "[[Blog]]"
+  - "Blog"
 tags:
 title: It's getting harder to focus every day
 ---
