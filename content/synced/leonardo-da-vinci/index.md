@@ -5,7 +5,7 @@ category:
 title: Leonardo Da Vinci
 author: Walter Isaacson
 isbn13: 978-1501139154
-link: https://www.goodreads.com/book/show/34684622-leonardo-da-vinci
+source: https://www.goodreads.com/book/show/34684622-leonardo-da-vinci
 rating:
 tags:
   - Active

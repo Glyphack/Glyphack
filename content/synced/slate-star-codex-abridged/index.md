@@ -6,13 +6,13 @@ title: Slate Star Codex Abridged
 author:
   - "Scott Alexander"
 isbn13: xxx-slate-star-codex
-link: https://www.slatestarcodexabridged.com/
+source: https://www.slatestarcodexabridged.com/
 rating:
 layout: book
 tags:
   - Active
 ---
-I knew Scott Alexander's blog since 2023 or something. I saw a video How not to be a noob form George Hotz and it changed my perspective on life.
+I knew Scott Alexander's blog since 2023 or something. I saw a video [How not to be a noob](https://www.youtube.com/watch?v=-v8pD0d5Bmk) form George Hotz and it changed my perspective on life.
 So then I picked up this book. I read it during my Camping Trip in Sweden.
 
 I'm liking it it's a collection essays from slatestarcodex.com.

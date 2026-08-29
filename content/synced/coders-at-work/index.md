@@ -5,7 +5,7 @@ category:
 title: Coders at Work
 author: Peter Seibel
 isbn13: 978-1430219484
-link:
+source: https://codersatwork.com/
 rating: "4"
 tags:
 layout: book

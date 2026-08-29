@@ -5,9 +5,9 @@ category:
 title: What Do You Care What Other People Think?
 author: "Richard Feynman"
 isbn13: 978-0393320923
-link: https://en.wikipedia.org/wiki/What_Do_You_Care_What_Other_People_Think%3F
+source: https://en.wikipedia.org/wiki/What_Do_You_Care_What_Other_People_Think%3F
 rating: "5"
-tags: 
+tags:
 layout: book
 ---
 I got interested in Richard Feynmann's writings after reading [Surely You're Joking, Mr. Feynman!](/synced/surely-youre-joking-mr-feynman/)

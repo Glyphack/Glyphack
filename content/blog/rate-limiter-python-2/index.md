@@ -5,15 +5,15 @@ category:
 tags:
 title: Rate Limiter From Scratch in Python Part 2
 ---
-- [Introduction](#introduction)
-- [New Rate Limiting Algorithms](#new-rate-limiting-algorithms)
-  - [Fixed Window](#fixed-window)
-    - [Test](#test)
-  - [Sliding Window Log](#sliding-window-log)
-    - [Testing](#testing)
-  - [Sliding Window Count](#sliding-window-count)
-    - [Tests](#tests)
-- [Conclusion](#conclusion)
+- [Introduction](/blog/rate-limiter-python-2/)
+- [New Rate Limiting Algorithms](/blog/rate-limiter-python-2/)
+  - [Fixed Window](/blog/rate-limiter-python-2/)
+    - [Test](/blog/rate-limiter-python-2/)
+  - [Sliding Window Log](/blog/rate-limiter-python-2/)
+    - [Testing](/blog/rate-limiter-python-2/)
+  - [Sliding Window Count](/blog/rate-limiter-python-2/)
+    - [Tests](/blog/rate-limiter-python-2/)
+- [Conclusion](/blog/rate-limiter-python-2/)
 
 ## Introduction
 

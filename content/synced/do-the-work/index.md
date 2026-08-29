@@ -6,9 +6,8 @@ layout: book
 title: Do the Work
 author: Steven Pressfield
 isbn13: 978-1936891375
-link:
 rating:
-url:
+source: https://stevenpressfield.com/books/do-the-work/
 tags:
   - Active
 ---

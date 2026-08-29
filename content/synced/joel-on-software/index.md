@@ -5,8 +5,8 @@ category:
 title: Joel On Software
 author: "Joel Spolsky"
 isbn13: 978-1590593899
-link:
-rating: "5"
+source: https://www.joelonsoftware.com/
+rating: 5
 tags:
 layout: book
 ---

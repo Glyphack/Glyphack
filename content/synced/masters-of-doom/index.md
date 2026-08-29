@@ -7,7 +7,7 @@ title: Masters of Doom
 author: David Kushner
 isbn13: 978-0749924898
 rating: "5"
-link: 
+source: https://en.wikipedia.org/wiki/Masters_of_Doom
 layout: book
 ---
 The story of John Carmack and John Romero is entertaining, dramatic and inspirational.

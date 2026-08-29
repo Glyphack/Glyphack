@@ -5,7 +5,7 @@ category:
 title: Write an Interpreter in Go
 author: "Thorsten Ball"
 isbn13: 978-3982016115
-link: https://interpreterbook.com/
+source: https://interpreterbook.com/
 rating: 4
 tags:
 layout: book

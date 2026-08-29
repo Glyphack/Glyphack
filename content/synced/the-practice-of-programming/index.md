@@ -8,7 +8,7 @@ author:
   - Brian Kernighan
   - Rob Pike
 isbn13: 978-0201615869
-link:
+source: https://en.wikipedia.org/wiki/The_Practice_of_Programming
 rating: "3"
 layout: book
 ---

@@ -190,7 +190,7 @@
         <span class="book-rating">{{ .Params.rating }}/5</span>
       </div>
       {{ end }}
-      {{ with .Params.link }}
+      {{ with .Params.source }}
       <div class="book-meta-item">
         <span class="book-meta-label">Link:</span>
         <a href="{{ . }}" target="_blank" rel="noopener noreferrer">{{ . }}</a>

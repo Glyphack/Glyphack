@@ -6,7 +6,7 @@ title: Surely You're Joking, Mr. Feynman!
 author: "Richard Feynman"
 rating: "5"
 isbn13: 978-0393316049
-link: https://en.wikipedia.org/wiki/Surely_You%27re_Joking,_Mr._Feynman!
+source: https://en.wikipedia.org/wiki/Surely_You%27re_Joking,_Mr._Feynman!
 tags: []
 layout: book
 ---

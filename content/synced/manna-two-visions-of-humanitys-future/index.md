@@ -5,7 +5,7 @@ category:
 title: Manna - Two Visions of Humanity's Future
 author: Marshall Brain
 isbn13: 978-0985232115
-link: https://marshallbrain.com/manna1
+source: https://marshallbrain.com/manna1
 rating: "5"
 layout: book
 tags:

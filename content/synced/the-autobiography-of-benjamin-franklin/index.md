@@ -5,7 +5,7 @@ category:
 title: The Autobiography of Benjamin Franklin
 author: "Benjamin Franklin"
 isbn13: 978-1609425111
-link: https://standardebooks.org/ebooks/benjamin-franklin/the-autobiography-of-benjamin-franklin
+source: https://standardebooks.org/ebooks/benjamin-franklin/the-autobiography-of-benjamin-franklin
 rating: 5
 tags:
 layout: book

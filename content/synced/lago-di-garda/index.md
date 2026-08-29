@@ -16,7 +16,7 @@ It was a great decision!
 
 ---
 
-We stayed at Cazzano di Brentonico. It's close to the big lake there. Small quite city. A lot of fruit trees with their fruits on them.
+We stayed at [Cazzano di Brentonico](https://www.google.com/maps/place/38060+Cazzano,+Autonomous+Province+of+Trento,+Italy/@45.8175064,10.9658636,17z/data=!3m1!4b1!4m15!1m8!3m7!1s0x47820576a09308c9:0xa7dfcfb14e10b919!2s38060+Crosano,+Autonomous+Province+of+Trento,+Italy!3b1!8m2!3d45.819468!4d10.9700031!16s%2Fg%2F11b6gg3rjq!3m5!1s0x47820573852af967:0x260709882e6f2451!8m2!3d45.8169285!4d10.9690291!16s%2Fg%2F11b6gh2wxc?entry=ttu&g_ep=EgoyMDI2MDcxNS4wIKXMDSoASAFQAw%3D%3D). It's close to the big lake there. Small quite city. A lot of fruit trees with their fruits on them.
 Neighbor cities are quite close. You can just walk along the road and reach the next one. We did it to grab some fresh pastries.
 
 Dolomites mountain range was about two hours from our place by car. We also went there.

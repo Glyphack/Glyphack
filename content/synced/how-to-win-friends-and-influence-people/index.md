@@ -4,7 +4,7 @@ category:
   - "Books"
 author: Dale Carnegie
 rating: "4"
-link:
+source: https://en.wikipedia.org/wiki/How_to_Win_Friends_and_Influence_People
 layout: book
 title: How to Win Friends and Influence People
 isbn13: 978-0671027032

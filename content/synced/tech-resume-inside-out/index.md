@@ -7,7 +7,7 @@ title: Tech Resume Inside Out
 author: "Gergely Orosz"
 rating: "5"
 isbn13: 978-1-63649-416-6
-link:
+source: https://thetechresume.com/
 layout: book
 ---
 It was a good and light read. I picked it up while I was preparing my resume for job searched and I think it was the last thing I read on writing resumes.

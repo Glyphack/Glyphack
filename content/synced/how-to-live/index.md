@@ -5,7 +5,7 @@ category:
 title: How to Live
 author: "Derek Sivers"
 isbn13: 978-1991152336
-link: https://sive.rs/h
+source: https://sive.rs/h
 rating: "5"
 tags:
 layout: book

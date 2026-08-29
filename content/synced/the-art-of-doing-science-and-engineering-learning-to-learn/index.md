@@ -5,7 +5,7 @@ category:
 title: Learning to Learn
 author: Richard Hamming
 isbn13: 978-1732265172
-link: https://worrydream.com/refs/Hamming_1997_-_The_Art_of_Doing_Science_and_Engineering.pdf
+source: https://worrydream.com/refs/Hamming_1997_-_The_Art_of_Doing_Science_and_Engineering.pdf
 rating:
 layout: book
 tags:

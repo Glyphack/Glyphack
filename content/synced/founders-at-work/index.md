@@ -5,7 +5,7 @@ category:
 title: Founders at Work
 author: Jessica Livingstone
 isbn13: 978-1430210788
-link:
+source: http://www.foundersatwork.com/
 rating:
 layout: book
 tags:

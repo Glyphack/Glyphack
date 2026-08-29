@@ -5,7 +5,7 @@ category:
 title: The Conquest of Happiness
 author: "Bertrand Russell"
 isbn13: 978-0415378475
-link: https://www.goodreads.com/book/show/51783.The_Conquest_of_Happiness
+source: https://www.goodreads.com/book/show/51783.The_Conquest_of_Happiness
 rating: 5
 tags:
 layout: book
