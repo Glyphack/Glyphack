@@ -1,5 +1,5 @@
 ---
-date: 2026-08-19
+date: 2026-09-01
 category:
   - "Blog"
 tags:
