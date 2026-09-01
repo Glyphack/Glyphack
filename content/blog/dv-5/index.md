@@ -27,7 +27,7 @@ You can watch me [here](https://youtu.be/ROll1Qz64OQ?t=295) using it to build a 
 
 ## Ty
 
-Ty worked on the [self feature](/blog/ty-self/) a bit and then I'm taking a break. I'll get back this week.
+Ty worked on the [self feature](/blog/ty-self/)a bit and then I'm taking a break. I'll get back this week.
 Most of the blocking issues are resolved by others. They did the super hard part.
 We are close to have Self type in Ty!
 
