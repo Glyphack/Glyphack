@@ -11,7 +11,7 @@ It's been a while since I wrote a dev log.
 I was working on some networking project and I didn't really think about other stuff for a few weeks.
 Now I'm slowly getting back to writing more blogs.
 
-My plan is to share more notes on my blog like my current [BookShelf](/synced/reading-list/).
+My plan is to share more notes on my blog like my current [Bookshelf](/synced/reading-list/).
 I'll probably start with sharing my travels.
 
 ## Fuzzing Ty

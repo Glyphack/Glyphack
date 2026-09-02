@@ -20,21 +20,21 @@ There are great plugins that make this thing called digital garden (basically a 
 While they are good I was looking for something that I can use to generate the site myself.
 So I can have my notes in the same theme as my blog, so it looks like the same page.
 
-That's how I found [Obsidian Enveloppe](https://github.com/Enveloppe/obsidian-enveloppe), a plugin that helps you push files from Obsidian to Github.
+That's how I found [Obsidian Enveloppe](https://github.com/Enveloppe/obsidian-enveloppe), a plugin that helps you push files from Obsidian to GitHub.
 I'm satisfied with the tool, it does the job with little complexity and composes well with user workflow.
 
 So as a first step I decided to give it a shot, moving my reading list off Notion to my Blog.
 
 This will allow me to use Obsidian as my editing tool and my Blog as the publishing tool.
 
-## My setup
+## My Setup
 
 I create notes for books I read with my notes for the book.
 These notes have special [front matter](https://gohugo.io/content-management/front-matter/) `category: [Books]` to specify it's a book.
 
 Then I publish these notes to my blog repository in a special folder that I use to sync my notes. This sync is a one way sync. I'm not going to update these notes on Blog anymore.
 
-The published notes will appear in my blog by default. Since Hugo just picks up all the markdown files and turns them into a page.
+The published notes will appear in my blog by default. Since Hugo just picks up all the Markdown files and turns them into a page.
 
 But these pages are not linked by default since they are not blog entries.
 So I created this HTML page, that lists all the notes with "Books" category:
@@ -66,7 +66,7 @@ So I created this HTML page, that lists all the notes with "Books" category:
 {{ end }}
 ```
 
-And I used it as the layout for a markdown page:
+And I used it as the layout for a Markdown page:
 
 ```markdown
 ---

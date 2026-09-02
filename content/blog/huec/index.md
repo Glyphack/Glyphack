@@ -205,7 +205,7 @@ Philips Hue [developer docs](https://developers.meethue.com/develop/application-
 
 You can play around with it in the box below:
 
-{{< hue/xy-convertor >}}
+{{< xy-convertor >}}
 
 When you run the app in interactive mode with `huec interactive`, it will open up a browser page and run a server.
 The browser displays a color picker and calculates the payload for the color based on the explanations above.

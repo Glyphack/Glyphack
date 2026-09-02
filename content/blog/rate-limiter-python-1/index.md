@@ -82,7 +82,7 @@ For example, we don't require to support where/filtering clause.
 [This video](https://www.youtube.com/watch?v=tKbV6BpH-C8)
 gives a nice explanation of why sometimes we must do this.
 
-{{< callout emoji="✅" text=" In the above abstraction, we are not creating a generic storage but only a key-value store. This abstraction limits the extensibility of the code but makes the work easier. Which makes it a good choice for rate limiter problem scope. Always be careful when creating a very generic abstraction." >}}
+In the above abstraction, we are not creating a generic storage but only a key-value store. This abstraction limits the extensibility of the code but makes the work easier. Which makes it a good choice for rate limiter problem scope. Always be careful when creating a very generic abstraction.
 
 **Limit Strategy**:
 This component implements the rate limit algorithms without knowing the

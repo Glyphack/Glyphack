@@ -38,3 +38,7 @@ url_api = "https://api.github.com/repos/gohugoio/hugo/releases/assets/468320272"
 checksum = "sha256:dadf3499d4c6a27f6bc9d56d5a992ba62d82a74a3771fcc165c364ec1eeaac1c"
 url = "https://github.com/gohugoio/hugo/releases/download/v0.164.0/hugo_0.164.0_windows-amd64.zip"
 url_api = "https://api.github.com/repos/gohugoio/hugo/releases/assets/468320283"
+
+[[tools."pipx:pre-commit"]]
+version = "4.6.2"
+backend = "pipx:pre-commit"

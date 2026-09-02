@@ -17,8 +17,7 @@ title: Rate Limiter From Scratch in Python Part 2
 
 ## Introduction
 
-In the last [post](Rate%20Limiter%20From%20Scratch%20in%20Python%20Part%201.md)
-I started writing a rate limiter.
+In the last [post](/blog/rate-limiter-python-1/) I started writing a rate limiter.
 The project right now supports only 1 rate limiting algorithm(Token Bucket).
 
 In this part we're going to implement the following algorithms:
