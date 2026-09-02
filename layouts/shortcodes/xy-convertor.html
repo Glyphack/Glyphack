@@ -1,9 +1,9 @@
 {{/*
-  hue/xy-convertor shortcode
+  xy-convertor shortcode
   Displays a color picker that converts RGB to CIE XY format used by Philips Hue.
 
   Usage:
-    {{< hue/xy-convertor >}}
+    {{< xy-convertor >}}
 */}}
 
 {{ $id := printf "hue-xy-%d" (index (seq 1 (add (.Ordinal) 1)) (.Ordinal)) }}
