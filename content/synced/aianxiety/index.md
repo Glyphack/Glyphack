@@ -208,7 +208,7 @@ title: جواب به بدبینی‌ها درباره‌ی هوش مصنوعی
 مثلا آیا پولش رو گذاشته روی این کار یا سرمایه گذاری کرده توی صنعت برنامه نویسی با AI؟
 آیا سابقه‌اش توی پیش بینی کردن خوبه؟
 چون اکثر آدما، از جمله خودم، توی پیش‌بینی خوب نیستند. فقط کافیه یه مدت پیش‌بینی‌های خودتون و اطرافیانتون رو بنویسید و چک کنید چقدر درسته.
-بعضی ریسرچرهای که توی زمینه AI کار میکردن [پیش‌بینیشون این بوده](https://www.slatestarcodexabridged.com/SSC-Journal-Club-Expert-Prediction-Of-Experiments) که حدود سال ۲۱۰۰، AI میتونه کارهارو بهتر از انسان انجام بده.
+بعضی ریسرچرهای که توی زمینه AI کار میکردن ۱۰ سال پیش [پیش‌بینیشون این بوده](https://www.slatestarcodexabridged.com/SSC-Journal-Club-AI-Timelines) که حدود سال ۲۱۰۰، AI میتونه کارهارو بهتر از انسان انجام بده.
 مقایسه کنید با روایت‌هایی که الان میشنوید از AI lab ها.
 همونطور که آدم‌هایی که اون زمان فکر میکردن سرعت پیشرفت کم هست اشتباه میکردن الان هم آدمایی که فکر میکنن تا سال بعد همه بدبخت میشیم ممکنه اشتباه کنن.
 
@@ -220,7 +220,7 @@ title: جواب به بدبینی‌ها درباره‌ی هوش مصنوعی
 > The formulation of the problem is often more essential than its solution, which may be merely a matter of mathematical or experimental skill.
 > ― Albert Einstein
 
-(من کتابی درباره انیشتین نخوندم و نمیدونم که این رو خودش گفته یا نه در نتیجه منبع معتبر ترین چیزی هست که پیدا کردم:‌https://www.goodreads.com/quotes/298061-the-formulation-of-the-problem-is-often-more-essential-than)
+(من کتابی درباره انیشتین نخوندم و نمیدونم که این رو خودش گفته یا نه [منبع](https://www.goodreads.com/quotes/298061-the-formulation-of-the-problem-is-often-more-essential-than).)
 
 
 قطعا انیشتین درباره‌ی اینکه مسئله رو درست تعریف کنیم بدیم به AI حرف نمیزده.
