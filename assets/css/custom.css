@@ -190,3 +190,25 @@ figure + figure {
   margin-top: 0.2rem;
   vertical-align: top;
 }
+
+/* Posts in right-to-left languages */
+
+pre,
+code {
+	direction: ltr;
+	unicode-bidi: isolate;
+}
+
+.post-single li {
+	margin-left: 0;
+	margin-inline-start: var(--li-indent);
+}
+
+.post-single blockquote {
+	border-left: none;
+	border-inline-start: solid 2px;
+}
+
+.post-single :is(h1, h2, h3, h4, h5, h6, p):not(li p) {
+	unicode-bidi: plaintext;
+}

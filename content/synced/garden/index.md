@@ -7,6 +7,14 @@ tags:
 source:
 title: Garden
 ---
+# Pepper
+
+I don't remember where these peppers come from. Back when I went to [Pytest Dev Sprint](/blog/pytest-dev-sprint-2024/) I bought some pepper seeds but they never sprouted.
+They need a lot of heat to start growing. So maybe the just stayed inside the soil and suddenly grew?
+That's so amazing.
+
+![IMG_5111.jpeg](IMG_5111.jpeg)
+
 # Basil from AH
 
 I thought it's not possible to regrow herb pots from the supermarket.
