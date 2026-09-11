@@ -1,5 +1,5 @@
 ---
-date: 2026-08-05
+date: 2026-09-01
 category:
   - "Books"
 title: My Inventions The Autobiography of Nikola Tesla
