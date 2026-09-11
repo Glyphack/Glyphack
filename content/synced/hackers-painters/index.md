@@ -1,5 +1,5 @@
 ---
-date: 2026-08-28
+date: 2025-11-01
 category:
   - "Books"
 title: Hackers & Painters
