@@ -14,23 +14,23 @@ I didn't get a recommendation for this one but Tesla is well-known and I love au
 
 Maybe you know him as the crazy inventor who was obsessed with [the number three](https://www.youtube.com/watch?v=6ZrO90AI0c8) (It's true, it was in the book!) and think the book is just about electricity.
 
-Tesla's autobiography is like a psychology book, if you don't mind that your psychology book talks a lot about electricity.
+Tesla's autobiography is introspective, and the rest is a lot about electricity.
 So when I finished the book I had two feelings.
 I know now a lot of personal memories of Tesla, and how he lived and what he liked to do.
-And some blurry ideas about electricities.
-It's the same as I studied chemistry in high school and I have a blurry memory of that half empty rectangle with small cells inside each that each had a letter.
+And some blurry ideas about electricity's.
+I know about as much as chemistry in high school. I remember the half empty rectangle with small cells inside each that each had a letter.
 
-The first two chapters of the book are personal about his memories growing up.
-It has so much details.
-To the point that I wanted to also write more about how I feel about stuff.
-Reading this book really pushed me forward with writing more.
+The first chapter of the book are personal and about his memories growing up.
+It has so much details to the point that I wanted to also write more about how I feel about stuff.
+Reading this book really pushed me to write more.
 
 His childhood is filled with stories that you kinda wanna hear from a boy who becomes an inventor.
 Inspiring parents that prepare mentally prepare him, a boy who is in love with manufacturing machines from all sorts of stuff he could find.
 The classic story of reading under lights of a candle.
 
-But it also gets pretty personal. He talks about his personal feelings. The ideas that made him sad and happy.
-Like when they moved from countryside into a town and he got pretty depressed because he missed the animals and the land(What's this called?)
+He talks about his personal feelings.
+The ideas that made him sad and happy.
+Like when they moved from countryside into a town and he got pretty depressed because he missed the animals and the nature.
 
 This book also gets pretty philosophical and electrical!
 His life is filled with stories.
@@ -93,7 +93,7 @@ This helps because the idea sticks to my head and maybe few days later I get the
 
 But with writing, I think it's the exact opposite.
 No amount of contemplating in writing is useful, at least for me.
-I need sit down and start writing whatever that comes to my mind for what I want to write.
+I need to sit down and start writing whatever that comes to my mind for what I want to write.
 When I have something it's much easier to iterate on it and I continue it.
 But thinking exactly what I want to write and then come back to write it? Never happened.
 
@@ -124,7 +124,7 @@ I want to end this section on his childhood thoughts and thinking. With this pas
 He was a playful kid.
 He created toys for himself and played in nature.
 The whole family moved to a bigger, Gospic, after his brother died in a horse riding accident.
-And this made him miss the country side.
+And this made him miss the countryside.
 
 These are some of the fun memories:
 
