@@ -2,6 +2,7 @@
 date: 2024-05-29 22:55:24+02:00
 category:
   - "Blog"
+  - "Trips"
 tags:
 title: Camping at Vresselse Bos
 ---
