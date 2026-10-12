@@ -1,12 +1,10 @@
 ---
 date: 2026-10-10
 title: Projects
-url: /projects/
 tags:
-  - Active
 ---
 Here are some projects that I worked on.
-To view my job experience checkout my [Resume](/synced/resume/).
+To view my job experience checkout my [Resume](/resume/).
 
 ## [Ty](https://github.com/astral-sh/ruff)
 
