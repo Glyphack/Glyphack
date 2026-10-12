@@ -1,0 +1,18 @@
+{{ define "main" }}
+
+<div class="list-container">
+
+    {{ partial "breadcrumbs.html" . }}
+
+    <h1>{{ .Title }}</h1>
+    {{ .Content }}
+
+    {{/* A page counts as Persian when its title uses Persian script */}}
+    {{ $persian := where .Site.RegularPages "Title" "like" `\p{Arabic}` }}
+
+    {{ range sort $persian "Date" "desc" }}
+    {{ partial "post-entry.html" . }}
+    {{ end }}
+
+</div>
+{{ end }}

@@ -38,7 +38,7 @@ name = "Reads This"
 url = "https://r.glyphack.com/s/s"
 [[params.menu]]
 name = "Resume"
-url = "https://docs.google.com/document/d/1XgC2Va8ZgJ2DrmRKpgd_7iVjv8aASnn8nzl6DgkR1mg/edit?usp=sharing"
+url = "/resume/"
 [[params.social]]
 name = "github"
 url = "https://github.com/glyphack"
@@ -86,6 +86,8 @@ Checkout my bi-weekly [Devlogs](/logs/) about various things I do and usually pa
 I love plants you can check my [gardening](/synced/garden/) journey.
 
 See my [trips](/trips/) for travel notes.
+
+I also write in [Persian](/persian/).
 
 ### [What Am I Doing Now](/now/)
 See [my "now" page](/now/).

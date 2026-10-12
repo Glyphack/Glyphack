@@ -59,8 +59,7 @@ Then we got a map. We decided to go to [Villinge](https://www.google.com/maps/pl
 The red line is the route we ended up going.
 It was natures decision forced on us.
 The wind and waves pushed us to the south, and when I found out it was too late to reroute.
-And there were very few islands after Kvarnon.
-I used islands to figureI didn't realize this until it was too late.
+I used islands to figure out where we are and I didn't realize this until it was too late because there was fewer islands after Kvarnon and it was mostly water.
 
 ![Camping_Trip_in_Sweden-2d363452.webp](Camping_Trip_in_Sweden-2d363452.webp)
 
@@ -88,7 +87,8 @@ We met two other people on the kayak.
 One of them, a Swedish man, could talk in Dutch and Yasaman talked with him.
 First time using her Dutch speaking skills outside of the Netherlands!
 
-In the middle of the way it started raining heavily. It was fine but annoying, and we were tired and hungry.
+In the middle of the way it started raining heavily.
+And we were tired and hungry.
 This was enough reason to stop somewhere.
 Luckily, we were close to a small island, it was sandy and had big trees on it.
 Good rain protection.
