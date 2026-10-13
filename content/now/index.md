@@ -2,7 +2,6 @@
 date: 2024-03-04
 tags:
 title: Now
-url: /now/
 ---
 This is my [now page](https://nownownow.com/about), with what I'm thinking and working on.
 You should make one too.
@@ -13,7 +12,7 @@ Updated 2026-07-24 from Amsterdam. It's sunny and green.
 
 I'm writing a lot more. I think what finally made writing stick for me was that I started writing for my own. To think and solve problems.
 And I'm using Obsidian for it now. I have made some customizations to make it more enjoyable. I will share more about it.
-These are just my personal writings. My blog is on a git repo. But I made a tool to export the writings I want to my blog. So a lot of the notes you see here like my [Trips](/synced/trips/) and [Garden](/synced/garden/) are coming from Obsidian.
+These are just my personal writings. My blog is on a git repo. But I made a tool to export the writings I want to my blog. So a lot of the notes you see here like my [Trips](/trips/) and [Garden](/garden/) are coming from Obsidian.
 On using Obsidian, I generally like this program. It has a good mobile support so I can write and attach pictures on the phone as well.
 
 If it all goes well I'm gonna write a lot more for myself, and share them on this website.
@@ -30,7 +29,7 @@ I haven't worked on it for a while now. My last work was on pytest integration. 
 ## Gardening
 
 My plants are doing well and are enjoying the warm weather and the sun. Recently I found a couple more plants on the street and added them to my collection.
-You can see them in my [Garden](/synced/garden/).
+You can see them in my [Garden](/garden/).
 
 ## Building a Logic Gate Simulator
 

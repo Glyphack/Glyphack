@@ -50,9 +50,12 @@ blog/ty-self/
 blog/ty-test/
 blog/vresselse-camping/
 blog/write-software-documentation/
+garden/
 logs/
+now/
 persian/
 projects/
+reading-list/
 resume/
 synced/a-philosophy-of-software-design/
 synced/aianxiety/
@@ -63,7 +66,6 @@ synced/dalaro/
 synced/data-oriented-design/
 synced/do-the-work/
 synced/founders-at-work/
-synced/garden/
 synced/hackers-painters/
 synced/how-to-live/
 synced/how-to-win-friends-and-influence-people/
@@ -75,9 +77,7 @@ synced/manna-two-visions-of-humanitys-future/
 synced/masters-of-doom/
 synced/my-inventions-the-autobiography-of-nikola-tesla/
 synced/no-ordinary-genius/
-synced/now/
 synced/on-slave-trade/
-synced/reading-list/
 synced/slate-star-codex-abridged/
 synced/surely-youre-joking-mr-feynman/
 synced/system-design-interview/
@@ -86,8 +86,8 @@ synced/the-art-of-doing-science-and-engineering-learning-to-learn/
 synced/the-autobiography-of-benjamin-franklin/
 synced/the-conquest-of-happiness/
 synced/the-practice-of-programming/
-synced/trips/
 synced/what-do-you-care-what-other-people-think/
 synced/where-good-ideas-come-from/
 synced/writing-an-interpreter-in-go/
 talks/
+trips/

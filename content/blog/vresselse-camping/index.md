@@ -6,7 +6,6 @@ category:
 tags:
 title: Camping at Vresselse Bos
 ---
-
 I had some time in between switching jobs and decided to go for a camping trip.
 My first time in the Netherlands.
 

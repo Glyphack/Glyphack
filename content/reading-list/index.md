@@ -2,7 +2,6 @@
 date: 2026-08-14
 tags:
 title: Bookshelf
-url: /reading-list/
 layout: reading-list
 ---
 Books I've read and plan to read.
