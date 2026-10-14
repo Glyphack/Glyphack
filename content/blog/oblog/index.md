@@ -101,7 +101,7 @@ Hugo uses the front matter as well.
 
 ## Styled Pages
 
-For some pages, like my [Bookshelf](/synced/reading-list/), I want custom styling.
+For some pages, like my [Bookshelf](/reading-list/), I want custom styling.
 This page is mostly HTML that is stored in the blog with a bit of Markdown that is in my notes.
 
 The way this works is that I set a layout in the front matter of this note `layout: reading-list`.
@@ -136,7 +136,7 @@ In Hugo I can create a [layout](https://gohugo.io/methods/page/layout/) for it i
 
 Then Hugo uses this HTML to render that page.
 The Markdown content will be shown at the top and the HTML follows.
-The template can be more fancy like my [reading list](/synced/reading-list/) page.
+The template can be more fancy like my [reading list](/reading-list/) page.
 
 This is a good separation.
 I don't need the HTML templates in my Obsidian vault.
