@@ -118,7 +118,7 @@ So next time I have to read a paper to understand the subject I will be more rel
 
 I'm changing some habits to replace the current ones.
 If I don't feel motivated enough to do anything I get up and pick up a book to read.
-I'm keeping a [Garden](/garden/) in my balcony is that when I'm tired I can move the soil around and plant some pots and prune plants.
+I'm keeping a [Garden](/synced/garden/) in my balcony is that when I'm tired I can move the soil around and plant some pots and prune plants.
 I find this to be a less addictive than say, watching a movie.
 When the motivation comes back I can stop it easily.
 

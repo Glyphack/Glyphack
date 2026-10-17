@@ -19,7 +19,7 @@ My goal is to share more stuff on my website by exporting them from Obsidian.
 Using Obsidian never became a habit for me until I moved all my notes there.
 I don't have a sophisticated workflow I write things down in files and link them together.
 I don't need to sync my blog and notes manually anymore.
-This is how I was able to share my [trips](/trips/) and my [garden](/garden/) online.
+This is how I was able to share my [trips](/trips/) and my [garden](/synced/garden/) online.
 
 Currently the pages I share from my vault don't show up in the RSS feed.
 But if A blogpost refers to a page from my vault that I shared it will have a link to that page.
