@@ -87,6 +87,8 @@ Outside was maybe 7 degrees and windy but the water was keeping me warm.
 We had lunch at this place [Hofland Eatery](https://www.google.com/maps/place/Hofland+Eatery/@63.9950481,-21.1988024,698m/data=!3m1!1e3!4m10!1m2!2m1!1sRestaurants!3m6!1s0x48d667196d42fb4b:0xb083f9eb2f6f718a!8m2!3d63.9950481!4d-21.1897902!15sCgtSZXN0YXVyYW50c1oNIgtyZXN0YXVyYW50c5IBEHBpenphX3Jlc3RhdXJhbnSaASNDaFpEU1VoTk1HOW5TMFZKUTBGblNVUjRNemx4VTBKUkVBReABAPoBBAgAEDU!16s%2Fg%2F11h4f_j1hg?entry=ttu&g_ep=EgoyMDI2MTAxOC4wIKXMDSoASAFQAw%3D%3D) and I got a giant pizza! I always wanted to get a giant pizza since I was a kid. But I don't do it because I wanna live healthy. So I used the trip as an opportunity to break the rule.
 It was made like how pizzas were made in Iran. Reminded me of childhood. With a lot of meat, sausage and thick bread.
 
+![Iceland_Trip-5616a1dc.webp](Iceland_Trip-5616a1dc.webp)
+
 In [Reykjavík](https://www.google.com/maps/place/Reykjav%C3%ADk,+Iceland/@64.1261913,-22.0177698,22224m/data=!3m2!1e3!4b1!4m6!3m5!1s0x48d674b9eedcedc3:0xec912ca230d26071!8m2!3d64.1469868!4d-21.9407552!16zL20vMDZmbGc?entry=ttu&g_ep=EgoyMDI2MTAxOC4wIKXMDSoASAFQAw%3D%3D) there was library that turned into a bar during nights. You would thought it's really a bar but downstairs they had chairs and table actually.
 There was a band playing there so we walked in. They were singing songs suggested by the audience. It was a fun experience the songs where the old ones that everyone can sing along.
 They played [Toto - Rosanna](https://www.youtube.com/watch?v=qmOLtTGvsbM) and I got a throwback to when I learned about Toto.
