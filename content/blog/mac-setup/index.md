@@ -3,7 +3,6 @@ date: 2026-10-14
 category:
   - "Blog"
 tags:
-  - Active
 title: I made a macOS Setup
 ---
 Unlike Linux users, Mac users don't rice their systems and share these customizations.

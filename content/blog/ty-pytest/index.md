@@ -3,7 +3,6 @@ date: 2026-09-01
 category:
   - "Blog"
 tags:
-  - Active
 title: Running Python Tests in Ty
 ---
 The last thing I worked on in [Ty](https://docs.astral.sh/ty/) was adding [Pytest support](https://github.com/astral-sh/ty/issues/1986).

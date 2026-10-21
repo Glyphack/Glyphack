@@ -6,7 +6,6 @@ start: 2026-08-21
 end: 2026-08-25
 location:
 tags:
-  - Active
 title: Camping Trip in Sweden
 ---
 I like nature.

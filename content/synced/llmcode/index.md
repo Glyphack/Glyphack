@@ -2,7 +2,6 @@
 date: 2026-10-16
 title: کد برای حل مسأله نوشته میشه
 tags:
-  - Active
   - persian
 ---
 https://x.com/erfanafre/status/2110452773158564043

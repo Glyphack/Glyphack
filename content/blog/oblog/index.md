@@ -3,7 +3,6 @@ date: 2026-09-04
 category:
   - "Blog"
 tags:
-  - Active
 title: Share Obsidian Notes To A Blog
 ---
 A while back I started [sharing](/blog/ob/) my working notes on my blog.
