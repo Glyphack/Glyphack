@@ -5,6 +5,10 @@ category:
 tags: []
 title: Blogging with Obsidian
 ---
+I suggest reading [Share Obsidian Notes To A Blog](/blog/oblog/) post. That's the upgrade to the process I described here.
+
+***
+
 My blog is a bunch of files that are given to a program that converts them to HTML and CSS files, which is what you see here.
 
 Also, Obsidian uses files to store my notes. This means it gives the most freedom than any other tool out there.

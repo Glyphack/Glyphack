@@ -6,6 +6,7 @@ tags:
 title: Share Obsidian Notes To A Blog
 ---
 A while back I started [sharing](/blog/ob/) my working notes on my blog.
+After about a year I made some improvements to the process and I'm gonna talk about it here.
 This increased the amount of time I spend on writing.
 As a result, developed a habit of [journaling](https://jon.bo/posts/on-journaling/) and keeping log of things I'm doing to the point that I spend about 1 hour writing these days.
 I always liked reading [people's](https://jon.bo/posts/on-journaling/) [notes](https://jon.bo/posts/on-journaling/).

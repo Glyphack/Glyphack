@@ -50,7 +50,7 @@ He's talking about childhood memories and feelings because he believes in that e
 As we get older we have routines and habits that make a change harder.
 > Our first endeavors are purely instinctive prompting of an imagination vivid and undisciplined. As we grow older reason asserts itself and we become more and more systematic and designing. But those early impulses, though not immediately productive, are of the greatest moment and may shape our very destinies. Indeed, I feel now that had I understood and cultivated instead of suppressing them, I would have added substantial value to my bequest to the world.
 
-His father was a clergyman, more specifically a military school dropout that became a priest.
+His father was a clergyman, more specifically an officer's son with military education that later chose to be a priest.
 And he wanted Nikola to also be a priest as well.
 The innovative instinct did not come from him, but it came from his mother.
 
@@ -58,7 +58,7 @@ The innovative instinct did not come from him, but it came from his mother.
 >
 > On another occasion he was taking out for a drive, a friend who carelessly permitted his costly fur coat to rub on the carriage wheel. My father reminded him of it saying, "Pull in your coat; you are ruining my tire." He had the odd habit of talking to himself and would often carry on an animated conversation and indulge in heated argument, changing the tone of his voice. A casual listener might have sworn that several people were in the room.
 
-His mother was illiterate, but you don't need to read or write to build stuff, do you?
+His mother was from a family of inventors and she was also a skilled person.
 
 > She invented and constructed all kinds of tools and devices and wove the finest designs from thread which was spun by her. She even planted seeds, raised the plants and separated the fibbers herself. She worked indefatigably, from break of day till late at night, and most of the wearing apparel and furnishings of the home were the product of her hands.
 
@@ -123,7 +123,8 @@ I want to end this section on his childhood thoughts and thinking. With this pas
 
 He was a playful kid.
 He created toys for himself and played in nature.
-The whole family moved to a bigger, Gospic, after his brother died in a horse riding accident.
+The whole family moved to a bigger city called Gospic.
+Before they move his brother died in an accident with a horse.
 And this made him miss the countryside.
 
 These are some of the fun memories:
@@ -154,13 +155,13 @@ I imagine it was like gluing them at a specific angle to the wheel so when they 
 While showing all these signs his father still wanted to send him to clergy.
 He had to deal with two hard diseases.
 
-First he had Malaria.
+First he had Malaria and physicians gave up on him. He had to stay in bed for a long time.
+Second time he was diagnosed with cholera. He spent nine months in bed to recover.
+
 And during his recovery he read a lot of Mark Twain books.
 
 > One day I was handed a few volumes of new literature unlike anything I had ever read before and so captivating as to make me utterly forget me hopeless state. They were the earlier works of Mark Twain and to them might have been due the miraculous recovery which followed. Twenty-five years later, when I met Mr. Clemens and we formed a friendship between us, I told him of the experience and was amazed to see that great man of laughter burst into tears.
 
-Second time he was in a more serious condition
-Where physicians gave up on him.
 At this time his father changed his mind and told Tesla that he will send him to the best engineering school.
 That's what gave him the energy to get up again.
 
@@ -180,14 +181,14 @@ The brush name is confusing to me because I thought it's a literal brush but it'
 Watch the video definitely.
 
 After his study he works in Europe at the Telegraph office.
-And the idea from rotating magnetic field comes to his mind somewhere in a park.
+And the idea from rotating magnetic field comes to him later.
 
 > The consummation of the experiment was, however, delayed until the summer of that year, when I finally had the satisfaction of seeing the rotation effected by alternating currents of different phase, and without sliding contacts or commutator, as I had conceived a year before. It was an exquisite pleasure but not to compare with the delirium of joy following the first revelation.
 
 > For a while I gave myself up entirely to the intense enjoyment of picturing machines and devising new forms. It was a mental state of happiness about as complete as I have ever known in life. Ideas came in an uninterrupted stream and the only difficulty I had was to hold them fast. The pieces of apparatus I conceived were to me absolutely real and tangible in every detail, even to the minutest marks and signs of wear. I delighted in imagining the motors constantly running, for in this way they presented to the mind's eye a fascinating sight.
 
 After Budapest he moves to Paris and works Edison's European company. The famous Edison.
-During this time he moves around to Austria and Germany to fix stuff.
+During this time he moves around to France and Germany to fix stuff.
 He knew a lot of languages and that was an advantage to be able to move this easily!
 
 One of his funny stories from Germany, that you can still say as a joke about them, is this one:
@@ -198,7 +199,7 @@ Or as he puts it in a succinct way:
 
 > There were three administrators, whom I shall designate as A, B, and C for convenience. When I called on A, he told me what B had the say. This gentleman thought that only C could decide, and the latter was quite sure that A alone had the power to act. After several laps of this circulus viciousus, it dawned upon me that my reward was a castle in Spain.
 
-At some point they realize his pretty good and send him to the US.
+At some point they realize his pretty good, and told him to go the US. Tesla sold his stuff to gather money for this trip.
 
 Where he meets with Edison. The famous Edison.
 
@@ -219,12 +220,13 @@ His analogy is funny, he says there's some toxic agent that is produced in the b
 > To venture a theory out of my sphere, the body probably accumulates little by little a definite quantity of some toxic agent and I sink into a nearly lethargic state which lasts half an hour to the minute. Upon awakening I have the sensation as though the events immediately preceding had occurred very long ago, and if I attempt to continue the interrupted train of thought I feel veritable nausea. Involuntarily, I then turn to other and am surprised at the freshness of the mind and ease with which I overcome obstacles that had baffled me before. After weeks or months, my passion for the temporarily abandoned invention returns and I invariably find answers to all the vexing questions, with scarcely any effort.
 
 But what was he working on at this time?
-The idea that I mentioned at the beginning, the wireless system.
+The idea that I mentioned at the beginning, the wireless power system.
 
 This system as he puts it was a way to transfer electricity and with that [information wirelessly](https://en.wikipedia.org/wiki/World_Wireless_System).
 And the most fascinating part is using earth and atmosphere to do this.
 Again, I don't know anything about physics pas the basic formulas I memorized in high school.
 
+Similar to the idea of moving power wirelessly he also showed in an small experiment that you can control machines remotely. He called this telautomatics.
 But he says that he did experiments to showcase his idea, at least it was proven working in a small scale.
 
 > In demonstrating my invention before audiences, the visitors were requested to ask questions, however involved, and the automaton would answer them by signs. This was considered magic at the time, but was extremely simple, for it was myself who gave the replies by means of the device. At the same period, another larger telautomatic boat was constructed, a photograph of which was shown in the October 1919 number of the Electrical Experimenter.
