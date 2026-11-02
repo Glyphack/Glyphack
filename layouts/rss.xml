@@ -20,9 +20,9 @@
       {{ with (.Site.Params.author).email }}<author>{{.}}{{ with ($.Site.Params.author).name }} ({{.}}){{end}}</author>{{end}}
       <guid>{{ .Permalink }}</guid>
       {{- $content := .Content -}}
-      {{- $content = replaceRE `(<iframe[^>]+src="([^"]+)"[^>]*>.*?</iframe>)` `$1<p><a href="$2">View embedded content</a></p>` $content -}}
-      {{- $content = replaceRE `(<video[^>]+src="([^"]+)"[^>]*>.*?</video>)` `$1<p><a href="$2">Watch video</a></p>` $content -}}
-      {{- $content = replaceRE `Your browser does not support video playback.` (printf `<p><a href="%s">Open this post to view the video</a></p>` .Permalink) $content -}}
+      {{- $content = replaceRE `href="#` (printf `href="%s#` .Permalink) $content -}}
+      {{- $content = replaceRE `(?s)<details>\s*<summary>(.*?)</summary>` `<p><strong>$1</strong></p>` $content -}}
+      {{- $content = replaceRE `</details>` `` $content -}}
       <description>{{ $content | html }}</description>
     </item>
     {{ end }}

@@ -13,7 +13,7 @@ So why don’t more tests look like this?
 
 ## Unit Tests Are Verbose
 
-Say you’re writing a parser and want to add a unit test. It usually ends up looking like this example from [Writing An Interpreter In Go](https://glyphack.com/s/write-an-interpreter-in-go/):
+Say you’re writing a parser and want to add a unit test. It usually ends up looking like this example from [Writing an Interpreter in Go](/synced/writing-an-interpreter-in-go/):
 
 ```go
 // parser/parser_test.go

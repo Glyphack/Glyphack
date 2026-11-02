@@ -1,1 +1,1 @@
-Not available in RSS.
+<p><a href="{{ .Page.Permalink }}">Try the interactive RGB to Hue XY converter on the website</a></p>

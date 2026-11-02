@@ -108,10 +108,12 @@ The result was that Claude built a much better-looking UI in the first shot and 
 What V0 and ChatGPT made was pretty similar, but it looked really basic and I didn't continue with prompting.
 <details>
     <summary>Prompt</summary>
+
 Hello, I want you to make a design for a web application. This web application is a local terminal application, but when you open it, when you run it, it will open a web page for you that you can interact with the application. What this does is that it's an offline code review tool where you can launch it and you will see the diff of the repository, git repository that you are at. You can select different branches, you can select the base branch, the other branch you want to check the diff and then you can select commits. You will see the file tree of the changes and you will see the files and you would see the lines and you can comment on the lines. And when it's done, there is a button for a finish review where you click and then you get your review copied to the clipboard. It's useful to use it with coding tools, AI coding agents. So you can review their code and give them back feedback in bulk. Make a design for it. I'm mostly looking for something minimal but also beautiful. Not too much clutter but it also should look nice. Like the color, typography, these kind of things. What are the important parts here?
 Start with checking the requirements and ask me if there are any questions about it.
 Don't want the full app just html and style with tailwind. Run it for me so I can see it.
 Generate as a single HTML file tailwind. No js for functionality.
+
 </details>
 
 

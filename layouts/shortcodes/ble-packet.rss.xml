@@ -1,1 +1,10 @@
-{{ .Params.payload | default "" }}
+<pre><code>{{ .Params.payload | upper }}</code></pre>
+<ul>
+{{- range split .Inner "\n" }}
+  {{- $line := strings.TrimSpace . }}
+  {{- if and $line (in $line "|") }}
+    {{- $p := split $line "|" }}
+  <li>Bytes {{ index $p 0 | strings.TrimSpace }}: {{ index $p 1 | strings.TrimSpace }}{{ with index $p 2 | strings.TrimSpace }}. {{ . }}{{ end }}</li>
+  {{- end }}
+{{- end }}
+</ul>

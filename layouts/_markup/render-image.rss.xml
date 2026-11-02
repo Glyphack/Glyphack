@@ -1,0 +1,49 @@
+{{- $u := urls.Parse .Destination -}}
+{{- $url := $u.String -}}
+{{- $imgResource := .Page.Scratch.Get "typoNilVariable" -}}
+{{- if not $u.IsAbs -}}
+  {{- $path := strings.TrimPrefix "./" $u.Path -}}
+  {{- if .PageInner.Resources -}}
+    {{- $imgResource = .PageInner.Resources.Get $path -}}
+  {{- else if (or .PageInner.Parent .PageInner.Parent.Resources) -}}
+    {{- $imgResource = .PageInner.Parent.Resources.Get $path -}}
+  {{- end -}}
+  {{- $imgResource = or $imgResource (resources.Get $path) -}}
+  {{- with $imgResource -}}
+    {{- $url = .Permalink -}}
+    {{- if and (eq .MediaType.MainType "image") (ne .MediaType.SubType "svg") -}}
+      {{- $url = (.Filter images.AutoOrient).Permalink -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $ext := lower (strings.TrimPrefix "." (path.Ext $u.Path)) -}}
+{{- $isVideo := in (slice "mp4" "webm" "ogv" "mov" "m4v") $ext -}}
+{{- $isPdf := eq $ext "pdf" -}}
+{{- with $imgResource -}}
+  {{- $isVideo = eq .MediaType.MainType "video" -}}
+  {{- $isPdf = eq .MediaType.Type "application/pdf" -}}
+{{- end -}}
+
+{{- $youtubeHosts := slice "youtube.com" "www.youtube.com" "m.youtube.com" -}}
+{{- $youtubeID := "" -}}
+{{- $host := lower $u.Host -}}
+{{- if and (in $youtubeHosts $host) (eq $u.Path "/watch") -}}
+  {{- $youtubeID = $u.Query.Get "v" -}}
+{{- else if and (in $youtubeHosts $host) (strings.HasPrefix $u.Path "/shorts/") -}}
+  {{- $youtubeID = strings.TrimPrefix "/shorts/" $u.Path -}}
+{{- else if eq $host "youtu.be" -}}
+  {{- $youtubeID = strings.TrimPrefix "/" $u.Path -}}
+{{- end -}}
+
+{{- $text := .Text -}}
+{{- if $youtubeID -}}
+<a href="https://www.youtube.com/watch?v={{ $youtubeID }}"><img src="https://img.youtube.com/vi/{{ $youtubeID }}/hqdefault.jpg" alt="{{ or $text "YouTube video" }}"></a><br><a href="https://www.youtube.com/watch?v={{ $youtubeID }}">Watch on YouTube{{ with $text }}: {{ . }}{{ end }}</a>
+{{- else if $isPdf -}}
+<a href="{{ $url }}">{{ or $text "Open PDF" }} (PDF)</a>
+{{- else if $isVideo -}}
+<a href="{{ $url }}">Watch video{{ with $text }}: {{ . }}{{ end }}</a>
+{{- else -}}
+<img src="{{ $url }}" alt="{{ $text }}">
+{{- with .Title }}<br><em>{{ . | markdownify }}</em>{{ end -}}
+{{- end -}}
