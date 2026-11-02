@@ -3,26 +3,60 @@
   <h1>{{ .Title }}</h1>
   {{ .Content }}
 
-  {{ $sections := slice
-    (dict "heading" "All Time Favorites" "items" site.Data.favorites "note" "author")
-    (dict "heading" "From Blogs I Follow" "items" site.Data.blogroll "note" "site")
-  }}
-  {{ range $sections }}
-  {{ if .items }}
-  <h2>{{ .heading }}</h2>
-  {{ $note := .note }}
-  {{ range .items }}
+  <div id="favorites" hidden>
+    <h2>All Time Favorites</h2>
+  </div>
+
+  {{ with site.Data.blogroll }}
+  <h2>From Blogs I Follow</h2>
+  {{ range . }}
   <div class="post-line">
     <p class="line-date">{{ time.AsTime .date | time.Format site.Params.listDateFormat }}</p>
     <div>
       <p class="line-title">
         <a href="{{ .url }}">{{ .title }}</a>
-        {{ with index . $note }}<small>{{ . }}</small>{{ end }}
+        {{ with .site }}<small>{{ . }}</small>{{ end }}
       </p>
     </div>
   </div>
   {{ end }}
   {{ end }}
-  {{ end }}
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", async function () {
+    const bundleUrl = "https://readwise.io/reader/view/572d59f0-2f03-4439-abe1-93de43ac7a1c";
+    const section = document.getElementById("favorites");
+
+    const response = await fetch(bundleUrl);
+    if (!response.ok) {
+      console.error("Could not load favorites:", response.status);
+      return;
+    }
+    const bundle = new DOMParser().parseFromString(await response.text(), "text/html");
+
+    for (const doc of bundle.querySelectorAll("a.document")) {
+      const link = document.createElement("a");
+      link.href = doc.getAttribute("href");
+      link.textContent = doc.querySelector("h4").textContent.trim();
+
+      const title = document.createElement("p");
+      title.className = "line-title";
+      title.append(link);
+
+      const author = doc.querySelector(".author");
+      if (author) {
+        const note = document.createElement("small");
+        note.textContent = author.textContent.trim();
+        title.append(" ", note);
+      }
+
+      const line = document.createElement("div");
+      line.className = "post-line";
+      line.append(title);
+      section.append(line);
+    }
+    section.hidden = false;
+  });
+</script>
 {{ end }}
