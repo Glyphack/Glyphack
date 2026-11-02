@@ -36,21 +36,26 @@ class Favorite:
     date: str
 
 
-def read_token() -> str:
+def read_token() -> str | None:
     env_token = os.environ.get("READWISE_API_KEY")
     if env_token:
         return env_token.strip()
 
     result = subprocess.run(
-        ["security", "find-generic-password", "-a", KEYCHAIN_ACCOUNT, "-s", KEYCHAIN_SERVICE, "-w"],
+        [
+            "security",
+            "find-generic-password",
+            "-a",
+            KEYCHAIN_ACCOUNT,
+            "-s",
+            KEYCHAIN_SERVICE,
+            "-w",
+        ],
         capture_output=True,
         text=True,
     )
     if result.returncode != 0:
-        raise RuntimeError(
-            "Readwise token not found. Set READWISE_API_KEY or add it to the keychain: "
-            + result.stderr.strip()
-        )
+        return None
     return result.stdout.strip()
 
 
@@ -98,7 +103,11 @@ def fetch_favorites(token: str) -> list[Favorite]:
 
 
 def main() -> None:
-    favorites = fetch_favorites(read_token())
+    token = read_token()
+    if token is None:
+        print("Skipped updating favorites because the token is not set")
+        return
+    favorites = fetch_favorites(token)
     OUTPUT_FILE.parent.mkdir(exist_ok=True)
     OUTPUT_FILE.write_text(json.dumps([asdict(f) for f in favorites], indent=2) + "\n")
     log(f"Wrote {len(favorites)} favorites to {OUTPUT_FILE.relative_to(ROOT)}")
