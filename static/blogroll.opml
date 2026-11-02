@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="1.0">
+<head>
+  <title>My feeds</title>
+</head>
+<body>
+<outline text="Feeds" title="Feeds">
+  <outline title="Simon Eskildsen"  type="rss" xmlUrl="https://sirupsen.com/atom.xml" />
+  <outline title="Bartosz Ciechanowski"  type="rss" xmlUrl="https://ciechanow.ski/atom.xml" />
+  <outline title="Max Bernstein's Blog"  type="rss" xmlUrl="https://bernsteinbear.com/feed.xml" />
+  <outline title="Julian.com"  type="rss" xmlUrl="https://www.julian.com/blog/rss.xml" />
+  <outline title="David Heinemeier Hansson"  type="rss" xmlUrl="https://world.hey.com/dhh/feed.atom" />
+  <outline title="Dev as Life - Medium"  type="rss" xmlUrl="https://blog.inkdrop.app/feed" />
+  <outline title="Joel on Software"  type="rss" xmlUrl="https://www.joelonsoftware.com/feed/" />
+  <outline title="Julia Evans"  type="rss" xmlUrl="https://jvns.ca/atom.xml" />
+  <outline title="Coding Horror"  type="rss" xmlUrl="https://blog.codinghorror.com/rss/" />
+  <outline title="Martin Kleppmann's blog"  type="rss" xmlUrl="https://feeds.feedburner.com/martinkl?format=xml" />
+  <outline title="Tom Preston-Werner"  type="rss" xmlUrl="https://feeds.feedburner.com/tom-preston-werner" />
+  <outline title="journal.stuffwithstuff.com"  type="rss" xmlUrl="https://journal.stuffwithstuff.com/rss.xml" />
+  <outline title="matklad"  type="rss" xmlUrl="https://matklad.github.io/feed.xml" />
+  <outline title="3Blue1Brown mailing list"  type="rss" xmlUrl="https://3blue1brown.substack.com/feed" />
+  <outline title="too long to tweet"  type="rss" xmlUrl="https://max.levch.in/rss" />
+  <outline title="Eli Bendersky's website"  type="rss" xmlUrl="https://eli.thegreenplace.net/feeds/all.atom.xml" />
+  <outline title="Kalzumeus Software"  type="rss" xmlUrl="https://www.kalzumeus.com/feed/articles/" />
+  <outline title="Stephan Ango"  type="rss" xmlUrl="https://stephanango.com/feed" />
+  <outline title="Drew DeVault's blog"  type="rss" xmlUrl="https://drewdevault.com/blog/index.xml" />
+  <outline title="Armin Ronacher's Thoughts and Writings"  type="rss" xmlUrl="https://lucumr.pocoo.org/feed.atom" />
+  <outline title="Scattered Thoughts"  type="rss" xmlUrl="https://www.scattered-thoughts.net/atom.xml" />
+  <outline title="Slate Star Codex"  type="rss" xmlUrl="https://slatestarcodex.com/feed/" />
+  <outline title="the singularity is nearer"  type="rss" xmlUrl="https://geohot.github.io//blog/feed.xml" />
+  <outline title="Derek Sivers"  type="rss" xmlUrl="https://sive.rs/podcast.rss" />
+  <outline title="Deepak Gulati's blog"  type="rss" xmlUrl="https://www.deepakg.com/feed.rss" />
+  <outline title="Artem Tyurin"  type="rss" xmlUrl="https://agentcooper.io/rss.xml" />
+  <outline title="command center"  type="rss" xmlUrl="https://commandcenter.blogspot.com/feeds/posts/default" />
+  <outline title="antirez"  type="rss" xmlUrl="https://antirez.com/rss" />
+  <outline title="Jon Gjengset"  type="rss" xmlUrl="https://thesquareplanet.com/feed.xml" />
+  <outline title="null program"  type="rss" xmlUrl="https://nullprogram.com/feed/" />
+  <outline title="research!rsc"  type="rss" xmlUrl="http://research.swtch.com/feed.atom" />
+  <outline title="dcreager.net"  type="rss" xmlUrl="http://dcreager.net/atom.xml" />
+  <outline title="Paul Buchheit"  type="rss" xmlUrl="http://paulbuchheit.blogspot.com/feeds/posts/default?alt=rss" />
+  <outline title="fasterthanli.me"  type="rss" xmlUrl="https://fasterthanli.me/index.xml" />
+  <outline title="Kevin Lynagh's website"  type="rss" xmlUrl="https://kevinlynagh.com/feed.xml" />
+  <outline title="Stevey's Blog Rants"  type="rss" xmlUrl="http://steve-yegge.blogspot.com/feeds/posts/default?alt=rss" />
+  <outline title="Mitchell Hashimoto"  type="rss" xmlUrl="http://mitchellhashimoto.com/feed.xml" />
+  <outline title="apenwarr"  type="rss" xmlUrl="https://apenwarr.ca/log/rss.php" />
+  <outline title="Pointers Gone Wild"  type="rss" xmlUrl="https://pointersgonewild.com/rss.xml" />
+  <outline title="Tristan Hume"  type="rss" xmlUrl="https://thume.ca/atom.xml" />
+  <outline title="farbodahm"  type="rss" xmlUrl="https://farbodahm.me/index.xml" />
+  <outline title="The Observation Deck" category="New People" type="rss" xmlUrl="https://bcantrill.dtrace.org/index.xml" />
+  <outline title="Patrick Dubroy's blog" category="New People" type="rss" xmlUrl="https://dubroy.com/blog/rss.xml" />
+  <outline title="benkuhn.net" category="New People" type="rss" xmlUrl="https://www.benkuhn.net/index.xml" />
+  <outline title="Andrew Kelley"  type="rss" xmlUrl="https://andrewkelley.me/rss.xml" />
+  <outline title="up &amp; to the right"  type="rss" xmlUrl="https://jon.bo/posts/index.xml" />
+  <outline title="Alexey Guzey"  type="rss" xmlUrl="https://guzey.com/index.xml" />
+  <outline title="Elijah Potter"  type="rss" xmlUrl="https://elijahpotter.dev/rss.xml" />
+  <outline title="Posts on Made of Bugs"  type="rss" xmlUrl="https://blog.nelhage.com/atom.xml" />
+  <outline title="dan luu"  type="rss" xmlUrl="https://danluu.com/atom.xml" />
+  <outline title="Paul Graham: Essays"  type="rss" xmlUrl="https://filipesilva.github.io/paulgraham-rss/feed.rss" />
+</outline>
+</body>
+</opml>

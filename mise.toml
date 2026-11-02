@@ -1,3 +1,4 @@
 [tools]
 hugo = "0.164.0"
+uv = "0.12.6"
 "pipx:pre-commit" = "latest"

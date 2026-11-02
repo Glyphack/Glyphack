@@ -1,3 +1,5 @@
 .hugo_build.lock
 public
 resources/
+data/blogroll.json
+data/favorites.json

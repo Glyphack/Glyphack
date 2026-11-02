@@ -1,0 +1,28 @@
+{{ define "main" }}
+<div class="list-container">
+  <h1>{{ .Title }}</h1>
+  {{ .Content }}
+
+  {{ $sections := slice
+    (dict "heading" "All Time Favorites" "items" site.Data.favorites "note" "author")
+    (dict "heading" "From Blogs I Follow" "items" site.Data.blogroll "note" "site")
+  }}
+  {{ range $sections }}
+  {{ if .items }}
+  <h2>{{ .heading }}</h2>
+  {{ $note := .note }}
+  {{ range .items }}
+  <div class="post-line">
+    <p class="line-date">{{ time.AsTime .date | time.Format site.Params.listDateFormat }}</p>
+    <div>
+      <p class="line-title">
+        <a href="{{ .url }}">{{ .title }}</a>
+        {{ with index . $note }}<small>{{ . }}</small>{{ end }}
+      </p>
+    </div>
+  </div>
+  {{ end }}
+  {{ end }}
+  {{ end }}
+</div>
+{{ end }}

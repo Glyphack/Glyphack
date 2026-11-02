@@ -34,8 +34,8 @@ url = "/talks/"
 name = "Tools"
 url = "/t/"
 [[params.menu]]
-name = "Reads This"
-url = "https://r.glyphack.com/s/s"
+name = "Blogroll"
+url = "/blogroll/"
 [[params.menu]]
 name = "Resume"
 url = "/resume/"
