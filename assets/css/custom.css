@@ -212,3 +212,18 @@ code {
 .post-single :is(h1, h2, h3, h4, h5, h6, p):not(li p) {
 	unicode-bidi: plaintext;
 }
+
+/* Header spacing */
+
+:root {
+	--header-bottom-gap: 0.5rem;
+	--header-menu-top-gap: 0.1rem;
+}
+
+.header-title {
+	margin-bottom: 1rem;
+}
+
+.header p {
+	margin-bottom: 0.4rem;
+}

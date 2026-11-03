@@ -1,12 +1,12 @@
 repos:
-  - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.45.0
-    hooks:
-      - id: markdownlint-fix
-        files: ^content/blog/
-        args: ['--disable', 'MD013']
   - repo: local
     hooks:
+      - id: rumdl
+        name: Fix markdown
+        entry: rumdl check --fix --disable MD013
+        language: system
+        types: [markdown]
+        files: ^content/blog/
       - id: download-covers
         name: Download book covers
         entry: uv run scripts/download-covers.py
@@ -18,3 +18,4 @@ repos:
         entry: uv run scripts/check_image_gps.py
         language: system
         types: [image]
+        exclude_types: [svg]

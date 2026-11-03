@@ -12,7 +12,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          submodules: true
           fetch-depth: 0
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
@@ -26,6 +25,7 @@ jobs:
           HUGO_CACHEDIR: ${{ runner.temp }}/hugo_cache
           HUGO_ENVIRONMENT: production
         run: |
+          hugo mod get github.com/tomfran/typo/v3@main
           hugo \
             --minify \
             --baseURL "${{ steps.pages.outputs.base_url }}/"
