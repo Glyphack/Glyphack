@@ -13,10 +13,16 @@
     }
     h1 { font-size: 1.1rem; margin: 0.25rem 0 0.5rem; }
     h2 { font-size: 0.8rem; margin: 0.6rem 0 0.2rem; opacity: 0.75; }
-    label { display: block; font-size: 0.85rem; }
+    label {
+      display: grid;
+      grid-template-columns: 1fr 6.5rem;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+    }
     input { width: 100%; padding: 0.2rem 0.3rem; box-sizing: border-box; font-size: 0.95rem; }
     input[readonly] { background: #f3f3f3; color: #333; }
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.3rem 0.6rem; }
+    .grid { display: grid; gap: 0.25rem; }
     .tabs { display: flex; gap: 0.4rem; margin-bottom: 0.25rem; }
     .tabs button {
       flex: 1;
