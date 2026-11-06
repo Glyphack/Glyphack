@@ -144,8 +144,16 @@ I'm also not sure if this would survive or not given the rough situation it had 
 It keeps growing and seems healthy
 ![7EC0371D-239A-45AC-ABA9-2A84F58A00DB.jpeg](7EC0371D-239A-45AC-ABA9-2A84F58A00DB.jpeg)
 
-## Avocado
+# Avocado
 
 I found this a few days ago (2026-07-29) still not growing.
+2026-11-06 update seems like this plant was dead it's not growing.
 ![IMG_4654.jpeg](IMG_4654.jpeg)
 ![image.jpg](image.jpg)
+
+
+***
+
+Send me your pics!
+
+![E473E094-E363-484E-8ADF-6BB518C0D4E2.jpg](E473E094-E363-484E-8ADF-6BB518C0D4E2.jpg)
