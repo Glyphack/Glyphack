@@ -2,7 +2,7 @@
 date: 2024-04-16 21:48:35+02:00
 category:
   - "Blog"
-tags: []
+tags:
 title: Expertise Beyond Validation
 ---
 

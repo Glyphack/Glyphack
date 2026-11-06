@@ -8,6 +8,7 @@ isbn13: 978-0812993011
 source: https://www.amazon.com/Creativity-Inc-Overcoming-Unseen-Inspiration/dp/0812993012
 rating: "1"
 tags:
+  - Archive
 layout: book
 ---
 The first chapter of the book is history behind the company Pixar and it's founder Ed Catmull.

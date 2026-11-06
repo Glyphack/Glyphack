@@ -2,7 +2,7 @@
 date: 2024-12-31 18:00:17+01:00
 category:
   - "Blog"
-tags: []
+tags:
 title: On Tracking Time
 ---
 

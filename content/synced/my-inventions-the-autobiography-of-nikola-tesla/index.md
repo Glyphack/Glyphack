@@ -9,6 +9,7 @@ source: https://en.wikipedia.org/wiki/My_Inventions:_The_Autobiography_of_Nikola
 rating: 4
 layout: book
 tags:
+  - Archive
 ---
 I didn't get a recommendation for this one but Tesla is well-known and I love autobiographies, so I read it.
 

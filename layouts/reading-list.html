@@ -5,35 +5,33 @@
   </header>
   <div class="post-content">
     {{ .Content }}
-    <div></div>
-    {{ $syncPages := where .Site.RegularPages "Section" "synced" }}
-    <div></div>
-    {{ $activeBooks := slice }} {{ $otherBooks := slice }}
-    <div></div>
-    {{ range $syncPages }} {{ if eq .Params.layout "book" }} {{ if in
-    .Params.tags "Active" }} {{ $activeBooks = $activeBooks | append . }} {{
-    else }} {{ $otherBooks = $otherBooks | append . }} {{ end }} {{ end }} {{
-    end }}
-    <div></div>
-    {{ if gt (len $activeBooks) 0 }}
-    <h2>Currently Reading</h2>
-    <div class="book-card-container">
-      {{ range sort $activeBooks "Date" "desc" }}
-        {{ partial "book-card" (dict "page" . "showStatus" false) }}
-      {{ end }}
-    </div>
-    {{ end }}
-
-    <h2>Books</h2>
-    <div class="book-card-container">
-      {{ if gt (len $otherBooks) 0 }}
-        {{ range sort $otherBooks "Date" "desc" }}
-          {{ partial "book-card" (dict "page" . "showStatus" true) }}
-        {{ end }}
+    {{ $reading := slice }}
+    {{ $read := slice }}
+    {{ $toRead := slice }}
+    {{ range where .Site.RegularPages "Section" "synced" }}
+      {{ if ne .Params.layout "book" }}{{ continue }}{{ end }}
+      {{ if in .Params.tags "Active" }}
+        {{ $reading = $reading | append . }}
+      {{ else if in .Params.tags "Archive" }}
+        {{ $read = $read | append . }}
       {{ else }}
-      <p class="no-books-message">No books found matching the criteria.</p>
+        {{ $toRead = $toRead | append . }}
       {{ end }}
-    </div>
+    {{ end }}
+    {{ $shelves := slice
+      (dict "title" "Currently Reading" "books" $reading)
+      (dict "title" "Read" "books" $read)
+      (dict "title" "To Read" "books" $toRead)
+    }}
+    {{ range $shelves }}
+      {{ if eq (len .books) 0 }}{{ continue }}{{ end }}
+      <h2>{{ .title }}</h2>
+      <div class="book-card-container">
+        {{ range sort .books "Date" "desc" }}
+          {{ partial "book-card" (dict "page" .) }}
+        {{ end }}
+      </div>
+    {{ end }}
   </div>
 </article>
 
@@ -135,13 +133,6 @@
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-  }
-
-  .no-books-message {
-    padding: 1.5rem;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    text-align: center;
   }
 
   /* Responsive Adjustments */

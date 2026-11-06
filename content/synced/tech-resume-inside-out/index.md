@@ -1,6 +1,7 @@
 ---
 date: 2025-04-27
-tags: []
+tags:
+  - Archive
 category:
   - "Books"
 title: Tech Resume Inside Out

@@ -2,7 +2,7 @@
 date: 2025-10-25 11:09:19+02:00
 category:
   - "Blog"
-tags: []
+tags:
 title: Simple Expertise
 ---
 If you think about how we judge skills you'd see we do it by questioning the advanced stuff.

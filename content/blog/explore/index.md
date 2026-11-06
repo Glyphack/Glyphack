@@ -2,7 +2,7 @@
 date: 2024-09-29 21:31:32+02:00
 category:
   - "Blog"
-tags: []
+tags:
 title: How to Discover Interests
 ---
 

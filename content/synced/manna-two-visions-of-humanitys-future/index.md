@@ -9,6 +9,7 @@ source: https://marshallbrain.com/manna1
 rating: "5"
 layout: book
 tags:
+  - Archive
 ---
 I picked up the book from [this](https://geohot.github.io//blog/jekyll/update/2026/04/11/openai-people.html) recommendation.
 

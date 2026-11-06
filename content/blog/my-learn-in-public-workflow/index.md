@@ -2,7 +2,7 @@
 date: 2023-05-18 14:07:58+02:00
 category:
   - "Blog"
-tags: []
+tags:
 title: Trying Out Learning In Public
 ---
 

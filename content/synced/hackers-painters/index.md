@@ -7,7 +7,8 @@ author: "Paul Graham"
 isbn13: 978-1449389550
 source: https://en.wikipedia.org/wiki/Hackers_%26_Painters
 rating: "5"
-tags: []
+tags:
+  - Archive
 layout: book
 ---
 I read all of this posts a while ago. He's a good writer and reading his posts felt like I was also learning to write. There are also some advice on writing.

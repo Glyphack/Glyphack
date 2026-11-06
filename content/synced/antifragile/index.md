@@ -6,6 +6,7 @@ title: Antifragile
 author: "Nassim Nicholas Taleb"
 isbn13: 978-0812979688
 tags:
+  - Archive
 rating: "4"
 layout: book
 ---

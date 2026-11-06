@@ -1,9 +1,6 @@
 ---
-category:
-  - "Projects"
 date: 2026-07-10
 tags:
-  - Active
 source:
 title: Garden
 ---

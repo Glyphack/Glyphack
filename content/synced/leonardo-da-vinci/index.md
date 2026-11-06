@@ -8,7 +8,6 @@ isbn13: 978-1501139154
 source: https://www.goodreads.com/book/show/34684622-leonardo-da-vinci
 rating:
 tags:
-  - Active
 layout: book
 ---
 I listened to founders podcast and enjoyed Da Vinci's work.

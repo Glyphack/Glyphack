@@ -8,6 +8,7 @@ isbn13: 978-1916478701
 source: https://www.dataorienteddesign.com/dodbook/
 rating: "3"
 tags:
+  - Archive
 layout: book
 ---
 I found this book in [Andrew Kelly's talk on data oriented design](https://www.youtube.com/watch?v=IroPQ150F6c).

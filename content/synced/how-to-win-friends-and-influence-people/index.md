@@ -9,6 +9,7 @@ layout: book
 title: How to Win Friends and Influence People
 isbn13: 978-0671027032
 tags:
+  - Archive
 ---
 I found this book in the street.
 I wish I could say it changed my life, sadly that would be an exaggeration.
@@ -29,7 +30,7 @@ These examples help the advice to stick.
 Of course it needs practice. For me the practice was to notice how often I and others fail at this simple thing.
 I've interacted with a lot of people who cut you in the middle of your story to mention something.
 I intentionally refrained myself from mentioning stuff when someone is telling a story.
-Try it and you see it's very tempting. 
+Try it and you see it's very tempting.
 When someone is telling something and calls something with a wrong name, you can still listen to the story and then correct the name.
 
 Overall I'm happy I picked up the book on that day. I think everyone should read it. Either to hear the advices or to be reminded about them.

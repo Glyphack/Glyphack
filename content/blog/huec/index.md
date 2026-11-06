@@ -2,7 +2,7 @@
 date: 2026-02-25 22:25:08+01:00
 category:
   - "Blog"
-tags: []
+tags:
 title: Reverse Engineering Philips Hue light strip to control from PC
 ---
 I was looking for a way to control my [Philips Hue light strip](https://amzn.to/4r7oN4M) without their terrible app[^1].

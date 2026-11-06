@@ -2,7 +2,7 @@
 date: 2025-12-10 16:12:40+01:00
 category:
   - "Blog"
-tags: []
+tags:
 title: Ty Test Suite
 ---
 

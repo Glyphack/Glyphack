@@ -2,7 +2,7 @@
 date: 2025-09-18 19:20:37+02:00
 category:
   - "Blog"
-tags: []
+tags:
 title: Adding Support for Self to Ty
 ---
 

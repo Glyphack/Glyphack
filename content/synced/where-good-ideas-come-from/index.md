@@ -8,6 +8,7 @@ isbn13: 978-1594485381
 source: https://www.amazon.com/Where-Good-Ideas-Come-Innovation/dp/1594485380
 rating: "3"
 tags:
+  - Archive
 layout: book
 ---
 I started reading this book because of [this recommendation](https://sirupsen.com/books/where-good-ideas-come-from).

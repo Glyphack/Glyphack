@@ -8,6 +8,7 @@ isbn13: 978-0393313932
 source: https://www.goodreads.com/book/show/6996.No_Ordinary_Genius
 rating:
 tags:
+  - Archive
 layout: book
 ---
 This is the third book I read about Feynman.

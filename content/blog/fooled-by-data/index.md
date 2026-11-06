@@ -2,7 +2,7 @@
 date: 2025-01-29 22:32:33+01:00
 category:
   - "Blog"
-tags: []
+tags:
 title: Can Data Fool You?
 ---
 

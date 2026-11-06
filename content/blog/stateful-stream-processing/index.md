@@ -2,7 +2,7 @@
 date: 2022-08-15 08:53:57+04:30
 category:
   - "Blog"
-tags: []
+tags:
 title: Stateful Stream Processing
 ---
 A pattern that I have recently seen in a project is data replication through

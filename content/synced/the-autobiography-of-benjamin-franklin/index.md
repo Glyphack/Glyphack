@@ -8,6 +8,7 @@ isbn13: 978-1609425111
 source: https://standardebooks.org/ebooks/benjamin-franklin/the-autobiography-of-benjamin-franklin
 rating: 5
 tags:
+  - Archive
 layout: book
 ---
 I liked this book. Such a fulfilled life.

@@ -9,6 +9,7 @@ isbn13: 978-1936891375
 rating: 3
 source: https://stevenpressfield.com/books/do-the-work/
 tags:
+  - Archive
 ---
 Recommended from https://sive.rs/book/DoTheWork
 

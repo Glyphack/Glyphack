@@ -10,6 +10,7 @@ isbn13: "9780735609167"
 source: https://www.amazon.nl/WINNING-CHESS-STRATEGIES-Yasser-Seirawan/dp/0735609160
 rating:
 tags:
+  - Archive
 layout: book
 ---
 I got interested into chess after a friend sent me some videos of a fun chess commentary.

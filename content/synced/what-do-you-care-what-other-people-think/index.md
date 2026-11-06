@@ -8,6 +8,7 @@ isbn13: 978-0393320923
 source: https://en.wikipedia.org/wiki/What_Do_You_Care_What_Other_People_Think%3F
 rating: "5"
 tags:
+  - Archive
 layout: book
 ---
 I got interested in Richard Feynmann's writings after reading [Surely You're Joking, Mr. Feynman!](/synced/surely-youre-joking-mr-feynman/)

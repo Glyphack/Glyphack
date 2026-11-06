@@ -2,7 +2,7 @@
 date: 2025-04-09 21:25:18+02:00
 category:
   - "Blog"
-tags: []
+tags:
 title: Blogging with Obsidian
 ---
 I suggest reading [Share Obsidian Notes To A Blog](/blog/oblog/) post. That's the upgrade to the process I described here.

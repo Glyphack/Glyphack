@@ -2,7 +2,8 @@
 date: 2025-04-27
 category:
   - "Books"
-tags: []
+tags:
+  - Archive
 title: System Design Interview
 author: "Alex Xu"
 isbn13: 979-8664653403

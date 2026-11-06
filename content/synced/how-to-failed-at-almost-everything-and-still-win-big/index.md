@@ -10,6 +10,7 @@ source: https://www.amazon.com/dp/1591847745?lv=shuf&channelId=500&plpRedirect=m
 rating: 3
 layout: book
 tags:
+  - Archive
 ---
 I categorize this as a self help book but it's quite different from the others I have read.
 I also consider it simpler and easier to follow advice. I still feel it's too long for what it's trying to cover. Or maybe it's covering too many topics.

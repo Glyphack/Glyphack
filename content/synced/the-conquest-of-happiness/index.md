@@ -8,6 +8,7 @@ isbn13: 978-0415378475
 source: https://www.goodreads.com/book/show/51783.The_Conquest_of_Happiness
 rating: 5
 tags:
+  - Archive
 layout: book
 ---
 My dad recommended the book to me when I was 13. Now I'm 26.

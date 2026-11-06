@@ -2,7 +2,7 @@
 date: 2026-04-02 08:53:48+02:00
 category:
   - "Blog"
-tags: []
+tags:
 title: Application as a Database
 ---
 

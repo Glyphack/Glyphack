@@ -2,7 +2,7 @@
 date: 2024-03-25 16:46:15+01:00
 category:
   - "Blog"
-tags: []
+tags:
 title: How to infer type for Generic types in Python?
 ---
 
