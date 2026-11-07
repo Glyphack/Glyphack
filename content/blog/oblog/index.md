@@ -5,11 +5,12 @@ category:
 tags:
 title: Share Obsidian Notes To A Blog
 ---
+
 A while back I started [sharing](/blog/ob/) my working notes on my blog.
 After about a year I made some improvements to the process and I'm gonna talk about it here.
 This increased the amount of time I spend on writing.
 As a result, developed a habit of [journaling](https://jon.bo/posts/on-journaling/) and keeping log of things I'm doing to the point that I spend about 1 hour writing these days.
-I always liked reading [people's](https://jon.bo/posts/on-journaling/) [notes](https://jon.bo/posts/on-journaling/).
+I always liked reading other [people's](https://notes.andymatuschak.org/About_these_notes) notes.
 These notes while are not as polished as a blogpost they give you a different view into the person's mind.
 
 Since last week I moved everything into Obsidian and just keep my blog for building the Markdown files and putting them on the internet.
@@ -44,12 +45,11 @@ You can install plugins in Obsidian.
 But I needed the ability to customize its behavior for myself, just like in Neovim.
 Then I made a [personal plugin](https://github.com/Glyphack/dotfiles/tree/master/obsidian) and I started customizing anything I wanted.
 You can have any custom command you like in it.
-One of my favorite things is a command that I made to log what I'm doing to my current weekly notes.
+One of my favorite things is a command that I made to log what I'm doing to my current weekly note.
 
 This plugin can contain all the various customizations I like all in one and I don't even need to publish it anywhere.
 I can install it locally in my vault directory and use it.
 This was the step that made me use Obsidian more.
-
 
 ## Setup
 
@@ -62,7 +62,7 @@ I create a note in Obsidian. It can be a blogpost or just a page.
 I trigger the action "Insert Template" in Obsidian and insert my "Share Template".
 This is the template:
 
-```
+```text
 ---
 share: true
 title: ""
@@ -75,7 +75,7 @@ Now automatically this note is copied into the [content directory](https://gohug
 
 So then I have a new entry in my blog like this:
 
-```
+```text
 blog/
 	content/
 		Hello World/
