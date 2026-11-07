@@ -11,7 +11,7 @@ A few weeks ago, I experienced one of these busy weeks with lots of meetings, Sl
 First of all, the cost of getting interrupted while developing is high. You need time to get back on what you were doing, and if this happens a lot, you can't manage to get many things done.
 The second thing I noticed was that I have to do better with planning for my day. I have a mix of personal stuff, university, and work. Some days, I'm constantly switching between tasks with different contexts, and I get myself out of the zone.
 
-# My setup
+## My setup
 
 I've experimented with different productivity tools for focus and time management tools. I was looking for a simple enough task manager with a built-in time tracker that you can decide on something you must do in the day and track your time while doing them for the rest of the day. I could not find such a tool, so I combined different apps to achieve this.
 
@@ -41,7 +41,7 @@ If you're not familiar with Pomodoro, here is the procedure from Wikipedia
 I prefer it over other Pomodoro apps because the features it provides, such as reminders, help me to continuously not lose focus and track time.
 I started using Toggl with 25 min focus 5 min break and increased the time to 45 min focus in just two weeks!
 
-# Conclusion
+## Conclusion
 
 I think task management and time tracking are not only for teams, but people can also boost their productivity with these methods.
 I did not go over all the features of the tools I mentioned because it's not the tools that are important but the techniques you put in place to help yourself with focus and time management.

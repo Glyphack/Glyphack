@@ -3,7 +3,7 @@ date: 2024-03-04
 tags:
 title: Now
 ---
-This is my [now page](https://nownownow.com/about), with what I'm thinking and working on.
+This is my [now page](https://nownownow.com/about) with what I'm thinking and working on.
 You should make one too.
 
 Updated 2026-07-24 from Amsterdam. It's sunny and green.

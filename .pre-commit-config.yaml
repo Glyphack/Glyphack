@@ -3,7 +3,7 @@ repos:
     hooks:
       - id: rumdl
         name: Fix markdown
-        entry: rumdl check --fix --disable MD013
+        entry: rumdl check --fix --fail-on error
         language: system
         types: [markdown]
         files: ^content/blog/

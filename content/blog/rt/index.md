@@ -6,6 +6,10 @@ tags:
 title: I Made ReadsThis to Share and Find Good Blogs
 ---
 
+Update:
+I don't want to develop another site just to have my links on it. So if you want to see my readings check [Blogroll](/blogroll/).
+The idea is still useful though. But maybe instead of collecting everyone's favorites in one place it can work like [nownownow.com](https://nownownow.com/about).
+
 I created a site to share your favorite RSS Feeds in a page.
 The idea comes from one of my favorite sites [usesthis.com](https://usesthis.com).
 
