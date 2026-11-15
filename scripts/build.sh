@@ -18,5 +18,4 @@ fi
 mise trust --quiet || true
 mise install
 mise exec -- uv run scripts/fetch_blogroll.py
-mise exec -- hugo
-exec mise exec -- scripts/check-internal-links.sh
+exec mise exec -- hugo

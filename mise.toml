@@ -4,3 +4,12 @@ lychee = "0.24.2"
 uv = "0.12.6"
 "pipx:pre-commit" = "latest"
 rumdl = "0.3.2"
+
+[tasks.checks]
+description = "Download missing book covers, check images for GPS data, then build the site and check links to its own pages and files"
+run = [
+  "uv run scripts/download-covers.py",
+  "uv run scripts/check_image_gps.py",
+  "hugo",
+  "lychee --offline --root-dir {{config_root}}/public --no-progress 'public/**/*.html'",
+]
