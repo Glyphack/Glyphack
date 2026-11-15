@@ -19,7 +19,7 @@ import feedparser
 import httpx2
 
 ROOT = Path(__file__).resolve().parent.parent
-OPML_FILE = ROOT / "static" / "blogroll.opml"
+OPML_FILE = ROOT / "content" / "blogroll" / "blogroll.opml"
 OUTPUT_FILE = ROOT / "data" / "blogroll.json"
 
 POSTS_PER_FEED = 3

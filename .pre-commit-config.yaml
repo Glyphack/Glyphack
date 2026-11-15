@@ -19,3 +19,7 @@ repos:
         language: system
         types: [image]
         exclude_types: [svg]
+      - id: build
+        name: Build blog
+        entry: ./scripts/build.sh
+        language: system
