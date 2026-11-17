@@ -1,0 +1,443 @@
+{{/*
+  byte-table shortcode
+
+  Shows the bytes of a message as a hex dump in the style of hexyl: the row
+  number counting from 1, the hex bytes, and their characters, 8 bytes per
+  row. Under the dump is one line per section with its bytes and
+  description. Hovering a byte, a
+  character or a section line highlights the whole section.
+
+  Usage:
+
+    {{< byte-table hex="02 03 62 6f 62 02 68 69" >}}
+    | Pos | Description                        |
+    | --- | ---------------------------------- |
+    | 0-0 | Request type for sending a message |
+    | 1-4 | Recipient name (length prefixed)   |
+    | 5-7 | Message content (length prefixed)  |
+    {{< /byte-table >}}
+
+  The hex parameter holds all the bytes as two-digit hex values separated by
+  spaces. Each table row is one section. Columns are found by header name,
+  ignoring case:
+    - Pos: the section's first and last byte, counting from 0, like "1-4".
+      A single byte is written as "0-0".
+    - Description: what the bytes mean. Markdown is rendered.
+
+  Each section gets its own color from hexyl's terminal colors: cyan, green,
+  yellow, magenta, blue and red, starting over after six sections.
+
+  Bytes are shown as characters the way hexyl does it:
+    - zero byte: "⋄"
+    - printable ASCII: the character itself
+    - ASCII whitespace: a space for 0x20 and "_" for the rest
+    - other ASCII: "•"
+    - above 0x7f: "×"
+
+  The styles and script are written with every table so they survive page
+  rebuilds in `hugo server`. The script sets itself up only once per page.
+
+  Build errors if:
+    - The hex parameter is missing, empty or holds something other than
+      two-digit hex values
+    - A line is not a table row
+    - The Pos or Description column is missing
+    - A row has a different number of cells than the header
+    - A Pos is not written like "1-4", starts after it ends, or goes past the
+      last byte
+    - A byte is in more than one row, or in no row
+*/}}
+
+<style>
+.byte-table {
+  --bt-text: var(--content-primary);
+  --bt-border: var(--code-border);
+  --bt-mono: var(--font-mono, "Monaspace", ui-monospace, monospace);
+  --bt-gray: light-dark(#868c96, #7d838d);
+  --bt-cyan: light-dark(#0b7889, #5cc8d7);
+  --bt-green: light-dark(#3b7d33, #7fcf70);
+  --bt-yellow: light-dark(#a06a00, #e3bf4c);
+  --bt-magenta: light-dark(#a3449a, #d98bd2);
+  --bt-blue: light-dark(#2f6db5, #7eaae6);
+  --bt-red: light-dark(#b8433a, #ec7f76);
+  margin: 1.8rem 0;
+}
+
+.byte-table .c-0 { --fc: var(--bt-cyan); }
+.byte-table .c-1 { --fc: var(--bt-green); }
+.byte-table .c-2 { --fc: var(--bt-yellow); }
+.byte-table .c-3 { --fc: var(--bt-magenta); }
+.byte-table .c-4 { --fc: var(--bt-blue); }
+.byte-table .c-5 { --fc: var(--bt-red); }
+
+.byte-table__scroll {
+  overflow-x: auto;
+}
+
+.byte-table__dump {
+  display: inline-flex;
+  font-family: var(--bt-mono);
+  font-size: 0.88rem;
+  line-height: 1.7;
+  font-variant-numeric: tabular-nums;
+  color: var(--bt-text);
+  background: var(--code-background);
+  border: 1px solid var(--bt-border);
+  border-radius: 8px;
+}
+
+.byte-table__col {
+  padding: 0.45rem 0.7rem;
+}
+
+.byte-table__col > div {
+  white-space: pre;
+}
+
+.byte-table__col + .byte-table__col {
+  border-left: 1px solid var(--bt-border);
+}
+
+.byte-table__offsets {
+  color: var(--bt-gray);
+  text-align: right;
+  user-select: none;
+}
+
+.byte-table__hex {
+  padding-left: 0.35rem;
+  padding-right: 0.35rem;
+}
+
+.byte-table__b,
+.byte-table__c {
+  color: var(--fc);
+  cursor: default;
+  transition: background 0.15s ease, opacity 0.15s ease;
+}
+
+.byte-table__b {
+  padding: 0.1rem 0.5ch;
+}
+
+.byte-table__c {
+  padding: 0.1rem 0;
+}
+
+.byte-table__b.is-active,
+.byte-table__c.is-active {
+  background: color-mix(in srgb, var(--fc) 20%, transparent);
+}
+
+.byte-table__b.is-start,
+.byte-table__c.is-start {
+  border-top-left-radius: 0.3rem;
+  border-bottom-left-radius: 0.3rem;
+}
+
+.byte-table__b.is-end,
+.byte-table__c.is-end {
+  border-top-right-radius: 0.3rem;
+  border-bottom-right-radius: 0.3rem;
+}
+
+.byte-table.has-active .byte-table__b:not(.is-active),
+.byte-table.has-active .byte-table__c:not(.is-active) {
+  opacity: 0.35;
+}
+
+/* ── Sections under the dump ── */
+.byte-table__sections {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 1rem;
+  margin-top: 0.7rem;
+}
+
+.byte-table__section {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  align-items: baseline;
+  padding: 0.12rem 0.5rem;
+  border-radius: 0.35rem;
+  cursor: default;
+  outline: none;
+  transition: background 0.15s ease, opacity 0.15s ease;
+}
+
+.byte-table__section.is-active {
+  background: color-mix(in srgb, var(--fc) 14%, transparent);
+}
+
+.byte-table.has-active .byte-table__section:not(.is-active) {
+  opacity: 0.45;
+}
+
+.byte-table__section:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--fc) 50%, transparent);
+  outline-offset: -2px;
+}
+
+.byte-table__section-hex {
+  color: var(--fc);
+  font-family: var(--bt-mono);
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+
+.byte-table__desc {
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+@media (max-width: 640px) {
+  .byte-table__dump {
+    font-size: 0.76rem;
+  }
+
+  .byte-table__col {
+    padding: 0.4rem 0.5rem;
+  }
+
+  .byte-table__hex {
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+  }
+
+  .byte-table__sections {
+    column-gap: 0.7rem;
+  }
+
+  .byte-table__section {
+    padding: 0.12rem 0.3rem;
+  }
+
+  .byte-table__section-hex {
+    font-size: 0.74rem;
+  }
+}
+</style>
+
+<script>
+(function () {
+  "use strict";
+
+  if (window.__byteTableInit) {
+    return;
+  }
+  window.__byteTableInit = true;
+
+  function highlight(root, fi) {
+    root.classList.toggle("has-active", fi !== null);
+    root.querySelectorAll("[data-fi]").forEach(function (el) {
+      el.classList.toggle("is-active", el.dataset.fi === fi);
+    });
+  }
+
+  function fieldOf(root, target) {
+    var el = target.closest("[data-fi]");
+    return el && root.contains(el) ? el.dataset.fi : null;
+  }
+
+  function initTable(root) {
+    if (root._byteTable) return;
+    root._byteTable = true;
+
+    root.addEventListener("mouseover", function (e) {
+      highlight(root, fieldOf(root, e.target));
+    });
+    root.addEventListener("mouseleave", function () {
+      highlight(root, null);
+    });
+    root.addEventListener("focusin", function (e) {
+      highlight(root, fieldOf(root, e.target));
+    });
+    root.addEventListener("focusout", function () {
+      highlight(root, null);
+    });
+  }
+
+  function initAll() {
+    document.querySelectorAll(".byte-table").forEach(initTable);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initAll);
+  } else {
+    initAll();
+  }
+}());
+</script>
+
+{{/* ── 1. Parse the markdown table into a header and rows ── */}}
+{{ $header := slice }}
+{{ $rows := slice }}
+{{ range split .Inner "\n" }}
+  {{ $line := strings.TrimSpace . }}
+  {{ if eq $line "" }}{{ continue }}{{ end }}
+  {{ if not (hasPrefix $line "|") }}
+    {{ errorf "[byte-table] line %q is not a table row, rows start with '|' at %s" $line $.Position }}
+  {{ end }}
+  {{ if findRE `^[\s|:-]+$` $line }}{{ continue }}{{ end }}
+  {{ $cells := slice }}
+  {{ range split ($line | strings.TrimPrefix "|" | strings.TrimSuffix "|") "|" }}
+    {{ $cells = $cells | append (strings.TrimSpace .) }}
+  {{ end }}
+  {{ if eq (len $header) 0 }}
+    {{ $header = $cells }}
+  {{ else }}
+    {{ if ne (len $cells) (len $header) }}
+      {{ errorf "[byte-table] row %q has %d cells but the header has %d at %s" $line (len $cells) (len $header) $.Position }}
+    {{ end }}
+    {{ $rows = $rows | append (dict "cells" $cells) }}
+  {{ end }}
+{{ end }}
+
+{{ if eq (len $rows) 0 }}
+  {{ errorf "[byte-table] the table has no rows at %s" .Position }}
+{{ end }}
+
+{{/* ── 2. Find the columns by header name ── */}}
+{{ $col := dict }}
+{{ range $i, $h := $header }}
+  {{ $col = merge $col (dict (lower $h) $i) }}
+{{ end }}
+{{ range slice "pos" "description" }}
+  {{ if not (isset $col .) }}
+    {{ errorf "[byte-table] the table needs a '%s' column at %s" (title .) $.Position }}
+  {{ end }}
+{{ end }}
+{{ $posCol := index $col "pos" }}
+{{ $descCol := index $col "description" }}
+
+{{/* ── 3. Turn the hex parameter into bytes and their characters ── */}}
+{{ $tokens := findRE `\S+` (.Get "hex" | default "") }}
+{{ if eq (len $tokens) 0 }}
+  {{ errorf "[byte-table] the 'hex' parameter is missing or empty at %s" .Position }}
+{{ end }}
+{{ $bytes := slice }}
+{{ range $tokens }}
+  {{ if not (findRE `^[0-9a-fA-F]{2}$` .) }}
+    {{ errorf "[byte-table] %q in the hex parameter is not a two-digit hex byte at %s" . $.Position }}
+  {{ end }}
+  {{ $n := int (printf "0x%s" .) }}
+  {{ $chr := "×" }}
+  {{ if eq $n 0 }}
+    {{ $chr = "⋄" }}
+  {{ else if and (ge $n 33) (le $n 126) }}
+    {{ $chr = printf "%c" $n }}
+  {{ else if eq $n 32 }}
+    {{ $chr = " " }}
+  {{ else if in (slice 9 10 12 13) $n }}
+    {{ $chr = "_" }}
+  {{ else if lt $n 128 }}
+    {{ $chr = "•" }}
+  {{ end }}
+  {{ $bytes = $bytes | append (dict "hex" (lower .) "chr" $chr) }}
+{{ end }}
+{{ $total := len $bytes }}
+
+{{/* ── 4. Read each row's Pos range and check every byte belongs to exactly one row ── */}}
+{{ $fields := slice }}
+{{ $owner := dict }}
+{{ range $fi, $row := $rows }}
+  {{ $pos := index $row.cells $posCol }}
+  {{ $match := findRESubmatch `^(\d+)\s*-\s*(\d+)$` $pos }}
+  {{ if not $match }}
+    {{ errorf "[byte-table] Pos %q in row %d should look like '1-4' at %s" $pos (add $fi 1) $.Position }}
+  {{ end }}
+  {{ $startText := index (index $match 0) 1 | strings.TrimLeft "0" }}
+  {{ $endText := index (index $match 0) 2 | strings.TrimLeft "0" }}
+  {{ $start := cond (eq $startText "") 0 (int $startText) }}
+  {{ $end := cond (eq $endText "") 0 (int $endText) }}
+  {{ if gt $start $end }}
+    {{ errorf "[byte-table] Pos %q in row %d starts after it ends at %s" $pos (add $fi 1) $.Position }}
+  {{ end }}
+  {{ if ge $end $total }}
+    {{ errorf "[byte-table] Pos %q in row %d goes past the last byte (%d) at %s" $pos (add $fi 1) (sub $total 1) $.Position }}
+  {{ end }}
+  {{ range $i := seq $start $end }}
+    {{ if isset $owner (string $i) }}
+      {{ errorf "[byte-table] byte %d is in more than one row (row %d overlaps an earlier row) at %s" $i (add $fi 1) $.Position }}
+    {{ end }}
+    {{ $owner = merge $owner (dict (string $i) $fi) }}
+  {{ end }}
+  {{ $hexes := slice }}
+  {{ range $i := seq $start $end }}
+    {{ $hexes = $hexes | append (index $bytes $i).hex }}
+  {{ end }}
+  {{ $fields = $fields | append (dict
+    "start" $start
+    "end" $end
+    "hexes" $hexes
+    "description" (index $row.cells $descCol)
+  ) }}
+{{ end }}
+
+{{ $owned := slice }}
+{{ range $i, $b := $bytes }}
+  {{ if not (isset $owner (string $i)) }}
+    {{ errorf "[byte-table] byte %d (%s) is not in any row's Pos at %s" $i $b.hex $.Position }}
+  {{ end }}
+  {{ $owned = $owned | append (merge $b (dict "fi" (index $owner (string $i)))) }}
+{{ end }}
+{{ $bytes = $owned }}
+
+{{/* ── 5. Split the bytes into lines of 8 ── */}}
+{{ $perLine := 8 }}
+{{ $lines := slice }}
+{{ range $l := seq 0 (sub (div (add $total (sub $perLine 1)) $perLine) 1) }}
+  {{ $first := mul $l $perLine }}
+  {{ $last := sub (math.Min $total (add $first $perLine)) 1 }}
+  {{ $cells := slice }}
+  {{ range $i := seq $first $last }}
+    {{ $b := index $bytes $i }}
+    {{ $f := index $fields $b.fi }}
+    {{ $cells = $cells | append (merge $b (dict
+      "isStart" (or (eq $i $f.start) (eq $i $first))
+      "isEnd" (or (eq $i $f.end) (eq $i $last))
+    )) }}
+  {{ end }}
+  {{ $lines = $lines | append (dict "number" (add $l 1) "cells" $cells) }}
+{{ end }}
+
+{{/* ── 6. Emit HTML ── */}}
+<div class="byte-table">
+  <div class="byte-table__scroll">
+    <div class="byte-table__dump">
+      <div class="byte-table__col byte-table__offsets">
+        {{- range $lines }}
+        <div>{{ .number }}</div>
+        {{- end }}
+      </div>
+      <div class="byte-table__col byte-table__hex">
+        {{- range $lines }}
+        <div>
+          {{- range .cells -}}
+          <span class="byte-table__b c-{{ mod .fi 6 }}{{ if .isStart }} is-start{{ end }}{{ if .isEnd }} is-end{{ end }}" data-fi="{{ .fi }}">{{ .hex }}</span>
+          {{- end -}}
+        </div>
+        {{- end }}
+      </div>
+      <div class="byte-table__col byte-table__chars">
+        {{- range $lines }}
+        <div>
+          {{- range .cells -}}
+          <span class="byte-table__c c-{{ mod .fi 6 }}{{ if .isStart }} is-start{{ end }}{{ if .isEnd }} is-end{{ end }}" data-fi="{{ .fi }}">{{ .chr }}</span>
+          {{- end -}}
+        </div>
+        {{- end }}
+      </div>
+    </div>
+  </div>
+
+  <div class="byte-table__sections">
+    {{- range $fi, $f := $fields }}
+    <div class="byte-table__section c-{{ mod $fi 6 }}" data-fi="{{ $fi }}" tabindex="0">
+      <span class="byte-table__section-hex">{{ delimit $f.hexes " " }}</span>
+      <span class="byte-table__desc">{{ $.Page.RenderString $f.description }}</span>
+    </div>
+    {{- end }}
+  </div>
+</div>

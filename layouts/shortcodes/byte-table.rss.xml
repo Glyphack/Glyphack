@@ -1,0 +1,33 @@
+{{/* One list item per table row: the row's bytes from the hex parameter, then its description. */}}
+{{- $tokens := findRE `\S+` (.Get "hex" | default "") }}
+{{- $header := slice }}
+{{- $rows := slice }}
+{{- range split .Inner "\n" }}
+  {{- $line := strings.TrimSpace . }}
+  {{- if or (not (hasPrefix $line "|")) (findRE `^[\s|:-]+$` $line) }}{{ continue }}{{ end }}
+  {{- $cells := slice }}
+  {{- range split ($line | strings.TrimPrefix "|" | strings.TrimSuffix "|") "|" }}
+    {{- $cells = $cells | append (strings.TrimSpace .) }}
+  {{- end }}
+  {{- if eq (len $header) 0 }}
+    {{- $header = $cells }}
+  {{- else }}
+    {{- $rows = $rows | append (dict "cells" $cells) }}
+  {{- end }}
+{{- end }}
+{{- $posCol := 0 }}
+{{- $descCol := 0 }}
+{{- range $i, $h := $header }}
+  {{- if eq (lower $h) "pos" }}{{ $posCol = $i }}{{ end }}
+  {{- if eq (lower $h) "description" }}{{ $descCol = $i }}{{ end }}
+{{- end }}
+<ul>
+{{- range $rows }}
+  {{- $range := split (index .cells $posCol) "-" }}
+  {{- $start := index $range 0 | strings.TrimSpace | strings.TrimLeft "0" }}
+  {{- $end := index $range 1 | strings.TrimSpace | strings.TrimLeft "0" }}
+  {{- $start = cond (eq $start "") 0 (int $start) }}
+  {{- $end = cond (eq $end "") 0 (int $end) }}
+  <li><code>{{ delimit (first (add (sub $end $start) 1) (after $start $tokens)) " " | lower }}</code> {{ $.Page.RenderString (index .cells $descCol) }}</li>
+{{- end }}
+</ul>
