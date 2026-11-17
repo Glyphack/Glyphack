@@ -396,6 +396,10 @@ These are cool things that I want to see happening:
 
 I hope you never get stuck in a place where you cannot communicate with others. But if you do use Igloo to find a way out collectively.
 
+***
+
+Thanks to Kevin for reading drafts of this post.
+
 [^1]: <https://blog.cloudflare.com/iran-protests-internet-shutdown/>
 [^2]: I didn't test with various DNS servers to see how big a problem this can be.
     But just knowing that it can happen is enough for me to not rely on it. <https://developers.google.com/speed/public-dns/docs/security#randomize_case>
