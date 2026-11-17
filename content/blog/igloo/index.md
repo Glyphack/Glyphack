@@ -4,6 +4,7 @@ category:
   - "Blog"
 tags:
 title: Chatting Over DNS
+toc: "true"
 ---
 
 It's always fun to see how a tool can be used to do something that is not its primary purpose.
@@ -12,12 +13,20 @@ I know what you're thinking, "Isn't DNS for figuring out the IP address of a dom
 
 DNS is one of the parts of the internet that works even in the most restricted networks.
 That's why there are [many](https://www.bamsoftware.com/software/dnstt/) [VPNs](https://github.com/yarrick/iodine) that use DNS for transferring data.
-But using normal web apps with DNS tunneling is painfully slow.
-DNS messages are capped at 512 bytes.
-These apps are not designed for this constraint; each request contains a few kilobytes of data.
-So one HTTP request is split into multiple DNS messages.
+Usually firewalls that block internet access allow DNS queries but then block the connection when you try to connect to an external IP address.
 
-My goal was to make an app for communication under such constraints[^1]. Igloo has basic features of sending messages, files, and voice, plus encryption and authentication. All over DNS!
+But the downside of this approach is that it's really slow.
+DNS messages are capped at 512 bytes.
+Normal web apps are not designed for this constraint; each request contains a few kilobytes of data.
+So one HTTP request is split into multiple DNS messages, and requires multiple round trips to complete one action on the app.
+Plus, the firewall might detect malicious DNS activity and drop your messages.
+
+Here's a comparison of sending `{"to":"bob","content":"hi"}` to a web app over HTTPS through a DNS tunnel, versus sending it with Igloo:
+![Chatting_Over_DNS-igloo-vs-dns-tunneling.svg](Chatting_Over_DNS-igloo-vs-dns-tunneling.svg)
+Most of this extra overhead is for TLS, HTTP headers, application authentication, and cookies.
+
+My goal was to make an app for communication under such constraints[^1].
+[Igloo](http://github.com/glyphack/igloo) has basic features of sending messages, files, and voice, plus encryption and authentication. All over DNS!
 
 ![Igloo Demo](igloo-demo.mp4)
 
@@ -39,8 +48,11 @@ dig @[Your IP Address] example.com
 ```
 
 IP addresses are not something that you can rely on all the time.
-Also, if the user is in a restricted environment,[^2] he cannot directly send a request to our DNS server.
-Imagine a network that only allows him to connect to certain IP addresses. He needs to send the request to an internal DNS server in this case.
+Also, if the user is in a restricted environment, the firewall will block connection to external IP addresses.
+So even the DNS message cannot reach us.
+In this case the user can only read the internal DNS server.
+So we need to use the internal DNS server, which user has access to, and send the message to our own server.
+With a DNS server you can usually ask it to reach to other DNS servers to answer a query. This happens when you query it for a name that it does not know about.
 
 The solution that other DNS tunneling apps use is to become the authoritative name server for a domain.
 When you buy a domain name, you define where the DNS server that knows the IP address of your domain is.
@@ -59,7 +71,7 @@ This continues until one DNS server knows your name servers, and it sends the qu
 And in this case the name server is our own server.
 So we get all the DNS requests for queries that end with `glyphack.com`, like `example.glyphack.com`.
 
-![How the user reaches our server through DNS](Chatting_Over_DNS-6647242d.svg)
+![How the user reaches our server through DNS](Chatting_Over_DNS-dns-tunneling.svg)
 
 ## Sending Data
 
@@ -72,7 +84,7 @@ For example, `part1.part2.glyphack.com` is still a valid query.
 
 We cannot simply put the binary data in the label data because the name section only allows for [letters and numbers](https://tools.ietf.org/html/rfc1035#section-2.3.1).
 One solution for converting binary into characters is base64, but it uses characters like `+` and `/` that are not allowed in DNS.
-Also, there's no difference between the characters `A` and `a` in the label, and you cannot simply rely on the fact that the bytes arrive exactly as is since a resolver can also flip the case of characters[^3].
+Also, there's no difference between the characters `A` and `a` in the label, and you cannot simply rely on the fact that the bytes arrive exactly as is since a resolver can also flip the case of characters[^2].
 The encoding that is suitable is either base32 or [base36](https://en.wikipedia.org/wiki/Base36).
 Since base36 has a few more characters and takes a bit less space than base32, I chose it over base32.
 
@@ -290,7 +302,7 @@ DNS request size is already limited, so we have to be cautious of the size.
 The extra information added to each message for security is 27 bytes in each request and 18 bytes in each response.
 But luckily we still have 126 more bytes in each request to implement application features.
 
-![Igloo stack](Chatting_Over_DNS-3da28dbc.svg)
+![Igloo stack](Chatting_Over_DNS-igloo-stack.svg)
 
 ## Authentication
 
@@ -347,9 +359,25 @@ Voice works like files, except that text compression does not work well on it. A
 The solution here is to use something like Opus encoding. It can drop the size to ~ 1 KB/sec, which makes voice usable on slow connections.
 I didn't do this in the end because I didn't have the time to figure out compiling the library on different platforms and making sure it works.
 
+## Finding DNS servers
+
+As I said one of the uses of this chat application is when access to the internet is behind a firewall and you cannot communicate with others.
+In that case, you probably cannot use DNS servers like `1.1.1.1` or `8.8.8.8` because they might be blocked in your network.
+
+First option you have is the DNS server of the ISP. This is what you use normally if you don't set any servers.
+Sometimes your ISP DNS server might block your traffic or even not have access to internet as well.
+
+The second option is to find all the DNS servers in the network using [masscan](https://github.com/robertdavidgraham/masscan/).
+This tool can find anything that responds on the DNS UPD port.
+Once you gather them you can try them one by one by trying to send a handshake message to Igloo server.
+
+For this case the Igloo client application has a list of DNS servers.
+It probes them to see which one can reach Igloo, and uses the one that works.
+
 ***
 
-What's next?
+## What's next?
+
 As you can see, even with the limited space on DNS, a lot of stuff can be done.
 
 I was in a rush when building this application because I wanted to use it with a few people.
@@ -361,10 +389,13 @@ These are cool things that I want to see happening:
 - Group chats.
 - Keeping the message history on the client side in a safe way.
 - [Parallel routing](https://github.com/EndPositive/slipstream) of DNS requests to increase bandwidth.
-- Opus coded ([this binding](https://github.com/SpaceManiac/opus-rs) looks good) for voice encoding/decoding.
+- Opus codec ([this binding](https://github.com/SpaceManiac/opus-rs) looks good) for voice encoding/decoding.
 - In-app updates so the user can keep using the app through DNS.
 
-[^1]: There are more than just limitations of the DNS specification in play. For example, in my tests sometimes the DNS resolver would drop requests and responses for an extended period of time. So being able to send out one message with one DNS request becomes critical.
-[^2]: <https://blog.cloudflare.com/iran-protests-internet-shutdown/>
-[^3]: I didn't test with various DNS servers to see how big a problem this can be.
+***
+
+I hope you never get stuck in a place where you cannot communicate with others. But if you do use Igloo to find a way out collectively.
+
+[^1]: <https://blog.cloudflare.com/iran-protests-internet-shutdown/>
+[^2]: I didn't test with various DNS servers to see how big a problem this can be.
     But just knowing that it can happen is enough for me to not rely on it. <https://developers.google.com/speed/public-dns/docs/security#randomize_case>
